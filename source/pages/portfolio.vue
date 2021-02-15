@@ -1,0 +1,180 @@
+<template>
+	<main>
+
+		<promo-banner promo-type="Style" :order="0" />
+
+		<navigation :category="HeaderMenu" :col="3" />
+
+		<nuxt-child :key="$route.path"></nuxt-child>
+
+	</main>
+</template>
+
+<style lang="scss" scoped>
+
+main {
+	display: grid;
+	grid-template-columns: 1fr;
+}
+
+</style>
+
+<script>
+
+	import TransitionSound from '~/assets/mixins/TransitionSound'
+	import EmitSound from '~/assets/mixins/EmitSound';
+	
+	export default { layout: 'Application', scrollToTop: false, transition: 'OpacityTransition', 
+		mixins: [ TransitionSound, EmitSound ],
+		head () {
+			return {
+				title: `Eccheuma | Портфолио`,
+				meta: [
+					{ 
+						hid: 'description', name: 'description', 
+						content: `Принятые работы. С указанием сроков, цены, комментариев, и отзывов на выполненую работу.`
+					}
+				]
+			}
+		},
+		data() {
+			return {
+
+				HeaderMenu: [
+					{
+						ID: 0, disabled: false,
+						route: '/portfolio/landings', name: 'Лэндинги', icon: 'fab fa-js-square',
+						discription: 'Главная страница. Тут собраны статьи на завязанные на профильную тему.'
+					},
+					{
+						ID: 1, disabled: false,
+						route: '/portfolio/logo', name: 'Логотипы', icon: 'fas fa-bezier-curve',
+						discription: 'Галлерея изображений. Начиная от логотипов и полноценных макетов, заканчивая всякими набросками и непринятыми вариантами работ.'
+					},
+					{
+						ID: 2, disabled: false,
+						route: '/portfolio/banners', name: 'Макеты', icon: 'fas fa-sticky-note',
+						discription: 'Предложения по оказанию услуг. В зависимости от сезона и нагруженности тут появляются выгодные предложения на разные виды услуг.'
+					},
+				]
+
+			}
+		},
+		components: {
+			PromoBanner: () => import  ( '~/components/promo/PromoBanner.vue' ),
+			Navigation: () => import  ( '~/components/common/Navigation.vue' ),
+		},
+		computed: {
+			CurentRoute() {
+				return this.$route.path
+			},
+		},
+		methods: {
+			GoRouterTo(prop) {
+
+				if ( this.$route.path != prop ) {
+
+					setTimeout(() => {
+						this.EmitSound(`Out`)
+					}, 750);
+
+					this.$router.push({ path: prop })
+				}
+			},
+		}
+	};
+
+</script>
+
+<style lang="sass" >
+
+.CurentRoute
+	cursor: pointer
+	padding: 15px 0px
+	display: block
+	font-size: 12px
+	font-weight: 700
+	border-radius: 12px
+	color: $color5 !important
+	transition-duration: .5s
+	&:after
+		transition-duration: .5s
+		content: ''
+		display: block
+		width: 100%
+		height: 1px
+		transform: scaleX(1) translateY(-47px)
+		background-color: rgba($color5,1)
+		@media screen and ( max-width: $MobileBreakPoint )
+			transform: scaleX(1) translateY(-36px) 
+
+$TransitionDuration: .25s
+
+.PageSelector
+	position: sticky
+	top: 0
+	z-index: 30
+	padding: 0 10vh
+	text-align: center
+	&_Item
+		position: relative
+		&:nth-of-type(1)
+			&::after
+				display: none
+		&:after
+			content: ''
+			display: block
+			position: absolute
+			top: calc(30px - 1vh)
+			left: -0.125rem
+			border-radius: .7rem
+			width: .25rem
+			height: 2vh
+			background-color: $color3 
+	nav 
+		margin: 0px 15px
+		color: rgba($color6,.70)
+		a 
+			cursor: pointer
+			padding: 15px 0px
+			display: block
+			font-size: .65rem
+			font-weight: 700
+			line-height: 30px
+			border-radius: 12px
+			i 
+				display: block
+				font-size: $FontSize4
+				margin-bottom: 12px
+				color: $color3 
+			&:before 
+				transition-duration: $TransitionDuration
+				content: ''
+				display: block
+				width: 100%
+				height: 1px
+				transform: scaleX(0) translateY(-16px)
+				background-color: grey
+			&:hover 
+				text-decoration: none
+				color: rgba($color5, 1)
+				transition-duration: $TransitionDuration
+				i 
+					transition-duration: $TransitionDuration
+					color: $color4 
+				&:before 
+					transition-duration: $TransitionDuration
+					content: ''
+					text-align: center
+					display: block
+					width: 100%
+					height: 1px
+					transform: scaleX(1) translateY(-16px)
+					background-color: #ffffff
+					box-shadow: 0px 0px 6px 0px
+
+.Portfolio-Case
+	min-height: 400px
+	background-color: $color1
+
+</style>

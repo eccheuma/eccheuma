@@ -1,0 +1,138 @@
+@import "_fonts"
+
+.DarkUI
+	background-color: $color1 !important
+	color: $color5 !important
+
+::placeholder
+	color: #666
+
+::selection
+	background-color: $accent
+	color: #fff
+
+.w
+	&-lg-100
+		width: 100% !important
+	&-lg-75
+		width: 75% !important
+	&-lg-50
+		width: 50% !important
+	&-lg-25
+		width: 25% !important
+
+.Fading
+	&-enter
+		opacity: 0
+		&-active
+			opacity: 0
+			transition: opacity .75s ease-in-out .25s
+		&-to
+			opacity: 1
+	&-leave
+		opacity: 1
+		&-active
+			opacity: 1
+			transition: opacity .75s ease-in-out .25s
+		&-to
+			opacity: 0
+
+$OpacityTransition_Delay: 1s
+
+.OpacityTransition
+	&-enter
+		opacity: 0
+		&-active
+			opacity: 0
+			transition: opacity $OpacityTransition_Delay ease-in-out
+		&-to
+			opacity: 1
+	&-leave
+		opacity: 1
+		&-active
+			opacity: 1
+			transition: opacity $OpacityTransition_Delay ease-in-out
+		&-to
+			opacity: 0
+
+// ==================
+
+$page_transition_delay: .50s
+
+.page_transition
+	&-enter
+		&-active
+			opacity: 0
+			transition: opacity $page_transition_delay ease-in-out
+			transition-delay: $page_transition_delay
+		&-to
+			opacity: 1
+	&-leave
+		&-active
+			opacity: 1
+			transition: opacity $page_transition_delay ease-in-out
+		&-to
+			opacity: 0
+
+.not_active_link
+	pointer-events: none
+	opacity: .10
+
+@media print
+	a:not(.btn)
+		text-decoration: none
+
+body
+	background-color: #000000
+	width: 100vw
+	height: 100vh
+	overflow-x: hidden
+	font-size: 12px
+	position: relative
+	line-height: 1.65
+	font-family: $default-font
+
+button
+	&:focus
+		outline: none
+
+main
+	background-color: $color1
+	color: $color5
+
+aside
+	position: relative
+	margin: 0
+	color: $color5
+	background-color: $color2
+
+.popover
+	overflow: hidden
+	position: relative
+	z-index: 1000
+	max-width: 25vw
+	background-color: $color1
+	box-shadow: 0px 0px 0px 1px $color3
+	transition-delay: .5s
+	border-radius: .7rem
+	i
+		position: absolute
+		opacity: .5
+		top: -3rem
+		left: -25%
+		display: block
+		color: $color3
+		font-size: 12rem
+		z-index: -1
+		transform: rotate(15deg)
+	&-body
+		padding: 15px 15px
+		color: $color5
+		text-align: center
+		font-size: $FontSize4
+		font-weight: 500
+
+.parallax_container
+	background-color: $color2
+	overflow: hidden
+	color: #fff

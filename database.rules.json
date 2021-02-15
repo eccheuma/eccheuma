@@ -1,0 +1,43 @@
+{
+  "rules": {
+    "App": {
+      ".read": true,
+      ".write": false,
+    },
+    "Posts": {
+      ".indexOn": "ID",
+      ".read": true,
+      "$Post": {
+        ".read": true,
+        ".write": "auth.uid === 'tGOrAx0PyvWmxQ64gYcUxn3roNB3'",
+        "$areas": {
+          ".read": true,
+          ".write": "auth.uid === 'tGOrAx0PyvWmxQ64gYcUxn3roNB3'",
+        },
+				"comments": {
+          ".read": true,
+          "$HASH": {
+            ".write": "newData.child('UserID').val() === auth.uid || !newData.exists() && auth.uid !== null",
+          }
+        },
+        "likes": {
+          ".read": true,
+          "$HASH": {
+            ".write": "auth.uid === $HASH"
+          }
+        }
+      },
+    },
+    "Users": {
+      "$USER": {
+        ".read": true,
+        ".write": "auth.uid === $USER || auth.uid === 'tGOrAx0PyvWmxQ64gYcUxn3roNB3'"
+      }
+    },
+    "$OTHER_SECTIONS": {
+      ".indexOn": "ID",
+      ".read": true,
+      ".write": "auth.uid === 'tGOrAx0PyvWmxQ64gYcUxn3roNB3'",
+    }
+  }
+}

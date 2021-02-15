@@ -1,0 +1,166 @@
+
+$default-font: "Montserrat", sans-serif;
+$second-font: "PTSerif", sans-serif;
+$accent: #E4AA2F;
+$text: #333;
+
+$Image_format: 'webp';
+
+$MobileBreakPoint: 768px;
+
+// Main pallete   
+$color0: #000000;
+$color1: #181818;
+$color2: #1D1D1D;
+$color3: #414141;
+$color4: #737373;
+$color5: #FFFFFF;
+$color6: #F0F0F0;
+$color7: #FFFFFF;
+
+$colorWarning: #eecf22;
+$colorSuccess: #95d829;
+$colorWrong: #c93131;
+
+$FontSize1: 1.5rem;
+$FontSize2: .9rem;
+$FontSize3: .8rem;
+$FontSize4: .66rem;
+$FontSize5: .5rem;
+
+// Customization Bootstrap vars from "app/libs/bootstrap/scss/_variables.scss"
+$grid-gutter-width: 30px;
+$grid-columns: 12;
+$grid-breakpoints: (xs: 0, sm: 576px, md: $MobileBreakPoint, lg: 1440px, xl: 2560px);
+$container-max-widths: (sm: 520px, md: 730px, lg: 1400px, xl: 2300px);
+
+$gutter: $grid-gutter-width;
+
+$fa-font-path: "/fonts/webfonts";
+
+// OTHER
+
+%button_switch {
+	border: 1px solid rgba($color4,.5);
+	&:hover {
+		transform: translateY(-4px);
+		border: 1px solid transparent;
+		box-shadow: 0px 4px 0px 0px rgba($color1,.25);
+	}
+}
+
+%border_black {
+	border-top: 4px solid $color1;
+	border-bottom: 4px solid $color1;
+}
+
+%button_light_active {
+	transition-duration: .5s;
+	text-decoration: none;
+	color: $color2;
+	background-color: $color5;
+	border: 1px solid $color5;  
+}
+
+@mixin push-button {
+
+	border: 1px solid rgba($color4,.5);
+
+	padding: 5px 25px;
+	margin: 0px 2px;
+	border-radius: .7rem;
+	color: $color3;
+	font-size: .75rem;
+	line-height: 20px;
+	font-weight: 700;
+	transition: all 200ms ease-in-out;
+
+	@content;
+
+	&:hover {
+		transform: translateY(-0.5vh);
+		border: 1px solid transparent;
+		box-shadow: 0px 0.5vh 0px 0px rgba($color1,.25);
+	}
+
+}
+
+@mixin light-button {
+	cursor: pointer;
+	padding: 6px 2vw;
+	// FONT
+	font-size: 12px; font-weight: 600; color: $color1;
+	// BORDER
+	border: 1px solid rgba($color1, .25); border-radius: .7rem;
+	// OTHER
+	background-color: $color6;
+	box-shadow: 0px 0px 0px 2px $color6;
+	transition-duration: .25s;
+	// CONTENT
+
+	@content;
+
+	&:hover {
+		text-decoration: none; background-color: $color2; color: $color6;
+	}
+
+}
+
+@mixin gradient_border($side: both) {
+
+	border-image: linear-gradient(to left, $color2, $color3, $color2);
+	border-image-slice: 1;
+
+	@if $side == both {
+		border: {
+			top: 1px solid transparent;	
+			bottom: 1px solid transparent;	
+		}
+	} @else if $side == top or bottom {
+		border-#{$side}: 1px solid transparent;	
+	}
+	
+}
+
+%button_light {
+	cursor: pointer;
+	padding: 6px 2vw;
+	border-radius: .8rem;
+	color: $color1;
+	background-color: $color6;
+	border: 1px solid $color3;
+	box-shadow: 0px 0px 0px 2px $color6;
+	font-size: 14px;
+	font-weight: 600;
+	transition-duration: .25s;
+	&:hover {
+		text-decoration: none;
+		color: $color6;
+		background-color: $color2;
+	}
+}
+
+%button_black {
+	cursor: pointer;
+	margin: 0 auto;
+	padding: 6px 3vw;
+	border-radius: .8rem;
+	color: $color4;
+	background-color: $color1;
+	border: 1px solid $color3;
+	font-size: 12px;
+	font-weight: 600;
+	transition-duration: .25s;
+	&:hover {
+		text-decoration: none;
+		color: $color6;
+		background-color: $color2;
+	}
+}
+
+%gradient_border {
+	border-top: 1px solid transparent;
+	border-bottom: 1px solid transparent;
+	border-image: linear-gradient(to left, $color2, $color3, $color2);
+	border-image-slice: 1;
+}
