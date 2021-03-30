@@ -174,6 +174,9 @@
 	import { mapActions, mapState } from 'vuex'
 	import type { VuexModules } from '~/types/VuexModules'
 
+	// MIXINS
+	import EmitSound from '~/assets/mixins/EmitSound'
+
 	// TYPES
 	import type { COMMENT, POST } 	from '~/types/Post.ts'
 	import type { USER_STATE }			from '~/types/User.ts'			
@@ -181,6 +184,7 @@
 
 	// MODULE
 	export default Vue.extend({
+		mixins: [ EmitSound ],
 		props: {
 			postID: {
 				type: Number,
@@ -246,6 +250,9 @@
 				firebase.database()
 					.ref(`Posts/PostID-${ this.postID }/comments/Hash-${ this.commentID }`)
 					.remove()
+					.then(() => {
+						this.EmitSound('Tap', { rate: .33, volume: .25 });
+					})
 
 			}
 

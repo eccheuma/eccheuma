@@ -7,6 +7,7 @@
 		@keydown.ctrl.enter="sendComment"
 		> 
 
+		<!-- Post description, Image, Tage and etc. -->
 		<div 
 			ref="ImageHolder" 
 			class="post-header"
@@ -31,6 +32,7 @@
 
 		</div>
 
+		<!-- Footer. Social buttons and Author Icon -->
 		<div 
 			class="post-footer" 
 			:class="[
@@ -48,6 +50,7 @@
 						{ disabled: !LoginStatus }
 					]"
 					@click="sendLike"
+					@mouseenter="EmitSound('On', { rate: .45, volume: .25 })"
 					>
 
 					<i class="fas fa-fire" />
@@ -71,7 +74,8 @@
 				<button 
 					:id="`CommentPopOver-${ payload.ID }`" 
 					:class="{ active: CommentSection }"
-					@click="CommentSection = !CommentSection" 
+					@click="toggleSection(!CommentSection, 'CommentSection')"
+					@mouseenter="EmitSound('On', { rate: .45, volume: .25 })" 
 					>
 
 					<i class="fas fa-comment" />
@@ -95,7 +99,7 @@
 			</section>
 
 			<section class="post-footer-collapse">
-				<button @click="ContentSection = !ContentSection">
+				<button @click="toggleSection(!ContentSection, 'ContentSection')">
 					{{ !ContentSection ? 'Развернуть пост' : 'Свернуть пост' }}
 				</button>
 			</section>				
@@ -111,14 +115,23 @@
 
 		</div>
 
+		<!-- Comments and Content -->
 		<client-only>
 
 			<component 
 				:is="`eccheuma-collapse`" 
 				:active="ContentSection"
-			> <article class="post-content" :class="[{'rounded': !ContentSection }]">
+				>
 
-					<header key="POST_CONTENT_SECTION_1" class="post-content-header">
+				<article 
+					class="post-content" 
+					:class="[
+						{ 'rounded': !ContentSection },
+						{ 'rounded-bottom': !CommentSection }
+					]"
+				>
+
+					<header class="post-content-header">
 						<h4>{{ payload.title }}</h4>
 						<h6>{{ payload.description }}</h6>
 						<span>{{ AuthorInfo ? AuthorInfo.UserName : '' }} | {{ PostDate.Day }} в {{ PostDate.Time }}</span>
@@ -132,28 +145,35 @@
 						<post-content :source="Content" />
 					</template>
 
-					<footer key="POST_CONTENT_SECTION_3" class="post-content-footer">
-						<h6 class="d-inline mr-2">
-							Теги: 
-						</h6>
+					<footer class="post-content-footer">
+						<h6>Теги: </h6>
 						<span>{{ payload.tags }}</span>
 						<hr>
-						<button class="mx-auto mt-5" type="button" @click="CommentSection = !CommentSection">
+						<button @click="toggleSection(!CommentSection, 'CommentSection')">
 							Открыть комментарии
 						</button>
 					</footer>
 
 				</article>
+				
 			</component>
 
 			<component 
 				:is="`eccheuma-collapse`" 
 				:active="CommentSection"
-			>	<div class="post-comments" :class="{ 'rounded': !CommentSection }">
+				>	
+
+				<div 
+					class="post-comments" 
+					:class="[
+						{ 'rounded': !CommentSection },
+						{ 'rounded-bottom': CommentSection }
+					]"
+				>
 
 					<template v-if="!sortedComments.length">
 						<section class="post-comments-first">
-							<span>Тут ещё нет комментариев, но я крайне надеюсь что они появятся.</span>
+							<span>" <i>Тут ещё нет комментариев, но это пока...</i> "</span>
 						</section>
 					</template>
 
@@ -198,6 +218,7 @@
 					</section>
 
 				</div>
+
 			</component>
 
 		</client-only>
@@ -518,6 +539,7 @@
 
 		&-content {
 			display: inline-grid;
+			width: 100%;
 		}
 
 		&-answer {
@@ -645,7 +667,7 @@
 		data() {
 			return {
 
-				Cooled: !process.browser,
+				Cooled: process.browser,
 
 				ImageURL: PLACEHOLDER,
 
@@ -712,13 +734,6 @@
 			
 		},
 		watch: {
-			InViewport: {
-				handler() {
-					if ( this.ImageURL === PLACEHOLDER ) {
-						this.$nextTick().then(this.updateImage)
-					}
-				},
-			},
 			'payload.image': {
 				handler() {
 					this.$nextTick().then(this.updateImage)
@@ -726,6 +741,12 @@
 			},
 		},
 		created() {
+
+			const Watcher = this.$watch('Cooled', () => {
+				if ( Watcher ) {
+					this.updateImage(); Watcher()
+				}
+			}) 
 
 			this.getAuthor()
 			this.listenSnapshots(['Likes', 'Comments', 'Content'])
@@ -765,8 +786,7 @@
 
 				firebase.database()
 					.ref(`Users/${ this.payload.authorID }/state`)
-					.once('value')
-					.then((snapshot) => {
+					.on('value', (snapshot) => {
 						this.AuthorInfo = snapshot.val()
 					})
 
@@ -785,6 +805,14 @@
 				})
 
 			}, 
+
+			toggleSection(status: boolean, section: 'ContentSection' | 'CommentSection'): void {
+
+				this[section] = status;
+
+				this.EmitSound('Out', { rate: status ? 0.8 : 0.6, volume: .25 }); 
+
+			},
 
 			async updateImage(): Promise<void> {
 
@@ -833,7 +861,7 @@
 						.ref(`Posts/PostID-${ this.payload.ID }/${ SECTION.toLowerCase() }/Hash-${ HASH }`)
 						.set( COMMENT )
 						.then(() => {
-							this.EmitSound('Tap', { rate: .5 }); this.Message = '';
+							this.EmitSound('Tap', { rate: .75, volume: .25 }); this.Message = '';
 						})
 
 				}
@@ -848,9 +876,13 @@
 
 				if ( this.userLiked && this.LoginStatus ) {
 
+					this.EmitSound('Tap', { rate: .5, volume: .25 })
+
 					firebase.database().ref(REF).remove()
 
 				} else {
+
+					this.EmitSound('Tap', { rate: .75, volume: .25 })
 
 					firebase.database().ref(REF).set({
 						hash: this.HashGenerator()

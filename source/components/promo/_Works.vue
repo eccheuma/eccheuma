@@ -20,6 +20,7 @@
             :key="`section-of-${section.ID}_${index}`"
             class="works_swiper-item"
           >
+            
             <vue-image
               :content="{ path: item.content.path }"
               :sections="{ date: false, description: false, zoom: true }"
@@ -30,7 +31,7 @@
 
             <div class="works_swiper-item-description">
               <span>{{ section.content.name }}</span>
-              <span>{{ section.content.description }}</span>
+              <span>{{ section.content.theme }}</span>
             </div>
           </section>
         </template>

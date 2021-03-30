@@ -204,14 +204,18 @@
 			'content.path': {
 				handler() {
 					if ( this.CLIENT_RENDER_CHECK ) {
-						this.$nextTick().then(this.getPlaceholder)
+						this.$nextTick(() => requestAnimationFrame(this.getImage))
 					}
 				}
 			},
 		},
 		mounted() {
-			if ( this.CLIENT_RENDER_CHECK ) { 
-				this.$nextTick().then(this.getPlaceholder)
+			if ( this.CLIENT_RENDER_CHECK ) {
+
+				setTimeout(() => {
+					this.$nextTick(() => requestAnimationFrame(this.getImage))
+				}, 1000)
+
 			}
 		},
 		methods: {
@@ -221,7 +225,7 @@
 				GetLocalTime: 'GetLocalTime'
 			}),
 
-			async getPlaceholder(): Promise<void> {
+			async getImage(): Promise<void> {
 
 				const URL = await this.GetImageURL({ 
 					_path: this.content.path,
