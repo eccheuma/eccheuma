@@ -1,8 +1,8 @@
 <template>
-	<div class="post-comment-item">
+	<div v-if="Object.keys(RecivedData).length " :id="`HASH-${ commentID }`" class="post-comment-item">
 
 		<section class="post-comment-item-icon">
-			<i class="m-auto post_comment-icon" :style="`background-image: url(${ Author.UserImageID })`" />
+			<i class="post_comment-icon" :style="`background-image: url(${ Author.UserImageID })`" />
 		</section>
 
 		<section class="post-comment-item-author">
@@ -14,12 +14,12 @@
 		</section>
 
 		<section class="post-comment-item-content">
-			<p>{{ Comment.Comment }}</p>
+			<p>{{ RecivedData.Comment }}</p>
 			
 			<template v-if="LoginStatus">
-				<span class="mx-auto" v-if="UserState.UserID === Author.UserID" @click="RemoveComment">
+				<button v-if="UserState.UserID === Author.UserID" @click="RemoveComment">
 					Удалить комментарий
-				</span>
+				</button>
 			</template>
 		</section>
 
@@ -30,7 +30,7 @@
 
 .post-comment-item {
 
-	@media screen and ( max-width: $MobileBreakPoint ) {
+	@media screen and ( max-width: var(--mobile-breakpoint)) {
 		
 		row-gap: 2vh;
 
@@ -49,7 +49,7 @@
 
 	padding: 2vh 3vw;
 	margin: { bottom: 2vh };
-	border-bottom: 1px solid $color6;
+	border-bottom: 1px solid rgb(var(--color-5));
 
 	grid-template: {
 		columns: auto 1fr;
@@ -80,8 +80,8 @@
 				repeat: 	no-repeat;
 			}
 	
-			border: 4px solid $color5;
-			box-shadow: 0px 1vh 0px 0px $color6;
+			border: 4px solid rgb(var(--color-6));
+			box-shadow: 0px 1vh 0px 0px rgb(var(--color-5));
 			border-radius: 100%;
 		}
 
@@ -100,11 +100,11 @@
 
 		hr {
 
-			background-color: $color6;
+			background-color: rgb(var(--color-5));
 			width: 50%;
 			margin: 1vh 0;
 
-			@media screen and ( max-width: $MobileBreakPoint ) {
+			@media screen and ( max-width: var(--mobile-breakpoint)) {
 				margin: 1vh auto;
 			}
 
@@ -114,16 +114,16 @@
 			font-weight: 700;
 			display: block;
 			&:nth-of-type(1) {
-				font-size: $FontSize3;
-				color: $color3;
+				font-size: var(--font-size-3);
+				color: rgb(var(--color-3));
 			}
 			&:nth-of-type(2) {
-				color: $color4;
-				font-size: $FontSize4;
+				color: rgb(var(--color-4));
+				font-size: var(--font-size-4);
 			}
 		}
 
-		@media screen and ( max-width: $MobileBreakPoint ) {
+		@media screen and ( max-width: var(--mobile-breakpoint)) {
 			text-align: center;
 		}
 
@@ -137,18 +137,26 @@
 
 		p {
 			font-weight: 500;
-			font-size: $FontSize2;
-			font-family: $second-font;
-			color: $color2;
+			font-size: var(--font-size-3);
+			font-family: var(--second-font);
+			color: rgb(var(--color-2));
 
-			@media screen and ( max-width: $MobileBreakPoint ) {
+			@media screen and ( max-width: var(--mobile-breakpoint)) {
 				padding: 0 5vw;
 			}
 
 		}
+
+		button {
+			@include push-button {
+				background-color: transparent;
+				padding: 3px 20px;
+				float: right;
+				margin: 0;
+			};
+		}
+
 	}
-
-
 
 }
 
@@ -159,8 +167,8 @@
 	import Vue, { PropOptions } from 'vue'
 
 	// FIREBASE
-	import firebase from "firebase/app"
-	import "firebase/database"
+	import firebase from 'firebase/app'
+	import 'firebase/database'
 
 	// VUEX
 	import { mapActions, mapState } from 'vuex'
@@ -174,36 +182,32 @@
 	// MODULE
 	export default Vue.extend({
 		props: {
-			PostID: {
+			postID: {
+				type: Number,
 				required: true,
 			} as PropOptions<POST['ID']>,
-			UserID: {
+			userID: {
+				type: String,
 				required: true,
 			} as PropOptions<USER_STATE['UserID']>,
-			CommentID: {
+			commentID: {
+				type: String,
 				required: true,
 			} as PropOptions<string>,
-			ModerationMode: {
-				required: true,
+			moderationMode: {
+				type: Boolean,
+				required: false,
+				default: false,
 			} as PropOptions<boolean>,
 		},
 		data() {
 			return {
 
-				Ready: false,
-
 				DateOfComment: { Day: '', Time: '' } as FORMATED_DATE,
 
 				Author: 	new Object() as USER_STATE,
-				Comment: 	new Object() as COMMENT,
+				RecivedData: new Object() as COMMENT,
 
-			}
-		},
-		watch: {
-			Comment: {
-				async handler() {
-					this.DateOfComment = await this.GetLocalTime(this.Comment.Date)
-				}
 			}
 		},
 		computed: {
@@ -214,42 +218,36 @@
 			}),
 
 		},
+		async created() {
+
+			firebase.database()
+				.ref(`Users/${ this.userID }/state`)	
+				.on('value', (data) => {
+					this.Author = data.val()
+				});
+
+			firebase.database()
+				.ref(`Posts/PostID-${ this.postID }/comments/Hash-${ this.commentID }`)	
+				.on('value', (data) => {
+					this.RecivedData = data.val();
+				});
+
+			this.DateOfComment = await this.GetLocalTime(this.RecivedData.Date)
+
+		},
 		methods: {
 
 			...mapActions({
 				GetLocalTime: 'GetLocalTime'
 			}),
 
-			TEST(a: boolean): number {
-
-				if(a) {
-					return 6
-				} else {
-					return 8
-				}
-
-			},
-
 			RemoveComment() {
+
 				firebase.database()
-					.ref(`Posts/PostID-${ this.PostID }/comments/Hash-${ this.CommentID }`)
+					.ref(`Posts/PostID-${ this.postID }/comments/Hash-${ this.commentID }`)
 					.remove()
+
 			}
-
-		},
-		created() {
-
-			firebase.database()
-				.ref(`Users/${ this.UserID }/state`)	
-				.on('value', data => {
-					this.Author = data.val()
-				});
-
-			firebase.database()
-				.ref(`Posts/PostID-${ this.PostID }/comments/Hash-${ this.CommentID }`)	
-				.on('value', data => {
-					this.Comment = data.val(); this.Ready = true
-				});
 
 		},
 	})

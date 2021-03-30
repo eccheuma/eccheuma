@@ -1,186 +1,200 @@
 <template>
-	<nav class="container navigation_wrapper">
-		<div class="row no-gutters">
-			<div class="col">
-				<nav class="row justify-content-center px-lg-5" id="BottomNavigationContainer">
+	<nav class="portfolio_navigation-container">
+	<template v-for="(link, index) in category">
 
-					<div class="navigation_item" 
-						v-for="prop in category" :key="prop.ID"
-						:id="`navigation_header-${prop.ID}`"
-						@mouseenter="EmitSound(`On`)"
-						:class="[
-							{ 'not_active_link': prop.disabled },
-							`col-${ col }`
-						]">
+		<nuxt-link ref="links" :key="index" :to="link.route" :class="{ active: link.route === $route.path }">
 
-						<transition name="route_selector">
-							<span v-if="CurentRoute == `${prop.route}`"></span>
-						</transition>
+			<transition name="opacity-transition">
+				<span v-if="link.route === $route.path" />
+			</transition>
 
-						<nuxt-link 
-							prefetch 
-							:to="prop.route"
-							:class="{'navigation_curentRoute': CurentRoute == `${prop.route}`}">
-								<i class="d-none d-lg-block" :class="prop.icon" style="pointer-events: none"></i>
-								{{ prop.name }}
-						</nuxt-link>
+			<i :class="link.icon" /> {{ link.name }}
 
-						<b-popover
-							container="BottomNavigationContainer" 
-							:target="`navigation_header-${prop.ID}`" 
-							triggers="hover"
-							placement="bottom"
-							:delay="{ show: 250, hide: 0 }">
-							<i class="fas fa-info-circle"></i>
-							{{ prop.discription }}
-						</b-popover>
+			<popover>
+				<i class="fas fa-info-circle" />
+				{{ link.discription }}
+			</popover>
 
-					</div>
-					
-				</nav>
-			</div>
-		</div>
+		</nuxt-link>
+
+	</template>
 	</nav>
 </template>
 
-<script>
+<style lang="scss">
 
+.portfolio_navigation {
+	&-container {
+
+		@include gradient_border(both);
+
+		width: 100%;
+		display: grid;
+
+		grid-template: {
+			columns: repeat(auto-fit, minmax(160px, 1fr));
+		}
+
+		padding: 0 25%;
+
+		.active {
+
+			opacity: 1 !important;
+			color: rgb(var(--color-5));
+
+			i {
+				transform: rotate(15deg);
+				color: rgb(var(--color-5));
+			}
+
+		}
+
+		a {
+
+			position: relative;
+
+			justify-self: center;
+
+			width: 100%;
+
+			color: rgb(var(--color-4));
+
+			padding: 20px 3vw;
+
+			text: {
+				align: center;
+			}
+
+			transition: all 250ms ease-in-out;
+
+			font: {
+				weight: 700;
+				size: .65rem;
+			}
+
+			span {
+				content: '';
+				position: absolute;
+
+				top: -1px; left: 0;
+				height: .1px; width: 100%;
+
+				background: linear-gradient(90deg, transparent 0%, rgb(var(--color-5)) 50%, transparent 100%);
+
+			}
+
+			i {
+
+				transition: all 500ms ease-in-out;
+
+				color: rgb(var(--color-4));
+
+				display: block;
+
+				font: {
+					size: 1rem;
+				}
+
+				margin: { bottom: 2vh };
+
+			}
+
+			&:after {
+
+				$W: 4px; $H: 10px;
+
+				content: '';
+
+				position: absolute;
+
+				width: $W; height: $H; 
+
+				top: calc(50% - #{$H / 2}); right: #{$W / 2};
+
+				border-radius: .7rem;
+
+				background: {
+					color: rgb(var(--color-3));
+				}
+			}
+
+			&:last-of-type {
+				&:after {
+					display: none;
+				}
+			}
+
+			&:hover {
+				text-decoration: none;
+			}
+
+		}
+
+	}
+}
+
+</style>
+
+<script lang="ts">
+
+	import Vue, { PropOptions } from 'vue'
+
+	// COMPONENTS
+	import Popover from '~/components/common/Popover.vue'
+
+	// MIXINS
 	import EmitSound from '~/assets/mixins/EmitSound'
 
-	export default {
+	// TYPES
+	import type { ROUTES } from '~/types/Navigation.ts'
+
+	type NAV_ITEM = {
+		ID: number 
+		disabled: boolean
+		route: ROUTES
+		name: string
+		icon: string
+		discription: string
+	}
+
+	// MODULE
+	export default Vue.extend({
+		components: {
+			Popover
+		},
 		mixins: [ EmitSound ],
 		props: {
 			category: {
-				default: [
-					{
-						ID: 0, disabled: false,
-						route: 'Home', name: 'Главная', icon: 'fa-scroll',
-						discription: 'Главная страница. Тут собраны статьи на завязанные на профильную тему.'
-					},
-				]
-			},
-			col: {
-				default: 3
-			}
+				type: Array,
+				required: true,
+			} as PropOptions< NAV_ITEM[] >,
 		},
 		computed: {
-			CurentRoute() { // Текущий рут
-				return this.$route.path
+			CurentRoute(): ROUTES {
+				return this.$route.path as ROUTES
 			},
+		},
+		mounted() {
+
+			const LINK_COMPONENTS = this.$refs.links as Vue[]
+
+			LINK_COMPONENTS.forEach((component) => {
+				component.$el.addEventListener('mouseenter', this.hoverSound)
+			})
+
 		},
 		methods: {
-			GoRouterTo(prop) { // Переход на рут
-				if ( this.$route.path != prop ) {
-					this.$router.push({ path: prop })
+			hoverSound() {
+				this.EmitSound('Tap', { rate: 1.25 })
+			},
+			GoRouterTo(path: ROUTES) {
+
+				if ( this.$route.path !== path ) {
+					this.$router.push({ path })
 				}
+
 			},
 		},
-	}
+	})
 
 </script>
-
-<style lang="sass" scoped>
-
-$TransitionDuration: .25s
-
-.route_selector
-	&-enter 
-		&-active
-			opacity: 0
-			transition: all $TransitionDuration ease
-			transition-delay: $TransitionDuration
-		&-to
-			opacity: 1
-	&-leave 
-		&-active
-			opacity: 1
-			transition: all $TransitionDuration ease
-		&-to
-			opacity: 0
-
-.navigation
-	&_wrapper
-		position: sticky
-		top: 0
-		z-index: 2050
-		margin: 0 auto
-		max-width: 1420px
-		text-align: center
-		// height: 12.5vh
-		background-color: $color1
-		@extend %gradient_border
-		nav 
-			margin: 0px 1vw
-			color: rgba($color6,.5)
-			a 			
-				will-change: transform, color, filter
-				cursor: pointer
-				display: block
-				line-height: 6vh
-				font-size: 11.5px
-				font-weight: 600
-				border-radius: 12px
-				margin-top: -1px
-				transition-duration: $TransitionDuration
-				color: $color4
-				@media screen and ( max-width: $MobileBreakPoint )
-					color: rgba($color6, .75)
-					line-height: 8vh
-				i 
-					display: block
-					font-size: $FontSize3
-					color: $color3 
-					padding: 2vh 0 0px
-					filter: drop-shadow(0px -5vh 0px rgba($color5,0))
-					transition-duration: $TransitionDuration
-				&:before 
-					content: ''
-					display: block
-					width: 100%
-					height: 1px
-					transform: scaleX(0)
-					background: linear-gradient(90deg, rgba($color5,0) 0%, rgba($color5,1) 50%, rgba($color5,0) 100%)
-					transition-duration: $TransitionDuration
-				&:hover
-					text-decoration: none
-					color: $color5
-					transform: translateY(-6px)
-					i 
-						color: $color5
-						transform: scale(1.5) translateY(-5vh)
-						filter: drop-shadow(0px 5px 10px $color5)
-					&:before 
-						transform: scaleX(1) translateY(6px)
-						filter: drop-shadow(0px 0px 6px $color5)
-	&_curentRoute
-		color: $color5 !important
-		i 
-			transition-duration: $TransitionDuration
-			display: block
-			font-size: $FontSize3
-			color: $color5 !important
-	&_item
-		// position: relative
-		&::after
-			content: ''
-			display: block
-			position: absolute
-			top: 3vh
-			left: -0.125rem
-			border-radius: .7rem
-			width: .25rem
-			height: 2vh
-			background-color: $color3 
-		&:nth-child(1)
-			&::after
-				display: none
-		span
-			text-align: center
-			display: block
-			width: 100%
-			height: 1px
-			transform: translateY(-1px)
-			margin: 0px 0px -1px 
-			background: linear-gradient(90deg, rgba($color5,.0) 0%, rgba($color5,1) 50%, rgba($color5,.0) 100%) !important 
-			filter: drop-shadow(0px 0px 6px $color5)
-</style>

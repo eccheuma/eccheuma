@@ -1,0 +1,33 @@
+@import "_variables";
+@import "_utils";
+@import "_transitions";
+@import "_fonts";
+
+::placeholder {
+	color: rgb(var(--color-4));
+}
+
+::selection {
+	background-color: rgb(var(--accent));
+	color: rgb(var(--color-5));
+}
+
+body {
+	background-color: rgb(var(--color-0));
+	width: 100vw;
+	height: 100vh;
+	overflow-x: hidden;
+	font-size: var(--font-size-3);
+	position: relative;
+	line-height: 1.65;
+	color: rgb(var(--color-6));
+	font-family: var(--default-font), sans-serif;
+}
+
+main {
+	background-color: rgb(var(--color-1));
+}
+
+aside {
+	background-color: rgb(var(--color-1));
+}

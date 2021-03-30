@@ -1,70 +1,75 @@
 <template>
-	<div class="CursorFX-Wrap" ref="CurWrap">
-		<span class="CursorFX" v-show="CursorFX_state" ref="CurRef"></span>
+	<div ref="CurWrap" class="CursorFX-Wrap">
+		<span v-show="CursorShowed" ref="CurRef" class="CursorFX" />
 	</div>
 </template>
 
 <script lang="ts">
 
 	import Vue from 'vue'
-	// VUEX
-	import { mapActions, mapState} from 'vuex'
-
-	import type { VuexModules } from '~/types/VuexModules'
 
 	// MODULE
 	export default Vue.extend({
 		data() {
 			return {
 
-				CursorFX_state: false,
+				CursorShowed: false,
 
 				CursorNode: null as unknown as HTMLElement | null,
 				ParentNode: null as unknown as HTMLElement | null,
 
-				ParentNodeRect: {} as DOMRect | undefined
+			}
+		},
+		computed: {
+			CursorNodeRect(): { H: number, W: number } {
+
+				if ( this.CursorNode ) {
+					return {
+						H: this.CursorNode.getBoundingClientRect().height / 2,
+						W: this.CursorNode.getBoundingClientRect().width 	/ 2,
+					}
+				} 
+
+				return { H: 0, W: 0 }
 
 			}
 		},
 		watch: {
 			ParentNode: {
 				handler() {
-					if ( this.ParentNode ) {
 
-						this.ParentNode.addEventListener("mouseenter", 	this.ListenersAction )
-						this.ParentNode.addEventListener("mouseleave", 	this.ListenersAction )
-						this.ParentNode.addEventListener("click", 			this.ListenersAction )
+					this.ParentNode?.addEventListener('mouseenter', 	this.defineListenersAction)
+					this.ParentNode?.addEventListener('mouseleave', 	this.defineListenersAction)
+					this.ParentNode?.addEventListener('click', 				this.defineListenersAction)
 
-						this.ParentNodeRect = this.ParentNode.getBoundingClientRect()
-
-					}
 				}
 			}
 		},
-		computed: {
-			CursorNodeRect(): { H: number, W: number } {
+		mounted() {
 
-				return {
-					H: this.CursorNode ? this.CursorNode.getBoundingClientRect().height / 2 : 0,
-					W: this.CursorNode ? this.CursorNode.getBoundingClientRect().width 	/ 2 : 0,
-				}
-
-			}
+			this.ParentNode = this.$el.parentElement!
+			this.CursorNode = this.$refs.CurRef as HTMLElement 
+				
 		},
+		destroyed() {
+
+			this.ParentNode?.removeEventListener('mouseenter', 	this.defineListenersAction)
+			this.ParentNode?.removeEventListener('mouseleave', 	this.defineListenersAction)
+			this.ParentNode?.removeEventListener('click', 			this.defineListenersAction)
+
+		},	
 		methods: {
-			SetCursorPosition(event: MouseEvent) {
+			setCursorPosition(event: MouseEvent) {
 
-				window.requestAnimationFrame( () => {
-					if ( this.CursorNode && this.ParentNodeRect ) {
-
-						this.CursorNode.style.top 	= `${(event.y - this.ParentNodeRect.top) 	- this.CursorNodeRect.H }px`
-						this.CursorNode.style.left 	= `${(event.x - this.ParentNodeRect.left) - this.CursorNodeRect.W }px`
-
+				requestAnimationFrame( () => {
+					if ( this.CursorNode && this.ParentNode ) {
+						this.CursorNode.style.top 	= `${ event.y - this.ParentNode.getBoundingClientRect().y }px`;
+						this.CursorNode.style.left 	= `${ event.x - this.ParentNode.getBoundingClientRect().x }px`;
 					}
 				})
 
 			},
-			AnimateCursor( config = {} ) {
+			animateCursor( config = {} ) {
 
 				this.$AnimeJS.remove( this.CursorNode )
 
@@ -72,72 +77,57 @@
 					targets: this.CursorNode,
 					opacity: [0, 0.1],
 					scale: [0, 10],
-					easing: "easeInOutQuad",
+					easing: 'easeInOutQuad',
 					duration: 1000,
 				}
 
-				this.$AnimeJS({...Default, ...config})
+				this.$AnimeJS({ ...Default, ...config })
 
 			},
-			ListenersAction(event: MouseEvent) {
+			defineListenersAction(event: MouseEvent) {
 
-				this.CursorFX_state = true
+				this.CursorShowed = true
 
 				const EventProperty = { capture: true }
 
 				switch (event.type) {
 
-					case `mouseenter`:
+					case 'mouseenter':
 
-						this.AnimateCursor({
+						this.animateCursor({
 							begin: () => {
-								window.addEventListener("mousemove", this.SetCursorPosition, EventProperty);
+								window.addEventListener('mousemove', this.setCursorPosition, EventProperty);
 							}
 						}); break;
 
-					case `mouseleave`:
+					case 'mouseleave':
 
-						this.AnimateCursor({
-							direction: "reverse",
+						this.animateCursor({
+							direction: 'reverse',
 							complete: () => { 
 								
-								this.CursorFX_state = false;
+								this.CursorShowed = false;
 
-								window.removeEventListener("mousemove", this.SetCursorPosition, EventProperty ); 
+								window.removeEventListener('mousemove', this.setCursorPosition, EventProperty ); 
 
 							},
 						}); break;
 
-					case `click`:
+					case 'click':
 
-						this.SetCursorPosition(event)
+						this.setCursorPosition(event)
 
-						this.AnimateCursor({
+						this.animateCursor({
 							opacity: [this.CursorNode?.style.opacity ?? 1, .5],
 							scale: [10, 5],
 							duration: 250,
-							direction: "alternate",
+							direction: 'alternate',
 						}); break;
 
 				}
 
 			},
 		},
-		mounted() {
-
-			this.ParentNode = ( this.$refs.CurWrap 	as HTMLElement ).parentElement
-			this.CursorNode = ( this.$refs.CurRef 	as HTMLElement )
-				
-		},
-		destroyed() {
-
-			if ( this.ParentNode ) {
-				this.ParentNode.addEventListener("mouseenter", 	this.ListenersAction )
-				this.ParentNode.addEventListener("mouseleave", 	this.ListenersAction )
-				this.ParentNode.addEventListener("click", 			this.ListenersAction )
-			}
-
-		}	
 	})
 
 </script>
@@ -151,7 +141,7 @@
 	left: 0px
 	height: 10px
 	width: 10px
-	background-color: $color5
+	background-color: rgb(var(--color-6))
 	z-index: 9999
 	border-radius: 100%
 	filter: blur(3px)
@@ -163,6 +153,6 @@
 		left: 0
 		width: 100%
 		height: 100%
-		-webkit-mask-image: radial-gradient(circle, rgba($color1, 1) 55%, rgba($color1, 0) 100%)
+		-webkit-mask-image: radial-gradient(circle, rgba(var(--color-1), 1) 55%, rgba(var(--color-1), 0) 100%)
 
 </style>

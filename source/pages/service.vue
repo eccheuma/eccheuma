@@ -45,7 +45,7 @@
 	export default Vue.extend({
 		layout: 'Application',
 		scrollToTop: false,  
-		transition: 'OpacityTransition', 
+		transition: 'opacity-transition', 
 		mixins: [ TransitionSound ],
 		head () {
 			return {
@@ -129,7 +129,7 @@
 			position: absolute; top: 0; left: 0;
 			font-size: 5vh;
 			font-weight: 700;
-			color: $color3;
+			color: rgb(var(--color-3));
 			text-align: center;
 			display: block;
 			height: 100%;
@@ -139,7 +139,7 @@
 		p {
 			margin: 0px;
 			font-size: 12px;
-			color: $color4;
+			color: rgb(var(--color-4));
 		}
 	}
 }
@@ -152,12 +152,12 @@
 // 			display: inline-block
 // 		hr
 // 			width: 100%
-// 			background-color: $color2
+// 			background-color: rgb(var(--color-2))
 // 		span
 // 			// background-color: red
 // 			font-size: 36px
 // 			font-weight: 700
-// 			color: $color3
+// 			color: rgb(var(--color-3))
 // 			text-align: center
 // 			display: inline-block
 // 			height: 100%
@@ -165,6 +165,6 @@
 // 		p
 // 			margin: 0px
 // 			font-size: 12px
-// 			color: $color4
+// 			color: rgb(var(--color-4))
 
 </style>

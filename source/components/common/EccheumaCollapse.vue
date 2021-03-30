@@ -1,8 +1,7 @@
 <template>
-	<div class="eccheuma_collapse-container" ref="collapse" :style="styleObject">
-		<div class="test" ref="test"></div>
-		<div class="eccheuma_collapse-wrap" ref="wrap">
-			<slot></slot>
+	<div ref="collapse" class="eccheuma_collapse-container" :style="styleObject">
+		<div ref="wrap" class="eccheuma_collapse-wrap">
+			<slot />
 		</div>
 	</div>
 </template>
@@ -11,7 +10,7 @@
 
 .eccheuma_collapse {
 	&-container {
-		overflow-y: hidden;
+		overflow: hidden;
 		will-change: height;
 		transition: {
 			property: height;
@@ -32,10 +31,12 @@ import Vue, { PropOptions } from 'vue'
 export default Vue.extend({
 	props: {
 		active: {
+			type: Boolean,
 			required: true,
-			default: false,
 		},
 		options: {
+			type: Object,
+			required: false,
 			default() {
 				return {
 					duration: 500,
@@ -52,15 +53,6 @@ export default Vue.extend({
 			InnerHeight: 0,
 
 		}
-	},
-	updated() {
-
-		if( this.active && !this.InChange ) {
-			this.$nextTick().then(async () => {
-				this.InnerHeight = await this.GetInnerHeight()
-			})
-		}
-
 	},
 	computed: {
 		styleObject(): any {
@@ -79,6 +71,18 @@ export default Vue.extend({
 			},
 		},
 	},
+	mounted() {
+		this.Collapse = this.active;
+	},
+	updated() {
+
+		if ( this.active && !this.InChange ) {
+			this.$nextTick().then(async () => {
+				this.InnerHeight = await this.GetInnerHeight()
+			})
+		}
+
+	},
 	methods: {
 		async ToggleCollapse() {
 
@@ -96,12 +100,8 @@ export default Vue.extend({
 
 			const CONTAINER_NODE = this.$refs.wrap as HTMLElement;
 
-			return new Promise(resolve => {
-
-				console.log("PROMISE")
-
+			return new Promise((resolve) => {
 				resolve(CONTAINER_NODE.getBoundingClientRect().height)
-
 			})
 			
 		},
@@ -109,16 +109,6 @@ export default Vue.extend({
 			this.$emit('collapsed', this.active)
 		}
 	},
-	mounted() {
-
-		this.Collapse = this.active;
-
-		// const EL 		= this.$refs.test as HTMLElement
-		// const VNODE 	= this.$slots.default?.[0].elm
-		// 
-		// VNODE ? EL.append(VNODE.cloneNode()) : null
-
-	}
 })
 
 </script>

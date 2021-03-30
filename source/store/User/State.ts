@@ -9,6 +9,15 @@ import 'firebase/database'
 // TYPES
 	import { USER_STATE } from '~/types/User'
 
+// STATE
+	export const state = () => ({
+
+		UserProfileArea: false,
+
+		UserState: new Object() as USER_STATE
+
+	})
+
 // CURENT STATE
 	export type CurentState = ReturnType<typeof state>
 
@@ -18,15 +27,6 @@ import 'firebase/database'
 			State: CurentState
 		}
 	}
-
-// STATE
-	export const state = () => ({
-
-		UserProfileArea: false,
-
-		UserState: new Object as USER_STATE
-
-	})
 
 // MUTATIONS
 	export const mutations: MutationTree<CurentState> = {

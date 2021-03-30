@@ -60,28 +60,28 @@
 
 		&_item {
 			border-radius: .7rem;
-			border: 1px solid $color3;
+			border: 1px solid rgb(var(--color-3));
 			padding: 10px 15px 20px;
 			margin: 3vh 0;
-			color: $color5;
+			color: rgb(var(--color-6));
 		}
 
 		.message {
 			&-owner {
-				border: 1px solid $color4 !important
+				border: 1px solid rgb(var(--color-4)) !important
 			}
 			&-support {
-				border: 1px solid $colorWarning !important
+				border: 1px solid var(--color-Warning) !important
 			}
 			&-unread {
-				border: 1px solid rgba($color4, .25);
+				border: 1px solid rgba(var(--color-4), .25);
 				animation: unread 1s infinite alternate;
 				@keyframes unread {
 					0% {
-						border: 1px solid rgba($color4, .25)
+						border: 1px solid rgba(var(--color-4), .25)
 					}
 					100% {
-						border: 1px solid rgba($color4, 1)
+						border: 1px solid rgba(var(--color-4), 1)
 					}
 				}
 			}	
@@ -109,8 +109,8 @@
 			padding: 15px 15px;
 			font-size: .8rem;
 			font-weight: 700;
-			background-color: $color6;
-			@media screen and ( max-width: $MobileBreakPoint ) {
+			background-color: rgb(var(--color-5));
+			@media screen and ( max-width: var(--mobile-breakpoint)) {
 				height: 20vh;
 			}
 		}

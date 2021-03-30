@@ -1,18 +1,18 @@
 <template>
-	<div key="Application"  id="ApplicationLayout" ref="ApplicationNode" :class="DarkUI ? `theme_dark` : `theme_light`">
+	<div id="ApplicationLayout" key="Application" ref="ApplicationNode" :class="`theme-${ UI }`">
 
 			<client-only>
 				
 				<vk-messages />
 
 				<!-- Модальный портал -->
-				<PortalTarget  name="Modal" :transition="MIXIN_Transition('Fading')" slim />
+				<portal-target name="Modal" :transition="MIXIN_Transition('Fading')" slim />
 
 				<!-- Лоадер -->
-				<Page-Loader />
+				<page-loader />
 
 				<!-- Модуль регистрации -->
-				<Registration />
+				<registration />
 
 			</client-only>
 
@@ -22,15 +22,15 @@
 			<client-only>
 
 				<!-- Нотификация -->
-				<Notification />
+				<notification />
 
 				<!-- Профиль пользователя -->
-				<User-Profile v-if="LoginStatus == true && !$isMobile"></User-Profile>
+				<user-profile v-if="LoginStatus == true && !$isMobile" />
 
 			</client-only>
 
 			<!-- Карусель -->
-			<Header-Carousel/>
+			<header-carousel />
 
 			<!-- Навигация -->
 
@@ -39,20 +39,20 @@
 			</template>
 
 			<template v-else>
-				<header-navigation :search="true" :background="true"/>
+				<header-navigation :search="true" :background="true" />
 			</template>
 
 			<!-- Основной контент -->	
 			<section class="content-wrapper">
 
-				<scroll-bar v-if="!$isMobile"/>
+				<scroll-bar v-if="!$isMobile" />
 
-				<nuxt class="content-container"></nuxt>
+				<nuxt class="content-container" />
 
 			</section>
 
 			<!-- Футер -->
-			<Footer/>
+			<footer-component />
 
 	</div>    
 </template>
@@ -63,15 +63,15 @@
 	&::-webkit-scrollbar {
 		width: 10px;
 		&-track {
-			background-color: $color1;
-			// border: 1px solid $color3;
+			background-color: rgb(var(--color-1));
+			// border: 1px solid rgb(var(--color-3));
 		}
 		&-thumb {
 			border-radius: 2rem;
-			background-color: $color4;
-			border: 3px solid $color1;
+			background-color: rgb(var(--color-4));
+			border: 3px solid rgb(var(--color-1));
 			&:hover {
-				background-color: $color5;
+				background-color: rgb(var(--color-6));
 			}
 		}
 		&-button {
@@ -88,36 +88,43 @@
 
 .content {
 	&-wrapper {
+
+		display: grid;
+		grid-template: {
+			columns: 3vw auto 3vw;
+			rows: 1fr;
+		}
+
 		width: 100vw;
 		min-height: 100vh;
-		position: relative; 
+		
 	}
 	&-container {
 		width: 90vw;
 		margin: 0 auto;
-		@media screen and ( max-width: $MobileBreakPoint ) {
+		@media screen and ( max-width: var(--mobile-breakpoint)) {
 			width: 100vw;
 		}
 	}
 }
 
 .theme {
-	&_light {
+	&-light {
 		transition-duration: .75s;
-		background-color: $color6;
+		background-color: rgb(var(--color-5));
 	}
-	&_dark {
+	&-dark {
 		transition-duration: .75s;
-		background-color: $color1;
+		background-color: rgb(var(--color-1));
 	}
 }
-
 
 </style>
 
 <script lang="ts">
 
-/*⠄⠄⠄⢰⣧⣼⣯⠄⣸⣠⣶⣶⣦⣾⠄⠄⠄⠄⡀⠄⢀⣿⣿⠄⠄⠄⢸⡇⠄⠄ 
+/*
+	⠄⠄⠄⢰⣧⣼⣯⠄⣸⣠⣶⣶⣦⣾⠄⠄⠄⠄⡀⠄⢀⣿⣿⠄⠄⠄⢸⡇⠄⠄ 
 	⠄⠄⠄⣾⣿⠿⠿⠶⠿⢿⣿⣿⣿⣿⣦⣤⣄⢀⡅⢠⣾⣛⡉⠄⠄⠄⠸⢀⣿⠄ 
 	⠄⠄⢀⡋⣡⣴⣶⣶⡀⠄⠄⠙⢿⣿⣿⣿⣿⣿⣴⣿⣿⣿⢃⣤⣄⣀⣥⣿⣿⠄ 
 	⠄⠄⢸⣇⠻⣿⣿⣿⣧⣀⢀⣠⡌⢻⣿⣿⣿⣿⣿⣿⣿⣿⣿⠿⠿⠿⣿⣿⣿⠄ 
@@ -149,11 +156,12 @@
 	import PageLoader 		from '~/components/common/PageLoader.vue'
 
 	// TYPES
-	import type { I_CONTENT, CurentState as NotificationState } from '~/store/Notification.ts'
+	import type { NOTIFICATION_CONTENT } from '~/types/Notification.ts'
+
+	import type { VuexModules } from '~/types/VuexModules.ts'
 
 	// MODULE
 	export default Vue.extend({ 
-		mixins: [ Transition ],
 		components: {
 			PageLoader,
 			HeaderCarousel,
@@ -165,42 +173,34 @@
 			VkMessages: 			() => import('~/components/common/VK_Messages.vue'),
 			ScrollBar: 				() => import('~/components/common/ScrollBar.vue'),
 			Notification: 		() => import('~/components/common/Notification.vue'),
-			Footer: 					() => import('~/components/common/Footer.vue'),
+			FooterComponent: 	() => import('~/components/common/Footer.vue'),
 			/// Mobile components ========================================= //
 			MobileNavigation: () => import('~/components/_mobile/HeaderNavigation.vue'),
 		},
+		mixins: [ Transition ],
+		transition: 'layout-transition',
+		data() {
+			return {
+				someAction: false,
+			}
+		},
+		head(): any {
+			return {
+				link: [
+					{ rel: 'icon', href: `/${ this.someAction ? 'IconAction' : 'Icon' }.svg` },
+				]
+			}
+		},
 		computed: {
 			...mapState({
-				DarkUI:				( state: any ): boolean => state.ScrollBar.DarkUI,
-				LoginStatus:	( state: any ): boolean => state.Auth.Auth.LoginStatus,
-				Muted:				( state: any ): boolean => state.Sound.Global.Mute,
-				AppScroll:		( state: any ): boolean => state.AppScroll
+				UI:						state => (state as VuexModules).App.UI,
+				LoginStatus:	state => (state as VuexModules).Auth.Auth.LoginStatus,
+				Muted:				state => (state as VuexModules).Sound.Global.Mute,
+				AppScroll:		state => (state as VuexModules).AppScroll
 			}),
 			LocalThemeStatus() {
 				return localStorage.theme
 			},
-		},
-		methods: {
-			...mapMutations({
-				SetDeviceType: 'SetDeviceType',
-				ChangeNotificationState: 'Notification/Change_Status'
-			}),
-			...mapActions({
-				Set_Notification: 'Notification/Set_Notification'
-			}),
-			RegisterRequestNotification() {
-
-				const CONTENT: I_CONTENT = {
-					message: 'Если вы ещё не зарегистрированны - То сейчас самое лучшее время!',
-					description: 'Благодаря регистрации на сайте, вы получите личный кабинет с возможностью мониторинга состояния заказа, просмотр заявок, и возможность коментиривания и оценки контента.',
-					link: '',
-				}
-
-				if( this.LoginStatus ) {
-					this.Set_Notification( CONTENT )
-				}
-
-			}
 		},
 		mounted() {
 
@@ -210,7 +210,33 @@
 				}, 750);
 			}
 
-			setTimeout(() => this.RegisterRequestNotification(), 6e5 );
+			setTimeout( this.setRegisterNatification, 6e5 );
+
+		},
+		methods: {
+
+			...mapMutations({
+				SetDeviceType: 'SetDeviceType',
+				ChangeNotificationState: 'Notification/Change_Status'
+			}),
+
+			...mapActions({
+				Set_Notification: 'Notification/Set_Notification'
+			}),
+
+			setRegisterNatification() {
+
+				const C: NOTIFICATION_CONTENT = {
+					message: 'Если вы ещё не зарегистрированны - То сейчас самое лучшее время!',
+					description: 'Благодаря регистрации на сайте, вы получите личный кабинет с возможностью мониторинга состояния заказа, просмотр заявок, и возможность коментиривания и оценки контента.',
+					link: '',
+				}
+
+				if ( !this.LoginStatus ) {
+					this.Set_Notification(C)
+				}
+
+			}
 
 		}
 	})

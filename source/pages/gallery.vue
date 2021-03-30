@@ -1,7 +1,7 @@
 <template>
 	<main class="gallery-container">
 
-		<promo-banner promo-type="Gallery"></promo-banner>
+		<promo-banner promo-type="Gallery" />
 
 		<section class="gallery-title">
 
@@ -31,7 +31,6 @@
 			</vue-image>
 		</section>
 
-
 		<section class="gallery-title">
 
 			<span>Галлерея изображений</span>
@@ -42,11 +41,11 @@
 
 		<section class="gallery-content">
 
-			<page-selector :payload="PageParams"/>
+			<pagination :payload="PageParams" />
 
-			<nuxt-child :key="$route.path" :load-range="LoadRange" />
+			<nuxt-child :key="$route.path" />
 
-			<page-selector :payload="PageParams"/>
+			<pagination :payload="PageParams" />
 
 		</section>
 
@@ -63,7 +62,7 @@
 		gap: 15px;
 		grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
 
-		@media screen and ( max-width: $MobileBreakPoint ) {
+		@media screen and ( max-width: var(--mobile-breakpoint)) {
 			grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 		}
 		
@@ -86,7 +85,7 @@
 
 		grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
 
-		@media screen and ( max-width: $MobileBreakPoint ) {
+		@media screen and ( max-width: var(--mobile-breakpoint)) {
 			grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 		}
 
@@ -94,26 +93,26 @@
 	&-title {
 
 		border: { 
-			top: 1px solid $color2;
+			top: 1px solid rgb(var(--color-2));
 		};
 
-		margin: { top: 5vh }; padding: 3vh 0;
+		padding: 3vh 0;
 
 		span {
 			
 			display: block; text-align: center; font-weight: 600;
 
 			&:nth-of-type(1) {
-				font-size: $FontSize1; color: $color5; 
+				font-size: var(--font-size-1); color: rgb(var(--color-6)); 
 			}
 			&:nth-of-type(2) {
-				font-size: $FontSize3; color: $color4;
+				font-size: var(--font-size-3); color: rgb(var(--color-4));
 			}
 			
 		}
 
 		hr {
-			background-color: $color3; width: 50%;
+			background-color: rgb(var(--color-3)); width: 50%;
 		}	
 
 	}
@@ -126,71 +125,70 @@
 
 	import Vue from 'vue'
 
-	import firebase from "firebase/app"
-	import "firebase/database"
+	import firebase from 'firebase/app'; import 'firebase/database';
 
 	import { mapMutations } from 'vuex'
 
 	import TransitionSound from '~/assets/mixins/TransitionSound'
 
-	const LOAD_RANGE = 6
-	
+// LOAD POLITIC
+	import { load_ranges } from '~/config/LoadPolitic.ts'
+
+// MODULE
 	export default Vue.extend({ 
+		components: {
+			Pagination: 	() => import('~/components/common/Pagination.vue'),
+			PromoBanner: 	() => import('~/components/promo/PromoBanner.vue'),
+			VueImage: 		() => import('~/components/common/ImageComponent/Image.vue'),
+		},
+		mixins: [ TransitionSound ],
 		layout: 'Application', 
 		scrollToTop: false, 
+		transition: 'opacity-transition',
 		loading: false, 
-		transition: 'OpacityTransition',
-		mixins: [ TransitionSound ],
-		head () {
-			return {
-				title: `Eccheuma | Галерея`,
-				meta: [
-					{ 
-						hid: 'description', name: 'description', 
-						content: `Галлерея изображений. Начиная от логотипов и полноценных макетов, заканчивая всякими набросками и непринятыми вариантами работ.`
-					}
-				]
-			}
-		},
 		data() {
 			return {
 
-				LoadRange: LOAD_RANGE,
+				LoadRange: load_ranges.gallery,
 
 				PageParams: {
 					scrollTarget: 1833, 
 					section: 'gallery', 
 					collumns: 2, 
-					params: `range=${LOAD_RANGE}`
+					params: `range=${ load_ranges.gallery }`
 				},
 
 				GalleryWrap: false,
 
 			}
 		},
-		components: {
-			PageSelector: () => import('~/components/common/PageSelector.vue'),
-			PromoBanner: () => import  ( '~/components/promo/PromoBanner.vue' ),
-			VueImage: () => import  ( '~/components/common/ImageComponent/Image.vue' ),
+		head () {
+			return {
+				title: 'Eccheuma | Галерея',
+				meta: [
+					{ 
+						hid: 'description', 
+						name: 'description', 
+						content: 'Галлерея изображений. Начиная от логотипов и полноценных макетов, заканчивая всякими набросками и непринятыми вариантами работ.'
+					}
+				]
+			}
+		},
+		async created() {
+
+			const GalleryQuantity: number = await firebase.database().ref('Gallery').once('value').then( data => data.numChildren() )
+
+			this.ChangePageQuantity( Math.ceil(GalleryQuantity / this.LoadRange) )
+
 		},
 		methods: {
 			...mapMutations({
 				ChangePageQuantity: 'PageSelector/ChangePageQuantity'
 			}),
 			ShowGalleryWrap() {
-				this.GalleryWrap = this.GalleryWrap == false ? true : false
+				this.GalleryWrap = !this.GalleryWrap;
 			},
 		},
-		async created() {
-
-			const GalleryQuantity: number = await firebase.database().ref("Gallery").once('value').then( data => data.numChildren() )
-
-			const A = GalleryQuantity / this.LoadRange
-			const B = A % 1 == 0 ? Math.trunc(A) : Math.trunc(A) + 1 
-
-			this.ChangePageQuantity(B)
-
-		}
 	})
 
 </script>

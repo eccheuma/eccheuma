@@ -1,5 +1,5 @@
 <template>
-	<div class="Parallax-Wrapper" ref="Wrapper">
+	<div class="Parallax-Wrapper" ref="Wrapper" :data-test="inViewport">
 
 		<div class="Parallax-Container" ref="Container">
 			<slot></slot>
@@ -52,6 +52,8 @@
 		data() {
 			return {
 
+				inViewport: false,
+
 				Init: false,
 
 				ElementPosition: {} as { Top: number, Bottom: number },
@@ -89,11 +91,6 @@
 					const OFFSET 	= this.options.OpacityFadeOffset || this.DefaultOptions.OpacityFadeOffset
 					const RANGE 	= Math.abs( ( this.ScrollPosition + OFFSET ) - ELEMENT.Bottom )
 
-					const VIEW = {
-						Top: this.ScrollPosition,
-						Bottom: this.ScrollPosition + window.innerHeight,
-					}
-
 					// Нижняя граница для конечного затухания. ENG: Endpoint of scrollPosition where opacity should gonna reach 0 
 
 					if ( this.ScrollPosition <= ELEMENT.Bottom - OFFSET ) {
@@ -106,6 +103,15 @@
 			}
 		},
 		watch: {
+			inViewport: {
+				handler() {
+					if ( this.inViewport ) {
+						window.addEventListener('scroll', this.ScrollHandler);
+					} else {
+						window.removeEventListener('scroll', this.ScrollHandler);
+					}
+				},
+			},
 			TranslateValue: {
 				handler() { 
 					this.StyleElement(
@@ -125,6 +131,9 @@
 				}
 			}
 		},
+		mounted() {
+			this.InitElement()
+		},
 		methods: {
 			InitElement(): void {
 
@@ -134,8 +143,12 @@
 					Top: ELEMENT.getBoundingClientRect().top + pageYOffset, 
 					Bottom: ELEMENT.getBoundingClientRect().bottom + pageYOffset,
 				}
+
+				new IntersectionObserver((entry) => {
+					this.inViewport = entry.pop()?.isIntersecting || false 
+				}).observe(this.$el)
 				
-				window.addEventListener('scroll', this.ScrollHandler, { passive: true, capture: true });
+				window.addEventListener('scroll', this.ScrollHandler);
 
 				this.Init = true
 
@@ -154,7 +167,7 @@
 			},
 			ScrollHandler(): void {
 
-				if( this.ScrollPosition != Math.trunc( window.scrollY )) {
+				if ( this.inViewport && this.ScrollPosition !== Math.trunc( window.scrollY )) {
 					requestAnimationFrame( () => {
 						this.ScrollPosition = Math.trunc( window.scrollY );
 					})
@@ -168,17 +181,13 @@
 					const ELEMENT = this.$refs[_REF] as Element
 					
 					requestAnimationFrame( () => { 
-						ELEMENT.setAttribute("style", _CSS ) 
+						ELEMENT.setAttribute('style', _CSS ) 
 					})
 
 				}
 				
 			}
 		},
-		mounted() {
-			this.InitElement()
-		},
 	})
 	
 </script>
-

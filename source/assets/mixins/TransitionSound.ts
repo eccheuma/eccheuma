@@ -3,21 +3,21 @@
 
 import Vue from 'vue'
 
-import EmitSound from '~/assets/mixins/EmitSound.ts'
+import EmitSound from '~/assets/mixins/EmitSound'
 
 export default Vue.extend({
 	mixins: [ EmitSound ],
 	mounted() {
 
-		setTimeout(() => {
-			this.EmitSound('Translate', { volume: .35, loop: false, })
-		}, 750);
+		// setTimeout(() => {
+		// 	this.EmitSound('In', { rate: .5, volume: .25 })
+		// }, 500);
 
 	},
 	destroyed() {
 
 		setTimeout(() => {
-			this.EmitSound('Out', { volume: .35, loop: false, })
+			this.EmitSound('Out', { rate: .6, volume: .25 })
 		}, 250);
 
 	},

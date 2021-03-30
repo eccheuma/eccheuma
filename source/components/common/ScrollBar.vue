@@ -1,65 +1,70 @@
 <template>
-	<div class="scroll_panel-wrap">
-		<div class="scroll_panel-container">
+	<div class="scroll_panel-container">
 
-			<transition name="Fading">
-				<section class="scroll_panel-messages" v-if="LoginStatus">
+		<transition name="Fading">
+			<section class="scroll_panel-messages" v-if="LoginStatus">
 
-					<i @click="ScrollPage(0)" v-b-toggle="`Header_menu_collapse`" class="fas" 
-						:class="[
-							{ 'fa-envelope-open-text active': NewMessages > 0 },
-							{ 'fa-envelope': NewMessages == 0 },
-						]"/>
+				<i 
+					@click="ScrollPage(0)" 
+					v-b-toggle="`Header_menu_collapse`" 
+					class="fas" 
+					:class="[
+						{ 'fa-envelope-open-text active': NewMessages > 0 },
+						{ 'fa-envelope': NewMessages == 0 },
+					]"/>
 
-					<span>{{ NewMessages }}</span>
-					
-					<!-- <b-popover
-						class="scroll_bar-container-Message"
-						container="scroll-bar" 
-						target="ScrollMessages" 
-						triggers="hover" 
-						:delay="{ show: 250, hide: 0 }"
-						placement="right">
-						<template v-if="LastMessage">
-							<h6>От {{ LastMessage.from }}</h6>
-							<hr>
-							<p>{{ LastMessage.message }}</p>
-						</template>
-						<template v-else>
-							<p>Нет новых сообщений</p>
-						</template>
-					</b-popover> -->
-				</section>
-			</transition>
-
-			<section class="scroll_panel-switch">
-
-				<i class="fas fa-adjust"></i>
-
-				<div class="scroll_panel-switch-checker" id="ScrollTheme" @click="StateThemeChange">
-					<span class="switch" :class="{ active: DarkUI }"></span>
-				</div>
-
-				<b-popover target="ScrollTheme" triggers="hover" placement="right"
-					:delay="{ show: 250, hide: 0 }">
-					Смена темы
-				</b-popover>
-
+				<span>{{ NewMessages }}</span>
+				
+				<!-- <b-popover
+					class="scroll_bar-container-Message"
+					container="scroll-bar" 
+					target="ScrollMessages" 
+					triggers="hover" 
+					:delay="{ show: 250, hide: 0 }"
+					placement="right">
+					<template v-if="LastMessage">
+						<h6>От {{ LastMessage.from }}</h6>
+						<hr>
+						<p>{{ LastMessage.message }}</p>
+					</template>
+					<template v-else>
+						<p>Нет новых сообщений</p>
+					</template>
+				</b-popover> -->
 			</section>
+		</transition>
 
-			<section class="scroll_panel-arrows">
+		<section class="scroll_panel-switch">
 
-				<i class="fas fa-sort-up" @click="ScrollPage(0)" />
+			<i class="fas fa-adjust" />
 
-				<i class="fas fa-sort-down" @click="ScrollPage(9999)" />
+			<div 
+				id="ScrollTheme" 
+				class="scroll_panel-switch-checker" 
+				@click="changeTheme(UI === 'light' ? 'dark' : 'light')"
+				>
+				<span class="switch" :class="{ active: UI === 'dark' }" />
+			</div>
 
-			</section>
+			<!-- <b-popover target="ScrollTheme" triggers="hover" placement="right"
+				:delay="{ show: 250, hide: 0 }">
+				Смена темы
+			</b-popover> -->
 
-		</div>
+		</section>
+
+		<section class="scroll_panel-arrows">
+
+			<i class="fas fa-sort-up" @click="scrollPage(0)" />
+
+			<i class="fas fa-sort-down" @click="scrollPage(9999)" />
+
+		</section>
+
 	</div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 
 $scroll_w: 3vw;
 
@@ -69,43 +74,39 @@ $scroll_w: 3vw;
 	&:before {
 		content: '';
 		position: absolute; top: 0; left: #{ (100% - $s) / 2 };
-		width: $s; height: 1px; background-color: $color3;
+		width: $s; height: 1px; background-color: rgb(var(--color-3));
 	}
 };
 
 .scroll_panel {
-	&-wrap {
-		position: absolute; top: 0; left: 0; z-index: 1000;
-		height: 100%; width: $scroll_w;
-		background-color: $color1;
-	}
 	&-container {
 		position: sticky; top: 0; left: 0;
 		display: grid; grid-template: { columns: 1fr; rows: repeat(10, minmax(auto, 1fr))}; row-gap: 10px; 
 		align-items: center;
 		height: 100vh; width: $scroll_w;
+		background-color: rgb(var(--color-1));
 	}
 	&-messages {
 		grid-row: -3;
 		text-align: center;
 		i {
 			display: block; width: 100%; padding: 10px 0;
-			color: $color4;
+			color: rgb(var(--color-4));
 		}
 		span {
-			color: $color4; font-weight: 700; font-size: $FontSize3;
+			color: rgb(var(--color-4)); font-weight: 700; font-size: var(--font-size-3);
 		}
 	}
 	&-switch {
 		grid-row: -2;
-		text-align: center; color: $color3;
-		background-color: $color1;
+		text-align: center; color: rgb(var(--color-3));
+		background-color: rgb(var(--color-1));
 		padding: 10px 0;
 		@extend %TopBorder;
 		&-checker {
 			position: relative; margin: 0px auto; margin-top: 10px;
 			height: calc(#{$scroll_w} + 15px); width: 50%; 
-			background-color: $color3;
+			background-color: rgb(var(--color-3));
 			border: {
 				radius: .7rem
 			}
@@ -113,7 +114,7 @@ $scroll_w: 3vw;
 			span { 
 				position: absolute; top: 0; left: 0;
 				height: calc(#{$scroll_w} / 2); width: calc(#{$scroll_w} / 2);
-				background-color: $color2;
+				background-color: rgb(var(--color-2));
 				transform: scale(.75);
 				transition-duration: 500ms;
 				border: {
@@ -123,7 +124,7 @@ $scroll_w: 3vw;
 
 			.active {
 				top: calc(#{$scroll_w} - 10px);
-				background-color: $color6;
+				background-color: rgb(var(--color-5));
 			}
 
 		}
@@ -135,10 +136,10 @@ $scroll_w: 3vw;
 		i {
 			display: block; width: 100%;
 			text-align: center; font-size: 1.5vw;
-			color: $color4;
+			color: rgb(var(--color-4));
 			transition: color 250ms ease; will-change: color;
 			&:hover {
-				color: $color5
+				color: rgb(var(--color-6))
 			} 
 		}
 	}
@@ -150,15 +151,19 @@ $scroll_w: 3vw;
 
 	import Vue from 'vue'
 
-	import { mapState, mapMutations, mapActions } from 'vuex'
+// VUEX
+	import { mapState, mapMutations } from 'vuex'
 
+// TYPES
 	import type { VuexModules } from '~/types/VuexModules'
+	import type { APP_THEME } 	from '~/types/App.ts'
 
+// MIXINS
 	import EmitSound from '~/assets/mixins/EmitSound'
 
+// MODULE
 	export default Vue.extend({
 		mixins: [ EmitSound ],
-		props: ['name'],
 		data() {
 			return {
 				LocalStatusOfTumbler: false
@@ -167,45 +172,56 @@ $scroll_w: 3vw;
 		computed: {
 
 			...mapState({
-				DarkUI: 				state => (state as VuexModules).ScrollBar.DarkUI,
+				UI: 						state => (state as VuexModules).App.UI,
 				LoginStatus: 		state => (state as VuexModules).Auth.Auth.LoginStatus,
 				Messages: 			state => (state as VuexModules).User.Messages.Messages,
 				NewMessages: 		state => (state as VuexModules).User.Messages.NewMessagesCount
 			}),
 
 		},
-		watch: {
-			Messages: {
-				handler() {
-					console.log(this.Messages)
-				}
+		mounted() {
+
+			if ( this.CLIENT_RENDER_CHECK ) {
+
+				const LOCAL_UI_THEME = window.localStorage.getItem('UI') || 'light';
+
+				this.setUI(LOCAL_UI_THEME)
+
 			}
+
 		},
 		methods: {
-			...mapActions({
-				ChangeUITheme: 'ScrollBar/ChangeUITheme',
+			...mapMutations({
+				setUI: 'App/setUI',
 			}),
-			ScrollPage(to: 0 | 9999) {
+			scrollPage(to: 0 | 9999) {
+
+				this.EmitSound('On', { rate: .5, volume: .25 })
+
 				window.scrollTo({
 					top: to,
 					left: 0,
 					behavior: 'smooth'
 				});
 			},
-			StateThemeChange() {
+			changeTheme(theme: APP_THEME) {
 
-				this.DarkUI ? this.EmitSound(`Off`, { rate: 1.25 }) : this.EmitSound(`Off`, { rate: .75 })
+				this.setUI(theme); 
 
-				this.ChangeUITheme()
+				switch (theme) {
+
+					case 'light': 
+						this.EmitSound('Off', { rate: 1.25, volume: .25 }); 
+					break;
+
+					case 'dark': 	
+						this.EmitSound('Off', { rate: .75, volume: .25 }); 
+					break;
+
+				}
 
 			},
 		},
-		mounted() {
-
-			if ( localStorage.theme == "true") {
-				this.ChangeUITheme(true)
-			}
-		}
 	})
 
 </script>

@@ -15,7 +15,7 @@
 	import Vue from 'vue'
 
 	export default Vue.extend({
-		transition: 'OpacityTransition'
+		transition: 'opacity-transition'
 	})
 
 </script>
@@ -23,9 +23,9 @@
 <style lang="sass" scoped>
 
 .container
-	background-color: $color1
+	background-color: rgb(var(--color-1))
 	height: 100vh
-	color: $color5
+	color: rgb(var(--color-6))
 	&::before
 		content: ''
 		display: block
@@ -44,10 +44,10 @@
 		font-weight: 700
 	p
 		font-weight: 500
-		font-size: $FontSize2
+		font-size: var(--font-size-3)
 	a
 		font-weight: 500
-		font-size: $FontSize2
+		font-size: var(--font-size-3)
 		text-decoration: line
 
 </style>

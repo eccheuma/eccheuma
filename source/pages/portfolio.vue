@@ -3,9 +3,9 @@
 
 		<promo-banner promo-type="Style" :order="0" />
 
-		<navigation :category="HeaderMenu" :col="3" />
+		<navigation :category="HeaderMenu" />
 
-		<nuxt-child :key="$route.path"></nuxt-child>
+		<nuxt-child :key="$route.path" />
 
 	</main>
 </template>
@@ -24,7 +24,7 @@ main {
 	import TransitionSound from '~/assets/mixins/TransitionSound'
 	import EmitSound from '~/assets/mixins/EmitSound';
 	
-	export default { layout: 'Application', scrollToTop: false, transition: 'OpacityTransition', 
+	export default { layout: 'Application', scrollToTop: false, transition: 'opacity-transition', 
 		mixins: [ TransitionSound, EmitSound ],
 		head () {
 			return {
@@ -95,7 +95,7 @@ main {
 	font-size: 12px
 	font-weight: 700
 	border-radius: 12px
-	color: $color5 !important
+	color: rgb(var(--color-6)) !important
 	transition-duration: .5s
 	&:after
 		transition-duration: .5s
@@ -104,8 +104,8 @@ main {
 		width: 100%
 		height: 1px
 		transform: scaleX(1) translateY(-47px)
-		background-color: rgba($color5,1)
-		@media screen and ( max-width: $MobileBreakPoint )
+		background-color: rgba(var(--color-6),1)
+		@media screen and ( max-width: var(--mobile-breakpoint))
 			transform: scaleX(1) translateY(-36px) 
 
 $TransitionDuration: .25s
@@ -130,10 +130,10 @@ $TransitionDuration: .25s
 			border-radius: .7rem
 			width: .25rem
 			height: 2vh
-			background-color: $color3 
+			background-color: rgb(var(--color-3)) 
 	nav 
 		margin: 0px 15px
-		color: rgba($color6,.70)
+		color: rgba(var(--color-5),.70)
 		a 
 			cursor: pointer
 			padding: 15px 0px
@@ -144,9 +144,9 @@ $TransitionDuration: .25s
 			border-radius: 12px
 			i 
 				display: block
-				font-size: $FontSize4
+				font-size: var(--font-size-4)
 				margin-bottom: 12px
-				color: $color3 
+				color: rgb(var(--color-3)) 
 			&:before 
 				transition-duration: $TransitionDuration
 				content: ''
@@ -157,11 +157,11 @@ $TransitionDuration: .25s
 				background-color: grey
 			&:hover 
 				text-decoration: none
-				color: rgba($color5, 1)
+				color: rgba(var(--color-6), 1)
 				transition-duration: $TransitionDuration
 				i 
 					transition-duration: $TransitionDuration
-					color: $color4 
+					color: rgb(var(--color-4)) 
 				&:before 
 					transition-duration: $TransitionDuration
 					content: ''
@@ -175,6 +175,6 @@ $TransitionDuration: .25s
 
 .Portfolio-Case
 	min-height: 400px
-	background-color: $color1
+	background-color: rgb(var(--color-1))
 
 </style>

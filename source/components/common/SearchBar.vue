@@ -78,18 +78,18 @@
 			width: 100%
 			text-align: center
 			padding: 2px 15%
-			font-size: $FontSize4
+			font-size: var(--font-size-4)
 			font-weight: 700
 			line-height: 25px
 			border-radius: .7rem
 			border: 0px
-			background-color: $color6
+			background-color: rgb(var(--color-5))
 	&-Modal
 		position: absolute
 		text-align: center
-		color: $color5
+		color: rgb(var(--color-6))
 		font-size: 12px
-		background-color: rgba($color1,.75)
+		background-color: rgba(var(--color-1),.75)
 		backdrop-filter: blur(3px)
 		top: calc(-100% - 20px)
 		height: 100%
@@ -97,6 +97,6 @@
 		margin-bottom: -100%
 		padding: 20px 10px
 		border-radius: .7rem
-		@extend %gradient_border
+		@extend %gradient_border !optional
 
 </style>

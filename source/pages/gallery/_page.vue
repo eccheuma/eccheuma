@@ -1,17 +1,21 @@
 <template>
 	<section class="gallery-page">
-		
-		<vue-image v-for="(image, index) in Images" :key="`GALLERY-IMAGE-${ image.ID }`"
-		
-			class="gallery-item"
 
-			v-observe-visibility="ObserveVisibilityOptions"
+		<vue-image
+			v-for="(image, index) in Images" 
 
 			:id="`GalleryImage_${ index }`"
+			:key="`GALLERY-IMAGE-${ image.ID }`"
+
+			ref="images" 
+		
+			class="gallery-item"
 			:style="`order: ${( BasePoint - image.ID ) + Images.length }`"
+
 			:content="image.content" 
 			:sections="{ date: true, description: true, zoom: true }" 
-			:property="{ fit: 'cover', type: 'gallery', collumn: 10 }">
+			:property="{ fit: 'cover', type: 'gallery', collumn: 10 }"
+		>
 
 			{{ image.content.description }}
 
@@ -27,33 +31,33 @@
 	// VUEX
 		import { mapActions, mapMutations, mapState } from 'vuex'
 
+	// FIREBASE
+		import firebase from  'firebase/app'
+		import 'firebase/database'
+
 	// VUEX MODULE TYPE MAP
 		import type { VuexModules } from '~/types/VuexModules';
 
-	// FIREBASE
-		import firebase from "firebase/app"
-		import "firebase/database"
-
 	// MIXINS
-		import ViewPortAnimation from "~/assets/mixins/ViewPortAnimation"
+		import ResetPageContent 				from '~/assets/mixins/ResetPageContent.ts'
+		import PageTransitionProperty 	from '~/assets/mixins/PageTransitionProperty.ts'
+		import IntersectionObserver 		from '~/assets/mixins/IntersectionObserver.ts'
 
 	// TYPES
 		import type { PAYLOAD } 				from '~/store/PageContent'
-		import type { IMAGE_PROPERTY } 	from '~/types/Image.ts'
+
+	// LOAD POLITIC
+		import { load_ranges } from '~/config/LoadPolitic.ts'
 
 	// COMPONENTS
 		import VueImage from '~/components/common/ImageComponent/Image.vue'
 
-	// VARIABLES
-	const DB_SECTION = 'Gallery'
-
 	// MODULE
 	export default Vue.extend({
-		transition: 'OpacityTransition', 
-		mixins: [ ViewPortAnimation ],
 		components: {
 			VueImage
 		},
+		mixins: [ ResetPageContent, PageTransitionProperty, IntersectionObserver ],
 		async middleware({ params, query, redirect }) {
 
 			const PAGE 			= Number( params.page.slice(-1) ) // Parse page_1: str => 1: int
@@ -63,26 +67,16 @@
 
 			const OutRange = QUANTITY + LOADRANGE < PAGE * LOADRANGE 
 
-			if ( OutRange ) {
-				return redirect('/error')
-			}
+			if ( OutRange ) { redirect('/error') }
 
     },
-		async asyncData({ params, query }): Promise<any> {
+		asyncData({ params, query }) {
 
-			const Page 			= Number( params.page.slice(-1) ) // page_1 => 1
-			const LoadRange = Number( query.range ) || 6
+			const Page 			= Number( params.page.slice(-1) ); // page_1 => 1
+			const LoadRange = Number( query.range );
 			
 			return { Page, LoadRange }
 
-		},
-		head(): any {
-			return {
-				title: `Eccheuma | Галлерея | ${ this.Page } Страница`
-			}
-		},
-		async fetch() {
-			await this.GetData()
 		},
 		data() {
 			return {
@@ -90,24 +84,39 @@
 				Ready: false,
 				
 				Page: 1,
-				LoadRange: 0,
+				LoadRange: load_ranges.gallery,
 				BasePoint: 0,
 
 			}
 		},
-		watch: {
-			GalleryData: {
-				handler() {
-					this.Ready = true
-				}
+		async fetch() {
+
+			await this.GetData();
+			
+		},
+		head(): {[index: string]: string } {
+			return {
+				title: `Eccheuma | Галлерея | ${ this.Page } Страница`
 			}
 		},
 		computed: {
 
 			...mapState({
-				Images: state => (state as VuexModules).PageContent.Content as IMAGE_PROPERTY[]
+				Images: state => (state as VuexModules).PageContent.Content.Gallery
 			}),
 
+		},
+		watch: {
+			GalleryData: {
+				handler() {
+					this.$nextTick().then(() => {
+						this.Ready = true
+					})
+				}
+			}
+		},
+		created() {
+			this.ChangePage(this.Page)
 		},
 		methods: {
 			
@@ -136,9 +145,6 @@
 
 			}
 		},
-		created() {
-			this.ChangePage(this.Page)
-		}
 	})
 	
 </script>

@@ -86,18 +86,21 @@ const DefaultConfiguration: Options = {
 	buttons: false,
 	indicators: false,
 	auto: false,
-	interval: 1000,
+	interval: 8000,
 }
 
 export default Vue.extend({
 	props: {
 		options: {
+			type: Object,
 			required: false,
 			default() { return DefaultConfiguration }
 		} as PropOptions<Options>
 	},
 	data() {
 		return {
+
+			wasInit: false,
 
 			Configuration: DefaultConfiguration,
 
@@ -122,6 +125,24 @@ export default Vue.extend({
 		'ActiveIndex': {
 			handler() { this.UpdateStyles() }
 		}
+	},
+	created() {
+
+		this.Configuration 	= { ...this.Configuration, ...this.options };
+
+	},
+	mounted() { 
+
+		// Из-за того, что VUE порой "ПО ОСОБЕННОМУ" обрабатывает виртуальный ДОМ, 
+		// и не всегда присылает содержимое слотов - Приходится изощряться, и делать 
+		// некое подобие EventLoop'а на минималках. Криво? - Да. Но по другому никак.
+
+		// Подробнее тут: https://vuejs.org/v2/api/#vm-scopedSlots
+
+		if ( !this.wasInit ) {
+			this.SlotChecker(); 
+		}
+
 	},
 	methods: {
 		SlotChecker() {
@@ -214,18 +235,27 @@ export default Vue.extend({
 				this.AutoChange()
 			}
 
+			this.wasInit = true;
+
 		},
 		AutoChange(kill: boolean = false) {
 
-			const I = setInterval(() => { 
-
+			const T = this.Configuration.interval;
+	
+			const CB = () => {
 				if ( !this.mouseData.isHover ) {
-					this.ChangeSlide('NEXT') 
+					this.ChangeSlide('NEXT');
 				}
+			}
 
-			}, this.options.interval)
+			// Custom interval function
+			const CIF = () => {
+				const ST = setTimeout(() => {
+					CB(); clearTimeout(ST); CIF();
+				}, 8000)
+			}
 
-			if ( kill ) { clearInterval(I) }
+			CIF();
 
 		},
 		DotsEvents() {
@@ -254,18 +284,22 @@ export default Vue.extend({
 		},
 		TouchEvents(el: HTMLElement) {
 
+			const LISTENERS_OPTIONS = { passive: true, capture: false }
+
 			el.addEventListener('touchmove', 	(e: TouchEvent) => {
 				
-				requestAnimationFrame( () => this.mouseData.hoverPosition = e.changedTouches[0].clientX )
+				requestAnimationFrame( () => {
+					this.mouseData.hoverPosition = e.changedTouches[0].clientX 
+				})
 
-			}, { passive: true, capture: false });
+			}, LISTENERS_OPTIONS);
 
 			el.addEventListener('touchstart', (e: TouchEvent) => {
 
 				this.mouseData.hoverPosition 	= this.mouseData.clickPosition 	= e.changedTouches[0].clientX;
 				this.mouseData.isDown 				= true;
 
-			}, { passive: true, capture: false });
+			}, LISTENERS_OPTIONS);
 
 			el.addEventListener('touchend', 	(e: TouchEvent) => {
 
@@ -280,7 +314,7 @@ export default Vue.extend({
 					this.ChangeSlide( DIFFERNCE > 0 ? 'NEXT' : 'PREV' )
 				}
 
-			}, { passive: true, capture: false })
+			}, LISTENERS_OPTIONS)
 
 		},
 		MouseHover( e: Event ) {
@@ -329,22 +363,6 @@ export default Vue.extend({
 
 		},
 	},
-	created() {
-
-		this.Configuration 	= { ...this.Configuration, ...this.options };
-
-	},
-	mounted() { 
-
-		// Из-за того, что VUE порой "ПО ОСОБЕННОМУ" обрабатывает виртуальный ДОМ, 
-		// и не всегда присылает содержимое слотов - Приходится изощряться, и делать 
-		// некое подобие EventLoop'а на минималках. Криво? - Да. Но по другому никак.
-
-		// Подробнее тут: https://vuejs.org/v2/api/#vm-scopedSlots
-
-		this.SlotChecker(); 
-
-	}
 })
 
 </script>

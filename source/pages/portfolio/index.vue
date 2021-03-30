@@ -1,7 +1,6 @@
 <template>
 	<div class="portfolio-container">
 		<work-case v-for="(workcase, index) in Case" :key="workcase.ID" 
-			v-observe-visibility="ObserveVisibilityOptions"
 			:style="`order: ${ Case.length - index }`"
 			:content="workcase.content"
 			:properties="workcase.properties"
@@ -16,15 +15,10 @@
 	import firebase from "firebase/app"
 	import "firebase/database"
 
-	import ViewPortAnimation from "~/assets/mixins/ViewPortAnimation"
-
 	import type { WORKCASE } from '~/types/WorkCase.ts'
 
 	export default Vue.extend({
 		transition: 'page_transition',
-		mixins: [
-			ViewPortAnimation
-		],
 		data() {
 			return {
 
@@ -49,9 +43,7 @@
 			},
 		},
 		mounted() {
-
 			this.GetCases()
-
 		}
 	})
 

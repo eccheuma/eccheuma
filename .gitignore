@@ -69,7 +69,7 @@ typings/
 .nuxt
 
 # Nuxt generate
-dist
+application
 
 # vuepress build output
 .vuepress/dist
@@ -90,4 +90,4 @@ sw.*
 *.swp
 
 # firebase functions 
-functions/
+functions

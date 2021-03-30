@@ -9,10 +9,10 @@
 			</keep-alive>
 		</template>
 
-		<div class="image_container" ref="ImageHolder" @mouseenter="ImageFocus = true" @mouseleave="ImageFocus = false">
+		<div ref="ImageHolder" class="image_container" @mouseenter="ImageFocus = true" @mouseleave="ImageFocus = false">
 
 			<template v-if="sections ? sections.zoom : false">
-				<i class="fas fa-search" @mouseenter="EmitSound('Tap', { rate: 1 })" @click.self="ToggleModal"/>
+				<i class="fas fa-search" @mouseenter="EmitSound('On', { rate: .5, volume: .25 })" @click.self="ToggleModal" />
 			</template>
 
 			<picture @dblclick="ToggleModal">
@@ -52,7 +52,6 @@
 	&-enter {
 		opacity: 0;
 		&-active {
-			opacity: 0;
 			transform: translateY(5vh);
 			transition: all .5s ease;
 		}
@@ -64,7 +63,6 @@
 	&-leave {
 		opacity: 1;
 		&-active {
-			opacity: 1;
 			transform: translateY(0);
 			transition: all .5s ease;
 		}
@@ -95,8 +93,8 @@
 	}
 	&_date {
 		margin: 10px auto; padding: 5px 1vw; 
-		background-color: $color1;
-		text-align: center; font-size: $FontSize4;
+		background-color: rgb(var(--color-1));
+		text-align: center; font-size: var(--font-size-4);
 		border-radius: .7rem;
 	}
 	&_wrapper {
@@ -108,9 +106,12 @@
 		overflow: hidden;
 		i { 
 			$size: 30px;
+
+			cursor: pointer;
+
 			position: absolute; top: 10px; left: calc(50% - #{ $size / 2 });
 			height: $size; width: $size;
-			color: #FFFFFF; background-color: rgba($color1, .75);
+			color: #FFFFFF; background-color: rgba(var(--color-1), .75);
 			text-align: center; line-height: $size;
 			border-radius: .7rem;
 			opacity: .25;
@@ -130,10 +131,10 @@
 			$pad: 10px;
 			position: absolute; bottom: $pad; left: $pad;
 			width: calc(100% - #{ $pad * 2 }); padding: 10px 20px;
-			background-color: rgba($color1, .75); border-radius: .7rem;
-			font-size: $FontSize4;
+			background-color: rgba(var(--color-1), .75); border-radius: .7rem;
+			font-size: var(--font-size-4);
 			span {
-				font-size: $FontSize3; font-weight: 700;
+				font-size: var(--font-size-3); font-weight: 700;
 				display: block; 
 			}
 		}
@@ -173,19 +174,14 @@
 
 	// MODULE
 	export default Vue.extend({
-		mixins: [ EmitSound ],
-		props: {
-			content: 	{ required: true  } as PropOptions<IMAGE_PROPERTY['content']>,
-			property: { required: false, default() { return defaultProperty }} as PropOptions<IMAGE_PROPERTY['property']>,
-			sections: { required: false, default() { return defaultSections }} as PropOptions<IMAGE_PROPERTY['sections']>,
-		},
 		components: {
 			Modal: () => import('~/components/common/ImageComponent/Modal.vue')
 		},
-		async fetch() {
-
-			this.LocalDate = await this.GetLocalTime(this.content.date)
-
+		mixins: [ EmitSound ],
+		props: {
+			content: 	{ type: Object, required: true  } as PropOptions<IMAGE_PROPERTY['content']>,
+			property: { type: Object, required: false, default() { return defaultProperty } } as PropOptions<IMAGE_PROPERTY['property']>,
+			sections: { type: Object, required: false, default() { return defaultSections } } as PropOptions<IMAGE_PROPERTY['sections']>,
 		},
 		data() {
 			return {
@@ -199,12 +195,24 @@
 
 			}
 		},
+		async fetch() {
+
+			this.LocalDate = await this.GetLocalTime(this.content.date)
+
+		},
 		watch: {
-			'content.path': function() {
-				if( process.client ) {
-					this.GetPlaceholder();
+			'content.path': {
+				handler() {
+					if ( this.CLIENT_RENDER_CHECK ) {
+						this.$nextTick().then(this.getPlaceholder)
+					}
 				}
 			},
+		},
+		mounted() {
+			if ( this.CLIENT_RENDER_CHECK ) { 
+				this.$nextTick().then(this.getPlaceholder)
+			}
 		},
 		methods: {
 			
@@ -213,42 +221,31 @@
 				GetLocalTime: 'GetLocalTime'
 			}),
 
-			async GetPlaceholder(): Promise<void> {
+			async getPlaceholder(): Promise<void> {
 
-				this.$nextTick(async () => {
+				const URL = await this.GetImageURL({ 
+					_path: this.content.path,
+					_size: (this.$refs.ImageHolder as HTMLElement).getBoundingClientRect().width * window.devicePixelRatio
+				})
 
-					const URL = await this.GetImageURL({ 
-						_path: this.content.path,
-						_size: (this.$refs.ImageHolder as HTMLElement).getBoundingClientRect().width * window.devicePixelRatio
-					})
-
-					this.$AnimeJS({
-						targets: this.$refs.ImageHolder,
-						opacity: [1, 0],
-						duration: 250,
-						direction: 'alternate',
-						easing: 'linear',
-						update: (anime) => {
-							if ( anime.progress === 100 ) {
-								this.Source = URL
-							}
+				this.$AnimeJS({
+					targets: this.$refs.ImageHolder,
+					opacity: [1, 0],
+					duration: 500,
+					endDelay: 250,
+					direction: 'alternate',
+					easing: 'linear',
+					update: (anime) => {
+						if ( anime.progress === 100 ) {
+							this.Source = URL
 						}
-					})
-
+					}
 				})
 
 			},
 
-			async ToggleModal(): Promise<void> {
-
+			ToggleModal() {
 				this.Modal = !this.Modal; this.EmitSound('Tap', { rate: 1.25 })
-
-			}
-		},
-		mounted() {
-
-			if( process.client ) { 
-				this.GetPlaceholder();
 			}
 
 		},

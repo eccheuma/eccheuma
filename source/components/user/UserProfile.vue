@@ -1,11 +1,14 @@
 <template>
 
-	<eccheuma-collapse class="user_profile-collapse"
-		@collapsed="AnimateContainer"
+	<eccheuma-collapse 
+		class="user_profile-collapse"
 		:active="UserProfileArea" 
-		:options="{ duration: 500 }">
+		:options="{ duration: 500 }"
+		@collapsed="AnimateContainer"
+		>
 
-		<section class="user_profile-container" ref="UserProfileContainer">
+		<section ref="UserProfileContainer" class="user_profile-container">
+
 			<div class="user_profile-info">
 
 				<section class="user_profile-info-header">
@@ -14,7 +17,7 @@
 				</section>
 
 				<section class="user_profile-info-body">
-					<i :style="`background-image: url(${ UserState.UserImageID })`" ref="UserIcon" />
+					<i ref="UserIcon" :style="`background-image: url(${ UserState.UserImageID })`" />
 					<span>{{ UserState.UserName }}</span>
 				</section>
 
@@ -56,11 +59,12 @@
 				</section>
 
 			</div>
+
 			<div class="user_profile-content">
 
 				<section class="user_profile-content-header">
 					<h6>{{ ComponentInfo.Title }}</h6>
-					<span><i class="fas fa-info-circle"/> Информация о балансе и заказе</span>
+					<span><i class="fas fa-info-circle" /> Информация о балансе и заказе</span>
 				</section>
 				
 				<transition name="UserProfileComponentTransition" mode="out-in">
@@ -70,6 +74,7 @@
 				</transition>
 
 			</div>
+
 			<div class="user_profile-navigation">
 
 				<section class="user_profile-navigation-header">
@@ -79,18 +84,23 @@
 
 				<section class="user_profile-navigation-body">
 
-					<button v-for="(item, index) in PreferencesArea" 
-									:key="`navigation-button-${ index }`"
-									:class="{ active: CurentPreferencesComponent == item.Component }" 
-									@click="AreaToggle( item.Component )">
-									{{ item.Name }}
-					</button>
+					<eccheuma-button 
+						v-for="(item, index) in PreferencesArea" 
+						:key="`navigation-button-${ index }`"
+						:class="{ active: CurentPreferencesComponent == item.Component }" 
+						@click.native="AreaToggle( item.Component )"
+						>
+						{{ item.Name }}
+					</eccheuma-button>
 
-					<button @click="Logout">Выход из аккаунта</button>
+					<button @click="Logout">
+						Выход из аккаунта
+					</button>
 
 				</section>
 
 			</div>
+
 		</section>
 
 	</eccheuma-collapse>
@@ -167,11 +177,15 @@ $HeaderHeight: 70vh;
 		text-align: center;
 
 		backdrop-filter: blur(3px);
-		background-color: rgba($color1,.9);
+		background-color: rgba(var(--color-1),.9);
 
 		display: grid; 
 		grid-template: {
 			columns: 2fr 5fr 2fr;
+		}
+
+		>div {
+			opacity: 0;
 		}
 
 	}
@@ -180,13 +194,13 @@ $HeaderHeight: 70vh;
 
 		hr {
 			width: 100%;
-			background-color: $color3;
+			background-color: rgb(var(--color-3));
 		}
 
 		padding: 2vh 0;
 
 		border: {
-			right: 1px solid $color3;
+			right: 1px solid rgb(var(--color-3));
 		} 
 
 		&-header {
@@ -196,12 +210,12 @@ $HeaderHeight: 70vh;
 
 			h6 {
 				display: block;
-				color: $color5;
+				color: rgb(var(--color-6));
 			}
 
 			span {
 				display: block;
-				color: $color6;
+				color: rgb(var(--color-5));
 			}
 
 		}
@@ -213,7 +227,7 @@ $HeaderHeight: 70vh;
 			span {
 				display: block;
 				width: 100%;
-				color: $color6;
+				color: rgb(var(--color-5));
 				font: {
 					weight: 700;
 				}
@@ -225,10 +239,10 @@ $HeaderHeight: 70vh;
 				height: $s; width: $s;
 				margin: 2vh auto;
 				border-radius: 100%;
-				border: 3px solid $color6;
+				border: 3px solid rgb(var(--color-5));
 				background-position: center center;
 				background-size: cover;
-				background-color: $color6;
+				background-color: rgb(var(--color-5));
 				// transform: scale(0);
 			}
 
@@ -240,7 +254,7 @@ $HeaderHeight: 70vh;
 
 			h6 {
 				display: block;
-				color: $color5;
+				color: rgb(var(--color-6));
 			}
 
 			span {
@@ -253,10 +267,10 @@ $HeaderHeight: 70vh;
 					weight: 500;
 					size: .65rem;
 				}
-				color: rgba($color6,.75);
+				color: rgba(var(--color-5),.75);
 				line-height: 10px;
 				strong {
-					color: $color6;
+					color: rgb(var(--color-5));
 					font-weight: 700;
 					text-align: right;
 				}
@@ -274,12 +288,12 @@ $HeaderHeight: 70vh;
 
 			h6 {
 				display: block;
-				color: $color5;
+				color: rgb(var(--color-6));
 			}
 
 			span {
 				display: block;
-				color: $color6;
+				color: rgb(var(--color-5));
 			}
 
 		}
@@ -293,19 +307,19 @@ $HeaderHeight: 70vh;
 		padding: $padY 0;
 
 		border: {
-			left: 1px solid $color3;
+			left: 1px solid rgb(var(--color-3));
 		} 
 
 		&-header {
 			
 			h6 {
 				display: block;
-				color: $color5;
+				color: rgb(var(--color-6));
 			}
 
 			span {
 				display: block;
-				color: $color6;
+				color: rgb(var(--color-5));
 			}
 
 		}
@@ -329,7 +343,7 @@ $HeaderHeight: 70vh;
 				};
 
 				background-color: transparent;
-				color: $color5;
+				color: rgb(var(--color-6));
 			}
 
 			button {
@@ -357,36 +371,28 @@ $HeaderHeight: 70vh;
 
 	import Vue from 'vue'
 
-	// declare module 'vue/types/vue' {
-	// 	interface Vue {
-	// 		$AnimeJS: any
-	// 	}
-	// }
-
 	// VUEX
-		import { mapState, mapMutations, mapActions, Mapper,  } from 'vuex'
-		import type { VuexModules } from '~/types/VuexModules'
+		import { mapState, mapActions } from 'vuex'
 
-	// VUELIDATE
-		import type { validationMixin } 						from "vuelidate"
-		import 			{ email, required, minLength } 	from 'vuelidate/lib/validators'
+	// TYPES
+		import type { AnimeAnimParams } from 'animejs';
+		import type { VuexModules } 		from '~/types/VuexModules'
 
 	// MIXINS
 		import EmitSound 			from '~/assets/mixins/EmitSound'
 		import D_WorkStatus 	from '~/assets/mixins/filters/WorkStatus'
 		// import D_UserStatus 	from '~/assets/mixins/filters/UserStatus'
 
-	// TYPES
-		type MODULES = 'Messages' | 'NameChange' | 'IconChange' | 'WorkRequests'
-
 	// COMPONENTS
 		import EccheumaCollapse from '~/components/common/EccheumaCollapse.vue'
+
+		type MODULES = 'Messages' | 'NameChange' | 'IconChange' | 'WorkRequests'
 
 	// ANIMATION STATES 
 
 		type ICON_ANIMATION_STATES = 'init' | 'update' | 'close'
 
-		const ANIMATION_VARIATIONS: {[K in ICON_ANIMATION_STATES]: anime.AnimeParams} = {
+		const ANIMATION_VARIATIONS: {[K in ICON_ANIMATION_STATES]: AnimeAnimParams } = {
 			'init': {
 				scale: [0, 1],
 				delay: 250,
@@ -408,14 +414,16 @@ $HeaderHeight: 70vh;
 
 	// MODULE
 	export default Vue.extend({
-		mixins: [ EmitSound, D_WorkStatus ],
 		components: {
 			EccheumaCollapse,
 			Messages: 		() => import('~/components/user/ProfileComponents/Messages.vue'),
 			NameChange: 	() => import('~/components/user/ProfileComponents/NameChange.vue'),
 			IconChange: 	() => import('~/components/user/ProfileComponents/IconChange.vue'),
 			WorkRequests: () => import('~/components/user/ProfileComponents/WorkRequests.vue'),
+			// Button 
+			EccheumaButton: () => import('~/components/common/EcchuemaButton.vue')
 		},
+		mixins: [ EmitSound, D_WorkStatus ],
 		data() {
 			return {
 
@@ -452,20 +460,20 @@ $HeaderHeight: 70vh;
 
 				const T = {
 					Messages: {
-						Title: `Сообщения`,
-						Sub: `Подсказка: Нажмите "Ctrl + Enter" для отправки сообщения.`,
+						Title: 'Сообщения',
+						Sub: 'Подсказка: Нажмите "Ctrl + Enter" для отправки сообщения.',
 					},
 					NameChange: {
-						Title: `Смена имени пользователя`,
-						Sub: `Подсказка: Нажмите "Shift + Enter" для подтверждения.`,
+						Title: 'Смена имени пользователя',
+						Sub: 'Подсказка: Нажмите "Shift + Enter" для подтверждения.',
 					},
 					IconChange: {
-						Title: `Иконка профиля`,
-						Sub: `Подсказка: Нажмите "Shift + Enter" для подтверждения.`,
+						Title: 'Иконка профиля',
+						Sub: 'Подсказка: Нажмите "Shift + Enter" для подтверждения.',
 					},
 					WorkRequests: {
-						Title: `Статус заказа`,
-						Sub: `Данная сводка полезна для проверки. В случае чего, пишите в чат через сообщения.`,
+						Title: 'Статус заказа',
+						Sub: 'Данная сводка полезна для проверки. В случае чего, пишите в чат через сообщения.',
 					},
 				}
 
@@ -486,6 +494,19 @@ $HeaderHeight: 70vh;
 				}
 			},
 		},
+		created() {
+
+			this.Set_RequestQuantity(); 
+			this.Set_RequestContent(); 
+
+			this.FireBaseGetMessages(); 
+
+		},
+		mounted() {
+
+			this.CheckMessages();
+			
+		},
 		methods: {
 
 			...mapActions({
@@ -500,7 +521,7 @@ $HeaderHeight: 70vh;
 			}),
 
 			AreaToggle( _component: MODULES ) {
-				this.CurentPreferencesComponent = _component
+				this.CurentPreferencesComponent = _component;
 			},
 
 			AnimateUserIcon(type: ICON_ANIMATION_STATES) {
@@ -521,7 +542,6 @@ $HeaderHeight: 70vh;
 					targets: (this.$refs.UserProfileContainer as HTMLElement).children,
 					opacity: active ? [0, 1] : [1, 0],
 					duration: 500,
-					direction: 'linear',
 					easing: 'easeInOutCubic',
 					complete: () => {
 						switch (active) {
@@ -538,19 +558,6 @@ $HeaderHeight: 70vh;
 
 			},
 
-		},
-		created() {
-
-			this.Set_RequestQuantity(); 
-			this.Set_RequestContent(); 
-
-			this.FireBaseGetMessages(); 
-
-		},
-		mounted() {
-
-			this.CheckMessages();
-			
 		},
 	})
 

@@ -28,8 +28,8 @@
 	column-gap: 30px; row-gap: 3vh;
 	padding: 5vh 5vw;
 	align-items: center;
-	background-color: $color2;
-	@media screen and ( max-width: $MobileBreakPoint ) {
+	background-color: rgb(var(--color-2));
+	@media screen and ( max-width: var(--mobile-breakpoint)) {
 		grid-template-columns: 1fr;
 		text-align: center;
 	}

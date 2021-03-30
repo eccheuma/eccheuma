@@ -1,9 +1,20 @@
 <template>
-	<section class="post-container" @keydown.ctrl.enter="SendComment" 
+	<section
 		:id="`PostID-${ payload.ID }`" 
-		:style="`order:${ PostOrder }`">
-		
-		<div class="post-header" ref="ImageHolder" :style="`background-image: url(${ ImageURL })`">
+		class="post-container"
+		:class="`interface-${ UI }`" 
+		:style="`order:${ order }`"
+		@keydown.ctrl.enter="sendComment"
+		> 
+
+		<div 
+			ref="ImageHolder" 
+			class="post-header"
+			:class="[
+				{ cooled_sections: Cooled },
+			]" 
+			:style="`background-image: url(${ ImageURL })`"
+		>
 
 			<section class="post-header-tags">
 				<span>{{ payload.tags }}</span>
@@ -20,144 +31,168 @@
 
 		</div>
 
-		<div class="post-footer">
+		<div 
+			class="post-footer" 
+			:class="[
+				{ cooled_sections: Cooled },
+				{ 'rounded-bottom': !ContentSection && !CommentSection },
+			]"
+			>
 
 			<section class="post-footer-social">
 
-				<button @click="SetLike" 
+				<button 
 					:id="`LikePopOver-${ payload.ID }`"
 					:class="[
-						{ active: UserLiked }, 
-						{ NonActive: !this.LoginStatus }
-					]">
+						{ active: userLiked }, 
+						{ disabled: !LoginStatus }
+					]"
+					@click="sendLike"
+					>
 
-					<i class="fas fa-fire"/>
+					<i class="fas fa-fire" />
 
 					<client-only>
 						
-						<template v-if="Object.values(Likes || {}).length">
-							<span class="post_btn_counter pl-2">{{ Object.values(Likes || {}).length }}</span>
+						<template v-if="Object.keys(Likes || {}).length">
+							<span class="post_btn_counter pl-2">{{ Object.keys(Likes || {}).length }}</span>
 						</template>
 
-						<span slot="placeholder"></span>
+						<span slot="placeholder" />
 
 					</client-only>
 
 				</button>
 
-				<button @click='CommentSection = !CommentSection' 
+				<popover :target="`LikePopOver-${ payload.ID }`">
+					{{ LoginStatus ? 'Поставить лайк' : 'Авторизируйтесь для оценки' }}
+				</popover>
+
+				<button 
 					:id="`CommentPopOver-${ payload.ID }`" 
-					:class="{ active: CommentSection }">
+					:class="{ active: CommentSection }"
+					@click="CommentSection = !CommentSection" 
+					>
 
 					<i class="fas fa-comment" />
 
 					<client-only>
 
-						<template v-if="Comments.length">
-							<span class="post_btn_counter pl-2">{{ Comments.length || '' }}</span>
+						<template v-if="sortedComments.length">
+							<span class="post_btn_counter pl-2">{{ sortedComments.length }}</span>
 						</template>
 
-						<span slot="placeholder"></span>
+						<span slot="placeholder" />
 
 					</client-only>
 
 				</button>
 
+				<popover :target="`CommentPopOver-${ payload.ID }`">
+					Открыть комметарий
+				</popover>
+
 			</section>
 
 			<section class="post-footer-collapse">
-				<button @click='ContentSection = !ContentSection'>
+				<button @click="ContentSection = !ContentSection">
 					{{ !ContentSection ? 'Развернуть пост' : 'Свернуть пост' }}
 				</button>
 			</section>				
 
 			<section class="post-footer-author">
-				<span>{{ AuthorInfo.UserName }}</span>
-				<i :style="`background-image: url(${ AuthorInfo.UserImageID })`"></i>
+
+				<template v-if="AuthorInfo">
+					<span>{{ AuthorInfo.UserName }}</span>
+					<i :style="`background-image: url(${ AuthorInfo.UserImageID })`" />
+				</template>
+
 			</section>
 
 		</div>
 
-		<!-- <client-only>
+		<client-only>
 
-			<component :is="`eccheuma-collapse`" :active="ContentSection" v-if="CLIENT_RENDER_CHECK">
-				<div class="post-content" v-if="ContentSection">
+			<component 
+				:is="`eccheuma-collapse`" 
+				:active="ContentSection"
+			> <article class="post-content" :class="[{'rounded': !ContentSection }]">
 
-					<section key="POST_CONTENT_SECTION_1" class="post-content-header">
+					<header key="POST_CONTENT_SECTION_1" class="post-content-header">
 						<h4>{{ payload.title }}</h4>
 						<h6>{{ payload.description }}</h6>
-						<span>{{ AuthorInfo.UserName }} | {{ PostDate.Day }} в {{ PostDate.Time }}</span>
-					</section>
+						<span>{{ AuthorInfo ? AuthorInfo.UserName : '' }} | {{ PostDate.Day }} в {{ PostDate.Time }}</span>
+					</header>
 
-					<section key="POST_CONTENT_SECTION_2" class="post-content-body">
+					<template v-if="editContent">
+						<slot />
+					</template>
 
-						<template v-if="EditContent">
-							<slot></slot>
-						</template>
+					<template v-else>
+						<post-content :source="Content" />
+					</template>
 
-						<template v-else>
-							<PostContent :source="Content"></PostContent>
-						</template>
-
-					</section>
-
-					<section key="POST_CONTENT_SECTION_3" class="post-content-footer">
-						<h6 class="d-inline mr-2">Теги: </h6>
+					<footer key="POST_CONTENT_SECTION_3" class="post-content-footer">
+						<h6 class="d-inline mr-2">
+							Теги: 
+						</h6>
 						<span>{{ payload.tags }}</span>
 						<hr>
-						<button class="mx-auto mt-5" type="button" @click='CommentSection = !CommentSection' v-b-toggle="`post_comment_collapse_ID${ payload.ID }`">
+						<button class="mx-auto mt-5" type="button" @click="CommentSection = !CommentSection">
 							Открыть комментарии
 						</button>
-					</section>
+					</footer>
 
-				</div>
+				</article>
 			</component>
 
-			<component :is="`eccheuma-collapse`" :active="CommentSection" v-if="CLIENT_RENDER_CHECK">
-				<div class="post-comments">
+			<component 
+				:is="`eccheuma-collapse`" 
+				:active="CommentSection"
+			>	<div class="post-comments" :class="{ 'rounded': !CommentSection }">
 
-					<template v-if="!Comments.length">
+					<template v-if="!sortedComments.length">
 						<section class="post-comments-first">
 							<span>Тут ещё нет комментариев, но я крайне надеюсь что они появятся.</span>
 						</section>
 					</template>
 
 					<section class="post-comments-content">
-						<transition-group name="Fade" mode="out-in">
-							<post-comment 
-								v-for="(item, index) in Comments" :key="`Comment#${ index }`" 
-								:UserID='item.UserID'
-								:ModerationMode='false' 
-								:PostID='payload.ID' 
-								:CommentID='item.ID'>
-							</post-comment>
-						</transition-group>
+						<post-comment 
+							v-for="item in sortedComments" 
+							:key="item.Date" 
+							:userID="item.UserID"
+							:postID="payload.ID" 
+							:commentID="item.ID" 
+						/>
 					</section>
 
 					<section class="post-comments-answer">
 
 						<template v-if="LoginStatus">
+
 							<h5>Оставьте свой комментарий</h5>
-							<p>Не длинее 600 символов и не менее 6. <strong>Лимит: {{ CommentCharLimit }}</strong></p>
-							<div class="row justify-content-center py-3">
-								<div class="col-10">
-									<textarea name="comment_section" v-model="Message" @input="EmitSound(`On`)"
-										placeholder="Напишите тут что-то в ответ." maxlength="400">
-									</textarea>
-								</div>
-							</div>
-							<div class="post_comment-footer row justify-content-center">
-								<div class="col-auto">
-									<button :class="$v.Message.$invalid ? 'NonActive' : '' " @click="SendComment" type="button">
-										Ответить <span>( Ctrl + Enter )</span>
-									</button>
-								</div>
-							</div>
+							<p>Не длинее 600 символов и не менее 6. <strong>Лимит: {{ charLimit }}</strong></p>
+
+							<textarea 
+								v-model="Message" 
+								name="comment_section" 
+								maxlength="400" 
+								placeholder="Напишите тут что-то в ответ." 
+								@input="EmitSound(`On`)"
+							/>
+	
+							<button :class="$v.Message.$invalid ? 'disabled' : '' " type="button" @click="sendComment">
+								Ответить <span>( Ctrl + Enter )</span>
+							</button>
+
 						</template>
 
 						<template v-else>
 							<h5>Для комментирования необходима авторизация</h5>
-							<p class="pb-0">Это не так уж и сложно, да и получите сверху ещё больше функионала.</p>
+							<p class="pb-0">
+								Это не так уж и сложно, да и получите сверху ещё больше функионала.
+							</p>
 						</template>
 
 					</section>
@@ -165,7 +200,7 @@
 				</div>
 			</component>
 
-		</client-only> -->
+		</client-only>
 
 	</section>
 </template>
@@ -173,11 +208,34 @@
 <style lang="scss">
 
 .post {
+	&-container {
+
+		padding: 0 4px;
+
+		margin: {
+			bottom: 2vh;
+		}
+
+		.rounded {
+
+			border-radius: .7rem;
+
+			&-top {
+				border-radius: 0 0 .7rem .7rem;
+			}
+
+			&-bottom {
+				border-radius: 0 0 .7rem .7rem;
+			}
+
+		}
+
+	}
 	&-header {
 
 		@include gradient_border(top);
 
-		background-color: $color2;
+		background-color: rgb(var(--color-2));
 		min-height: 40vh;
 
 		background: {
@@ -208,7 +266,7 @@
 			content: "";
 			position: absolute; top: 0; left: 0; z-index: 2;
 			width: 100%; height: 100%;
-			background-color: $color1;
+			background-color: rgb(var(--color-def-1));
 			opacity: .5;
 		}
 
@@ -217,13 +275,13 @@
 			z-index: 3;
 
 			justify-self: center;
-    	align-self: center;
+			align-self: center;
 
 			span {
 				padding: 4px 15px;
 				font-weight: 700;
-				font-size: $FontSize5;
-				background-color: $color1;
+				font-size: var(--font-size-5);
+				background-color: rgb(var(--color-def-1));
 				border-radius: .7rem;
 			}
 		}
@@ -241,7 +299,7 @@
 			}
 			h6 {
 				font-weight: 500;
-				font-size: $FontSize2;
+				font-size: var(--font-size-3);
 			}
 
 		}
@@ -251,13 +309,13 @@
 			z-index: 3;
 
 			justify-self: center;
-    	align-self: center;
+			align-self: center;
 
 			span {
 				padding: 4px 15px;
 				font-weight: 600;
-				font-size: $FontSize5;
-				background-color: $color1;
+				font-size: var(--font-size-5);
+				background-color: rgb(var(--color-def-1));
 				border-radius: .7rem;
 			}
 		}
@@ -265,7 +323,9 @@
 	}
 	&-footer {
 
-		background-color: $color5;
+		transition: border-radius 250ms ease-in-out;
+
+		background-color: rgb(var(--color-6));
 
 		display: grid;
 
@@ -275,7 +335,7 @@
 			areas: 'social collapse author'
 		}
 
-		@media screen and ( max-width: $MobileBreakPoint ) {
+		@media screen and ( max-width: var(--mobile-breakpoint)) {
 
 			padding: 2vh 0;
 			row-gap: 2vh;
@@ -288,13 +348,17 @@
 								'collapse'
 			}
 
-
 		}
 
 		.active {
 			transition-duration: 250ms;
-			background-color: $color2;
-			color: $color5;
+			background-color: rgb(var(--color-def-2));
+			color: rgb(var(--color-def-6));
+		}
+
+		.disabled {
+			pointer-events: none;
+			opacity: .25;
 		}
 
 		&-social {
@@ -311,7 +375,7 @@
 				@include push-button {
 					background-color: transparent;
 					padding: 6px 20px;
-					margin: 0 2px;
+					margin-right: 1ch;
 				}
 			}
 
@@ -340,9 +404,9 @@
 
 			$iconSize: 100px;
 
-			@media screen and ( max-width: $MobileBreakPoint ) {
+			@media screen and ( max-width: var(--mobile-breakpoint)) {
 				transform: unset;
-				border-bottom: 1px solid $color6;
+				border-bottom: 1px solid rgb(var(--color-5));
 			}
 
 			z-index: 3;
@@ -361,13 +425,13 @@
 
 				display: block;width: 100%;
 
-				background-color: $color1;
+				background-color: rgb(var(--color-def-1));
 				border-radius: .7rem;
 
 				margin: { bottom: 1vh };
 
 				font: {
-					size: $FontSize4;
+					size: var(--font-size-4);
 					weight: 700;
 				}
 
@@ -382,15 +446,15 @@
 				background: {
 					size: cover;
 					position: center;
-					color: $color6;
+					color: rgb(var(--color-5));
 				}
 
-				border: 4px solid $color5; border-radius: 100%;
+				border: 4px solid rgb(var(--color-6)); border-radius: 100%;
 
 				height: $iconSize; 
 				width: $iconSize;
 
-				box-shadow: 0px 1vh 0px 0px $color6;
+				box-shadow: 0px 1vh 0px 0px rgb(var(--color-5));
 
 			}
 
@@ -398,12 +462,14 @@
 	}
 	&-content {
 
-		@media screen and ( max-width: $MobileBreakPoint ) {
+		transition: border-radius 250ms ease-in-out;
+
+		@media screen and ( max-width: var(--mobile-breakpoint)) {
 			padding: 0 5vw;
 		}
 
-		background-color: $color5;
-		color: $color1;
+		background-color: rgb(var(--color-6));
+		color: rgb(var(--color-1));
 		min-height: 50vh;
 		padding: 5vh 3vw;
 		&-header {
@@ -416,37 +482,50 @@
 			}
 		}
 		&-footer {
+
 			button {
 				@include push-button {
 					background-color: transparent;
 				};
 			}
+
 			span {
 				width: 100px;
 				text-align: center;
 				padding: 4px 20px;
 				border-radius: .7rem;
-				background-color: $color1;
-				color: $color5;
-				font-size: $FontSize5;
+				background-color: rgb(var(--color-1));
+				color: rgb(var(--color-6));
+				font-size: var(--font-size-5);
 				font-weight: 700;
 			}
+
 		}
 	}
 	&-comments {
-		background-color: $color5;
-		color: $color1;
+
+		transition: border-radius 250ms ease-in-out;
+
+		background-color: rgb(var(--color-6));
+		color: rgb(var(--color-1));
+
 		&-first {
-			
+			text-align: center;
+			padding: 8vh 0;
+			font-size: var(--font-size-2);
+			font-weight: 600;
 		}
+
 		&-content {
+			display: inline-grid;
 		}
+
 		&-answer {
-			border-top: 1px solid $color6;
+			border-top: 1px solid rgb(var(--color-5));
 			padding: 4vh 3vw;
 			h5 {
-				color: $color3;
-				font-size: $FontSize1;
+				color: rgb(var(--color-3));
+				font-size: var(--font-size-1);
 				text-align: center;
 				font-weight: 700;
 			}
@@ -454,7 +533,7 @@
 				white-space: pre-wrap;
 				text-align: center;
 				font-weight: 500;
-				font-size: $FontSize2;
+				font-size: var(--font-size-3);
 			}
 			textarea {
 				resize: none;
@@ -464,11 +543,17 @@
 				border-radius: .7rem;
 				padding: 15px 20px;
 				font-size: 12px;
+				background-color: rgb(var(--color-6));
+				color: rgb(var(--color-1));
 			}
 			button {
 				@include push-button {
 					background-color: transparent;
 				};
+
+				margin: {
+					top: 3vh;
+				}
 			}
 		}
 	}
@@ -483,67 +568,93 @@
 	// VUEX
 	import { mapActions, mapState } from 'vuex'
 
-	// VUEX MODULE TYPE MAP
-	import type { VuexModules } from '~/types/VuexModules'
-
 	// VUELIDATE
-	import type { validationMixin } from "vuelidate"
 	import { required, minLength, maxLength, helpers } from 'vuelidate/lib/validators'
 
-	const customValidator = helpers.regex('alpha', /^[а-яА-ЯЁё\n\t\s\w\W]*$/)
-
 	// FIREBASE 
-	import firebase from "firebase/app"
-	import "firebase/database"
+	import firebase from 'firebase/app'
+	import 'firebase/database'
 
 	// MIXINS
-	import EmitSound from '~/assets/mixins/EmitSound.ts'
-	import HashGenerator from '~/assets/mixins/HashGenerator.ts'
+	import EmitSound 			from '~/assets/mixins/EmitSound.ts'
+	import HashGenerator 	from '~/assets/mixins/HashGenerator.ts'
 
-	// TYPES & INTERFACES
-	import type { POST, POST_CONTENT, COMMENT, LIKE } from '~/types/Post.ts'
-	import type { USER_STATE } 												from '~/types/User.ts'
-	import type { FORMATED_DATE } 											from '~/store'
-
-	type SECTIONS = 'Likes' | 'Comments' | 'Content'
+	import IntersectionObserver from '~/assets/mixins/IntersectionObserver.ts'
+	import IntersectionCooler 	from '~/assets/mixins/IntersectionCooler.ts'
 
 	// COMPONETS
 	import EccheumaCollapse from '~/components/common/EccheumaCollapse.vue'
+	import Popover 					from '~/components/common/Popover.vue'
 
-	// IMAGE PLACEHOLDER
-	const PLACEHOLDER = `${ require('~/assets/images/ImagePlaceholder.png?resize&size=600')}`
+	// VUEX MODULE TYPE MAP
+	import type { VuexModules } from '~/types/VuexModules'
+
+	// TYPES & INTERFACES
+	import type { POST, POST_CONTENT, COMMENT, LIKE } 	from '~/types/Post.ts'
+	import type { USER_STATE } 													from '~/types/User.ts'
+	import type { FORMATED_DATE } 											from '~/store'
+
+	import type { ANIMATION_PAYLOAD } from '~/assets/mixins/IntersectionObserver.ts'
+
+	type SECTIONS = 'Likes' | 'Comments' | 'Content'
+
+	// // IMAGE PLACEHOLDER
+	const PLACEHOLDER = require('~/assets/images/ImagePlaceholder.png?resize&size=600').src as string
+
+	// VALIDATE REGULAR EXPRESSION
+	const CYRILLIC_VALIDATION = helpers.regex('alpha', /^[а-яА-ЯЁё\n\t\s\w\W]*$/)
 		
+	// INERSECTION OBSERVER ANIMATION
+	const OBSERVER_ANIMATION: ANIMATION_PAYLOAD = {
+		in: {
+			opacity: [0, 1],
+		},
+		out: {
+			opacity: [1, 0],
+		}
+	}
+
 	// MODULE
 	export default Vue.extend({
-		mixins: [ EmitSound, HashGenerator ],
+		components: {
+			EccheumaCollapse,
+			Popover,
+			PostComment: () => import('~/components/post/PostComment.vue'),
+			PostContent: () => import('~/components/post/PostContent.vue'),
+		},
+		mixins: [ 
+			EmitSound, 
+			HashGenerator, 
+			IntersectionObserver, 
+			IntersectionCooler 
+		],
 		props: {
 			payload: {
 				type: Object,
 				required: true
 			} as PropOptions< POST >,
-			PostOrder: {
-				type: Number
+			order: {
+				type: Number,
+				required: true,
 			},
-			EditContent: {
+			editContent: {
 				type: Boolean,
 				default: false
 			},
 		},
-		components: {
-			EccheumaCollapse,
-			PostComment: () => import('~/components/post/PostComment.vue'),
-			PostContent: () => import('~/components/post/PostContent.vue'),
-		},
 		data() {
 			return {
 
-				ImageURL: 'PLACEHOLDER',
+				Cooled: !process.browser,
+
+				ImageURL: PLACEHOLDER,
 
 				CharterLimit: 600,
 
-				AuthorInfo: new Object() as USER_STATE,
+				AuthorInfo: new Object() as USER_STATE | null,
 
 				Message: '',
+				PreviosMessage: '_',
 
 				ContentSection: false,
 				CommentSection: false,
@@ -554,54 +665,25 @@
 				PostDate: { Day: '', Time: '' } as FORMATED_DATE,
 
 				Content: 	[] as POST_CONTENT[],
-				Comments: [] as COMMENT[],
+				Comments: {} as {[ID: string]: COMMENT},
 				Likes: 		{} as {[ID: string]: LIKE}
 
 			}
 		},
-		watch: {
-			payload: {
-				handler() {
-					this.UpdateImage()
-				},
-				deep: true
-			},
-			ImageURL: {
-				handler() {
-
-					this.$AnimeJS({
-						targets: this.$refs.ImageHolder,
-						opacity: [0, 1],
-						// delay: 1000,
-						duration: 250,
-						easing: 'easeInQuad',
-					})
-					
-				}
-			},
-		},
-		validations: {
-			Message: {
-				required, 
-				customValidator,
-				minLength: minLength(6),
-				maxLength: maxLength(600),
-			}
-		},
 		computed: {
-			...mapState({
-				// ROOT
-				LocalTime:		(state: any) => (state as VuexModules).LocalTime,
-				// MODULES
-				LoginStatus: 	(state: any) => (state as VuexModules).Auth.Auth.LoginStatus,
-				StoreUser:		(state: any) => (state as VuexModules).User.State.UserState,
-			}),
-			CommentCharLimit(): number {
 
+			...mapState({
+				LocalTime:		state => (state as VuexModules).LocalTime,
+				UI:						state => (state as VuexModules).App.UI,
+				LoginStatus: 	state => (state as VuexModules).Auth.Auth.LoginStatus,
+				StoreUser:		state => (state as VuexModules).User.State.UserState,
+			}),
+
+			charLimit(): number {
 				return 600 - this.Message.length
-				
 			},
-			UserLiked(): boolean {
+
+			userLiked(): boolean {
 
 				if ( this.LoginStatus ) {
 					return this.Likes ? this.StoreUser.UserID in this.Likes : false
@@ -609,6 +691,67 @@
 
 				return false
 
+			},
+
+			sortedComments(): COMMENT[] {
+
+				// CANDIDATE FOR WEB ASSEMBLY OPTIMIZATIONS
+
+				const PREP = Object.values(this.Comments || {})
+
+				const SORTED_DATES = PREP.map( item => item.Date ).sort();
+				const SORTED_ARRAY = [] as COMMENT[];
+
+				SORTED_DATES.forEach((number) => {
+					SORTED_ARRAY.push( PREP.filter(item => item.Date === number).pop()! )
+				})
+
+				return SORTED_ARRAY;
+
+			}
+			
+		},
+		watch: {
+			InViewport: {
+				handler() {
+					if ( this.ImageURL === PLACEHOLDER ) {
+						this.$nextTick().then(this.updateImage)
+					}
+				},
+			},
+			'payload.image': {
+				handler() {
+					this.$nextTick().then(this.updateImage)
+				},
+			},
+		},
+		created() {
+
+			this.getAuthor()
+			this.listenSnapshots(['Likes', 'Comments', 'Content'])
+
+		},
+		async mounted() {
+
+			this.initCooler(this.$el, (cooled: boolean) => { this.Cooled = cooled })
+
+			if ( !this.$isMobile && this.$PIXI.utils.isWebGLSupported() ) {
+				this.initIntersectionObserver(this.$el, OBSERVER_ANIMATION)
+			}
+
+			if ( this.CLIENT_RENDER_CHECK && !this.Cooled ) {
+				this.updateImage()		
+			}
+
+			this.PostDate = await this.GetLocalTime(this.payload.date)
+
+		},
+		validations: {
+			Message: {
+				required, 
+				CYRILLIC_VALIDATION,
+				minLength: minLength(6),
+				maxLength: maxLength(600),
 			}
 		},
 		methods: {
@@ -618,59 +761,66 @@
 				GetImageURL: 'Images/GetImageURL'
 			}),
 			
-			GetAuthorInfo() {
+			getAuthor() {
+
 				firebase.database()
 					.ref(`Users/${ this.payload.authorID }/state`)
-					.on('value', data => {
-						this.AuthorInfo = data.val()
+					.once('value')
+					.then((snapshot) => {
+						this.AuthorInfo = snapshot.val()
 					})
+
 			},
 
-			GetPostData( sections: SECTIONS[] ) {
+			listenSnapshots( sections: SECTIONS[] ) {
 
-				sections.map(( section: SECTIONS ) => {
-
-					if( section == 'Comments' ) {
-
-						firebase.database()
-							.ref(`Posts/PostID-${ this.payload.ID }/${ section.toLowerCase() }`)
-							.orderByChild('Date')
-							.on('value', data => {
-								this[section] = Object.values( data.val() || {} )
-							})
-
-						return
-
-					}
+				sections.forEach((section: SECTIONS) => {
 
 					firebase.database()
 						.ref(`Posts/PostID-${ this.payload.ID }/${ section.toLowerCase() }`)
-						.on('value', data => {
+						.on('value', (data) => {
 							this[section] = data.val()
 						})
 
 				})
 
 			}, 
-			async UpdateImage(): Promise<void> {
+
+			async updateImage(): Promise<void> {
 
 				const IMAGE_CONTAINER = this.$refs.ImageHolder as Element
 
-				this.ImageURL = await this.GetImageURL({ 
+				const I = await this.GetImageURL({ 
 					_path: this.payload.image,
 					_size: IMAGE_CONTAINER.getBoundingClientRect().width * window.devicePixelRatio
 				})
 
-			},
-			SendComment(): void {
+				this.$AnimeJS({
+					targets: this.$refs.ImageHolder,
+					opacity: [1, 0],
+					delay: 2000,
+					duration: 500,
+					endDelay: 500,
+					direction: 'alternate',
+					easing: 'easeInQuad',
+					update: (anime) => {
+						if (anime.progress === 100) {
+							this.ImageURL = I
+						}
+					}
+				})
 
-				if ( !this.$v.Message.$invalid && this.LoginStatus ) {
-					
+			},
+
+			sendComment(): void {
+
+				const NON_REPETED = this.PreviosMessage !== this.Message;
+
+				if ( !this.$v.Message.$invalid && this.LoginStatus && NON_REPETED ) {
+
 					const HASH = this.HashGenerator()
 
-					this.GetLocalTime()
-	
-					this.EmitSound('In', { rate: 1 })
+					const SECTION: SECTIONS = 'Comments'
 
 					const COMMENT: COMMENT = {
 						ID: HASH,
@@ -678,23 +828,25 @@
 						Comment : this.Message,
 						UserID: this.StoreUser.UserID,
 					}
-
-					const Section: SECTIONS = 'Comments'
 	
 					firebase.database()
-						.ref(`Posts/PostID-${ this.payload.ID }/${ Section.toLowerCase() }/Hash-${ HASH }`)
-						.set( COMMENT );
+						.ref(`Posts/PostID-${ this.payload.ID }/${ SECTION.toLowerCase() }/Hash-${ HASH }`)
+						.set( COMMENT )
+						.then(() => {
+							this.EmitSound('Tap', { rate: .5 }); this.Message = '';
+						})
 
 				}
 
 			},
-			SetLike(): void {
+
+			sendLike(): void {
 
 				const Section: SECTIONS = 'Likes'
 
 				const REF = `Posts/PostID-${ this.payload.ID }/${ Section.toLowerCase() }/${ this.StoreUser.UserID }`
 
-				if( this.UserLiked && this.LoginStatus ) {
+				if ( this.userLiked && this.LoginStatus ) {
 
 					firebase.database().ref(REF).remove()
 
@@ -707,20 +859,6 @@
 				}
 
 			},
-		},
-		created() {
-
-			this.GetAuthorInfo()
-			this.GetPostData(['Likes', 'Comments', 'Content'])
-
-		},
-		async mounted() {
-
-			this.PostDate = await this.GetLocalTime(this.payload.date)
-
-			if ( process.client ) {
-				this.UpdateImage()		
-			}
 
 		}
 	})

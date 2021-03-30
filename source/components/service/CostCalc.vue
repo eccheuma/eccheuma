@@ -159,8 +159,8 @@
 		input {
 			-webkit-appearance: none;
 			overflow: hidden;
-			background-color: $color2;
-			border: 1px solid $color3;
+			background-color: rgb(var(--color-2));
+			border: 1px solid rgb(var(--color-3));
 			border-radius: .7rem;
 			width: 100%;
 			&:focus {
@@ -178,12 +178,12 @@
 					height: 100%;
 					width: 6px;
 					border-radius: .7rem;
-					background-color: $color4;
+					background-color: rgb(var(--color-4));
 					cursor: pointer;
 					transition-duration: .5s;
 					&:hover {
 						transform: scale(1.5);
-						background-color: $color5;
+						background-color: rgb(var(--color-6));
 					}
 				}
 			}
@@ -193,14 +193,14 @@
 	&-main {
 
 		border: {
-			right: 1px solid $color3
+			right: 1px solid rgb(var(--color-3))
 		}
 
 		&-title {
 			display: block;
 			padding: 2vh 0 0;
 			font: {
-				size: $FontSize4;
+				size: var(--font-size-4);
 				weight: 700;
 			}
 		}
@@ -230,19 +230,19 @@
 			outline: none;
 			width: 90%;
 			border-radius: .7rem;
-			background-color: $color1;
-			border: 1px solid $color3;
-			color: rgba($color5, .75);
+			background-color: rgb(var(--color-1));
+			border: 1px solid rgb(var(--color-3));
+			color: rgba(var(--color-6), .75);
 			font-weight: 700;
-			font-size: $FontSize4;
+			font-size: var(--font-size-4);
 			padding: 1vh 15px;
 			margin: { bottom: 1vh; top: 1vh };
 		}
 
 		option {
-			border: 0px solid $color5;
-			font-size: $FontSize2;
-			color: rgba($color5, .75);
+			border: 0px solid rgb(var(--color-6));
+			font-size: var(--font-size-3);
+			color: rgba(var(--color-6), .75);
 			font-weight: 700;
 		}
 
@@ -261,15 +261,15 @@
 		}
 
 		hr {
-			background-color: $color3;
+			background-color: rgb(var(--color-3));
 		}
 
 		&-info {
-			color: $color5;
+			color: rgb(var(--color-6));
 			width: 60ch;
 			margin: { left: 1vw };
 			font: {
-				size: $FontSize4
+				size: var(--font-size-4)
 			}
 			i {
 				margin-right: .5ch;
@@ -278,15 +278,15 @@
 				padding: 0 6px;
 				margin: 0 1ch;
 				line-height: 10px;
-				background-color: $colorSuccess;
-				color: $color1;
+				background-color: var(--color-Success);
+				color: rgb(var(--color-1));
 				border-radius: .7rem;
 			}
 		}
 
 		&-header {
 			@include gradient_border(bottom);
-			background-color: $color1;
+			background-color: rgb(var(--color-1));
 			text-align: center;
 			padding: 2vh 1vw;
 			margin: unset !important;
@@ -302,7 +302,7 @@
 				display: block;
 				margin: { left: 1vw };
 				strong {
-					color: $color5;
+					color: rgb(var(--color-6));
 				}
 			}
 		}
@@ -320,11 +320,11 @@
 				margin: { left: 1vw };
 				padding: 2vh 0;
 				font: {
-					size: $FontSize1;
+					size: var(--font-size-1);
 					weight: 700;
 				}
 				strong {
-					color: $color3;
+					color: rgb(var(--color-3));
 				}
 			}
 		}

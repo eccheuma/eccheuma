@@ -3,12 +3,15 @@
 
 		<div class="user_profile-component-requests">
 			<template v-for="(item, index) in WorkRequests">
-				<div class="user_profile-component-request_item" :key="`item-${ index }`"
+				<div 
+					:key="`item-${ index }`" 
+					class="user_profile-component-request_item"
 					:class="[
-						{'status-pending'		: item.Status === 1 },
-						{'status-progress' 	: item.Status === 2 },
-						{'status-complete' 	: item.Status === 3 },
-					]">
+						{'status-pending': item.Status === 1 },
+						{'status-progress': item.Status === 2 },
+						{'status-complete': item.Status === 3 },
+					]"
+					>
 
 					<section>
 						<span>Тип заказа: <p>{{ item.Service.Name }}</p></span>
@@ -18,7 +21,7 @@
 					</section>
 
 					<section>
-						<i/>
+						<i />
 					</section>
 
 				</div>
@@ -37,20 +40,20 @@
 
 		.status {
 			&-pending {
-				border: 1px solid $color4;
+				border: 1px solid rgb(var(--color-4));
 			}
 			&-progress {
-				border: 1px solid $colorWarning;
+				border: 1px solid var(--color-Warning);
 			}
 			&-complete {
-				border: 1px solid rgba($colorSuccess, .25);
+				border: 1px solid rgba(var(--color-Success), .25);
 				animation: unread 1s infinite alternate;
 				@keyframes unread {
 					0% {
-						border: 1px solid rgba($colorSuccess, .25)
+						border: 1px solid rgba(var(--color-Success), .25)
 					}
 					100% {
-						border: 1px solid rgba($colorSuccess, 1)
+						border: 1px solid rgba(var(--color-Success), 1)
 					}
 				}
 			}	
@@ -64,7 +67,7 @@
 			columns: 8fr 2fr
 		}
 
-		background-color: $color1;
+		background-color: rgb(var(--color-1));
 		padding: 20px 40px;
 		border-radius: .7rem;
 		font-size: 12px;
@@ -72,12 +75,12 @@
 		p {
 			display: inline;
 			text-align: right;
-			color: $color5;
+			color: rgb(var(--color-6));
 		}
 		span {
 			display: block;
 			text-align: left;
-			color: $color4;
+			color: rgb(var(--color-4));
 		}
 
 	}
@@ -95,9 +98,6 @@
 	// VUEX MODULE TYPE MAP
 	import type { VuexModules } from '~/types/VuexModules'
 
-	// TYPES 
-	import type { REQUEST_STATUS } from '~/types/Services.ts'
-
 	// MIXINS
 	import F_WorkStatus 	from '~/assets/mixins/filters/WorkStatus'
 
@@ -108,13 +108,13 @@
 				WorkRequests: state => ( state as VuexModules ).User.WorkRequest.Requests
 			})
 		},
+		mounted() {
+			this.Set_RequestContent()
+		},
 		methods: {
 			...mapActions({
 				Set_RequestContent: 'User/WorkRequest/Set_RequestContent'
 			}),
-		},
-		mounted() {
-			this.Set_RequestContent()
 		},
 	})
 

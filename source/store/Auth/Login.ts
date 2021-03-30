@@ -32,8 +32,10 @@ import 'firebase/auth'
 				// console.log( _email, _password)
 
 				if ( rootState.Loader.Status.Loaded ) {
+
 					dispatch('Loader/Loader_Load', null, { root: true })
-					await commit('Loader/Loader_ChangeLoadStatus_Counter', 35, { root: true })
+					commit('Loader/Loader_ChangeLoadStatus_Counter', 35, { root: true })
+
 				}
 				
 				await firebase.auth().signInWithEmailAndPassword(email, password)
@@ -53,7 +55,6 @@ import 'firebase/auth'
 				commit('Auth/Auth/ChangeLoginStatus', true, { root: true })
 
 				commit('Loader/Loader_ChangeLoadMessage', 'Вход в учётную запись', { root: true })
-
 
 			} catch (e) {
 

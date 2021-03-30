@@ -51,11 +51,11 @@
 		height: 100vh;
 
 		background: {
-			color: #{$color1 + 'EE'};
+			color: rgba(var(--color-1), .95)
 		}
 
 		backdrop-filter: blur(10px);
-		@media screen and ( max-width: $MobileBreakPoint ) {
+		@media screen and ( max-width: var(--mobile-breakpoint)) {
 			backdrop-filter: unset;
 		}
 
@@ -68,7 +68,7 @@
 				size: 20px;
 			}
 			mix-blend-mode: multiply;
-			@media screen and ( max-width: $MobileBreakPoint ) {
+			@media screen and ( max-width: var(--mobile-breakpoint)) {
 				mix-blend-mode: unset;
 			}
 		}
@@ -77,7 +77,7 @@
 			content: '';
 			position: fixed; top: 2vh; left: 1vw;
 			width: 97vw; height: 96vh;
-			border: 1px solid $color3;
+			border: 1px solid rgb(var(--color-3));
 			border-radius: .7rem;
 			z-index: 1;
 		}
@@ -95,63 +95,63 @@
 			height: 40px;
 			width: 40px;
 			transform: rotate(0deg);
-			border: 0px solid $color6;
+			border: 0px solid rgb(var(--color-5));
 			border-radius: .7rem;
 			opacity: 1;
 			animation-timing-function: ease-in-out;
 			animation: Loader 3s infinite;
-			filter: drop-shadow(0px 0px 0px $color6);
-			@media screen and (max-width: $MobileBreakPoint) {
+			filter: drop-shadow(0px 0px 0px rgb(var(--color-5)));
+			@media screen and (max-width: var(--mobile-breakpoint)) {
 				filter: unset;
 			}
 			@keyframes Loader {
 				0% {
 					transform: rotate(45deg);
-					border: 3px solid $color6;
+					border: 3px solid rgb(var(--color-5));
 					border-radius: 25%;
 					opacity: 1;
-					filter: drop-shadow(0px 0px 10px $color6);
-					@media screen and (max-width: $MobileBreakPoint) {
+					filter: drop-shadow(0px 0px 10px rgb(var(--color-5)));
+					@media screen and (max-width: var(--mobile-breakpoint)) {
 						filter: unset;
 					}
 				}
 				25% {
 					transform: rotate(90deg) scale(1.25);
-					border: 3px solid $color6;
+					border: 3px solid rgb(var(--color-5));
 					border-radius: 100%;
 					opacity: 1;
-					filter: drop-shadow(0px 0px 2px $color6);
-					@media screen and (max-width: $MobileBreakPoint) {
+					filter: drop-shadow(0px 0px 2px rgb(var(--color-5)));
+					@media screen and (max-width: var(--mobile-breakpoint)) {
 						filter: unset;
 					}
 				}
 				50% {
 					transform: rotate(135deg);
-					border: 0px solid $color6;
+					border: 0px solid rgb(var(--color-5));
 					border-radius: 25%;
 					opacity: 0;
-					filter: drop-shadow(0px 0px 0px $color6);
-					@media screen and (max-width: $MobileBreakPoint) {
+					filter: drop-shadow(0px 0px 0px rgb(var(--color-5)));
+					@media screen and (max-width: var(--mobile-breakpoint)) {
 						filter: unset;
 					}
 				}
 				75% {
 					transform: rotate(180deg) scale(1);
-					border: 3px solid $color6;
+					border: 3px solid rgb(var(--color-5));
 					border-radius: 100%;
 					opacity: 1;
-					filter: drop-shadow(0px 0px 2px $color6);
-					@media screen and (max-width: $MobileBreakPoint) {
+					filter: drop-shadow(0px 0px 2px rgb(var(--color-5)));
+					@media screen and (max-width: var(--mobile-breakpoint)) {
 						filter: unset;
 					}
 				}
 				100% {
 					transform: rotate(225deg);
-					border: 3px solid $color6;
+					border: 3px solid rgb(var(--color-5));
 					border-radius: 25%;
 					opacity: 1;
-					filter: drop-shadow(0px 0px 10px $color6);
-					@media screen and (max-width: $MobileBreakPoint) {
+					filter: drop-shadow(0px 0px 10px rgb(var(--color-5)));
+					@media screen and (max-width: var(--mobile-breakpoint)) {
 						filter: unset;
 					}
 				}
@@ -161,14 +161,14 @@
 		span {
 			display: block;
 			width: 100vw;
-			color: $color5;
+			color: rgb(var(--color-6));
 			font-weight: 700;
 			letter-spacing: .25ch;
 			text-align: center;
 			opacity: 0;
 			&:nth-of-type(1) {
 				line-height: 10vh;
-				font-size: $FontSize4;
+				font-size: var(--font-size-4);
 			}
 		}
 
@@ -244,13 +244,13 @@
 					duration: () => { return this.$AnimeJS.random(500, 1500) },
 					complete: () => {
 
-						if( this.CurentStage != this.LoadStages.length - 1 ) {
+						if ( this.CurentStage !== this.LoadStages.length - 1 ) {
 
 							const FADE_TEXT_ANIM = this.$AnimeJS({
 								targets: this.$refs.message,
 								opacity: [0, 1],
-								duration: 150,
-								endDelay: 300,
+								duration: 100,
+								endDelay: 200,
 								easing: 'linear',
 								direction: 'alternate',
 								update: (a) => {

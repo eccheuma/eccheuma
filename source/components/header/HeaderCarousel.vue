@@ -1,53 +1,67 @@
 <template>
 	<section class="eccheuma_swiper">
-		<eccheuma-swiper :options="{ buttons: true, indicators: true }">
+		<eccheuma-swiper :options="{ buttons: true, indicators: true, auto: true }">
 
-			<template v-slot:icon-prev="{ onEdge }">
-				<button class="eccheuma_swiper-buttons" :class="{ onEdge }"
+			<template #icon-prev="{ onEdge }">
+				<button 
+					class="eccheuma_swiper-buttons" 
+					:class="{ onEdge }"
 					@click="EmitSound(`Off`, { volume: .3, rate: .75})" 
 					@mouseenter="CarouselFocus = true" 
-					@mouseleave="CarouselFocus = false">
-					<i class="fas fa-angle-left"></i>
+					@mouseleave="CarouselFocus = false"
+					>
+					<i class="fas fa-angle-left" />
 				</button>
 			</template>
 
-			<template v-slot:icon-next="{ onEdge }">
-				<button class="eccheuma_swiper-buttons" :class="{ onEdge }"
+			<template #icon-next="{ onEdge }">
+				<button 
+					class="eccheuma_swiper-buttons" 
+					:class="{ onEdge }"
 					@click="EmitSound(`Off`, { volume: .3, rate: .75})" 
 					@mouseenter="CarouselFocus = true" 
-					@mouseleave="CarouselFocus = false">
-					<i class="fas fa-angle-right"></i>
+					@mouseleave="CarouselFocus = false"
+					>
+					<i class="fas fa-angle-right" />
 				</button>
 			</template>
 
-			<template v-slot:pagination="{ active }">
-				<span class="eccheuma_swiper-dots" :class="{ active_dot: active }" @mouseenter="EmitSound('Tap', { rate: 1.25 })"></span>
+			<template #pagination="{ active }">
+				<span class="eccheuma_swiper-dots" :class="{ active_dot: active }" @mouseenter="EmitSound('Tap', { rate: 1.25 })" />
 			</template>
 
-			<template v-slot:default="{ activeIndex }">
+			<template #default="{ activeIndex }">
 				<section v-for="(item, index) in PostContent" :key="item.ID" class="eccheuma_swiper-item">
 
 						<client-only>
 
-							<eccheuma-parallax v-if="!$isMobile" :options="{ OpacityFade: true, OpacityFadeOffset: 100 }">
+							<template v-if="CLIENT_RENDER_CHECK && !$isMobile && $PIXI.utils.isWebGLSupported()">
+								<eccheuma-parallax :options="{ OpacityFade: true, OpacityFadeOffset: 100 }">
 
-								<div ref="ImageHolder" class="eccheuma_swiper-image" 
-									:style="`background-image: url(${ item.image })`"
-									:class="!CarouselFocus ? `focused` : `unfocused`">
-								</div>
+									<div 
+										ref="ImageHolder" 
+										class="eccheuma_swiper-image" 
+										:style="`background-image: url(${ item.image })`"
+										:class="!CarouselFocus ? `focused` : `unfocused`" 
+									/>
 
-							</eccheuma-parallax>
+								</eccheuma-parallax>
+							</template>
 
 							<template v-else>
-								<div ref="ImageHolder" class="eccheuma_swiper-image" 
-									:class="{'content-hidden': index > ( activeIndex + 1 ) || index < ( activeIndex - 1 )}"
-									:style="`background-image: url(${ item.image })`"></div>
+								<div 
+									ref="ImageHolder" 
+									class="eccheuma_swiper-image" 
+									:style="`background-image: url(${ item.image })`" 
+								/>
 							</template>
 
 							<section slot="placeholder">
-								<div ref="ImageHolder" class="eccheuma_swiper-image" 
+								<div 
+									ref="ImageHolder" 
+									class="eccheuma_swiper-image" 
 									:class="{'content-hidden': index > ( activeIndex + 1 ) || index < ( activeIndex - 1 )}"
-									:style="`background-image: url(${ ImagePlaceholder })`"></div>
+									:style="`background-image: url(${ ImagePlaceholder })`" />
 							</section>
 
 						</client-only>
@@ -62,12 +76,14 @@
 								<h2>{{ item.title }}</h2>
 								<h6>{{ item.description }}</h6>
 								<span>
-									<i class="fas fa-link"></i> Перейти к посту
+									<i class="fas fa-link" /> Перейти к посту
 								</span>
 							</section>
 
 							<section class="eccheuma_swiper-info">
-								<span>{{ item.time }}</span>
+								<template v-if="PostReliseTime[index]">
+									<span>{{ PostReliseTime[index].Day }} в {{ PostReliseTime[index].Time }}</span>
+								</template>
 							</section>
 
 						</div>
@@ -86,7 +102,7 @@ $swiperHeight: 70vh;
 .eccheuma_swiper {
 
 	width: 100vw; height: $swiperHeight; position: relative; 
-	background-color: $color1; color: $color5;
+	background-color: rgb(var(--color-1)); color: rgb(var(--color-6));
 
 	.content-hidden {
 		display: none;
@@ -126,7 +142,7 @@ $swiperHeight: 70vh;
 		// 	opacity: .25;
 		// 	z-index: 1;
 		// 	mix-blend-mode: darken;
-		// 	@media screen and ( max-width: $MobileBreakPoint ) { 
+		// 	@media screen and ( max-width: var(--mobile-breakpoint)) { 
 		// 		mix-blend-mode: none;
 		// 	}
 		// }
@@ -138,23 +154,23 @@ $swiperHeight: 70vh;
 
 	&-buttons {
 		cursor: pointer;
-		color: $color5;
-		background-color: rgba($color1, .25);
-		border: 1px solid rgba($color5, .0);
+		color: rgb(var(--color-6));
+		background-color: rgba(var(--color-1), .25);
+		border: 1px solid rgba(var(--color-6), .0);
 		border-radius: .7rem;
 		padding: 0 20px;
 		transition-duration: .5s;
 		mix-blend-mode: hard-light; 
-		@media screen and ( max-width: $MobileBreakPoint ) {
+		@media screen and ( max-width: var(--mobile-breakpoint)) {
 			mix-blend-mode: unset;
 		}
 		&:hover {
-			background-color: rgba($color1,.0);
+			background-color: rgba(var(--color-1),.0);
 			&:nth-of-type(1) {
-				box-shadow: 1px 0px 0px 0px rgba($color5,.25)
+				box-shadow: 1px 0px 0px 0px rgba(var(--color-6),.25)
 			}
 			&:nth-of-type(2) {
-				box-shadow: -1px 0px 0px 0px rgba($color5,.25)
+				box-shadow: -1px 0px 0px 0px rgba(var(--color-6),.25)
 			}
 		}
 
@@ -166,7 +182,7 @@ $swiperHeight: 70vh;
 		&:before {
 			content: ''; 
 			width: 100%; height: 1px; margin: auto 4px; opacity: 1;
-			background-color: $color5; 
+			background-color: rgb(var(--color-6)); 
 			transition: opacity, margin 250ms ease-in-out;
 		}
 	}
@@ -177,8 +193,8 @@ $swiperHeight: 70vh;
 		&:before {
 			content: ''; 
 			width: 100%; height: 1px; margin: auto 0; opacity: .5;
-			box-shadow: 0px 1px 0px $color1;
-			background-color: $color5; 
+			box-shadow: 0px 1px 0px rgb(var(--color-1));
+			background-color: rgb(var(--color-6)); 
 			transition: opacity, margin 250ms ease-in-out;
 		}
 		&:hover {
@@ -198,7 +214,7 @@ $swiperHeight: 70vh;
 			rows: 2fr 75% 2fr
 		}
 
-		@media screen and ( max-width: $MobileBreakPoint ) {
+		@media screen and ( max-width: var(--mobile-breakpoint)) {
 			text-align: center;
 		}
 
@@ -210,12 +226,12 @@ $swiperHeight: 70vh;
 
 		span {
 			font-weight: 600;
-			font-size: $FontSize5;
+			font-size: var(--font-size-5);
 			word-spacing: 10px;
 			padding: 7px 50px;
 			border-radius: .7rem;
-			color: $color5;
-			background-color: $color1;
+			color: rgb(var(--color-6));
+			background-color: rgb(var(--color-1));
 		}
 	} 
 
@@ -225,11 +241,11 @@ $swiperHeight: 70vh;
 
 		span {
 			font-weight: 600;
-			font-size: $FontSize5;
+			font-size: var(--font-size-5);
 			padding: 7px 50px;
 			border-radius: .7rem;
-			color: $color5;
-			background-color: $color1;
+			color: rgb(var(--color-6));
+			background-color: rgb(var(--color-1));
 		}
 	}
 
@@ -244,11 +260,11 @@ $swiperHeight: 70vh;
 		padding: 0 8.5vw;
 
 		text-shadow: 
-			 #{ $TBR }  #{ $TBR } $TBL rgba( $color2, $TBLO ),
-			-#{ $TBR } -#{ $TBR } $TBL rgba( $color2, $TBLO ),
-			-#{ $TBR }  #{ $TBR } $TBL rgba( $color2, $TBLO ),
-			 #{ $TBR } -#{ $TBR } $TBL rgba( $color2, $TBLO ),
-			 #{  0px }  #{ 2px  } 0px  rgba( $color1, $TBLO );
+			 #{ $TBR }  #{ $TBR } $TBL rgba(var(--color-2), $TBLO ),
+			-#{ $TBR } -#{ $TBR } $TBL rgba(var(--color-2), $TBLO ),
+			-#{ $TBR }  #{ $TBR } $TBL rgba(var(--color-2), $TBLO ),
+			 #{ $TBR } -#{ $TBR } $TBL rgba(var(--color-2), $TBLO ),
+			 #{  0px }  #{ 2px  } 0px  rgba(var(--color-1), $TBLO );
 
 		h2 {
 			font-weight: 600;
@@ -264,12 +280,12 @@ $swiperHeight: 70vh;
 		}
 	}
 		// position: absolute
-		// color: $color5 
-		// text-shadow: $TextBorder $TextBorder $TextBlur rgba($color2,$TextBlurOpa),
-		// (-+$TextBorder) (-+$TextBorder) $TextBlur rgba($color2,$TextBlurOpa),
-		// (-+$TextBorder) $TextBorder $TextBlur rgba($color2,$TextBlurOpa),
-		// $TextBorder (-+$TextBorder) $TextBlur rgba($color2,$TextBlurOpa),
-		// 0px 2px 3px rgba($color1,.5) 
+		// color: rgb(var(--color-6)) 
+		// text-shadow: $TextBorder $TextBorder $TextBlur rgba(var(--color-2),$TextBlurOpa),
+		// (-+$TextBorder) (-+$TextBorder) $TextBlur rgba(var(--color-2),$TextBlurOpa),
+		// (-+$TextBorder) $TextBorder $TextBlur rgba(var(--color-2),$TextBlurOpa),
+		// $TextBorder (-+$TextBorder) $TextBlur rgba(var(--color-2),$TextBlurOpa),
+		// 0px 2px 3px rgba(var(--color-1),.5) 
 		// top: 3px
 		// height: $HeaderHeight
 		// width: 100%
@@ -278,16 +294,16 @@ $swiperHeight: 70vh;
 		// i 
 		// 	margin-right: .5vw
 		// a 
-		// 	color: $color5
-		// 	font-size: $FontSize4
+		// 	color: rgb(var(--color-6))
+		// 	font-size: var(--font-size-4)
 		// 	font-weight: 700
 		// 	opacity: .5
 		// 	transition-duration: .5s
 		// 	&:hover
 		// 		opacity: 1	
-		// @media screen and ( max-width: $MobileBreakPoint )
+		// @media screen and ( max-width: var(--mobile-breakpoint))
 		// 	text-align: center
-		// 	color: $color5
+		// 	color: rgb(var(--color-6))
 		// 	padding: 35vh 10vw
 
 }
@@ -316,6 +332,8 @@ $swiperHeight: 70vh;
 	// TYPES
 		import type { POST } from '~/types/Post'
 
+		import type { FORMATED_DATE } from '~/store'
+
 	// VARS
 		const PLACEHOLDER_L = `${ require('~/assets/images/ImagePlaceholder.png?resize&size=600')}`
 	
@@ -335,6 +353,8 @@ $swiperHeight: 70vh;
 
 				PostContent: [] as POST[],
 
+				PostReliseTime: [] as FORMATED_DATE[],
+
 			}
 		},
 		async fetch() {
@@ -345,30 +365,38 @@ $swiperHeight: 70vh;
 		watch: {
 			PostContent: {
 				handler() {
-					if ( process.client ) {
-						this.GetPostImage()
-					}
+
+					this.get_PostImage();
+
+					this.PostContent.forEach(async (item, i) => {
+						this.PostReliseTime[i] = await this.GetLocalTime(item.date)
+					})
+
 				}
+			}
+		},
+		mounted() {
+			if ( this.CLIENT_RENDER_CHECK ) {
+				this.get_PostImage();
 			}
 		},
 		methods: {
 
 			...mapActions({
-				GetFirebaseImageURL: 'Images/GetImageURL'
+				GetFirebaseImageURL: 	'Images/GetImageURL',
+				GetLocalTime:						'GetLocalTime',
 			}),
 
-			async GetPostImage() {
+			get_PostImage() {
 
-				for (const key in this.PostContent) {
+				this.PostContent.forEach(async (el) => {
 
-					const IMAGE = this.PostContent[key].image
-
-					this.PostContent[key].image = await this.GetFirebaseImageURL({ 
-						_path: IMAGE,
+					el.image = await this.GetFirebaseImageURL({ 
+						_path: el.image,
 						_size: window.innerWidth * window.devicePixelRatio
 					})
-					
-				}
+
+				})
 
 			},
 			async GetPosts() {
@@ -386,16 +414,30 @@ $swiperHeight: 70vh;
 			},
 			GoToPost(ID: POST['ID']) {
 
-				// const ELEMENT = document.getElementById(`PostID-${ ID }`)
+				this.$router.push({ path: 'home' }, () => {
+					console.log('PUSH COMPLETE!')
+				});
 
-				// 	const RECT 	= ELEMENT.getBoundingClientRect()
-				// 	const POS 	= (RECT.top + pageYOffset) - ( RECT.height / 2 ) 
+				// this.$nextTick(() => {
 
-				// window.scrollTo({
-				// 	top: Math.trunc(POS),
-				// 	left: 0,
-				// 	behavior: 'smooth'
-				// });
+				// 	const ELEMENT = document.getElementById(`PostID-${ ID }`)
+	
+				// 	if ( ELEMENT ) {
+	
+				// 		const RECT 	= ELEMENT.getBoundingClientRect()
+				// 		const POS 	= (RECT.top + pageYOffset) - (RECT.height / 2) 
+
+				// 		console.log(POS, RECT)
+	
+				// 		window.scrollTo({
+				// 			top: Math.trunc(POS),
+				// 			left: 0,
+				// 			behavior: 'smooth'
+				// 		})
+	
+				// 	}
+
+				// })
 
 			},
 		},

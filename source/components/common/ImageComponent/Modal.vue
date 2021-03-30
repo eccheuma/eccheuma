@@ -52,20 +52,20 @@
 	&-wrap {
 		position: fixed; top: 0; left: 0; z-index: 9999;
 		height: 100vh; width: 100vw;
-		background-color: rgba($color1, .9);
+		background-color: rgba(var(--color-1), .9);
 	}
 	&-container {
 		position: relative; top: 5vh; left: 5vw; overflow: hidden;
 		width: 	#{ 100vw - 10vw }; 
 		height: #{ 100vh - 10vh }; 
-		background-color: $color2;
-		border: 1px solid $color3;
+		background-color: rgb(var(--color-2));
+		border: 1px solid rgb(var(--color-3));
 		border-radius: .7rem;
 	}
 	&-header {
 		width: 100%; 
-		line-height: 10vh; text-align: center; color: $color5; font-size: $FontSize2;
-		background-color: $color1;
+		line-height: 10vh; text-align: center; color: rgb(var(--color-6)); font-size: var(--font-size-3);
+		background-color: rgb(var(--color-1));
 	}
 	&-body {
 		$mar: 10px;
@@ -88,15 +88,15 @@
 			min-height: 5px;
 			&-track {
 				border-radius: 2rem;
-				background-color: $color1;
-				border: 1px solid $color3;
+				background-color: rgb(var(--color-1));
+				border: 1px solid rgb(var(--color-3));
 			}
 			&-thumb {
 				border-radius: 2rem;
-				background-color: $color4;
-				border: 2px solid $color1;
+				background-color: rgb(var(--color-4));
+				border: 2px solid rgb(var(--color-1));
 				&:hover {
-					background-color: $color5
+					background-color: rgb(var(--color-6))
 				}
 			}
 			&-button {
@@ -112,7 +112,7 @@
 		margin: 0 auto; padding: 4vh 25%;
 		grid-template-columns: repeat(2, 1fr); 
 		grid-column-gap: 20px;
-		background-color: $color1;
+		background-color: rgb(var(--color-1));
 		button {
 			@extend %button_light;
 			width: 100%;

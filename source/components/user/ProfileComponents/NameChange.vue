@@ -35,9 +35,9 @@
 			font-weight: 700;
 			font-size: 12px;
 			padding: 5px 10%;
-			color: $color5;
-			background-color: $color2;
-			border: 1px solid $color3;
+			color: rgb(var(--color-6));
+			background-color: rgb(var(--color-2));
+			border: 1px solid rgb(var(--color-3));
 			border-radius: .7rem;
 			width: 75%;
 		}

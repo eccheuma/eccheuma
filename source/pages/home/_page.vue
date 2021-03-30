@@ -1,32 +1,31 @@
 <template>
-	<transition-group name="page_transition" class="home-page">
+	<section ref="page" class="home-page">
 
-		<template v-if="Ready">
+		<post 
+			v-for="( item, index ) in Posts"
+			:key="`Post-${ index }`"
+			:order="Posts.length - index"
+			:payload="item"
+		/>
 
-			<post v-for="(item, index) in Posts"
-				:key="`Post-${index}`"
-				:payload="item"
-				:PostOrder="( BasePoint - item.ID ) + Posts.length"
-			/>
+		<promo-banner 
+			v-if="Posts.length >= 1"
+			key="PromoID_Works"
+			promo-type="Works"
+			:style="`order: ${ 1 }`"
+		/>
+		
+		<promo-banner 
+			v-if="Posts.length >= 3"
+			key="PromoID_Adaptation"
+			promo-type="Adaptation"
+			:style="`order: ${ 3 }`"
+		/>
 
-			<promo-banner v-if="Posts.length  >= 1" class="p-0" 
-				promo-type="Works"
-				key="PromoID_Works"
-				:order="1"
-			/>
-			
-			<promo-banner v-if="Posts.length >= 3" class="p-0" 
-				promo-type="Adaptation"
-				key="PromoID_Adaptation"
-				:order="3"
-			/>
-			
-		</template>
-
-	</transition-group>
+	</section>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 
 .home {
 	&-page {
@@ -41,57 +40,59 @@
 	import Vue from 'vue';
 
 	// VUEX
-	import { mapActions, mapState, mapMutations } from 'vuex';
+	import { mapActions, mapMutations, mapState } from 'vuex';
+
+	// FIREBASE
+	import firebase from 'firebase/app';
+	import 'firebase/database';
 
 	// VUEX MODULE TYPE MAP
 	import type { VuexModules } from '~/types/VuexModules';
 
-	// FIREBASE
-	import firebase from "firebase/app";
-	import "firebase/database";
+	// MIXINS
+	import ResetPageContent 				from '~/assets/mixins/ResetPageContent.ts'
+	import PageTransitionProperty 	from '~/assets/mixins/PageTransitionProperty.ts'
 
 	// TYPES
 	import type { PAYLOAD } from '~/store/PageContent';
-	import type { POST } 		from '~/types/Post.ts';
 
 	// COMPONENTS
 	import PromoBanner from '~/components/promo/PromoBanner.vue';
 	import Post from '~/components/post/Post.vue';
 
+	// LOAD POLITIC
+	import { load_ranges } from '~/config/LoadPolitic.ts'
+
 	// MODULE
 	export default Vue.extend({
-		transition: 'page_transition',
 		components: {
 			PromoBanner,
 			Post,
 		},
+		mixins: [ ResetPageContent, PageTransitionProperty ],
 		async middleware({ params, query, redirect }) {
 
 			const PAGE 			= Number( params.page.slice(-1) ) // page_1 => 1
-			const LOADRANGE = Number( query.range ) || 4
-			const QUANTITY 	= await firebase.database().ref("Posts").once('value').then( data => data.numChildren() )
+			const LOADRANGE = Number( query.range || load_ranges.posts );
+			const QUANTITY 	= await firebase.database().ref('Posts').once('value').then( data => data.numChildren() )
 
 			const OutRange = QUANTITY + LOADRANGE < PAGE * LOADRANGE 
 
-			if ( OutRange ) {
-				return redirect('/error')
-			}
+			if ( OutRange ) { redirect('/error') }
 
     },
-		asyncData({ params, query }): { Page: number, LoadRange: number } {
-			
-			const Page 			= Number( params.page.slice(-1) ) // page_1 => 1
-			const LoadRange = Number( query.range ) || 4 
-			
-			// console.log(Page, LoadRange, params.page, query.range )
-
-			return { Page, LoadRange }
-
+		//
+		transition: {
+			name: 'opacity-enterDelayed-transition',
+			mode: 'out-in',
 		},
-		async fetch() {
+		//
+		asyncData({ params, query }) {
 
-			await this.GetData();
-			await this.GetBasePoint();
+			const PAGE 				= Number( params.page.slice(-1) ) || 1 // page_1 => 1
+			const LOAD_RANGE 	= Number( query.range || load_ranges.posts )
+
+			return { PAGE, LOAD_RANGE }
 
 		},
 		data() {
@@ -99,28 +100,42 @@
 
 				Ready: false,
 
-				Page: 1,
-				BasePoint: 0,
-				LoadRange: 0,
+			// ASYNC DATA
+				PAGE: 1,
+				LOAD_RANGE: load_ranges.posts,
 
 			}
 		},
+		async fetch() {
+
+			await this.GetData();
+
+		},
 		head(): any {
 			return {
-				title: `Eccheuma | Главная | ${ this.Page } Страница`
-			}
-		},
-		watch: {
-			Posts: {
-				handler() {
-					this.Ready = true
-				}
+				title: `Eccheuma | Главная | ${ this.PAGE } Страница`
 			}
 		},
 		computed: {
 			...mapState({
-				Posts: state => (state as VuexModules).PageContent.Content as POST[]
+				Posts: state => (state as VuexModules).PageContent.Content.Posts
 			}),
+		},
+		// watch: {
+		// 	Posts: {
+		// 		handler() {
+		// 			this.$nextTick().then(() => this.animateTransitionPage('in')); this.Ready = true;
+		// 		}
+		// 	}
+		// },
+		created() {
+			this.ChangePage(this.PAGE)
+		},
+		beforeDestroy() {
+			// this.animateTransitionPage('out');
+		},
+		mounted() {
+			// this.animateTransitionPage('in');
 		},
 		methods: {
 
@@ -132,36 +147,38 @@
 				ChangePage: 'PageSelector/ChangePage'
 			}),
 
-			async GetBasePoint() {
+			animateTransitionPage(direction: 'in' | 'out' = 'in') {
 
-				const DATA = await firebase.database().ref("Posts").once('value')
-
-				this.BasePoint = DATA.numChildren() - ( this.LoadRange * this.Page )
+				this.$AnimeJS({
+					targets: this.$refs.page,
+					direction: direction === 'in' ? 'normal' : 'reverse',
+					opacity: [0, 1],
+					delay: 1000,
+					duration: 750,
+					easing: 'easeInOutSine',
+				})
 
 			},
 
 			async GetData() {
 
-				const POSTS = await firebase.database().ref('Posts').once('value')
+				const DATA = await firebase.database().ref('Posts').once('value')
 
-				const REM: number = POSTS.numChildren() - ( this.LoadRange * this.Page )
+				const REM: number = DATA.numChildren() - ( this.LOAD_RANGE * this.PAGE )
 
 				const PAYLOAD: PAYLOAD = {
 					REF: 'Posts',
 					LOAD_PROPERTY: {
-						LoadRange: REM < 0 ? this.LoadRange + REM : this.LoadRange,
+						LoadRange: REM < 0 ? this.LOAD_RANGE + REM : this.LOAD_RANGE,
 						LoadPoint: REM < 0 ? 0 : REM
 					}
 				}
 
 				await this.GetContent(PAYLOAD)
 
-			},
+			}
 
 		},
-		mounted() {
-			this.ChangePage(this.Page)
-		}
 	})
 	
 </script>

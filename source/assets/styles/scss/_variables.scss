@@ -1,0 +1,32 @@
+:root {
+	// DEFAULT COLOR VARIABLES
+	--color-def-0: 0,0,0;
+	--color-def-1: 24,24,24;
+	--color-def-2: 29,29,29;
+	--color-def-3: 65,65,65;
+	--color-def-4: 115,115,115;
+	--color-def-5: 240,240,240;
+	--color-def-6: 255,255,255;
+	// RGB COLOR VARIABLES
+	@for $i from 0 through 6 {
+		--color-#{$i}: var(--color-def-#{$i});
+	}
+	// ------
+	--color-Warning: #eecf22;
+	--color-Success: #95d829;
+	--color-Wrong: #c93131;
+	// ------
+	--font-size-1: 1.5rem;
+	--font-size-2: 0.9rem;
+	--font-size-3: 0.8rem;
+	--font-size-4: 0.66rem;
+	--font-size-5: 0.5rem;
+	// ----
+	--default-font: "Montserrat";
+	--second-font: "PTSerif";
+	// ----
+	--accent: #E4AA2F;
+	--text: #333;
+	// ----
+	--mobile-breakpoint: 768px;
+}

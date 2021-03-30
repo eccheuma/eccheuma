@@ -1,0 +1,138 @@
+%button_switch {
+	border: 1px solid rgba(var(--color-4),.5);
+	&:hover {
+		transform: translateY(-4px);
+		border: 1px solid transparent;
+		box-shadow: 0px 4px 0px 0px rgba(var(--color-1),.25);
+	}
+}
+
+%border_black {
+	border-top: 4px solid rgb(var(--color-1));
+	border-bottom: 4px solid rgb(var(--color-1));
+}
+
+%button_light_active {
+	transition-duration: .5s;
+	text-decoration: none;
+	color: rgb(var(--color-2));
+	background-color: rgb(var(--color-6));
+	border: 1px solid rgb(var(--color-6));  
+}
+
+@mixin push-button {
+
+	border: 1px solid rgba(var(--color-4),.5);
+
+	padding: 5px 25px;
+	margin: 0px 2px;
+	border-radius: .7rem;
+	color: rgb(var(--color-3));
+	font-size: .65rem;
+	line-height: 20px;
+	font-weight: 700;
+	transition: all 200ms ease-in-out;
+
+	@content;
+
+	&:hover {
+		transform: translateY(-0.5vh);
+		border: 1px solid transparent;
+		box-shadow: 0px 0.5vh 0px 0px rgba(var(--color-1),.25);
+	}
+
+}
+
+@mixin ecc-input {
+	-webkit-appearance: none;
+	overflow: hidden;
+	color: rgb(var(--color-6));
+	padding: 1vh 1vw;
+	background-color: rgb(var(--color-2));
+	border: 1px solid rgb(var(--color-3));
+	border-radius: .7rem;
+	width: 100%;
+	&:focus {
+		outline: none;
+	}
+}
+
+@mixin light-button {
+	cursor: pointer;
+	padding: 6px 2vw;
+	// FONT
+	font-size: 12px; font-weight: 600; color: rgb(var(--color-1));
+	// BORDER
+	border: 1px solid rgba(var(--color-1), .25); border-radius: .7rem;
+	// OTHER
+	background-color: rgb(var(--color-5));
+	box-shadow: 0px 0px 0px 2px rgb(var(--color-5));
+	transition-duration: .25s;
+	// CONTENT
+
+	@content;
+
+	&:hover {
+		text-decoration: none; background-color: rgb(var(--color-2)); color: rgb(var(--color-5));
+	}
+
+}
+
+@mixin gradient_border($side: both) {
+
+	border-image: linear-gradient(to left, rgb(var(--color-def-2)), rgb(var(--color-def-3)), rgb(var(--color-def-2)));
+	border-image-slice: 1;
+
+	@if $side == both {
+		border: {
+			top: 1px solid transparent;	
+			bottom: 1px solid transparent;	
+		}
+	} @else if $side == top or bottom {
+		border-#{$side}: 1px solid transparent;	
+	}
+	
+}
+
+%button_light {
+	cursor: pointer;
+	padding: 6px 2vw;
+	border-radius: .8rem;
+	color: rgb(var(--color-1));
+	background-color: rgb(var(--color-5));
+	border: 1px solid rgb(var(--color-3));
+	box-shadow: 0px 0px 0px 2px rgb(var(--color-5));
+	font-size: 14px;
+	font-weight: 600;
+	transition-duration: .25s;
+	&:hover {
+		text-decoration: none;
+		color: rgb(var(--color-5));
+		background-color: rgb(var(--color-2));
+	}
+}
+
+%button_black {
+	cursor: pointer;
+	margin: 0 auto;
+	padding: 6px 3vw;
+	border-radius: .8rem;
+	color: rgb(var(--color-4));
+	background-color: rgb(var(--color-1));
+	border: 1px solid rgb(var(--color-3));
+	font-size: 12px;
+	font-weight: 600;
+	transition-duration: .25s;
+	&:hover {
+		text-decoration: none;
+		color: rgb(var(--color-5));
+		background-color: rgb(var(--color-2));
+	}
+}
+
+%gradient_border {
+	border-top: 1px solid transparent;
+	border-bottom: 1px solid transparent;
+	border-image: linear-gradient(to left, rgb(var(--color-2)), rgb(var(--color-3)), rgb(var(--color-2)));
+	border-image-slice: 1;
+}

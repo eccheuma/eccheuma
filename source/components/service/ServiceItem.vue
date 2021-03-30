@@ -1,8 +1,8 @@
 <template>
 	<section class="service_item-container">
 
-		<portal to="Modal" v-if="Modal">
-			<service-modal @close-modal="ToggleModal(false)" :service-type="payload.path" />
+		<portal v-if="Modal" to="Modal">
+			<service-modal :service-type="payload.path" @close-modal="ToggleModal(false)" />
 		</portal>
 
 		<div class="service_item-header">
@@ -19,7 +19,8 @@
 				<hr>
 
 				<div class="service_item-body-container">
-					<section v-for="( item, i ) in Services" 
+					<section 
+						v-for="( item, i ) in Services" 
 						:key="`cost-${i}`"
 						:class="{ active: ActiveSection === i }"
 						@click="ActiveSection = i">
@@ -30,7 +31,6 @@
 					</section>
 				</div>
 
-
 			</section>
 			<section class="service_item-body-prices">
 
@@ -38,7 +38,8 @@
 				<hr>
 
 				<div class="service_item-body-container">
-					<section v-for="( item, i ) in Services" 
+					<section 
+						v-for="( item, i ) in Services" 
 						:key="`cost-${i}`"
 						:class="{ active: ActiveSection === i }"
 						@click="ActiveSection = i">
@@ -49,7 +50,6 @@
 					</section>
 				</div>
 
-				
 			</section>
 		</div>
 		<div class="service_item-footer">
@@ -60,13 +60,17 @@
 					" Euren die lebt lied vom naht schwebet verschwand euch lebens. Schmerz wie auf dem besitze. Lebens herauf und tränen fühl.. "
 				</span>
 
-				<button @click.prevent="ToggleRegisterModal"> Зарегистрироваться </button>
+				<eccheuma-button @click.native="ToggleRegisterModal">
+					Зарегистрироваться
+				</eccheuma-button>
 
 				<hr>
 
 			</template>
 
-			<button @click="ToggleModal(true)" :class="{ disabled: !LoginStatus }">Заказать</button>
+			<eccheuma-button :class="{ disabled: !LoginStatus }" @click.native="ToggleModal(true)">
+				Заказать
+			</eccheuma-button>
 
 		</div>
 	</section>
@@ -76,29 +80,31 @@
 
 	import Vue, { PropOptions } from 'vue'
 
-	// VUEX
-	import { mapState, mapMutations } from 'vuex'
-	import type { VuexModules } from '~/types/VuexModules.ts'
-
 	// FIREBASE
 	import firebase from 'firebase/app'
 	import 'firebase/database'
 
-	// TYPES 
-	import type { SERVICE, SERVICES_CARD } from '~/types/Services.ts'
+	// VUEX
+	import { mapState, mapMutations } from 'vuex'
 
 	// COMPONENTS
 	import ServiceModal from './ServiceModal.vue'
 
+	// TYPES 
+	import type { SERVICE, SERVICES_CARD } 	from '~/types/Services.ts'
+	import type { VuexModules } 						from '~/types/VuexModules.ts'
+
 	// MODULE
 	export default Vue.extend({
+		components: {
+			ServiceModal,
+			EccheumaButton: () => import('~/components/common/EcchuemaButton.vue')
+		},
 		props: {
 			payload: {
+				type: Object,
 				required: true
 			} as PropOptions<SERVICES_CARD>
-		},
-		components: {
-			ServiceModal
 		},
 		data() {
 			return {
@@ -116,6 +122,17 @@
 				LoginStatus: 		state => (state as VuexModules).Auth.Auth.LoginStatus
 			})
 		},
+		created() {
+
+			firebase.database()
+				.ref(`Service/${ this.payload.path }`)
+				.on('value', (data) => {
+
+					this.Services = Object.values(data.val()) as SERVICE[]
+
+				})
+
+		},
 		methods: {
 
 			...mapMutations({
@@ -127,17 +144,6 @@
 			}
 
 		},
-		created() {
-
-			firebase.database()
-				.ref(`Service/${ this.payload.path }`)
-				.on('value', data => {
-
-					this.Services = Object.values(data.val()) as SERVICE[]
-
-				})
-
-		}
 	})
 
 </script>
@@ -149,24 +155,24 @@
 		width: 100%;
 		border-radius: .7rem;
 		margin: 2vh 0;
-		background-color: $color2;
-		color: $color5;
+		background-color: rgb(var(--color-2));
+		color: rgb(var(--color-6));
 	}
 	&-header {
 		@include gradient_border(bottom);
-		background-color: $color2;
+		background-color: rgb(var(--color-2));
 		border-radius: .7rem;
-		box-shadow: 0px 3px 0px 0px rgba($color1,.25);
+		box-shadow: 0px 3px 0px 0px rgba(var(--color-1),.25);
 		padding: 4vh 0;
 		text-align: center;
 		span {
 			font-weight: 700;
 			font-size: 12px;
-			color: $color4;
+			color: rgb(var(--color-4));
 		}
 	}
 	&-body {
-		background-color: $color1;
+		background-color: rgb(var(--color-1));
 		padding: 2vh 2vw;
 
 		>section {
@@ -181,7 +187,7 @@
 		}
 
 		hr {
-			background-color: $color3;
+			background-color: rgb(var(--color-3));
 		}
 
 		&-container {
@@ -192,7 +198,7 @@
 			padding: 0 1vw;
 
 			.active {
-				background-color: $color3;
+				background-color: rgb(var(--color-3));
 			}
 
 			section {
@@ -202,7 +208,7 @@
 				cursor: pointer;
 				display: inline-flex;
 				width: 100%;
-				background-color: $color2;
+				background-color: rgb(var(--color-2));
 				border-radius: .7rem;
 				padding: 1vh 1vw;
 				margin: 1vh 0;
@@ -240,12 +246,12 @@
 		}
 
 		hr {
-			background-color: $color1;
+			background-color: rgb(var(--color-1));
 		}
 
 		span {
 			display: block;
-			color: $color4;
+			color: rgb(var(--color-4));
 			text-align: center;
 			width: 75%;
 			margin: 0 auto;

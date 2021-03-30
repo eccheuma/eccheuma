@@ -2,16 +2,22 @@
 // Mixin for sound emit in Howler.js via store
 import { mapActions } from 'vuex'
 
-// TYPES
-export type T_SOURCE = string
-
 // INTERFACES
-import { PROPERTY } from '~/store/Sound.ts'
+import type { PROPERTY } from '~/store/Sound'
+
+// TYPES
+export type FILE_NAME = 'Holl' 
+	| 'In'
+	| 'Off' 
+	| 'On' 
+	| 'Out'
+	| 'Tap'
+	| 'Translate'
 
 // DECLARE INSTANCE
 declare module 'vue/types/vue' {
 	interface Vue {
-	  EmitSound: (_source: T_SOURCE, _setting?: Partial<PROPERTY>) => void
+		EmitSound: (_source: FILE_NAME, _setting?: Partial<PROPERTY>) => void
 	}
 }
 
@@ -21,7 +27,7 @@ export default {
 		...mapActions({
 			ActivateSound: 'Sound/ActivateSound'
 		}),
-		EmitSound(_source: T_SOURCE, _setting?: PROPERTY ) {
+		EmitSound(_source: FILE_NAME, _setting?: PROPERTY ) {
 
 			const default_setting = {
 				status: true,

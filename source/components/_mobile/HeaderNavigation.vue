@@ -100,19 +100,19 @@
 		top: 20px 
 		right: 20px
 		z-index: 9999
-		color: $color5
+		color: rgb(var(--color-6))
 		font-size: 1.75rem
 		&:hover
 			transition-duration: .25s
-			color: $color5
+			color: rgb(var(--color-6))
 	&_modal
 		position: fixed
 		top: 0
 		width: 100vw
 		height: 100%
 		overflow: hidden
-		background-color: rgba($color1, .9)
-		color: $color6
+		background-color: rgba(var(--color-1), .9)
+		color: rgb(var(--color-5))
 		z-index: 2000
 		&:before
 			content: ''
@@ -129,21 +129,21 @@
 			z-index: 3000
 			&:hover
 				transition-duration: .25s
-				color: $color5
+				color: rgb(var(--color-6))
 				transform: scale(.9)
 		&-container
 			position: absolute
 			top: 10vh
 			height: 90vh
 			padding: 10vh 0
-			color: $color4
+			color: rgb(var(--color-4))
 		&-item
 			display: block
 			width: 100vw
-			color: $color5
-			background-color: rgba($color1, 1)
-			border-bottom: 1px solid $color3
-			border-top: 1px solid $color3
+			color: rgb(var(--color-6))
+			background-color: rgba(var(--color-1), 1)
+			border-bottom: 1px solid rgb(var(--color-3))
+			border-top: 1px solid rgb(var(--color-3))
 			a 
 				cursor: pointer
 				display: block
@@ -152,7 +152,7 @@
 				font-weight: 600
 				border-radius: 12px
 				margin-top: -1px
-				color: $color4
+				color: rgb(var(--color-4))
 		&-close
 			position: absolute
 			display: block
@@ -160,8 +160,8 @@
 			text-align: center
 			font-size: 2rem
 			top: 5vh
-			color: $color4
+			color: rgb(var(--color-4))
 			padding: 5vh 0
-			border-bottom: 1px solid $color3
+			border-bottom: 1px solid rgb(var(--color-3))
 
 </style>

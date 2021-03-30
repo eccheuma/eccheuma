@@ -63,11 +63,9 @@
 	export const actions: ActionTree<CurentState, CurentState> = {
 		ActivateSound({ commit, state }, { _path, _prop }: { _path: string, _prop: PROPERTY}) {
 
-			import(`~/assets/sounds/${_path}.ogg`)
-			
 			const PAYLOAD: SOUND = {
 				path: _path,
-				src: [`/static/sounds/${_path}.ogg`],
+				src: [`/sounds/${_path}.ogg`],
 				prop: {
 					volume: _prop.volume,
 					loop: 	_prop.loop,

@@ -2,7 +2,6 @@
 	<div class="row no-gutters Portfolio-Case">
 
 		<work-case v-for="workcase in Case" :key="workcase.ID" 
-			v-observe-visibility="ObserveVisibilityOptions"
 			:content="workcase.content"
 			:properties="workcase.properties"
 		/>
@@ -17,15 +16,10 @@
 	import firebase from "firebase/app"
 	import "firebase/database"
 
-	import ViewPortAnimation from "~/assets/mixins/ViewPortAnimation"
-
 	import type { WORKCASE } from '~/types/WorkCase'
 
 	export default Vue.extend({
 		transition: 'page_transition',
-		mixins: [
-			ViewPortAnimation
-		],
 		data() {
 			return {
 

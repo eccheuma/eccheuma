@@ -1,21 +1,34 @@
 <template>
-	<keep-alive :name="'keep-alive-component-'+PostKey">
-		<div class="vk_post">
-			<div :id="'vk_post_'+ID+'_'+PostKey+''" loading="lazy"></div>
-		</div>
-	</keep-alive>
+	<div class="vk_post">
+		<div :id="`vk_post_${ payload.ID }_${ payload.PostKey }`" />
+	</div>
 </template>
 
-<script>
+<script lang="ts">
 
-	import '~/assets/js/openapi.min.js'
+	import Vue, { PropOptions } from 'vue'
 
-	export default {
-		props: [
-			'ID',
-			'PostKey',
-			'Hash'
-		],
+	// TYPES
+	type VK_POST = {
+		ID: string
+		PostKey: number,
+		Hash: string,
+	}
+
+	interface VK {
+		Widgets: {
+			Post: (link: string, id: string, key: number, hash: string) => void
+		}
+	}
+
+	// MODULE
+	export default Vue.extend({
+		props: {
+			payload: {
+				type: Object,
+				required: true,
+			} as PropOptions<VK_POST>
+		},
 		data() {
 			return {
 
@@ -28,23 +41,38 @@
 				LoadMessage: '',
 			}
 		},
-		methods: {
-			GetVK_Posts() { /* global VK */
+		mounted() {
+
+			if ( this.CLIENT_RENDER_CHECK ) { this.getAPI() }
+			
+		},
+		methods: {  
+
+			/* global VK */ 
+
+			getAPI() { 
+				
+				// import('~/assets/js/openapi.min.js').then(this.getPosts)
+
+				require('~/assets/js/openapi.min.js'); this.getPosts()
+
+			},
+
+			getPosts() {
 
 				if ( process.client ) { 
-					VK.Widgets.Post(`vk_post_${ this.ID }_${ +this.PostKey }`, this.ID, this.PostKey, this.Hash);
+					(VK as unknown as VK).Widgets.Post(
+						`vk_post_${ this.payload.ID }_${ this.payload.PostKey }`,
+						this.payload.ID,
+						this.payload.PostKey,
+						this.payload.Hash
+					);
 				}
 
 			}
-		},
-		mounted() { /* global process */
 
-			if( process.client ) {
-				this.GetVK_Posts()
-			}
-			
 		},
-	}
+	})
 
 </script>
 
@@ -53,7 +81,7 @@
 .vk_post 
 	overflow: hidden
 	position: relative
-	background-color: $color5
+	background-color: rgb(var(--color-6))
 	margin-bottom: 10px
 	border-radius: .7rem
 	&_container
@@ -65,7 +93,7 @@
 		overflow-y: scroll
 		border-radius: .7rem
 	&_header 
-		background-color: $color5
+		background-color: rgb(var(--color-6))
 		border-radius: .7rem
 		position: sticky
 		overflow: hidden
@@ -76,9 +104,9 @@
 		span 
 			// background-color: green
 			display: block
-			color: $color1
+			color: rgb(var(--color-1))
 			text-align: center
-			font-size: $FontSize4
+			font-size: var(--font-size-4)
 			font-weight: 700 
 			line-height: 60px
 		i 
@@ -87,15 +115,15 @@
 				top: 13px
 				left: 15px
 				padding: 10px 10px
-				background-color: $color1
-				color: $color5
+				background-color: rgb(var(--color-1))
+				color: rgb(var(--color-6))
 				border-radius: 3rem 
 			&:nth-child(2) 
 				position: absolute
 				font-size: 70px
 				top: -4px
 				left: -15px
-				color: $color1
+				color: rgb(var(--color-1))
 				opacity: .25
 				transform: scale(1.75)
 				z-index: -1    

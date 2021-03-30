@@ -83,19 +83,19 @@
 	display: grid; height: 8vh;
 	padding: 1vh 1vw;
 	grid-template-columns: repeat(3, 1fr); 
-	background-color: $color1;
+	background-color: rgb(var(--color-1));
 	align-items: center;
 	section {
-		@media screen and ( max-width: $MobileBreakPoint ) {
+		@media screen and ( max-width: var(--mobile-breakpoint)) {
 			display: none;
 		}
 		span {
 			display: block; text-transform: uppercase;
 			&:nth-child(1) {
-				color: $color5; font-weight: 800; letter-spacing: 3px; font-size: .6rem
+				color: rgb(var(--color-6)); font-weight: 800; letter-spacing: 3px; font-size: .6rem
 			}
 			&:nth-child(2) {
-				color: $color6; font-weight: 700; letter-spacing: 1px; font-size: .45rem
+				color: rgb(var(--color-5)); font-weight: 700; letter-spacing: 1px; font-size: .45rem
 			}
 		}
 	}
@@ -114,14 +114,14 @@
 		grid-template-columns: 3fr 1fr;
 		justify-self: end;
 		span {
-			color: $color4; font-size: 10px; line-height: 15px;
+			color: rgb(var(--color-4)); font-size: 10px; line-height: 15px;
 		}
 		i {
 			$s: 7px;
 			height: $s; width: $s;
 			justify-self: end;
 			align-self: center;
-			background-color: $color6;
+			background-color: rgb(var(--color-5));
 			border-radius: 100%;
 			animation: MessageNotificationSpan 1s infinite alternate;
 			@keyframes MessageNotificationSpan {
@@ -130,7 +130,7 @@
 				}
 				100% {
 					opacity: 1;
-					box-shadow: 0px 0px 6px 0px $color6;
+					box-shadow: 0px 0px 6px 0px rgb(var(--color-5));
 				}
 			}
 		}

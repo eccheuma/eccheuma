@@ -117,10 +117,10 @@
 			height: $s;
 			width: $s;
 			border-radius: 100%;
-			border: 3px solid $color3;
+			border: 3px solid rgb(var(--color-3));
 			background-position: center;
 			background-size: cover;
-			background-color: $color6;
+			background-color: rgb(var(--color-5));
 		}
 
 		&-prepared {
@@ -130,7 +130,7 @@
 			span {
 				display: block;
 				margin: 3vh 5vw;
-				color: $color5;
+				color: rgb(var(--color-6));
 				font: {
 					size: .75rem;
 				}
@@ -152,10 +152,10 @@
 				height: $s;
 				width: $s;
 				border-radius: 100%;
-				border: 2px solid $color6;
+				border: 2px solid rgb(var(--color-5));
 
 				background: {
-					color: $color6;
+					color: rgb(var(--color-5));
 					position: center;
 					size: cover;
 				}
@@ -174,7 +174,7 @@
 			padding: 0 5vw;
 
 			span {
-				color: $color5;
+				color: rgb(var(--color-6));
 				font: {
 					size: .75rem;
 				}

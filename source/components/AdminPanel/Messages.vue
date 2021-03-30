@@ -145,10 +145,10 @@
 	width: 100%	
 
 .CMS_Messages
-	color: $color5
-	background-color: $color2
+	color: rgb(var(--color-6))
+	background-color: rgb(var(--color-2))
 	h1
-		color: $color5
+		color: rgb(var(--color-6))
 		text-align: center
 		display: block
 		width: 100%
@@ -158,14 +158,14 @@
 		font-size: 12px
 		padding: 5px 10%
 		margin: 0px 25%
-		color: $color5
-		background-color: $color2
-		border: 1px solid $color3
+		color: rgb(var(--color-6))
+		background-color: rgb(var(--color-2))
+		border: 1px solid rgb(var(--color-3))
 		border-radius: .7rem
 		width: 100%
 	&-Item
 		border-radius: .7rem
-		border: 1px solid $color3
+		border: 1px solid rgb(var(--color-3))
 		padding: 10px 20px
 		max-height: 300px
 	&-Textarea
@@ -179,23 +179,23 @@
 			font-size: .8rem
 			font-weight: 700
 	&-Wrapper
-		color: $color5
+		color: rgb(var(--color-6))
 		padding: 20px 40px
 		overflow-y: scroll
 		height: calc(40vh - 40px)
-		@media screen and ( max-width: $MobileBreakPoint )
+		@media screen and ( max-width: var(--mobile-breakpoint))
 			height: 100vh
 		p
 			text-align: left
 			font-weight: 700
 			font-size: 12px
-			color: $color5
+			color: rgb(var(--color-6))
 		span
 			text-align: left
 			font-weight: 700
 			font-size: 12px
 			p
-				color: $color4
+				color: rgb(var(--color-4))
 				float: right
 				display: inline-block
 	&-UserList
@@ -203,14 +203,14 @@
 			display: block
 			text-align: center
 			font-size: 12px
-			color: $color5
+			color: rgb(var(--color-6))
 		i
 			display: block
 			margin: 0 auto
 			height: 80px
 			width: 80px
 			border-radius: 100%
-			border: 3px solid $color5
+			border: 3px solid rgb(var(--color-6))
 			background-position: center center
 			background-size: cover
 			animation: UserProfile_Icon 1s 1

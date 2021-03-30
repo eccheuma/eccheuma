@@ -1,46 +1,48 @@
 <template>
-	<div class="home-container" id="Home">
+	<div id="HomePage" class="home-container">
 
 		<main>
-			<!-- <section class="container"> -->
 
-				<client-only>
-					<Auth v-if="$isMobile"></Auth>
-				</client-only>
+			<client-only>
+				<auth v-if="$isMobile" />
+			</client-only>
 
-				<page-selector :payload="{ order: 1, scrollTarget: 445, section: 'home', collumns: 3 }"/>
+			<pagination :payload="{ order: 1, scrollTarget: 445, section: 'home', delay: 0 }" />
 
-				<nuxt-child class="home-content" :key="$route.path" :load-range="LoadRange" />
+			<nuxt-child 
+				:key="$route.path" 
+				class="home-content"
+			/>
 
-				<page-selector :payload="{ order: -1, scrollTarget: 445, section: 'home', collumns: 3 }"/>
+			<pagination :payload="{ order: -1, scrollTarget: 445, section: 'home', delay: 0 }" />
 
-			<!-- </section>  -->
 		</main>
 
 		<aside>
 
 			<client-only>
-				<Auth v-if="!$isMobile"></Auth>
+				<auth v-if="!$isMobile" />
 			</client-only>
 
 			<div class="vk_post_container">
-				<div class="vk_post_header mt-1">
-					<i class="fab fa-vk"></i><i class="fab fa-vk"></i>
+
+				<div class="vk_post_header">
+					<i class="fab fa-vk" />
+					<i class="fab fa-vk" />
 					<span>Посты из Вконтакте</span>
 				</div>
-				<div class="d-lg-block d-sm-none vk_post_wrapper"> 
+
+				<div class="vk_post_wrapper"> 
 
 					<!-- @scroll.passive="Test" -->
 
-					<!-- <client-only>
+					<client-only>
 						<VKPostWidget
 							v-for="prop in VKPost"
 							:key="prop.PostKey"
-							:ID="prop.ID"
-							:PostKey="prop.PostKey"
-							:Hash="prop.Hash">
-						</VKPostWidget>
-					</client-only> -->
+							:payload="prop"
+						/>
+					</client-only>
 
 				</div>
 			</div>
@@ -57,7 +59,7 @@
 		display: grid;
 		column-gap: 15px;
 		grid-template-columns: 9fr 3fr;
-		@media screen and ( max-width: $MobileBreakPoint ) {
+		@media screen and ( max-width: var(--mobile-breakpoint)) {
 			grid-template-columns: 1fr;
 		}
 	}
@@ -72,53 +74,50 @@
 
 	import Vue from 'vue'
 
-	import { mapMutations } from 'vuex'
+	import { mapMutations, mapState } from 'vuex'
 
-	import firebase from "firebase/app"
-	import "firebase/database"
+	import firebase from 'firebase/app'
+	import 'firebase/database'
 
-	import PageSelector from '~/components/common/PageSelector.vue'
-	import TransitionSound from '~/assets/mixins/TransitionSound'
+// MIXINS
+	import TransitionSound 		from '~/assets/mixins/TransitionSound.ts'
+	import TransitionProperty from '~/assets/mixins/PageTransitionProperty.ts'
 
+// COMPONENTS
+	import Pagination 			from '~/components/common/Pagination.vue'
+	import Auth 							from '~/components/auth/Wrap.vue'
+
+// TYPES
+	import type { VuexModules } from '~/types/VuexModules'
+
+// LOAD POLITIC
+	import { load_ranges } from '~/config/LoadPolitic.ts'
+
+// MODULE
 	export default Vue.extend({ 
+		components: {
+			Pagination,
+			Auth,
+			VKPostWidget: () => import('~/components/common/VKPostWidget.vue'),
+		},
+		mixins: [ TransitionSound, TransitionProperty ],
 		layout: 'Application', 
 		scrollToTop: false, 
-		transition: 'OpacityTransition', 
-		mixins: [ TransitionSound ],
-		head () {
-			return {
-				title: `Eccheuma | Главная`,
-				meta: [
-					{ 
-						hid: 'description', name: 'description', 
-						content: 'Главная страница. Тут собраны статьи на завязанные на профильную тему.' 
-					},
-					{
-						hid: 'og:title', property: 'og:title',
-						content: `Escape from Mordorland - Главная `
-					},
-					{
-						hid: 'og:description', property: 'og:description',
-						content: `Главная страница. Тут собраны статьи на завязанные на профильную тему.`
-					},
-				],
-			}
-		},
 		data() {
 			return {
 
-				Title: `Главная`,
+				Title: 'Главная',
 
-				LoadRange: 4,
+				LoadRange: load_ranges.posts,
 
 				VKPost: [
 					{
-						ID: "-158755478",
+						ID: '-158755478',
 						PostKey: 17,
 						Hash: 'w29AkYYd9i4Jh7t0SORRF1-mZg4',
 					},
 					{
-						ID: "-158755478",
+						ID: '-158755478',
 						PostKey: 14,
 						Hash: 'vYYjqYns8GMqZpbxETGHiY4enUg'
 					},
@@ -126,38 +125,57 @@
 
 				PostHolder: [
 					{
-						ID: "-158755478",
+						ID: '-158755478',
 						PostKey: 17,
 						Hash: 'w29AkYYd9i4Jh7t0SORRF1-mZg4',
 					},
 					{
-						ID: "-158755478",
+						ID: '-158755478',
 						PostKey: 14,
 						Hash: 'vYYjqYns8GMqZpbxETGHiY4enUg'
 					},
 				]
 			}
 		},
-		components: {
-			PageSelector,
-			VKPostWidget: () => import('~/components/common/VKPostWidget.vue'),
-			Auth: 				() => import('~/components/user/Auth.vue'),
+		head () {
+			return {
+				title: 'Eccheuma | Главная',
+				meta: [
+					{ 
+						hid: 'description', 
+						name: 'description', 
+						content: 'Главная страница. Тут собраны статьи на завязанные на профильную тему.' ,
+					},
+					{
+						hid: 'og:title', 
+						property: 'og:title',
+						content: 'Escape from Mordorland - Главная',
+					},
+					{
+						hid: 'og:description', 
+						property: 'og:description',
+						content: 'Главная страница. Тут собраны статьи на завязанные на профильную тему.',
+					},
+				],
+			}
+		},
+		computed: {
+			...mapState({
+				LoginStatus: state => (state as VuexModules).Auth.Auth.LoginStatus
+			})
+		},
+		async created() {
+
+			const PostsQuantity: number = await firebase.database().ref('Posts').once('value').then( data => data.numChildren() );
+
+			this.ChangePageQuantity( Math.ceil( PostsQuantity / this.LoadRange ) );
+
 		},
 		methods: {
 			...mapMutations({
 				ChangePageQuantity: 'PageSelector/ChangePageQuantity'
 			})
 		},
-		async created() {
-
-			const PostsQuantity: number = await firebase.database().ref("Posts").once('value').then( data => data.numChildren() )
-
-			const A = PostsQuantity / this.LoadRange
-			const B = A % 1 == 1 ? Math.trunc(A) : Math.trunc(A) + 1 
-
-			this.ChangePageQuantity(B)
-
-		}
 	})
 
 </script>

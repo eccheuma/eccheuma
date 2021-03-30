@@ -10,20 +10,11 @@
 	import type { SELECTED_SERVICE, REQUEST_STATUS } from '~/types/Services.ts'
 	import type { Message as MESSAGE } from '~/store/User/Messages'
 
-	export type CurentState = ReturnType<typeof state>
-	
-	import type { I_CONTENT as NotificationType } from '~/store/Notification'
-	
+	import type { NOTIFICATION_CONTENT } from '~/types/Notification.ts'
+
 	interface WORK_REQUEST extends SELECTED_SERVICE {
 		ID: number
 		Status: keyof REQUEST_STATUS
-	}
-
-// DECALARE MODULE
-	declare module '~/types/VuexModules' {
-		interface User {
-			WorkRequest: CurentState
-		}
 	}
 	
 // STATE
@@ -36,6 +27,17 @@
 		
 	})
 
+// CURENT STATE
+	export type CurentState = ReturnType<typeof state>
+
+// DECALARE MODULE
+	declare module '~/types/VuexModules' {
+		interface User {
+			WorkRequest: CurentState
+		}
+	}
+
+// MUTATIONS
 	export const mutations: MutationTree<CurentState> = {
 		Change_WorkQuantity(state, prop) {
 			state.RequestQuantity = prop;
@@ -48,6 +50,7 @@
 		}
 	}
 
+// ACTIONS
 	export const actions: ActionTree<CurentState, VuexModules> = {
 		async SendWorkRequest({ dispatch, commit, rootState, state }, _service: SELECTED_SERVICE) {
 
@@ -75,9 +78,9 @@
 				Date: Date.now(),
 			}
 
-			const NOTIFICATION_MESSAGE: NotificationType = {
-				message: `Ваша заявка пошла на рассмотрение`,
-				description: `Информацию о стаусе заказа, вы можете посмотреть в личном кабинете, что находиться вверху приложения.`,
+			const NOTIFICATION_MESSAGE: NOTIFICATION_CONTENT = {
+				message: 'Ваша заявка пошла на рассмотрение',
+				description: 'Информацию о стаусе заказа, вы можете посмотреть в личном кабинете, что находиться вверху приложения.',
 			}
 
 			try {
@@ -115,24 +118,24 @@
 				
 			}
 		},
-		async Set_RequestContent({ commit, rootState }) {
+		Set_RequestContent({ commit, rootState }) {
 
 			const uid = rootState.Auth.Auth.CurentUser.uid
 
 			firebase.database()
 				.ref(`Users/${uid}/work_requests`)
-				.on('value', data => { 
+				.on('value', (data) => { 
 					commit('Change_Requests', data.val() ) 
 				});	
 			
 		},
-		async Set_RequestQuantity({ commit, rootState }) {
+		Set_RequestQuantity({ commit, rootState }) {
 
 			const uid = rootState.Auth.Auth.CurentUser.uid
 
 			firebase.database()
 				.ref(`Users/${uid}/work_requests`)
-				.on('value', data => {
+				.on('value', (data) => {
 					commit('Change_WorkQuantity', data.numChildren())
 				});
 
@@ -141,7 +144,7 @@
 
 			if ( state.Requests.length ) {
 
-				const R = state.Requests.filter(( item ) => item.Status > 1 )
+				const R = state.Requests.filter(( item: WORK_REQUEST ) => item.Status > 1 )
 				
 				commit('Change_ActiveRequests', R)
 

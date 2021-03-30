@@ -1,6 +1,6 @@
 <template>
-	<section class="work_case-container">
-		<div class="work_case-about">
+	<section ref="case" class="work_case-container">
+		<div class="work_case-about" :class="`interface-${ UI }`">
 
 			<div class="work_case-about-header">
 				<h5>{{ content.name }}</h5>
@@ -58,7 +58,7 @@
 
 		max-height: 60vh;
 
-		margin: 1vh 1vw;
+		margin: 5vh 1vw;
 
 		column-gap: 15px;
 		row-gap: 15px;
@@ -69,7 +69,7 @@
 			rows: 100%;
 		}
 
-		@media screen and ( max-width: $MobileBreakPoint ) {
+		@media screen and ( max-width: var(--mobile-breakpoint)) {
 
 			max-height: unset;
 
@@ -90,29 +90,29 @@
 		}
 
 		&-header {
-			background-color: $color6;
+			background-color: rgb(var(--color-6));
 			padding: 20px 0px ;
 			border-radius: .7rem;
 			text-align: center;
 			h5 {
-				color: #414141 ;
+				color: rgb(var(--color-2));
 				font-weight: 700;
 			}
 			span {
 				margin: 0;
 				font-size: 10px;
 				font-weight: 700;
-				color: #737373;
+				color: rgb(var(--color-3));
 			}
 		}
 		&-body {
 
-			@media screen and ( max-width: $MobileBreakPoint ) {
+			@media screen and ( max-width: var(--mobile-breakpoint)) {
 				padding-bottom: 100px;
 			}
 
 			position: relative;
-			background-color: $color6;
+			background-color: rgb(var(--color-6));
 			padding: 10px 30px;
 			border-radius: .7rem;
 			section {
@@ -121,16 +121,16 @@
 					margin-top: 10px;
 					font-size: 14px;
 					font-weight: 700;
-					color: $color1;
+					color: rgb(var(--color-3));
 				}
 				a {
 					display: block;
 					font-size: 12px; 
 					font-weight: 700;
-					color: $color3;
+					color: rgb(var(--color-3));
 					padding: 6px 15px;
 					&:hover {
-						color: $color4
+						color: rgb(var(--color-4))
 					}
 					&:empty {
 						margin-top: 10px;
@@ -142,14 +142,14 @@
 							content: "Не имеет.";
 							font-size: 12px;
 							font-weight: 700;
-							color: $color4;
+							color: rgb(var(--color-4));
 						}
 					}
 				}
 				span {
 					font-size: 12px;
 					font-weight: 700;
-					color: $color2;
+					color: rgb(var(--color-2));
 					padding: 2px 15px;
 				}
 			}
@@ -157,7 +157,7 @@
 	}
 	&-content {
 
-		background-color: $color2;
+		background-color: rgb(var(--color-2));
 
 		border-radius: .7rem;
 
@@ -173,7 +173,7 @@
 							"other"
 		}
 
-		@media screen and ( max-width: $MobileBreakPoint ) {
+		@media screen and ( max-width: var(--mobile-breakpoint)) {
 
 			max-height: unset;
 
@@ -200,21 +200,46 @@
 
 	import Vue, { PropOptions } from 'vue'
 
-	// COMPONENTS
-		import VueImage from '~/components/common/ImageComponent/Image.vue'
+	// VUEX
+	import { mapState } from 'vuex';
+
+	// MIXINS
+	import IntersectionObserver from '~/assets/mixins/IntersectionObserver.ts'
 
 	// TYPES
-		import type { WORKCASE, CONTENT } from '~/types/WorkCase.ts'
+	import type { WORKCASE, CONTENT } from '~/types/WorkCase.ts'
+
+	// VUEX MODULE TYPE MAP
+	import type { VuexModules } from '~/types/VuexModules'
 
 	// MODULE
 	export default Vue.extend({
-		props: {
-			content: 		{ required: true  } as PropOptions< CONTENT >,
-			properties: { required: true  } as PropOptions< WORKCASE['properties'] >,
-		},
 		components: {
-			VueImage
+			VueImage: () => import('~/components/common/ImageComponent/Image.vue')
 		},
+		mixins: [ IntersectionObserver ],
+		props: {
+			content: 		{ type: Object, required: true  } as PropOptions< CONTENT >,
+			properties: { type: Object, required: true  } as PropOptions< WORKCASE['properties'] >,
+		},
+		computed: {
+			...mapState({
+				UI: state => (state as VuexModules).App.UI,
+			})
+		},
+		mounted() {
+
+			const ANIMATION = {
+				in: {
+					opacity: [0, 1]
+				},
+				out: {
+					opacity: [1, 0]
+				}
+			}
+
+			this.initIntersectionObserver(this.$refs.case as Element, ANIMATION, .25)
+		}
 	})
 
 </script>

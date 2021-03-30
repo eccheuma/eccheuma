@@ -1,11 +1,16 @@
 import { ActionTree, MutationTree } from 'vuex'
 
 // TYPES AND INTERFACES
-	export type I_CONTENT = {
-		message: string
-		description: string
-		link?: string,
-	}
+	import type { NOTIFICATION_CONTENT } from '~/types/Notification.ts'
+
+// STATE
+	export const state = () => ({
+
+		status: false,
+
+		content: new Object() as NOTIFICATION_CONTENT,
+
+	})
 
 // CURENT STATE
 	export type CurentState = ReturnType<typeof state>
@@ -17,40 +22,21 @@ import { ActionTree, MutationTree } from 'vuex'
 		}
 	}
 
-// STATE
-	export const state = () => ({
-
-		status: false,
-
-		content: {
-			message: `Приветствие`,
-			description: `Some description text`,
-			link: '',
-		},
-
-	})
-
 // MUTATIONS
 	export const mutations: MutationTree<CurentState> = {
-		Change_Status: (state, status: boolean ) => {
+		Change_Status: (state, status?: boolean ) => {
 			state.status = status ?? !state.status
 		},
-		Change_Content(state, _content: I_CONTENT ) {
-			state.content = { ...state.content, ..._content }
+		Change_Content(state, _content: NOTIFICATION_CONTENT ) {
+			state.content = _content
 		},
 	}
 
 // ACTIONS
 	export const actions: ActionTree<CurentState, CurentState>  = {
-		Set_Notification({ commit }, { message, description, link }: I_CONTENT) {
+		Set_Notification({ commit }, payload: NOTIFICATION_CONTENT) {
 
-			const C: I_CONTENT = {
-				message,
-				description,
-				link,
-			}
-
-			commit('Change_Content', C)
+			commit('Change_Content', payload)
 
 			commit('Change_Status', true)
 

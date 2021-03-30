@@ -1,29 +1,26 @@
 <template>
-	<div class="promo_container" :class="`order-${ order }`">
+	<div class="promo_container">
 
-		<template v-if="CurentType">
-			<section class="promo_header">
-				<h4>{{ CurentType.title }}</h4> 
-				<p>{{ CurentType.subtitle }}</p>
-			</section>
+		<section class="promo_header" :class="{ cooled: Cooled }">
+			<h4>{{ moduleContent.title }}</h4> 
+			<p>{{ moduleContent.subtitle }}</p>
+		</section>
 
-			<component :is="PromoType"></component>
+		<keep-alive>
+			<component :is="PromoType" v-if="!Cooled" />
+		</keep-alive>
 
-			<section class="promo_footer">
-				
-				<client-only>
-					<p v-if="CLIENT_RENDER_CHECK && !$isMobile">{{ CurentType.footer}}</p>
-				</client-only>
+		<section class="promo_footer" :class="{ cooled: Cooled }">
 
-				<hr>
+			{{ moduleContent.footer }}
 
-				<nuxt-link :to="CurentType.link.path" tag="button">
-					{{ CurentType.link.name }}
-				</nuxt-link>
+			<hr>
 
-			</section>
+			<eccheuma-button @click.native="routeTo(moduleContent.link.path)">
+				{{ moduleContent.link.name }}
+			</eccheuma-button>
 
-		</template>
+		</section>
 
 	</div>
 </template>
@@ -36,71 +33,130 @@
 
 .promo {
 	&_container {
-		display: grid; padding: 3vh 0;
-		grid-template-columns: 1fr;
-		background-color: $color1;
+
+		padding: 3vh 0;
+
+		display: grid; 
+
+		grid-template: {
+			columns: 1fr;
+			rows: 20vh 70vh 30vh
+		}
+
+		@media screen and ( max-width: var(--mobile-breakpoint)) {
+			grid-template: {
+				columns: 1fr;
+				rows: 40vh 140vh 25vh
+			}
+		}
+
+		background: {
+			color: rgb(var(--color-1));
+		}
+
 		> section {
-			padding: 3vh 2vw
+			padding: 3vh 2vw;
+			display: inline-grid;
+			align-content: center;
 		}
 	}
 	&_header {
+
+		align-self: center;
+
 		h4 {
 			font-weight: 600;
 			width: 100%;
-			font-size: $FontSize1;
+			font-size: var(--font-size-1);
 		}
 		p {
 			font-weight: 500;
-			font-size: $FontSize3;
+			font-size: var(--font-size-3);
 			width: calc(min(100%, 70ch));
-			color: $color4;
+			color: rgb(var(--color-4));
 		}
-		@media screen and ( max-width: $MobileBreakPoint ) {
+		@media screen and ( max-width: var(--mobile-breakpoint)) {
 			text-align: center !important;
 		}
 	}
 	&_footer {
-		display: grid;
-		grid-template-columns: 1fr;
+
+		height: 30vh;
+
 		p {
 			font-size: 12px;
 			font-weight: 700;
 			// margin-bottom: 30px;
 			padding: 0 5vw;
-			color: $color4;
+			color: rgb(var(--color-4));
 		}
 		hr {
-			background-color: $color4;
+			background-color: rgb(var(--color-4));
 			width: 50%;
 			height: .5px;
 			border-top: unset;
 		}
 		button {
-			@include light-button { width: 25%; justify-self: center; margin-top: 15px; }
+
+			@include light-button { 
+				width: 25%; 
+				justify-self: center; 
+				margin-top: 15px; 
+			}
+
+			position: relative;
+
 		}
 	}
 }
-	
 
 </style>
 
-<script>
+<script lang="ts">
 
-	export default {
-		props: [ 'PromoType', 'order' ],
+	import Vue, { PropOptions } from 'vue'
+
+	// MIXINS
+	import IntersectionCooler 	from '~/assets/mixins/IntersectionCooler.ts'
+
+	// TYPES
+	type MODULES = 'Works' | 'Style' | 'Gallery' | 'Adaptation'
+
+	type CONTENT = {
+		title: string
+		subtitle: string
+		footer: string
+		link: {
+			path: string
+			name: string
+		}
+	}
+
+	// MODULE
+	export default Vue.extend({
 		components: {
-			Works: () => import  ( './_Works.vue' ),
-			Style: () => import  ( './_Style.vue' ),
-			Gallery: () => import  ( './_Gallery.vue' ),
-			Adaptation: () => import  ( './_Adaptation.vue' ),
+			Works: 			() => import('~/components/promo/_Works.vue'),
+			Style: 			() => import('~/components/promo/_Style.vue'),
+			Gallery: 		() => import('~/components/promo/_Gallery.vue'),
+			Adaptation: () => import('~/components/promo/_Adaptation.vue'),
+			// OTHERS 
+			EccheumaButton: () => import('~/components/common/EcchuemaButton.vue')
 		},
-		computed: {
-			CurentType() {
-				return this.PromoContent[this.PromoType]
-			}
+		mixins: [
+			IntersectionCooler
+		],
+		props: {
+			PromoType: {
+				type: String,
+				required: true,
+				default: 'Works'
+			} as PropOptions<MODULES>
 		},
 		data() {
 			return {
+
+				Cooled: false,
+
 				PromoContent: {
 					Style: {
 						title: 'Фирменный стиль и айдентика',
@@ -138,9 +194,25 @@
 							name: 'Перейти к портфолио'
 						}	
 					}
-				} 
+				} as {[T in MODULES]: CONTENT} 
 			}
 		},
-	};
+		computed: {
+			moduleContent(): CONTENT {
+				return this.PromoContent[this.PromoType]
+			}
+		},
+		mounted() {
+			this.initCooler(this.$el, (cooled: boolean) => { this.Cooled = cooled })
+		},
+		methods: {
+			routeTo(path: string) {
+
+				console.log(path)
+
+				this.$router.push({ path })
+			}
+		}
+	})
 
 </script>

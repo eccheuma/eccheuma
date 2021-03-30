@@ -1,59 +1,64 @@
 <template>
 
-	<section @mouseover="CursorInArea = true" id="header-navigation" class="navigation-wrap" :class="[{ 'module-background': background }, { 'module-search': search }]">
+	<section 
+		id="header-navigation" 
+		class="navigation-wrap" 
+		:class="[
+			{'module-background': background }, 
+			{'module-search': search }
+		]"
+		@mouseover="CursorInArea = true" 
+		>
 
 		<client-only>
-			<CursorFX v-if="Ready && CursorInArea && !$isMobile"></CursorFX>
+			<CursorFX v-if="Ready && CursorInArea && !$isMobile" />
 		</client-only>
 
 		<nav class="navigation-container">
 
-			<div class="navigation-item"
-
+			<div 
 				v-for="prop in HeaderMenu" 
-				
-				:key="prop.ID" 
+
 				:id="`HNI-${prop.ID}`"  
+				:key="prop.ID" 
+				
+				class="navigation-item"
 				:class="{ disabled: prop.disabled }"
 
-				@mouseenter="EmitSound(`Off`)" 
-				@click="EmitSound(`Tap`, { rate: .5 })">
+				@mouseenter="EmitSound('On', { rate: 1.25 })" 
+				@click="EmitSound('On', { rate: 1 })"
+				>
 
 				<transition name="route_selector">
-					<span v-if="CurentRoute == `${ prop.route }`"></span>
+					<span v-if="CurentRoute == `${ prop.route }`" />
 				</transition>
 
-				<nuxt-link no-prefetch 
+				<nuxt-link 
+					:id="`nav_item-${ prop.ID }`"
 					:to="prop.route"
-					:id="`nav_item-${prop.ID}`"
-					:class="[
-						{'navigation-curent_route': CurentRoute == `${ prop.route }`}
-					]"
 					
-					@click="ScrollPage">
+					no-prefetch
 
-						<i class="fas" :class="prop.icon" style="pointer-events: none"></i>
+					@click="ScrollPage"
+				>
+
+						<i class="fas" :class="prop.icon" style="pointer-events: none" />
 
 						{{ prop.name }}		
 
 				</nuxt-link>
 				
-				<b-popover v-if="!prop.disabled"
-					container="header-navigation" 
-					:target="`nav_item-${prop.ID}`" 
-					triggers="hover"
-					placement="bottom"
-					:delay="{ show: 250, hide: 0 }">
-					<i class="fas fa-info-circle"></i>
+				<popover v-if="!prop.disabled" :target="`nav_item-${ prop.ID }`">
+					<!-- <i class="fas fa-info-circle"></i> -->
 					{{ prop.discription }}
-				</b-popover>
+				</popover>
 
 			</div>
 
 		</nav>
 
-		<div class="navigation-search" v-if="search">
-			<search-bar />
+		<div class="navigation-search">
+			<search-bar v-if="search" />
 		</div>
 
 	</section>
@@ -100,75 +105,72 @@ $TransitionDuration: .25s;
 		grid-template-columns: 9fr 3fr !important;
 	}
 	&-background {
-		background-color: $color1;
+		background-color: rgb(var(--color-1));
 		@extend %gradient_border;
 	}
 }
 
 .navigation {
 	&-wrap {
-		position: sticky; top: 0; z-index: 2000; padding: 0 5vw;
+		position: sticky; top: 0; z-index: 1010; padding: 0 5vw;
 		display: grid; grid-template-columns: 1fr; gap: 15px; align-items: center;
 	}
 	&-container {
+
 		width: 100%;
     display: grid;
     justify-content: center;
     grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+
 	}
 	&-search {
 		padding: 0 10%;
 	}
-	&-curent_route {
-		color: $color6 !important;
-		transform: translateY(-1.5vh);
-		i {
-			transition-duration: $TransitionDuration;
-			display: block;
-			font-size: $FontSize3;
-			color: $color6 !important;
-			transform: scale(1.5) translateY(-5vh) !important;
-		}
-	}
 	&-item {
 		position: relative;
 		text-align: center;
+
 		&:before {
 			content: '';
 			display: block; position: absolute; top: -1px;
-			width: 100%; height: 1px;
+			width: 100%; height: .6px;
 			opacity: 0;
-			background: linear-gradient(90deg, rgba($color5,.0) 0%, rgba($color5,1) 50%, rgba($color5,.0) 100%) !important ;
+			background: linear-gradient(90deg, rgba(var(--color-6),.0) 0%, rgba(var(--color-6),1) 50%, rgba(var(--color-6),.0) 100%) !important ;
 			transition-duration: .5s;
 		}
+
 		&:after {
 			content: ''; display: block; position: absolute;
 			top: 4.5vh; left: -0.125rem;
 			width: .25rem; height: 10px;
 			opacity: 1 !important;
-			background-color: $color4 !important;
+			background-color: rgb(var(--color-4)) !important;
 			border-radius: .7rem;
-			@media screen and ( max-width: $MobileBreakPoint ) {
+			@media screen and ( max-width: var(--mobile-breakpoint)) {
 				display: none;
 			}
 		}
+
 		&:hover {
 			&:before {
 				opacity: 1
 			}
 		}
+
 		&:nth-child(1) {
 			&:after {
 				display: none
 			}
 		}
+
 		span {
 			display: block; position: absolute; top: -1px;
-			width: 100%; height: 1px;
+			width: 100%; height: .6px;
 			opacity: 1;
-			background: linear-gradient(90deg, rgba($color5,.0) 0%, rgba($color5,1) 50%, rgba($color5,.0) 100%) !important ;
+			background: linear-gradient(90deg, rgba(var(--color-6),.0) 0%, rgba(var(--color-6),1) 50%, rgba(var(--color-6),.0) 100%) !important ;
 			transition-duration: .5s;
 		}
+
 		a {
 			cursor: pointer;
 			display: block;
@@ -177,36 +179,36 @@ $TransitionDuration: .25s;
 			font-weight: 600;
 			border-radius: 12px;
 			transition-duration: $TransitionDuration;
-			color: $color4;
+			color: rgb(var(--color-4));
 			z-index: 2000;
 
-			@media screen and ( max-width: $MobileBreakPoint ) {
+			@media screen and ( max-width: var(--mobile-breakpoint)) {
 				display: inline-flex;
 			}
 
 			i {
 				display: block;
-				font-size: $FontSize3;
-				color: $color3;
+				font-size: var(--font-size-3);
+				color: rgb(var(--color-3));
 				padding: 2vh 0 0px;
 				transition-duration: $TransitionDuration;
-				filter: drop-shadow(0px -5vh 0px rgba($color5,0));
+				filter: drop-shadow(0px -5vh 0px rgba(var(--color-6),0));
 
-				@media screen and ( max-width: $MobileBreakPoint ) {
+				@media screen and ( max-width: var(--mobile-breakpoint)) {
 					margin-right: 1ch;
 				}
 
 			}
 			&:hover {
 				text-decoration: none;
-				color: $color5;
+				color: rgb(var(--color-6));
 				transform: translateY(-1.5vh);
 				i {
-					color: $color5;
+					color: rgb(var(--color-6));
 					transform: scale(1.5) translateY(-5vh);
 				}
 
-				@media screen and ( max-width: $MobileBreakPoint ) {
+				@media screen and ( max-width: var(--mobile-breakpoint)) {
 
 					text-decoration: unset;
 					color: unset;
@@ -219,7 +221,20 @@ $TransitionDuration: .25s;
 				}
 
 			}
-		}	
+		}
+
+		.active {
+			color: rgb(var(--color-5)) !important;
+			transform: translateY(-1.5vh);
+			i {
+				transition-duration: $TransitionDuration;
+				display: block;
+				font-size: var(--font-size-3);
+				color: rgb(var(--color-5)) !important;
+				transform: scale(1.5) translateY(-5vh) !important;
+			}
+		}
+
 	}
 }
 
@@ -231,17 +246,24 @@ $TransitionDuration: .25s;
 
 	import EmitSound from '~/assets/mixins/EmitSound.ts'
 
+	// COMPONENTS
+	import Popover from '~/components/common/Popover.vue'
+
 	export default Vue.extend({
-		mixins: [ EmitSound ],
 		components: {
+			Popover,
+			// ASYNC COMPONENTS
 			SearchBar: 	() => import('~/components/common/SearchBar.vue'),
-			CursorFX: 	() => import('~/components/common/CursorFX.vue')
+			CursorFX: 	() => import('~/components/common/CursorFX.vue'),
 		},
+		mixins: [ EmitSound ],
 		props: {
 			search: {
+				type: Boolean,
 				default: true
 			},
 			background: {
+				type: Boolean,
 				default: true
 			}
 		},
@@ -286,6 +308,9 @@ $TransitionDuration: .25s;
 				return this.$route.matched?.[0].path
 			},
 		},
+		mounted() {
+			this.Ready = true;
+		},
 		methods: {
 			ScrollPage(): void {
 
@@ -296,9 +321,6 @@ $TransitionDuration: .25s;
 
 			},
 		},
-		mounted() {
-			this.Ready = true;
-		}
 	})
 
 </script>

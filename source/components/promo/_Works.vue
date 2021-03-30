@@ -12,13 +12,13 @@
 
     <!-- :options="{ auto: true, interval: 5000 }" -->
 
-    <eccheuma-swiper v-if="Ready" :options="{ auto: true, interval: 8000 }">
+    <eccheuma-swiper v-if="Ready" :options="{ auto: true, interval: 8000 }" class="works_swiper">
       <template #default>
         <template v-for="section in Works.Landings">
           <section
             v-for="(item, index) in section.content.images"
             :key="`section-of-${section.ID}_${index}`"
-            class="eccheuma_swiper-item"
+            class="works_swiper-item"
           >
             <vue-image
               :content="{ path: item.content.path }"
@@ -28,7 +28,7 @@
               {{ section.content.name }}
             </vue-image>
 
-            <div class="eccheuma_swiper-item-description">
+            <div class="works_swiper-item-description">
               <span>{{ section.content.name }}</span>
               <span>{{ section.content.description }}</span>
             </div>
@@ -40,12 +40,10 @@
 </template>
 
 <style lang="scss" scoped>
-.eccheuma_swiper {
-  width: 100vw;
-  height: 100%;
-  position: relative;
-  background-color: $color1;
-  color: $color5;
+
+.works_swiper {
+  max-width: 50vw;
+  justify-self: center;
   &-item {
     padding: 0 5vw;
 
@@ -61,18 +59,18 @@
       }
       text-align: center;
       border: {
-        top: 1px solid $color3;
+        top: 1px solid rgb(var(--color-3));
       }
       span {
         display: block;
         &:nth-child(1) {
-          color: $color6;
-          font-size: $FontSize1;
+          color: rgb(var(--color-5));
+          font-size: var(--font-size-1);
           font-weight: 700;
         }
         &:nth-child(2) {
-          color: $color4;
-          font-size: $FontSize2;
+          color: rgb(var(--color-4));
+          font-size: var(--font-size-3);
           font-weight: 500;
         }
       }
@@ -90,7 +88,7 @@
     z-index: 10;
     i {
       letter-spacing: 20px;
-      color: $color5;
+      color: rgb(var(--color-6));
       &:nth-child(2) {
         transform: translateX(0px);
         animation: swipe 0.5s infinite alternate;
@@ -110,7 +108,7 @@
     position: relative;
     width: 100%;
     overflow: hidden;
-    background-color: $color2;
+    background-color: rgb(var(--color-2));
   }
   &_carousel {
     position: relative;

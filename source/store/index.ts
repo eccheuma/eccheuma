@@ -1,17 +1,14 @@
 
-	export const strict = false
-
 // VUEX TYPES
 	import type { ActionTree, MutationTree } from 'vuex'
+	
+	export const strict = false
 
 // TYPES
 	export type FORMATED_DATE = {
 		Day: string
 		Time: string
 	}
-
-// ROOT STATE TYPE
-	export type RootState = ReturnType<typeof state>
 
 // STATE
 	export const state = () => ({
@@ -23,6 +20,9 @@
 		LocalTime: {} as FORMATED_DATE
 
 	})
+
+// ROOT STATE TYPE
+	export type RootState = ReturnType<typeof state>
 	
 // MUTATIONS
 	export const mutations: MutationTree<RootState> = {
@@ -42,7 +42,7 @@
 
 // ACTIONS
 	export const actions: ActionTree<RootState, RootState> = {
-		async GetLocalTime({ commit }, n = null) {
+		GetLocalTime({ commit }, n = null) {
 
 			const Properties = {
 				D: { year: 'numeric', month: 'long', day: 'numeric' },

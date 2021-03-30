@@ -4,6 +4,7 @@ const IN_BUILD = process.env.NODE_ENV !== 'development';
 
 const MODE = mode => (!(mode === 'SPA' && !IN_BUILD));
 
+// TYPES
 export default {
   srcDir: 'source',
 
@@ -13,16 +14,36 @@ export default {
   },
 
   ssr: MODE('SSR'),
-  modern: IN_BUILD,
+
+  // modern: IN_BUILD,
+  
   target: 'static',
+
   server: {
     port: 3000,
     host: '0.0.0.0'
   },
 
-  generate: { dir: 'application', exclude: ['/Admin'] },
+  router: {
+    linkPrefetchedClass:  'prefetched',
+    linkActiveClass:      'active',
+    linkExactActiveClass: 'exact',
+  },
+
+  generate: { 
+    dir: 'application',
+    exclude: ['/Admin'] 
+  },
 
   loading: false,
+
+  loaders: {
+    vue: {
+      compilerOptions: {
+        whitespace: 'condense'
+      }
+    }
+  },
 
   head: {
     title: 'Eccheuma | Graphical & Web Design',
@@ -81,7 +102,6 @@ export default {
       }
     ],
     link: [
-      { rel: 'icon', href: '/Icon.svg' },
       {
         rel: 'preload',
         href: '/fonts/webfonts/fa-brands-400.woff2',
@@ -116,22 +136,19 @@ export default {
   },
 
   css: [
-    // Bootstrap custom variables
-    '~/assets/sass/variables.sass',
-
     // Sass bootstrap modules
-    '~/assets/sass/modules.sass',
-
+    '~/assets/styles/scss/modules.scss',
     // Main Style Sheets file
-    '~/assets/sass/main.sass'
+    '~/assets/styles/scss/main.scss',
   ],
 
   layoutTransition: {
-    name: 'OpacityTransition',
+    name: 'layout-transition',
     mode: 'out-in'
   },
 
   buildModules: [
+    // 'nuxt-vite',
     '@nuxtjs/sitemap',
     '@nuxt/typescript-build',
     '@nuxtjs/style-resources',
@@ -139,7 +156,21 @@ export default {
   ],
 
   build: {
-    analyze: IN_BUILD,
+    babel: {
+      presets({ envName }) {
+
+        const envTargets = {
+          client: { browsers: ['> 0.25%, not dead'] },
+          server: { node: 'current' },
+        }
+
+        return [
+          ['@nuxt/babel-preset-app', { targets: envTargets[envName], corejs: { version: 3 } }]
+        ]
+
+      }
+    },
+    // analyze: IN_BUILD,
     minimaze: IN_BUILD,
     parallel: false,
     publicPath: '/static',
@@ -180,7 +211,7 @@ export default {
     // Common plugins
     { src: '~/plugins/Firebase.ts' },
     { src: '~/plugins/VuePortal.js' },
-    { src: '~/plugins/VueBootstrap.js' },
+    // { src: '~/plugins/VueBootstrap.js' },
     { src: '~/plugins/MobileDetection.ts' },
     // Client plugins TypeScript
     { src: '~/plugins/Pixi.ts',       mode: 'client' },
@@ -194,11 +225,22 @@ export default {
 
   // BUILD MODULES CONFIGURATIONS
 
+  // vite: {
+  //   css: {
+  //     preprocessorOptions: {
+  //       scss: {
+  //         sourceMap: true,
+  //         implementation: require('sass'),
+  //         additionalData: '@import "~/assets/sass/_mixins.scss";',
+  //       },
+  //     },
+  //   }, 
+  // },
+
   sitemap: {
     hostname: 'https://escapefrommordorland.web.app',
     exclude: ['/Admin/*'],
-    gzip: true,
-    trailingSlash: true
+    trailingSlash: false
   },
 
   optimizedImages: {
@@ -209,7 +251,7 @@ export default {
   },
 
   styleResources: {
-    sass: ['~/assets/sass/variables.sass'],
-    scss: ['~/assets/sass/variables.scss']
+    sass: ['~/assets/styles/sass/_mixins.sass'],
+    scss: ['~/assets/styles/scss/_mixins.scss'],
   }
 };
