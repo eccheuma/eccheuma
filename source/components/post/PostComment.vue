@@ -30,7 +30,7 @@
 
 .post-comment-item {
 
-	@media screen and ( max-width: var(--mobile-breakpoint)) {
+	@media screen and ( max-width: $mobile-breakpoint ) {
 		
 		row-gap: 2vh;
 
@@ -83,6 +83,11 @@
 			border: 4px solid rgb(var(--color-6));
 			box-shadow: 0px 1vh 0px 0px rgb(var(--color-5));
 			border-radius: 100%;
+
+			@media screen and ( max-width: $mobile-breakpoint ) {
+				margin: 0 auto;
+			}
+
 		}
 
 	}
@@ -104,7 +109,7 @@
 			width: 50%;
 			margin: 1vh 0;
 
-			@media screen and ( max-width: var(--mobile-breakpoint)) {
+			@media screen and ( max-width: $mobile-breakpoint ) {
 				margin: 1vh auto;
 			}
 
@@ -123,7 +128,7 @@
 			}
 		}
 
-		@media screen and ( max-width: var(--mobile-breakpoint)) {
+		@media screen and ( max-width: $mobile-breakpoint ) {
 			text-align: center;
 		}
 
@@ -141,7 +146,7 @@
 			font-family: var(--second-font);
 			color: rgb(var(--color-2));
 
-			@media screen and ( max-width: var(--mobile-breakpoint)) {
+			@media screen and ( max-width: $mobile-breakpoint ) {
 				padding: 0 5vw;
 			}
 
@@ -151,7 +156,7 @@
 			@include push-button {
 				background-color: transparent;
 				padding: 3px 20px;
-				float: right;
+				float: left;
 				margin: 0;
 			};
 		}

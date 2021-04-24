@@ -5,7 +5,9 @@
 			<template #icon-prev="{ onEdge }">
 				<button 
 					class="eccheuma_swiper-buttons" 
-					:class="{ onEdge }"
+					:class="[
+						{ onEdge }, { glassy: CLIENT_RENDER_CHECK && !$isMobile && $PIXI.utils.isWebGLSupported() }
+					]"
 					@click="EmitSound(`Off`, { volume: .3, rate: .75})" 
 					@mouseenter="CarouselFocus = true" 
 					@mouseleave="CarouselFocus = false"
@@ -17,7 +19,9 @@
 			<template #icon-next="{ onEdge }">
 				<button 
 					class="eccheuma_swiper-buttons" 
-					:class="{ onEdge }"
+					:class="[
+						{ onEdge }, { glassy: CLIENT_RENDER_CHECK && !$isMobile && $PIXI.utils.isWebGLSupported() }
+					]"
 					@click="EmitSound(`Off`, { volume: .3, rate: .75})" 
 					@mouseenter="CarouselFocus = true" 
 					@mouseleave="CarouselFocus = false"
@@ -27,11 +31,16 @@
 			</template>
 
 			<template #pagination="{ active }">
-				<span class="eccheuma_swiper-dots" :class="{ active_dot: active }" @mouseenter="EmitSound('Tap', { rate: 1.25 })" />
+				<span 
+					class="eccheuma_swiper-dots" 
+					:class="{ active_dot: active }" 
+					@mouseenter="CarouselFocus = true" 
+					@mouseleave="CarouselFocus = false"
+				/>
 			</template>
 
 			<template #default="{ activeIndex }">
-				<section v-for="(item, index) in PostContent" :key="item.ID" class="eccheuma_swiper-item">
+				<section v-for="(item, index) in PostContent" :key="item.ID" class="eccheuma_swiper-item" @dblclick="GoToPost(item.ID)">
 
 						<client-only>
 
@@ -72,10 +81,10 @@
 								<span>{{ item.tags }}</span>
 							</section>
 
-							<section class="eccheuma_swiper-caption" @click="GoToPost(item.ID)">
+							<section class="eccheuma_swiper-caption">
 								<h2>{{ item.title }}</h2>
 								<h6>{{ item.description }}</h6>
-								<span>
+								<span @click="GoToPost(item.ID)">
 									<i class="fas fa-link" /> Перейти к посту
 								</span>
 							</section>
@@ -114,16 +123,12 @@ $swiperHeight: 70vh;
 
 	.focused {
 		opacity: .75;
-		filter: brightness(75%);
+		filter: brightness(75%) blur(0px);
 	}
 
 	.unfocused {
 		opacity: .25;
-		filter: brightness(75%);
-	}
-
-	.glassy {
-		filter: brightness(75%) blur(10px);
+		filter: brightness(50%) blur(3px);
 	}
 
 	&-image {
@@ -142,7 +147,7 @@ $swiperHeight: 70vh;
 		// 	opacity: .25;
 		// 	z-index: 1;
 		// 	mix-blend-mode: darken;
-		// 	@media screen and ( max-width: var(--mobile-breakpoint)) { 
+		// 	@media screen and ( max-width: $mobile-breakpoint ) { 
 		// 		mix-blend-mode: none;
 		// 	}
 		// }
@@ -158,10 +163,10 @@ $swiperHeight: 70vh;
 		background-color: rgba(var(--color-1), .25);
 		border: 1px solid rgba(var(--color-6), .0);
 		border-radius: .7rem;
-		padding: 0 20px;
+		padding: 0 3vh;
 		transition-duration: .5s;
 		mix-blend-mode: hard-light; 
-		@media screen and ( max-width: var(--mobile-breakpoint)) {
+		@media screen and ( max-width: $mobile-breakpoint ) {
 			mix-blend-mode: unset;
 		}
 		&:hover {
@@ -214,7 +219,7 @@ $swiperHeight: 70vh;
 			rows: 2fr 75% 2fr
 		}
 
-		@media screen and ( max-width: var(--mobile-breakpoint)) {
+		@media screen and ( max-width: $mobile-breakpoint ) {
 			text-align: center;
 		}
 
@@ -268,11 +273,12 @@ $swiperHeight: 70vh;
 
 		h2 {
 			font-weight: 600;
+			font-size: var(--font-size-2);
 		}
 		h6 {
 			white-space: pre-wrap;
 			font: {
-				size: .95rem;
+				size: var(--font-size-3);
 				weight: 500;
 			}
 			margin: 0 0 1vh;
@@ -301,7 +307,7 @@ $swiperHeight: 70vh;
 		// 	transition-duration: .5s
 		// 	&:hover
 		// 		opacity: 1	
-		// @media screen and ( max-width: var(--mobile-breakpoint))
+		// @media screen and ( max-width: $mobile-breakpoint )
 		// 	text-align: center
 		// 	color: rgb(var(--color-6))
 		// 	padding: 35vh 10vw
@@ -404,40 +410,40 @@ $swiperHeight: 70vh;
 				const POSTS = await firebase.database().ref('Posts').once('value');
 			
 				const DATA 	= await firebase.database()
-					.ref("Posts")
-					.orderByChild("ID")
+					.ref('Posts')
+					.orderByChild('ID')
 					.startAt( POSTS.numChildren() - this.PostForRequest )
 					.once('value')
 
 				this.PostContent = Object.values(DATA.val())
 				
 			},
-			GoToPost(ID: POST['ID']) {
+			GoToPost(ID: number) {
 
-				this.$router.push({ path: 'home' }, () => {
-					console.log('PUSH COMPLETE!')
-				});
+				const SCROLL_TO_OBJECT = () => {
 
-				// this.$nextTick(() => {
-
-				// 	const ELEMENT = document.getElementById(`PostID-${ ID }`)
+					const ELEMENT = document.getElementById(`PostID-${ ID }`)
 	
-				// 	if ( ELEMENT ) {
+					if ( ELEMENT ) {
 	
-				// 		const RECT 	= ELEMENT.getBoundingClientRect()
-				// 		const POS 	= (RECT.top + pageYOffset) - (RECT.height / 2) 
+						const RECT 	= ELEMENT.getBoundingClientRect()
+						const POS 	= (RECT.top + pageYOffset) - (RECT.height / 2) 
 
-				// 		console.log(POS, RECT)
+						window.scrollTo({
+							top: Math.trunc(POS),
+							left: 0,
+							behavior: 'smooth'
+						})
 	
-				// 		window.scrollTo({
-				// 			top: Math.trunc(POS),
-				// 			left: 0,
-				// 			behavior: 'smooth'
-				// 		})
-	
-				// 	}
+					}
 
-				// })
+				}
+
+				if ( this.$route.name === 'home' ) {
+					SCROLL_TO_OBJECT(); return;
+				}
+
+				this.$router.push({ path: 'home' }, () => setTimeout(SCROLL_TO_OBJECT, 1e3));
 
 			},
 		},

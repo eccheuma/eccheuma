@@ -210,9 +210,7 @@
 
 						<template v-else>
 							<h5>Для комментирования необходима авторизация</h5>
-							<p class="pb-0">
-								Это не так уж и сложно, да и получите сверху ещё больше функионала.
-							</p>
+							<p>Это не так уж и сложно, да и получите сверху ещё больше функионала.</p>
 						</template>
 
 					</section>
@@ -230,6 +228,8 @@
 
 .post {
 	&-container {
+
+		@include gradient_border(top);
 
 		padding: 0 4px;
 
@@ -253,8 +253,6 @@
 
 	}
 	&-header {
-
-		@include gradient_border(top);
 
 		background-color: rgb(var(--color-2));
 		min-height: 40vh;
@@ -280,7 +278,8 @@
 			width: 100%; height: 100%;
 			background-image: url(~assets/images/SVG/Stripes.svg);
 			background-size: 12px;
-			opacity: .5;
+			opacity: 1;
+			mask-image: linear-gradient(0deg, rgba(var(--color-1), 1) 0%, rgba(var(--color-1), .5) 25%);
 		}
 
 		&:after {
@@ -356,7 +355,7 @@
 			areas: 'social collapse author'
 		}
 
-		@media screen and ( max-width: var(--mobile-breakpoint)) {
+		@media screen and ( max-width: $mobile-breakpoint ) {
 
 			padding: 2vh 0;
 			row-gap: 2vh;
@@ -425,7 +424,7 @@
 
 			$iconSize: 100px;
 
-			@media screen and ( max-width: var(--mobile-breakpoint)) {
+			@media screen and ( max-width: $mobile-breakpoint ) {
 				transform: unset;
 				border-bottom: 1px solid rgb(var(--color-5));
 			}
@@ -485,7 +484,7 @@
 
 		transition: border-radius 250ms ease-in-out;
 
-		@media screen and ( max-width: var(--mobile-breakpoint)) {
+		@media screen and ( max-width: $mobile-breakpoint ) {
 			padding: 0 5vw;
 		}
 
@@ -493,6 +492,7 @@
 		color: rgb(var(--color-1));
 		min-height: 50vh;
 		padding: 5vh 3vw;
+
 		&-header {
 			height: 100%;
 			p {
@@ -601,12 +601,11 @@
 	import EmitSound 			from '~/assets/mixins/EmitSound.ts'
 	import HashGenerator 	from '~/assets/mixins/HashGenerator.ts'
 
-	import IntersectionObserver from '~/assets/mixins/IntersectionObserver.ts'
 	import IntersectionCooler 	from '~/assets/mixins/IntersectionCooler.ts'
 
 	// COMPONETS
-	import EccheumaCollapse from '~/components/common/EccheumaCollapse.vue'
-	import Popover 					from '~/components/common/Popover.vue'
+	import EccheumaCollapse 		from '~/components/common/EccheumaCollapse.vue'
+	import Popover 							from '~/components/common/Popover.vue'
 
 	// VUEX MODULE TYPE MAP
 	import type { VuexModules } from '~/types/VuexModules'
@@ -616,8 +615,6 @@
 	import type { USER_STATE } 													from '~/types/User.ts'
 	import type { FORMATED_DATE } 											from '~/store'
 
-	import type { ANIMATION_PAYLOAD } from '~/assets/mixins/IntersectionObserver.ts'
-
 	type SECTIONS = 'Likes' | 'Comments' | 'Content'
 
 	// // IMAGE PLACEHOLDER
@@ -625,16 +622,6 @@
 
 	// VALIDATE REGULAR EXPRESSION
 	const CYRILLIC_VALIDATION = helpers.regex('alpha', /^[а-яА-ЯЁё\n\t\s\w\W]*$/)
-		
-	// INERSECTION OBSERVER ANIMATION
-	const OBSERVER_ANIMATION: ANIMATION_PAYLOAD = {
-		in: {
-			opacity: [0, 1],
-		},
-		out: {
-			opacity: [1, 0],
-		}
-	}
 
 	// MODULE
 	export default Vue.extend({
@@ -647,7 +634,7 @@
 		mixins: [ 
 			EmitSound, 
 			HashGenerator, 
-			IntersectionObserver, 
+			// IntersectionObserver, 
 			IntersectionCooler 
 		],
 		props: {
@@ -716,20 +703,7 @@
 			},
 
 			sortedComments(): COMMENT[] {
-
-				// CANDIDATE FOR WEB ASSEMBLY OPTIMIZATIONS
-
-				const PREP = Object.values(this.Comments || {})
-
-				const SORTED_DATES = PREP.map( item => item.Date ).sort();
-				const SORTED_ARRAY = [] as COMMENT[];
-
-				SORTED_DATES.forEach((number) => {
-					SORTED_ARRAY.push( PREP.filter(item => item.Date === number).pop()! )
-				})
-
-				return SORTED_ARRAY;
-
+				return Object.values(this.Comments || {}).sort((a, b) => a.Date - b.Date)
 			}
 			
 		},
@@ -740,7 +714,9 @@
 				},
 			},
 		},
-		created() {
+		async created() {
+
+			this.PostDate = await this.GetLocalTime(this.payload.date);
 
 			const Watcher = this.$watch('Cooled', () => {
 				if ( Watcher ) {
@@ -752,19 +728,17 @@
 			this.listenSnapshots(['Likes', 'Comments', 'Content'])
 
 		},
-		async mounted() {
+		mounted() {
 
-			this.initCooler(this.$el, (cooled: boolean) => { this.Cooled = cooled })
-
-			if ( !this.$isMobile && this.$PIXI.utils.isWebGLSupported() ) {
-				this.initIntersectionObserver(this.$el, OBSERVER_ANIMATION)
+			if ( !this.$isMobile ) {
+				this.initCooler(this.$el, (cooled: boolean) => { this.Cooled = cooled })
+			} else {
+				this.Cooled = false;
 			}
 
-			if ( this.CLIENT_RENDER_CHECK && !this.Cooled ) {
-				this.updateImage()		
+			if ( this.CLIENT_RENDER_CHECK ) {
+				if ( !this.Cooled ) { this.updateImage() }
 			}
-
-			this.PostDate = await this.GetLocalTime(this.payload.date)
 
 		},
 		validations: {
@@ -821,14 +795,14 @@
 				const I = await this.GetImageURL({ 
 					_path: this.payload.image,
 					_size: IMAGE_CONTAINER.getBoundingClientRect().width * window.devicePixelRatio
-				})
+				}) as string
 
 				this.$AnimeJS({
 					targets: this.$refs.ImageHolder,
 					opacity: [1, 0],
-					delay: 2000,
+					delay: 500,
 					duration: 500,
-					endDelay: 500,
+					endDelay: 250,
 					direction: 'alternate',
 					easing: 'easeInQuad',
 					update: (anime) => {

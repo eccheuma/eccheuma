@@ -47,7 +47,24 @@
 
 		</section>
 
-		<section class="footer-pit" />
+		<section class="footer-pit">
+			<div class="footer-pit-text">
+				<span>Eccheuma</span>
+				<span>Ryova Graphical & Web Design</span>
+			</div>
+			<div class="footer-pit-logo">
+				<svg v-if="!$isMobile" ref="LOGO_SVG" fill="rgb(var(--color-2))" viewBox="0 0 157 24">
+					<path
+						ref="LOGO_PATH"
+						d="m156 7h-155c1-2 1-3 3-4 1-1 3-2 6-2h138c2 0 4 1 5 2 2 1 3 2 3 4zm-135 2h20c0 1 0 3-1 4s-3 2-7 2h-20c0-2 1-3 2-4 2-1 4-2 6-2zm135 8c0 2-1 3-3 4-1 1-3 2-5 2h-138c-3 0-5-1-6-2-2-1-2-2-3-4h155z"
+						stroke="none"
+					/>
+				</svg>
+			</div>
+			<div class="footer-pit-version">
+				<span>СБОРКА: {{ APP_VERSION }}</span>
+			</div>
+		</section>
 
 	</footer>
 </template>
@@ -66,16 +83,16 @@
 
 		@include gradient_border(top);
 
-		display: grid; padding: 5vh 5vw; gap: 30px;
+		display: grid; padding: 5vh 5vw 0px; gap: 30px;
 		grid-template: {
 			columns: repeat(5, 1fr);
-			rows: 20vh 4vh 6vh;
+			rows: 20vh 4vh 10vh;
 			areas: 	"social freelance about about about"
 							"info 	info 			info 	info 	info"
 							"pit		pit				pit		pit		pit"
 		}
 
-		@media screen and ( max-width: var(--mobile-breakpoint)) {
+		@media screen and ( max-width: $mobile-breakpoint ) {
 
 			grid-template: {
 				columns: 1fr;
@@ -157,7 +174,7 @@
 			columns: 1fr 3fr 1fr
 		}
 
-		@media screen and ( max-width: var(--mobile-breakpoint)) {
+		@media screen and ( max-width: $mobile-breakpoint ) {
 			
 			padding: 5vh 25vw;
 
@@ -208,6 +225,54 @@
 			}
 		}
 
+	}
+	&-pit {
+
+		@include section_position($area: pit);
+
+		align-content: center;
+
+		display: grid;
+		grid-template: {
+			columns: 1fr 1fr 1fr
+		}
+
+		&-text {
+			span {
+				display: block; 
+				text-transform: uppercase;
+				&:nth-child(1) {
+					color: rgb(var(--color-6)); 
+					font-weight: 800; 
+					letter-spacing: 3px; 
+					font-size: .6rem
+				}
+				&:nth-child(2) {
+					color: rgb(var(--color-5)); 
+					font-weight: 700; 
+					letter-spacing: 1px; 
+					font-size: .45rem
+				}
+			}
+		}
+		&-logo {
+			display: flex;
+			svg {
+				margin: auto;
+				height: 3vh;
+			}
+		}
+		&-version {
+			display: flex;
+			justify-content: flex-end;
+			span {
+				align-self: center;
+				color: rgb(var(--color-3));
+				font-weight: 800;
+				letter-spacing: .5ch;
+				font-size: var(--font-size-5);
+			}
+		}
 	}
 }
 

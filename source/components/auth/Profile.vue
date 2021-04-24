@@ -21,6 +21,16 @@
 
 		</section>
 		<section class="auth_profile-footer">
+
+			<template v-if="$isMobile">
+				<nuxt-link tag="button" :to="`/user-panel?uid=${ UserState.UserID }`">
+					Личный Кабинет
+				</nuxt-link>
+			</template>
+
+			<nuxt-link v-if="UserState.UserID === __SELF_KEY__" tag="button" to="/admin">
+				Админ Панель
+			</nuxt-link>
 			<button @click="logout()">
 				Выйти
 			</button>
@@ -257,7 +267,7 @@
 		button {
 			@include push-button {
 
-				margin: 0 auto;
+				margin: .5vh auto;
 
 				width: 75%;
 				background: {

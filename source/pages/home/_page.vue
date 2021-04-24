@@ -1,12 +1,17 @@
 <template>
-	<section ref="page" class="home-page">
+	<section class="home-page">
 
-		<post 
-			v-for="( item, index ) in Posts"
-			:key="`Post-${ index }`"
-			:order="Posts.length - index"
-			:payload="item"
-		/>
+		<intesection-component 
+			v-for="( item, index ) in Posts" 
+			:key="`Post-${ index }`" 
+
+			:style="`order: ${ Posts.length - index }`"
+			:rootMargin="5"
+
+			@isIntersecting="animateIntersection"
+		>
+			<post :order="0" :payload="item" />
+		</intesection-component>
 
 		<promo-banner 
 			v-if="Posts.length >= 1"
@@ -57,17 +62,30 @@
 	import type { PAYLOAD } from '~/store/PageContent';
 
 	// COMPONENTS
-	import PromoBanner from '~/components/promo/PromoBanner.vue';
-	import Post from '~/components/post/Post.vue';
+	import PromoBanner 					from '~/components/promo/PromoBanner.vue';
+	import Post 								from '~/components/post/Post.vue';
+	import IntesectionComponent from '~/components/intersectionComponent.vue'
 
 	// LOAD POLITIC
 	import { load_ranges } from '~/config/LoadPolitic.ts'
+
+	// INERSECTION OBSERVER ANIMATION
+	const OBSERVER_ANIMATION = {
+		in: {
+			opacity: [0, 1],
+			delay: 250,
+		},
+		out: {
+			opacity: [1, 0],
+		}
+	}
 
 	// MODULE
 	export default Vue.extend({
 		components: {
 			PromoBanner,
 			Post,
+			IntesectionComponent,
 		},
 		mixins: [ ResetPageContent, PageTransitionProperty ],
 		async middleware({ params, query, redirect }) {
@@ -121,21 +139,18 @@
 				Posts: state => (state as VuexModules).PageContent.Content.Posts
 			}),
 		},
-		// watch: {
-		// 	Posts: {
-		// 		handler() {
-		// 			this.$nextTick().then(() => this.animateTransitionPage('in')); this.Ready = true;
-		// 		}
-		// 	}
-		// },
+		watch: {
+			Posts: {
+				handler() {
+					console.log('Something!')
+					
+				}
+			}
+		},
 		created() {
 			this.ChangePage(this.PAGE)
 		},
 		beforeDestroy() {
-			// this.animateTransitionPage('out');
-		},
-		mounted() {
-			// this.animateTransitionPage('in');
 		},
 		methods: {
 
@@ -147,15 +162,14 @@
 				ChangePage: 'PageSelector/ChangePage'
 			}),
 
-			animateTransitionPage(direction: 'in' | 'out' = 'in') {
+			animateIntersection(intersection: boolean, slotNode: Node) {
 
 				this.$AnimeJS({
-					targets: this.$refs.page,
-					direction: direction === 'in' ? 'normal' : 'reverse',
-					opacity: [0, 1],
-					delay: 1000,
-					duration: 750,
-					easing: 'easeInOutSine',
+					targets: slotNode,
+					easing: 'linear',
+
+					...OBSERVER_ANIMATION[intersection ? 'in' : 'out']
+
 				})
 
 			},

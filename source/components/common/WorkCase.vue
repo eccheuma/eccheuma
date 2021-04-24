@@ -1,52 +1,54 @@
 <template>
-	<section ref="case" class="work_case-container">
-		<div class="work_case-about" :class="`interface-${ UI }`">
+	<section ref="case" class="work_case-wrap">
+		<div class="work_case-container">
+			<div class="work_case-about" :class="`interface-${ UI }`">
 
-			<div class="work_case-about-header">
-				<h5>{{ content.name }}</h5>
-				<span>Срок выполнения: {{ content.time }}</span>
+				<div class="work_case-about-header">
+					<h5>{{ content.name }}</h5>
+					<span>Срок выполнения: {{ content.time }}</span>
+				</div>
+
+				<div class="work_case-about-body">
+
+					<section>
+						<h6>Тематика:</h6>
+						<span>{{ content.theme }}</span>
+					</section> 
+
+					<section>
+						<h6>Техническое задание:</h6>
+						<span>{{ content.tech_request }}</span>
+					</section> 
+
+					<section>
+						<h6>Адрес на готовый продукт:</h6>
+						<a :href="`https://${ content.link }`">{{ content.link }}</a>
+					</section> 
+
+					<section>
+						<h6>Стоимость заказа:</h6>
+						<span>{{ content.cost }} ₽</span>
+					</section>
+
+				</div>
+
 			</div>
+			<div class="work_case-content">
 
-			<div class="work_case-about-body">
-
-				<section>
-					<h6>Тематика:</h6>
-					<span>{{ content.theme }}</span>
-				</section> 
-
-				<section>
-					<h6>Техническое задание:</h6>
-					<span>{{ content.tech_request }}</span>
-				</section> 
-
-				<section>
-					<h6>Адрес на готовый продукт:</h6>
-					<a :href="`https://${ content.link }`">{{ content.link }}</a>
-				</section> 
-
-				<section>
-					<h6>Стоимость заказа:</h6>
-					<span>{{ content.cost }} ₽</span>
-				</section>
+				<vue-image v-for="(item, index) in content.images" :key="`IMAGE-${ index }`"
+					:class="$isMobile ? '' 
+						: !index ? 'main' : 'other'
+					"
+					:style="$isMobile ? '' 
+						: !index ? `grid-column: main / ${ content.images.length }` : ''
+					"
+					:content="item.content" 
+					:sections="{ date: false, description: false, zoom: true }" 
+					:property="{ fit: 'cover', type: 'case' }">
+					{{ content.name }}
+				</vue-image>
 
 			</div>
-
-		</div>
-		<div class="work_case-content">
-
-			<vue-image v-for="(item, index) in content.images" :key="`IMAGE-${ index }`"
-				:class="$isMobile ? '' 
-					: !index ? 'main' : 'other'
-				"
-				:style="$isMobile ? '' 
-					: !index ? `grid-column: main / ${ content.images.length }` : ''
-				"
-				:content="item.content" 
-				:sections="{ date: false, description: false, zoom: true }" 
-				:property="{ fit: 'cover', type: 'case' }">
-				{{ content.name }}
-			</vue-image>
-
 		</div>
 	</section>
 </template>
@@ -69,7 +71,7 @@
 			rows: 100%;
 		}
 
-		@media screen and ( max-width: var(--mobile-breakpoint)) {
+		@media screen and ( max-width: $mobile-breakpoint ) {
 
 			max-height: unset;
 
@@ -107,7 +109,7 @@
 		}
 		&-body {
 
-			@media screen and ( max-width: var(--mobile-breakpoint)) {
+			@media screen and ( max-width: $mobile-breakpoint ) {
 				padding-bottom: 100px;
 			}
 
@@ -173,7 +175,7 @@
 							"other"
 		}
 
-		@media screen and ( max-width: var(--mobile-breakpoint)) {
+		@media screen and ( max-width: $mobile-breakpoint ) {
 
 			max-height: unset;
 
@@ -228,17 +230,37 @@
 			})
 		},
 		mounted() {
+			
+			if ( !this.$isMobile || this.$PIXI.utils.isWebGLSupported() ) {
 
-			const ANIMATION = {
-				in: {
-					opacity: [0, 1]
-				},
-				out: {
-					opacity: [1, 0]
-				}
+				this.setObserver(this.$refs.case as Element) 
+
 			}
 
-			this.initIntersectionObserver(this.$refs.case as Element, ANIMATION, .25)
+		},
+		methods: {
+
+			setObserver(elements: Vue | Vue[] | Element | Element[]) {
+
+				const ANIMATION = {
+					in: {
+						opacity: [0, 1],
+						translateY: [100, 0]
+					},
+					out: {
+						opacity: [1, 0],
+						translateY: [0, 100]
+					}
+				}
+
+				const SET = (el: Element) => this.initIntersectionObserver({ el, animation: ANIMATION, _options: { animation_target: el.firstElementChild! } })
+
+				Array.isArray(elements) 
+					? elements.forEach((node: Element | Vue) => SET((node as Vue).$el  || node)) 
+					: SET((elements as Vue).$el || elements )
+
+			},
+
 		}
 	})
 

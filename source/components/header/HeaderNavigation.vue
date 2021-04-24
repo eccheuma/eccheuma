@@ -2,7 +2,7 @@
 
 	<section 
 		id="header-navigation" 
-		class="navigation-wrap" 
+		class="navigation-container" 
 		:class="[
 			{'module-background': background }, 
 			{'module-search': search }
@@ -14,7 +14,7 @@
 			<CursorFX v-if="Ready && CursorInArea && !$isMobile" />
 		</client-only>
 
-		<nav class="navigation-container">
+		<nav class="navigation-items" :style="`--hngic: ${ $isMobile ? 1 : HeaderMenu.length }`">
 
 			<div 
 				v-for="prop in HeaderMenu" 
@@ -30,12 +30,14 @@
 				>
 
 				<transition name="route_selector">
-					<span v-if="CurentRoute == `${ prop.route }`" />
+					<span v-if="CurentRoute === prop.route" />
 				</transition>
 
 				<nuxt-link 
 					:id="`nav_item-${ prop.ID }`"
 					:to="prop.route"
+
+					:class="[{ active: CurentRoute === prop.route }]"
 					
 					no-prefetch
 
@@ -48,7 +50,7 @@
 
 				</nuxt-link>
 				
-				<popover v-if="!prop.disabled" :target="`nav_item-${ prop.ID }`">
+				<popover v-if="!prop.disabled || !$isMobile" :target="`nav_item-${ prop.ID }`">
 					<!-- <i class="fas fa-info-circle"></i> -->
 					{{ prop.discription }}
 				</popover>
@@ -57,8 +59,8 @@
 
 		</nav>
 
-		<div class="navigation-search">
-			<search-bar v-if="search" />
+		<div v-if="search" class="navigation-search">
+			<search-bar />
 		</div>
 
 	</section>
@@ -90,45 +92,67 @@ $TransitionDuration: .25s;
 	}
 }
 
-.disabled {
-	pointer-events: none;
-	a {
-		opacity: .1 !important 
-	}
-	&:before {
-		display: none !important
-	}
-}
-
 .module {
 	&-search {
-		grid-template-columns: 9fr 3fr !important;
+
+		--navigation-grid: 9fr 3fr;
+
+		@media screen and ( max-width: $mobile-breakpoint ) {
+			--navigation-grid: 12fr;
+		} 
+
 	}
 	&-background {
-		background-color: rgb(var(--color-1));
+
+		--navigation-background: rgb(var(--color-1));
 		@extend %gradient_border;
+
 	}
 }
 
 .navigation {
-	&-wrap {
-		position: sticky; top: 0; z-index: 1010; padding: 0 5vw;
-		display: grid; grid-template-columns: 1fr; gap: 15px; align-items: center;
-	}
 	&-container {
+
+		position: sticky; top: 0; z-index: 1010; padding: 0 5vw;
+
+		display: grid; 
+		
+		grid-template-columns: 1fr; 
+		gap: 15px; 
+		align-items: center;
+
+		grid-template: {
+			columns: var(--navigation-grid, 12fr);
+		};
+
+		background: {
+			color: var(--navigation-background, transparent);
+		};
+
+	}
+	&-items {
 
 		width: 100%;
     display: grid;
     justify-content: center;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(100px, calc(100% / var(--hngic))));
 
 	}
 	&-search {
 		padding: 0 10%;
+
+		@media screen and ( max-width: $mobile-breakpoint ) {
+			display: none;
+		}
+
 	}
 	&-item {
 		position: relative;
 		text-align: center;
+
+		@media screen and ( max-width: $mobile-breakpoint ) {
+			margin: .5vh 0;
+		}
 
 		&:before {
 			content: '';
@@ -146,7 +170,7 @@ $TransitionDuration: .25s;
 			opacity: 1 !important;
 			background-color: rgb(var(--color-4)) !important;
 			border-radius: .7rem;
-			@media screen and ( max-width: var(--mobile-breakpoint)) {
+			@media screen and ( max-width: $mobile-breakpoint ) {
 				display: none;
 			}
 		}
@@ -175,27 +199,29 @@ $TransitionDuration: .25s;
 			cursor: pointer;
 			display: block;
 			line-height: 6vh;
-			font-size: 11.5px;
+			font-size: var(--font-size-4);
 			font-weight: 600;
 			border-radius: 12px;
 			transition-duration: $TransitionDuration;
 			color: rgb(var(--color-4));
 			z-index: 2000;
 
-			@media screen and ( max-width: var(--mobile-breakpoint)) {
+			@media screen and ( max-width: $mobile-breakpoint ) {
 				display: inline-flex;
+				font-size: var(--font-size-3);
 			}
 
 			i {
 				display: block;
-				font-size: var(--font-size-3);
+				// font-size: var(--font-size-3);
 				color: rgb(var(--color-3));
 				padding: 2vh 0 0px;
 				transition-duration: $TransitionDuration;
 				filter: drop-shadow(0px -5vh 0px rgba(var(--color-6),0));
 
-				@media screen and ( max-width: var(--mobile-breakpoint)) {
+				@media screen and ( max-width: $mobile-breakpoint ) {
 					margin-right: 1ch;
+					display: none;
 				}
 
 			}
@@ -208,7 +234,7 @@ $TransitionDuration: .25s;
 					transform: scale(1.5) translateY(-5vh);
 				}
 
-				@media screen and ( max-width: var(--mobile-breakpoint)) {
+				@media screen and ( max-width: $mobile-breakpoint ) {
 
 					text-decoration: unset;
 					color: unset;
@@ -223,16 +249,37 @@ $TransitionDuration: .25s;
 			}
 		}
 
+		.disabled {
+			pointer-events: none;
+			a {
+				opacity: .1 !important 
+			}
+			&:before {
+				display: none !important
+			}
+		}
+
 		.active {
+
 			color: rgb(var(--color-5)) !important;
-			transform: translateY(-1.5vh);
+
+			@media screen and ( mix-width: $mobile-breakpoint ) {
+				transform: translateY(-1.5vh);
+			}
+
 			i {
+
 				transition-duration: $TransitionDuration;
 				display: block;
 				font-size: var(--font-size-3);
 				color: rgb(var(--color-5)) !important;
-				transform: scale(1.5) translateY(-5vh) !important;
+
+				@media screen and ( mix-width: $mobile-breakpoint ) {
+					transform: scale(1.5) translateY(-5vh) !important;
+				}
+
 			}
+
 		}
 
 	}
@@ -246,13 +293,10 @@ $TransitionDuration: .25s;
 
 	import EmitSound from '~/assets/mixins/EmitSound.ts'
 
-	// COMPONENTS
-	import Popover from '~/components/common/Popover.vue'
-
 	export default Vue.extend({
 		components: {
-			Popover,
 			// ASYNC COMPONENTS
+			Popover: 		() => import('~/components/common/Popover.vue'),
 			SearchBar: 	() => import('~/components/common/SearchBar.vue'),
 			CursorFX: 	() => import('~/components/common/CursorFX.vue'),
 		},

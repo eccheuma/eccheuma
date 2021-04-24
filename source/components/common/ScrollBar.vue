@@ -2,37 +2,34 @@
 	<div class="scroll_panel-container">
 
 		<transition name="Fading">
-			<section class="scroll_panel-messages" v-if="LoginStatus">
+			<section v-if="LoginStatus" id="ScrollMessage" class="scroll_panel-messages">
 
 				<i 
-					@click="ScrollPage(0)" 
-					v-b-toggle="`Header_menu_collapse`" 
 					class="fas" 
 					:class="[
 						{ 'fa-envelope-open-text active': NewMessages > 0 },
 						{ 'fa-envelope': NewMessages == 0 },
-					]"/>
+					]"
+					@click="scrollPage(0)" 
+					/>
 
 				<span>{{ NewMessages }}</span>
 				
-				<!-- <b-popover
-					class="scroll_bar-container-Message"
-					container="scroll-bar" 
-					target="ScrollMessages" 
-					triggers="hover" 
-					:delay="{ show: 250, hide: 0 }"
-					placement="right">
-					<template v-if="LastMessage">
-						<h6>От {{ LastMessage.from }}</h6>
-						<hr>
-						<p>{{ LastMessage.message }}</p>
-					</template>
-					<template v-else>
-						<p>Нет новых сообщений</p>
-					</template>
-				</b-popover> -->
+				<!-- <popover target="ScrollMessage">
+					<p>Нет новых сообщений</p>
+				</popover> -->
+
 			</section>
 		</transition>
+
+		<section class="scroll_panel-mute">
+			<span
+				:class="[{ active: GlobalVolume.Mute && !GlobalVolume.inChange }, { change: GlobalVolume.inChange }]"
+				@click="changeGlobalVolume({ _volume: Number(GlobalVolume.Mute), _duration: 1000 })"
+			>
+				<i class="fas" :class="GlobalVolume.Mute ? `fa-volume-mute` : `fa-volume-up`" />
+			</span>
+		</section>
 
 		<section class="scroll_panel-switch">
 
@@ -45,11 +42,6 @@
 				>
 				<span class="switch" :class="{ active: UI === 'dark' }" />
 			</div>
-
-			<!-- <b-popover target="ScrollTheme" triggers="hover" placement="right"
-				:delay="{ show: 250, hide: 0 }">
-				Смена темы
-			</b-popover> -->
 
 		</section>
 
@@ -74,7 +66,7 @@ $scroll_w: 3vw;
 	&:before {
 		content: '';
 		position: absolute; top: 0; left: #{ (100% - $s) / 2 };
-		width: $s; height: 1px; background-color: rgb(var(--color-3));
+		width: $s; height: 0.25px; background-color: rgb(var(--color-3));
 	}
 };
 
@@ -85,16 +77,68 @@ $scroll_w: 3vw;
 		align-items: center;
 		height: 100vh; width: $scroll_w;
 		background-color: rgb(var(--color-1));
+
+		@include gradient_border(right)
+
 	}
 	&-messages {
-		grid-row: -3;
+		grid-row: -4;
 		text-align: center;
 		i {
 			display: block; width: 100%; padding: 10px 0;
 			color: rgb(var(--color-4));
 		}
 		span {
-			color: rgb(var(--color-4)); font-weight: 700; font-size: var(--font-size-3);
+			color: rgb(var(--color-4)); 
+			font-weight: 700; 
+			font-size: var(--font-size-4);
+		}
+	}
+	&-mute {
+
+		.change {
+			opacity: .25;
+			pointer-events: none;
+		}
+
+		.active {
+			color: rgb(var(--color-1)) !important;
+			background-color: rgb(var(--color-5)) !important;
+			animation: Mute 1s infinite alternate;
+			@keyframes Mute {
+				0% {
+					transform: scale(0.85);
+				}
+				100% {
+					transform: scale(1);
+				}
+			}
+		}
+
+		@extend %TopBorder;
+		grid-row: -3;
+		padding: 2vh 0 5px;
+
+		span {
+			$size: $scroll_w / 1.5;
+
+			cursor: pointer;
+			display: flex;
+			width: $size;
+			height: $size;
+			color: rgb(var(--color-4));
+			font-size: #{$size / 3};
+			background-color: rgb(var(--color-1));
+			border: 1px solid rgb(var(--color-3));
+			border-radius: 100%;
+			opacity: 1;
+			margin: auto;
+
+			transition: all 250ms ease-in-out;
+
+			i {
+				margin: auto;
+			}
 		}
 	}
 	&-switch {
@@ -118,7 +162,7 @@ $scroll_w: 3vw;
 				transform: scale(.75);
 				transition-duration: 500ms;
 				border: {
-					radius: .7rem
+					radius: 100%
 				}
 			}
 
@@ -152,7 +196,10 @@ $scroll_w: 3vw;
 	import Vue from 'vue'
 
 // VUEX
-	import { mapState, mapMutations } from 'vuex'
+	import { mapState, mapMutations, mapActions } from 'vuex'
+
+// COMPONENTS
+	// import Popover from '~/components/common/Popover.vue'
 
 // TYPES
 	import type { VuexModules } from '~/types/VuexModules'
@@ -163,6 +210,9 @@ $scroll_w: 3vw;
 
 // MODULE
 	export default Vue.extend({
+		// components: {
+		// 	Popover
+		// },
 		mixins: [ EmitSound ],
 		data() {
 			return {
@@ -175,7 +225,8 @@ $scroll_w: 3vw;
 				UI: 						state => (state as VuexModules).App.UI,
 				LoginStatus: 		state => (state as VuexModules).Auth.Auth.LoginStatus,
 				Messages: 			state => (state as VuexModules).User.Messages.Messages,
-				NewMessages: 		state => (state as VuexModules).User.Messages.NewMessagesCount
+				NewMessages: 		state => (state as VuexModules).User.Messages.NewMessagesCount,
+				GlobalVolume: 	state => (state as VuexModules).Sound.Global,
 			}),
 
 		},
@@ -191,9 +242,15 @@ $scroll_w: 3vw;
 
 		},
 		methods: {
+
+			...mapActions({
+				changeGlobalVolume: 'Sound/Set_GlobalSoundProperty', 
+			}),
+
 			...mapMutations({
 				setUI: 'App/setUI',
 			}),
+
 			scrollPage(to: 0 | 9999) {
 
 				this.EmitSound('On', { rate: .5, volume: .25 })

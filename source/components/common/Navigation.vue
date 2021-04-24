@@ -1,5 +1,5 @@
 <template>
-	<nav class="portfolio_navigation-container">
+	<nav id="Navigation" class="portfolio_navigation-container">
 	<template v-for="(link, index) in category">
 
 		<nuxt-link ref="links" :key="index" :to="link.route" :class="{ active: link.route === $route.path }">
@@ -10,7 +10,7 @@
 
 			<i :class="link.icon" /> {{ link.name }}
 
-			<popover>
+			<popover target="Navigation">
 				<i class="fas fa-info-circle" />
 				{{ link.discription }}
 			</popover>

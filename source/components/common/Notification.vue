@@ -68,14 +68,14 @@
 		}
 		&-leave {
 
-			transform: translateY(-100px);
+			transform: translateY(0px);
 
 			&-active {
 				transition: transform 500ms ease-in-out
 			}
 
 			&-to {
-				transform: translateY(0px);
+				transform: translateY(-100px);
 			}
 
 		}
@@ -112,6 +112,8 @@
 
 		position: relative;
 		display: flex;
+
+		align-self: center;
 
 		i {
 			&:nth-child(1) {
@@ -174,6 +176,24 @@
 	&-text {
 		justify-self: center;
 		align-self: center;
+
+		span {
+			display: block;
+			margin-bottom: .25vh;
+			&:nth-child(1) {
+				font: {
+					size: var(--font-size-3);
+					weight: 800;
+				}
+			};
+			&:nth-child(2) {
+				font: {
+					size: var(--font-size-4);
+					weight: 600;
+				}
+			};
+		}
+
 	}
 	&-button {
 

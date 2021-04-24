@@ -3,7 +3,8 @@
 
 		<Loader
 			:ElementLoad="LoaderStatus.Load"
-			:ElementLoadComplete="LoaderStatus.Loaded">
+			:ElementLoadComplete="LoaderStatus.Loaded"
+			>
 			{{ LoaderMessage }}
 		</Loader>
 

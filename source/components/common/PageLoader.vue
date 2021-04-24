@@ -1,10 +1,10 @@
 <template>
 	
 	<transition name="LoaderTransition">
-		<section class="loader-container" v-if="CurentStage < LoadStages.length" @mousewheel.prevent>
+		<section v-if="!Loaded" class="loader-container" @mousewheel.prevent>
 
 			<div class="loader-content">
-				<i ref="spinner"></i>
+				<i ref="spinner" />
 				<span ref="message">{{ Message }}</span>
 			</div>
 
@@ -55,7 +55,7 @@
 		}
 
 		backdrop-filter: blur(10px);
-		@media screen and ( max-width: var(--mobile-breakpoint)) {
+		@media screen and ( max-width: $mobile-breakpoint ) {
 			backdrop-filter: unset;
 		}
 
@@ -68,7 +68,7 @@
 				size: 20px;
 			}
 			mix-blend-mode: multiply;
-			@media screen and ( max-width: var(--mobile-breakpoint)) {
+			@media screen and ( max-width: $mobile-breakpoint ) {
 				mix-blend-mode: unset;
 			}
 		}
@@ -101,7 +101,7 @@
 			animation-timing-function: ease-in-out;
 			animation: Loader 3s infinite;
 			filter: drop-shadow(0px 0px 0px rgb(var(--color-5)));
-			@media screen and (max-width: var(--mobile-breakpoint)) {
+			@media screen and (max-width: $mobile-breakpoint) {
 				filter: unset;
 			}
 			@keyframes Loader {
@@ -111,7 +111,7 @@
 					border-radius: 25%;
 					opacity: 1;
 					filter: drop-shadow(0px 0px 10px rgb(var(--color-5)));
-					@media screen and (max-width: var(--mobile-breakpoint)) {
+					@media screen and (max-width: $mobile-breakpoint) {
 						filter: unset;
 					}
 				}
@@ -121,7 +121,7 @@
 					border-radius: 100%;
 					opacity: 1;
 					filter: drop-shadow(0px 0px 2px rgb(var(--color-5)));
-					@media screen and (max-width: var(--mobile-breakpoint)) {
+					@media screen and (max-width: $mobile-breakpoint) {
 						filter: unset;
 					}
 				}
@@ -131,7 +131,7 @@
 					border-radius: 25%;
 					opacity: 0;
 					filter: drop-shadow(0px 0px 0px rgb(var(--color-5)));
-					@media screen and (max-width: var(--mobile-breakpoint)) {
+					@media screen and (max-width: $mobile-breakpoint) {
 						filter: unset;
 					}
 				}
@@ -141,7 +141,7 @@
 					border-radius: 100%;
 					opacity: 1;
 					filter: drop-shadow(0px 0px 2px rgb(var(--color-5)));
-					@media screen and (max-width: var(--mobile-breakpoint)) {
+					@media screen and (max-width: $mobile-breakpoint) {
 						filter: unset;
 					}
 				}
@@ -151,7 +151,7 @@
 					border-radius: 25%;
 					opacity: 1;
 					filter: drop-shadow(0px 0px 10px rgb(var(--color-5)));
-					@media screen and (max-width: var(--mobile-breakpoint)) {
+					@media screen and (max-width: $mobile-breakpoint) {
 						filter: unset;
 					}
 				}
@@ -165,10 +165,10 @@
 			font-weight: 700;
 			letter-spacing: .25ch;
 			text-align: center;
-			opacity: 0;
+			// opacity: 0;
 			&:nth-of-type(1) {
 				line-height: 10vh;
-				font-size: var(--font-size-4);
+				font-size: var(--font-size-5);
 			}
 		}
 
@@ -200,91 +200,141 @@
 		data() {
 			return {
 
+				Loaded: false,
+
 				Counter: 0,
 				CurentStage: 0,
 
 				LoadStages: [
-					{ LoadPoint: 0, 	Message: 'Монитрование элеменетов интерфейса' },
+					{ LoadPoint: 0, 	Message: 'Загрузка скриптов и данных' },
 					{ LoadPoint: 15, 	Message: 'Загрузка внешних API' },
-					{ LoadPoint: 75, 	Message: 'Остаточная компоновка элементов' },
-					{ LoadPoint: 100, Message: 'Готово!'}
+					{ LoadPoint: 30, 	Message: 'Монтирование элементов' },
+					{ LoadPoint: 80, 	Message: 'Остаточная компоновка элементов' },
+					{ LoadPoint: 100, Message: 'Готово!' },
 				] as LoadStage[]
 
 			} 
 		},
+		// head(): any {
+
+		// 	return {
+		// 		title: this.Message
+		// 	}
+
+		// },
 		computed: {
 			Message(): string {
-
-				const R = this.LoadStages.filter(stage => {
-					return stage.LoadPoint <= this.Counter;
-				}).pop()
-
-				return R?.Message || 'Загрузка'
-
+				return this.LoadStages[this.CurentStage].Message
 			}
 		},
-		methods: {
-			...mapMutations({
-
-				AppScroll: 'AppScroll'
-
-			}),
-			ChangeCounter() {
-
-				const FROM 	= this.Counter;
-				const TO 		= this.LoadStages[this.CurentStage].LoadPoint;
-
-				// CHANGE COUNTER => ANIMATE TEXT ON BREAKPOINT => UPDATE VALUE OF STAGE
-
-				const A = this.$AnimeJS({
-					targets: this.$data,
-					Counter: [FROM, TO],
-					round: 1,
-					easing: 'easeInOutCubic',
-					duration: () => { return this.$AnimeJS.random(500, 1500) },
-					complete: () => {
-
-						if ( this.CurentStage !== this.LoadStages.length - 1 ) {
-
-							const FADE_TEXT_ANIM = this.$AnimeJS({
-								targets: this.$refs.message,
-								opacity: [0, 1],
-								duration: 100,
-								endDelay: 200,
-								easing: 'linear',
-								direction: 'alternate',
-								update: (a) => {
-									if ( a.progress === 100 ) {
-
-										this.CurentStage += 1;
-
-									}
-								},
-								complete: () => {
-
-									this.ChangeCounter();
-									
-									this.$AnimeJS.remove(FADE_TEXT_ANIM);
-									this.$AnimeJS.remove(A); 
-									
-								}
-							})
-
-						} else { this.$AnimeJS.remove(A); this.CurentStage += 1; }
-
-					}
-				});
-
-			},
-		},
 		created() {
-
 			this.AppScroll(false);
-
 		},
 		mounted() {
+			requestAnimationFrame(this.changeStage)
+		},
+		methods: {
 
-			this.ChangeCounter()
+			...mapMutations({
+				AppScroll: 'AppScroll'
+			}),
+
+			animateCounter(stage: number) {
+
+				return new Promise((resolve) => {
+
+					this.$AnimeJS({
+						targets: this.$data,
+						Counter: [this.Counter, this.LoadStages[stage].LoadPoint],
+						round: 1,
+						easing: 'linear',
+						duration: 250,
+						complete: () => resolve(true),
+					})
+				})
+
+			},
+
+			changeStage() {
+
+				const nextStage = this.CurentStage + 1
+
+				this.animateCounter(nextStage)
+					.then(() => {
+
+						this.$AnimeJS({
+							targets: this.$refs.message,
+							opacity: [1, 0],
+							duration: 250,
+							delay: 500 - 250 * Math.random(),
+							round: 100,
+							easing: 'linear',
+							direction: 'alternate',
+							update: ({ progress }) => {
+								if ( progress === 100 ) {
+									this.CurentStage = nextStage;
+								}
+							},
+							complete: () => {
+								if ( this.LoadStages[this.CurentStage].LoadPoint !== 100 ) {
+									this.changeStage();
+								} else {
+									this.Loaded = true;
+								}
+							}
+						})
+
+					})
+
+			}
+
+			// changeCounter() {
+
+			// 	const FROM 	= this.Counter;
+			// 	const TO 		= this.LoadStages[this.CurentStage].LoadPoint;
+
+			// 	// CHANGE COUNTER => ANIMATE TEXT ON BREAKPOINT => UPDATE VALUE OF STAGE
+
+			// 	const A = this.$AnimeJS({
+			// 		targets: this.$data,
+			// 		Counter: [FROM, TO],
+			// 		round: 1,
+			// 		easing: 'easeInOutCubic',
+			// 		duration: () => { return this.$AnimeJS.random(500, 1500) },
+			// 		complete: () => {
+
+			// 			if ( this.CurentStage !== this.LoadStages.length - 1 ) {
+
+			// 				const FADE_TEXT_ANIM = this.$AnimeJS({
+			// 					targets: this.$refs.message,
+			// 					opacity: [0, 1],
+			// 					duration: 100,
+			// 					endDelay: 200,
+			// 					easing: 'linear',
+			// 					direction: 'alternate',
+			// 					update: (a) => {
+			// 						if ( a.progress === 100 ) {
+
+			// 							this.CurentStage += 1;
+
+			// 						}
+			// 					},
+			// 					complete: () => {
+
+			// 						this.ChangeCounter();
+									
+			// 						this.$AnimeJS.remove(FADE_TEXT_ANIM);
+			// 						this.$AnimeJS.remove(A); 
+									
+			// 					}
+			// 				})
+
+			// 			} else { this.$AnimeJS.remove(A); this.CurentStage += 1; }
+
+			// 		}
+			// 	});
+
+			// },
 
 		}
 	})

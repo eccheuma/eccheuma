@@ -59,7 +59,7 @@
 		display: grid;
 		column-gap: 15px;
 		grid-template-columns: 9fr 3fr;
-		@media screen and ( max-width: var(--mobile-breakpoint)) {
+		@media screen and ( max-width: $mobile-breakpoint ) {
 			grid-template-columns: 1fr;
 		}
 	}

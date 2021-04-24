@@ -184,6 +184,13 @@ $HeaderHeight: 70vh;
 			columns: 2fr 5fr 2fr;
 		}
 
+		@media screen and ( max-width: $mobile-breakpoint ) {
+			grid-template: {
+				columns: 1fr;
+				rows: auto auto auto;
+			}
+		}
+
 		>div {
 			opacity: 0;
 		}
@@ -191,6 +198,11 @@ $HeaderHeight: 70vh;
 	}
 
 	&-info {
+
+		display: grid;
+		grid-template: {
+			rows: 10% auto 50%;
+		}
 
 		hr {
 			width: 100%;
@@ -211,11 +223,15 @@ $HeaderHeight: 70vh;
 			h6 {
 				display: block;
 				color: rgb(var(--color-6));
+				font-size: var(--font-size-3);
+				font-weight: 700;
 			}
 
 			span {
 				display: block;
 				color: rgb(var(--color-5));
+				font-size: var(--font-size-4);
+				font-weight: 500;
 			}
 
 		}
@@ -224,11 +240,14 @@ $HeaderHeight: 70vh;
 
 			margin: 5vh 0;
 
+			align-self: center;
+
 			span {
 				display: block;
 				width: 100%;
 				color: rgb(var(--color-5));
 				font: {
+					size: var(--font-size-4);
 					weight: 700;
 				}
 			}
@@ -237,7 +256,7 @@ $HeaderHeight: 70vh;
 				$s: 80px;
 				display: block;
 				height: $s; width: $s;
-				margin: 2vh auto;
+				margin: 0 auto 2vh;
 				border-radius: 100%;
 				border: 3px solid rgb(var(--color-5));
 				background-position: center center;
@@ -255,6 +274,8 @@ $HeaderHeight: 70vh;
 			h6 {
 				display: block;
 				color: rgb(var(--color-6));
+				font-size: var(--font-size-3);
+				font-weight: 700;
 			}
 
 			span {
@@ -289,11 +310,15 @@ $HeaderHeight: 70vh;
 			h6 {
 				display: block;
 				color: rgb(var(--color-6));
+				font-size: var(--font-size-3);
+				font-weight: 700;
 			}
 
 			span {
 				display: block;
 				color: rgb(var(--color-5));
+				font-size: var(--font-size-4);
+				font-weight: 500;
 			}
 
 		}
@@ -315,11 +340,15 @@ $HeaderHeight: 70vh;
 			h6 {
 				display: block;
 				color: rgb(var(--color-6));
+				font-size: var(--font-size-3);
+				font-weight: 700;
 			}
 
 			span {
 				display: block;
 				color: rgb(var(--color-5));
+				font-size: var(--font-size-4);
+				font-weight: 500;
 			}
 
 		}

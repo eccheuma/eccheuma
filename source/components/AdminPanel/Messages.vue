@@ -183,7 +183,7 @@
 		padding: 20px 40px
 		overflow-y: scroll
 		height: calc(40vh - 40px)
-		@media screen and ( max-width: var(--mobile-breakpoint))
+		@media screen and ( max-width: $mobile-breakpoint )
 			height: 100vh
 		p
 			text-align: left

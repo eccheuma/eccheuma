@@ -1,31 +1,45 @@
 <template>
-	<portal to="Modal" v-if="modalState">
+	<portal v-if="modalState" to="Modal">
 
-		<div class="modal-wrap" @click.self="ToggleModal" :class="{ glassy: CLIENT_RENDER_CHECK && $PIXI.utils.isWebGLSupported() }">
+		<div 
+			class="modal-wrap"
+			:class="{ glassy: CLIENT_RENDER_CHECK && (!$isMobile || $PIXI.utils.isWebGLSupported()) }" 
+			@mousewheel.prevent="changeZoom"
+			@click.self="ToggleModal" 
+		>
 			<div class="modal-container">
 
-				<div class="modal-header">
-					<slot />
-				</div>
+				<section class="modal-header">
+					<h6>{{ title || '' }}</h6>
+					<span>{{ description || '' }}</span>
+				</section>
 
-				<div class="modal-body" v-dragscroll="true"
-					@mousedown="Grab(true)" @mouseup="Grab(false)"
+				<div 
+					ref="image"
+					v-dragscroll="true"
+					class="modal-body" 
 					:style="`overflow: ${ Zoom ? 'scroll' : 'hidden' }`"
 					:class="[
-						{ 'grab': 		Zoom },
+						{ 'grab': Zoom },
 						{ 'grabbing': Grabbing && Zoom },
-					]">
+					]"
+					@mousedown="Grab(true)" 
+					@mouseup="Grab(false)"
+					>
 				
 					<picture>
-						<img :src="URL" :style="Zoom ? ZoomPrefs : ''">
+						<img :src="URL" :style="Zoom ? zoomStyle : ''">
 					</picture>
 
 				</div>
 
 				<div class="modal-footer">
-					<!-- <button>SOMETHING</button> -->
-					<button @click.self="Zoom = !Zoom">{{ Zoom ? 'Уменьшить' : 'Увеличить' }}</button>
-					<button @click.self="ToggleModal">Закрыть</button>
+					<eccheuma-button @click.native="Zoom = !Zoom">
+						{{ Zoom ? 'Уменьшить' : 'Увеличить' }}
+					</eccheuma-button>
+					<eccheuma-button @click.native="ToggleModal">
+						Закрыть
+					</eccheuma-button>
 				</div>
 
 			</div>
@@ -44,33 +58,54 @@
 	cursor: grabbing;
 }
 
-.glassy {
-	backdrop-filter: blur(10px)
-}
-
 .modal {
 	&-wrap {
 		position: fixed; top: 0; left: 0; z-index: 9999;
 		height: 100vh; width: 100vw;
 		background-color: rgba(var(--color-1), .9);
+		display: flex;
 	}
 	&-container {
-		position: relative; top: 5vh; left: 5vw; overflow: hidden;
-		width: 	#{ 100vw - 10vw }; 
-		height: #{ 100vh - 10vh }; 
-		background-color: rgb(var(--color-2));
-		border: 1px solid rgb(var(--color-3));
-		border-radius: .7rem;
+
+		display: grid;
+		
+    grid-template: {
+			columns: 1fr;
+			rows: 2fr 8fr auto;
+		}
+
+    overflow: hidden;
+    width: 75vw;
+    height: 85vh;
+    background-color: rgb(var(--color-2));
+    border: 1px solid rgb(var(--color-3));
+    border-radius: .7rem;
+    margin: auto;
+
 	}
 	&-header {
-		width: 100%; 
-		line-height: 10vh; text-align: center; color: rgb(var(--color-6)); font-size: var(--font-size-3);
+		display: grid;
+		width: 100%;
+		text-align: center; 
+		align-content: center;
+		color: rgb(var(--color-6)); 
 		background-color: rgb(var(--color-1));
+		h6 {
+			font: {
+				size: var(--font-size-2);
+				weight: 700;
+			}
+		}
+		span {
+			width: 100ch;
+			margin: 0 auto;
+			font-size: var(--font-size-4);
+		}
 	}
 	&-body {
 		$mar: 10px;
 		margin: $mar;
-		height: calc(75% - (#{$mar} * 2));
+		height: calc(100% - (#{$mar} * 2));
 		width: calc(100% - (#{$mar} * 2));
 		picture {
 			img {
@@ -78,7 +113,7 @@
 				height: 100%;
 				padding: 10px;
 				object-fit: contain;
-				transition: all 1s ease-in-out;
+				transition: all 250ms ease-in-out;
 			}
 		}
 		&::-webkit-scrollbar {
@@ -106,17 +141,13 @@
 		}
 	}
 	&-footer {
-		// position: absolute; bottom: 0; left: 0;
 		display: grid;
 		width: 100%;
-		margin: 0 auto; padding: 4vh 25%;
+		margin: 0 auto; 
+		padding: 4vh 25%;
 		grid-template-columns: repeat(2, 1fr); 
 		grid-column-gap: 20px;
 		background-color: rgb(var(--color-1));
-		button {
-			@extend %button_light;
-			width: 100%;
-		}
 	}
 }
 
@@ -136,36 +167,75 @@
 	type PREVIEW_MODE = 'cover' | 'contain' | 'zoom'
 
 	// VARIABLES
-	const PLACEHOLDER_H = `${ require('~/assets/images/ImagePlaceholder.png?resize&size=1000')}`
+	const PLACEHOLDER = `${ require('~/assets/images/ImagePlaceholder.png?resize&size=1000')}`
 
 	export default Vue.extend({
+		components: {
+			EccheumaButton: () => import('~/components/common/EcchuemaButton.vue')
+		},
 		props: {
-			modalState: { required: true, default: false } as PropOptions< boolean >,
-			path: { required: true } as PropOptions< string >
+			modalState: { 
+				type: Boolean,
+				required: true, 
+				default: false 
+			} as PropOptions< boolean >,
+			path: { 
+				type: String,
+				required: true 
+			} as PropOptions< string >,
+			title: {
+				type: String,
+				default: '',
+				required: false,
+			} as PropOptions< string >,
+			description: {
+				type: String,
+				default: '',
+				required: false,
+			} as PropOptions< string >,
 		},
 		data() {
 			return {
 
-				URL: PLACEHOLDER_H,
+				URL: PLACEHOLDER,
 
 				PreviewMode: 'contain' as PREVIEW_MODE,
 
 				Grabbing: false,
 
 				Zoom: false,
-
-				ZoomPrefs: {
-					height: '200%',
-					width: '200%',
-				},
+				ZoomRate: 150,
 
 			}
+		},
+		computed: {
+			zoomStyle(): { height: string, width: string } {
+
+				return {
+					height: `${ this.ZoomRate }%`,
+					width: 	`${ this.ZoomRate }%`,
+				}
+
+			}
+		},
+		async created() {
+			this.URL = await this.GetImageURL({ 
+				_path: this.path
+			})
 		},
 		methods: {
 
 			...mapActions({
 				GetImageURL: 'Images/GetImageURL',
 			}),
+
+			changeZoom(event: WheelEvent) {
+
+				const STEP = 20;
+
+				this.ZoomRate += (Math.sign(event.deltaY) > 0 ? STEP : -STEP );
+
+			},
 
 			ToggleModal() {
 				this.$emit('toggle-modal', !this.modalState)
@@ -181,10 +251,5 @@
 
 			}
 		},
-		async created() {
-			this.URL = await this.GetImageURL({ 
-				_path: this.path
-			})
-		}
 	})
 </script>

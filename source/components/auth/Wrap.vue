@@ -13,6 +13,8 @@
 .auth_wrapper {
 	position: relative;
 	color: rgb(var(--color-1));
+	border-radius: .7rem;
+	overflow: hidden;
 }
 
 </style>

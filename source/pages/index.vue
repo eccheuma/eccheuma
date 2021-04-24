@@ -134,10 +134,10 @@
 			areas: ". build 	mute" ". logo 	." ". nav 		." ". quote 	." ". links 	.";
 		}
 
-		@media screen and (max-width: var(--mobile-breakpoint)) {
+		@media screen and ( max-width: $mobile-breakpoint ) {
 			grid-template: {
 				columns: 100vw;
-				rows: 1fr 2fr auto 2fr 1fr 60px;
+				rows: 1fr 1fr 4fr 1fr 1fr 60px;
 				areas: "build" "logo" "nav" "mute" "links";
 			}
 		}
@@ -146,8 +146,10 @@
 		width: 100vw;
 		height: 100vh;
 
-		@media screen and ( max-width: var(--mobile-breakpoint)) {
+		@media screen and ( max-width: $mobile-breakpoint ) {
 			overflow: hidden;
+			width: 100vw;
+			min-height: 90vh;
 		}
 
 		&:before {
@@ -184,7 +186,7 @@
 			background: radial-gradient(#00000000 0%, #000000ff 85%);
 		}
 
-		@media screen and (max-width: var(--mobile-breakpoint)) {
+		@media screen and ( max-width: $mobile-breakpoint ) {
 			&:after {
 				content: "";
 				position: absolute;
@@ -193,11 +195,7 @@
 				z-index: 2;
 				width: 100vw;
 				height: 100vh;
-				opacity: 0.5;
-				background: {
-					image: url("~assets/images/SVG/Stripes.svg");
-					size: 20px;
-				}
+				background: radial-gradient(#00000000 0%, #000000ff 85%);
 			}
 		}
 
@@ -244,10 +242,11 @@
 			letter-spacing: 1ch;
 			text-align: center;
 
-			@media screen and (max-width: var(--mobile-breakpoint)) {
+			@media screen and ( max-width: $mobile-breakpoint ) {
 				font-size: 0.45rem;
 				letter-spacing: 0.5ch;
 			}
+
 		}
 	}
 	&-logo {
@@ -255,7 +254,7 @@
 
 		align-self: end;
 
-		@media screen and (max-width: var(--mobile-breakpoint)) {
+		@media screen and (max-width: $mobile-breakpoint) {
 			align-self: center;
 		}
 
@@ -282,7 +281,7 @@
 				top: 5px;
 			}
 
-			@media screen and (max-width: var(--mobile-breakpoint)) {
+			@media screen and (max-width: $mobile-breakpoint) {
 				opacity: 1;
 			}
 
@@ -295,7 +294,7 @@
 					repeat: no-repeat;
 				}
 
-				@media screen and (max-width: var(--mobile-breakpoint)) {
+				@media screen and (max-width: $mobile-breakpoint) {
 					height: 3.6vh;
 				}
 			}
@@ -316,6 +315,7 @@
 		@include section_position($area: nav);
 
 		align-self: center;
+
 	}
 	&-quote {
 		@include section_position($area: quote);
@@ -441,9 +441,9 @@
 		head(): any {
 			return {
 				link: [
-					{ rel: 'icon', href: 'Icon.svg' },
-					{ rel: 'preload', 	href: '/static/sounds/Holl.ogg', 	as: 'fetch', crossorigin: true },
-					{ rel: 'preload', 	href: PLACEHOLDER, 								as: 'fetch', crossorigin: true },
+					{ rel: 'icon', 			href: 'Icon.svg' },
+					{ rel: 'preload', 	href: '/static/sounds/Holl.ogg', 	as: 'prefetch', crossorigin: true },
+					{ rel: 'preload', 	href: PLACEHOLDER, 								as: 'prefetch', crossorigin: true },
 				]
 			}
 		},
@@ -493,6 +493,8 @@
 
 				this.CanvasReady = true;
 
+				const LOOP: boolean = true;
+
 				const ANIMATIONS: AnimeAnimParams[] = [
 					{	
 						targets: this.$refs.LOGO_SVG,
@@ -501,7 +503,8 @@
 							{ value: 'drop-shadow(0px 0px 0px #FFFFFF)', duration: 5000 },
 						],
 						endDelay: 2000,
-						round: 100, 
+						round: 100,
+						loop: LOOP, 
 						easing: 'easeInOutSine',
 						direction: 'alternate',
 					},
@@ -514,6 +517,7 @@
 						delay: 1000,
 						duration: 3000,
 						round: 100, 
+						loop: LOOP,
 						easing: 'easeInOutSine',
 						direction: 'alternate',
 					},
@@ -527,7 +531,8 @@
 						delay: this.$AnimeJS.stagger(1000, { start: 0 }), 
 						endDelay: 8000, 
 						duration: 1000,
-						round: 100, 
+						round: 100,
+						loop: LOOP, 
 						easing: 'linear',
 						direction: 'alternate',
 					}

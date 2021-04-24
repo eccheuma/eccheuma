@@ -49,7 +49,9 @@ import { ActionTree, MutationTree } from 'vuex'
 
 		setContent(state, { data, from, to }: { data: any[], from: string, to: REFS }) {
 
-			state.Content[to] = data; console.log(`recive ${ from } data:`, data);
+			state.Content[to] = data; 
+			
+			// console.log(`recive ${ from } data:`, data);
 
 		},
 
@@ -99,15 +101,11 @@ import { ActionTree, MutationTree } from 'vuex'
 
 		async GetContent({ commit, dispatch }, _payload: PAYLOAD) {
 
-			console.log("SOMETHING!")
-
 			if ( process.client ) {
 
 				await dispatch('checkCachedData', _payload);	
 				
 			} else {
-
-				console.log(_payload)
 
 				const DATA = await firebase.database()
 					.ref(_payload.REF)
@@ -116,8 +114,6 @@ import { ActionTree, MutationTree } from 'vuex'
 					.startAt(_payload.LOAD_PROPERTY.LoadPoint || 0)
 					.once('value')
 					.then( data => Object.values(data.val()) )
-
-				console.log(DATA, 'data');
 
 				commit('setContent', { data: DATA, from: 'server', to: _payload.REF });			
 

@@ -1,83 +1,68 @@
 <template>
-	<div id="ApplicationLayout" key="Application" ref="ApplicationNode" :class="`theme-${ UI }`">
+	<eccheuma-layout key="Application" ref="ApplicationNode" :class="`ui-theme-${ UI }`">
 
-			<client-only>
-				
-				<vk-messages />
+		<!-- Лоадер -->
+		<page-loader />
 
-				<!-- Модальный портал -->
-				<portal-target name="Modal" :transition="MIXIN_Transition('Fading')" slim />
+		<client-only>
+			
+			<!-- Модальный портал -->
+			<portal-target name="Modal" :transition="MIXIN_Transition('opacity-transition')" slim />
 
-				<!-- Лоадер -->
-				<page-loader />
+			<!-- Модуль регистрации -->
+			<registration />
 
-				<!-- Модуль регистрации -->
-				<registration />
+		</client-only>
 
-			</client-only>
+		<!-- Верхняя шапка -->
+		<Header-Top />
 
-			<!-- Верхняя шапка -->
-			<Header-Top />
+		<client-only>
 
-			<client-only>
+			<!-- Нотификация -->
+			<notification />
 
-				<!-- Нотификация -->
-				<notification />
+			<!-- Профиль пользователя -->
+			<user-profile v-if="LoginStatus == true && !$isMobile" />
 
-				<!-- Профиль пользователя -->
-				<user-profile v-if="LoginStatus == true && !$isMobile" />
+		</client-only>
 
-			</client-only>
+		<!-- Карусель -->
+		<header-carousel />
 
-			<!-- Карусель -->
-			<header-carousel />
+		<!-- Навигация -->
 
-			<!-- Навигация -->
+		<template v-if="$isMobile">
+			<mobile-navigation />
+		</template>
 
-			<template v-if="$isMobile">
-				<mobile-navigation />
-			</template>
+		<template v-else>
+			<header-navigation :search="true" :background="true" />
+		</template>
 
-			<template v-else>
-				<header-navigation :search="true" :background="true" />
-			</template>
+		<!-- Основной контент -->	
+		<section class="content-wrapper">
 
-			<!-- Основной контент -->	
-			<section class="content-wrapper">
+			<scroll-bar v-if="!$isMobile" />
 
-				<scroll-bar v-if="!$isMobile" />
+			<nuxt class="content-container" />
 
-				<nuxt class="content-container" />
+		</section>
 
-			</section>
+		<!-- Футер -->
+		<footer-component />
 
-			<!-- Футер -->
-			<footer-component />
+		<client-only>
+			<vk-messages />
+		</client-only>
 
-	</div>    
+	</eccheuma-layout>    
 </template>
 
 <style lang="scss">
 
-* { 
-	&::-webkit-scrollbar {
-		width: 10px;
-		&-track {
-			background-color: rgb(var(--color-1));
-			// border: 1px solid rgb(var(--color-3));
-		}
-		&-thumb {
-			border-radius: 2rem;
-			background-color: rgb(var(--color-4));
-			border: 3px solid rgb(var(--color-1));
-			&:hover {
-				background-color: rgb(var(--color-6));
-			}
-		}
-		&-button {
-			height: 0;
-		}
-	}
+eccheuma-layout {
+	display: block;
 }
 
 .AppNoScroll {
@@ -102,13 +87,13 @@
 	&-container {
 		width: 90vw;
 		margin: 0 auto;
-		@media screen and ( max-width: var(--mobile-breakpoint)) {
+		@media screen and ( max-width: $mobile-breakpoint ) {
 			width: 100vw;
 		}
 	}
 }
 
-.theme {
+.ui-theme {
 	&-light {
 		transition-duration: .75s;
 		background-color: rgb(var(--color-5));

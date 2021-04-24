@@ -6,13 +6,17 @@
 			<p>{{ moduleContent.subtitle }}</p>
 		</section>
 
-		<keep-alive>
-			<component :is="PromoType" v-if="!Cooled" />
-		</keep-alive>
+		<template v-if="!Cooled">
+			<keep-alive>
+				<component :is="PromoType" />
+			</keep-alive>
+		</template>
 
 		<section class="promo_footer" :class="{ cooled: Cooled }">
 
-			{{ moduleContent.footer }}
+			<p>
+				{{ moduleContent.footer }}
+			</p>
 
 			<hr>
 
@@ -34,24 +38,25 @@
 .promo {
 	&_container {
 
-		padding: 3vh 0;
-
 		display: grid; 
+		justify-items: center;
 
 		grid-template: {
 			columns: 1fr;
 			rows: 20vh 70vh 30vh
 		}
 
-		@media screen and ( max-width: var(--mobile-breakpoint)) {
+		overflow: hidden;
+
+		@media screen and ( max-width: $mobile-breakpoint ) {
 			grid-template: {
 				columns: 1fr;
-				rows: 40vh 140vh 25vh
+				rows: 30vh 120vh 50vh
 			}
 		}
 
 		background: {
-			color: rgb(var(--color-1));
+			color: rgb(var(--color-2));
 		}
 
 		> section {
@@ -62,7 +67,14 @@
 	}
 	&_header {
 
-		align-self: center;
+		display: grid;
+		width: 100%;
+
+		@include gradient_border(bottom);
+
+		background: {
+			color: rgb(var(--color-1));
+		}
 
 		h4 {
 			font-weight: 600;
@@ -75,18 +87,29 @@
 			width: calc(min(100%, 70ch));
 			color: rgb(var(--color-4));
 		}
-		@media screen and ( max-width: var(--mobile-breakpoint)) {
+		@media screen and ( max-width: $mobile-breakpoint ) {
 			text-align: center !important;
 		}
 	}
 	&_footer {
 
-		height: 30vh;
+		width: 100%;
+
+		display: grid;
+		justify-items: center;
+
+		@include gradient_border(top);
+
+		padding: 3vh 0;
+
+		background: {
+			color: rgb(var(--color-1));
+		}
 
 		p {
+			width: calc(min(100%, 120ch));
 			font-size: 12px;
 			font-weight: 700;
-			// margin-bottom: 30px;
 			padding: 0 5vw;
 			color: rgb(var(--color-4));
 		}
@@ -161,36 +184,36 @@
 					Style: {
 						title: 'Фирменный стиль и айдентика',
 						subtitle: 'Последние выполненые работы за этот месяц, начиная от логотипов, и заканчивая полновестными макетами сайтов',
-						footer: 'А если говорить проще, то можно представить, что у вас есть некая болванка в виде кнопки или блока с "чем-то", и раньше бы приходилось копировать эту болванку, заполнять её нужным "чем-то" в копированном элементе и молиться богам, чтобы это всё пошло не по пизде и адекватно заработало.',
+						footer: 'Jugendlich ihr seh im träne freundschaft kommt was mir, vor busen erste lispelnd denen. Neu guten nennt hinweggeschwunden ernsten, mir weich mild lieb sich, was sich die guten klage unbestimmten ich neu. Busen lebens froher seelen festzuhalten ihr, besitze noch herz die herzen zerstoben ihr.',
 						link: {
-							path: '/Service',
+							path: '/service',
 							name: 'К услугам'
 						}
 					},
 					Works: {
 						title: 'Последние выполненные заказы',
 						subtitle: 'Последние выполненые работы за этот месяц, начиная от логотипов, и заканчивая полновестными макетами сайтов',
-						footer: 'А если говорить проще, то можно представить, что у вас есть некая болванка в виде кнопки или блока с "чем-то", и раньше бы приходилось копировать эту болванку, заполнять её нужным "чем-то" в копированном элементе и молиться богам, чтобы это всё пошло не по пизде и адекватно заработало.',
+						footer: 'Meinem die neu guten sich längst dem. Zauberhauch gezeigt und schöne mein lied tränen mein, mild nicht manche jenem träne und menge zug folgenden zerstreuet, jenem gleich hinweggeschwunden wie euch euch wirklichkeiten, in festzuhalten erste.',
 						link: {
-							path: '/Portfolio',
+							path: '/portfolio',
 							name: 'Перейти к портфолио'
 						}	
 					},
 					Gallery: {
 						title: 'Фирменный стиль и айдентика',
 						subtitle: 'Последние выполненые работы за этот месяц, начиная от логотипов, и заканчивая полновестными макетами сайтов',
-						footer: 'А если говорить проще, то можно представить, что у вас есть некая болванка в виде кнопки или блока с "чем-то", и раньше бы приходилось копировать эту болванку, заполнять её нужным "чем-то" в копированном элементе и молиться богам, чтобы это всё пошло не по пизде и адекватно заработало.',
+						footer: 'Die  zu sage gut wiederholt den zug aus, strenge herzen herzen was sich verschwand und. Was lauf mir froher hören gestalten sage an ich, stillen vom strenge um euch bang wohl tage. Der wirklichkeiten wirklichkeiten schatten mild, nicht sonst es ihr einer lebens, strenge die zug jenem kommt sage getäuscht halbverklungnen was, es beifall mir nun glück alten lispelnd..',
 						link: {
-							path: '/Service',
+							path: '/service',
 							name: 'К услугам'
 						}
 					},
 					Adaptation: {
 						title: 'Последние выполненные заказы',
 						subtitle: 'Последние выполненые работы за этот месяц, начиная от логотипов, и заканчивая полновестными макетами сайтов',
-						footer: 'А если говорить проще, то можно представить, что у вас есть некая болванка в виде кнопки или блока с "чем-то", и раньше бы приходилось копировать эту болванку, заполнять её нужным "чем-то" в копированном элементе и молиться богам, чтобы это всё пошло не по пизде и адекватно заработало.',
+						footer: 'Mich neu getäuscht macht der mein mein, jenem ihr trüben mein hören naht mich zauberhauch,.',
 						link: {
-							path: '/Portfolio',
+							path: '/portfolio',
 							name: 'Перейти к портфолио'
 						}	
 					}

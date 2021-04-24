@@ -10,14 +10,16 @@
 
 section {
 	display: grid;
-	grid-template-columns: 75% 25%;
+	grid-template-columns: 70% 30%;
 	row-gap: 15px;
+	font-size: var(--font-size-4);
 	strong {
 		text-align: left;
 	}
 	span {
 		&:nth-of-type(1) {
 			text-align: right;
+			font-weight: 700;
 		}
 		&:nth-of-type(2) {
 			text-align:	left;

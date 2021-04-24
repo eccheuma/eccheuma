@@ -2,7 +2,7 @@
 
 	<transition name="opacity-transition">
 		<div class="registration-wrap" v-if="RegistrationModal"  
-			@click.self="ChangeModalStatus"
+			@click.self="ChangeModalStatus(false)"
 			@keydown.shift.enter="Auth"
 			:class="{ glassy: CLIENT_RENDER_CHECK && $PIXI.utils.isWebGLSupported() }">
 
@@ -194,10 +194,6 @@
 
 <style lang="scss">
 
-.glassy {
-	backdrop-filter: blur(5px)
-}
-
 .registration {
 	&-wrap {
 		position: fixed; top: 0; left: 0; z-index: 10000;
@@ -212,7 +208,7 @@
 				size: 20px;
 			}
 			mix-blend-mode: multiply;
-			@media screen and ( max-width: var(--mobile-breakpoint)) {
+			@media screen and ( max-width: $mobile-breakpoint ) {
 				mix-blend-mode: unset;
 			}
 		}

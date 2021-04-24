@@ -27,23 +27,21 @@
 	import UserProfile from '~/components/user/UserProfile.vue'
 	
 	export default Vue.extend({
+		components: {
+			UserProfile
+		},
 		validate({ store, query }) {
 			
 			return ( store.state as VuexModules ).User.State.UserState.UserID === query.uid
 
 		},
-		components: {
-			UserProfile
+		mounted() {
+			this.ToggleProfileArea()
 		},
 		methods: {
 			...mapMutations({
 				ToggleProfileArea: 'User/State/Toggle_UserProfileArea'
 			}),
-		},
-		mounted() {
-
-			this.ToggleProfileArea()
-
 		}
 	})
 

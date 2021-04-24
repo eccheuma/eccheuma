@@ -3,9 +3,15 @@
 
 		<template v-if="sections ? sections.zoom : false">
 			<keep-alive>
-				<modal :modalState="Modal" :path="content.path" @toggle-modal="ToggleModal">
-					<slot />
-				</modal>
+
+				<modal 
+					:modalState="Modal" 
+					:path="content.path"
+					:title="content.title" 
+					:description="content.description"
+					@toggle-modal="ToggleModal" 
+				/>
+
 			</keep-alive>
 		</template>
 
@@ -32,21 +38,19 @@
 
 		</div>
 
-		<template v-if="sections ? sections.date : false">
-			<span class="image_date">
-				{{ LocalDate.Day }} в {{ LocalDate.Time }}
-			</span>
-		</template>
+		<client-only>
+			<template v-if="sections ? sections.date : false">
+				<span class="image_date">
+					{{ LocalDate.Day }} в {{ LocalDate.Time }}
+				</span>
+			</template>
+		</client-only>
 
 	</div>
 
 </template>
 
 <style lang="scss" scoped>
-
-.glassy {
-	backdrop-filter: blur(10px)
-}
 
 .DescriptionAnima {
 	&-enter {
@@ -94,7 +98,7 @@
 	&_date {
 		margin: 10px auto; padding: 5px 1vw; 
 		background-color: rgb(var(--color-1));
-		text-align: center; font-size: var(--font-size-4);
+		text-align: center; font-size: var(--font-size-5);
 		border-radius: .7rem;
 	}
 	&_wrapper {
@@ -158,7 +162,7 @@
 		import type { IMAGE_PROPERTY } 	from '~/types/Image.ts'
 
 	// VARS
-		const PLACEHOLDER_L = `${ require('~/assets/images/ImagePlaceholder.png?resize&size=600')}`
+		const PLACEHOLDER = require('~/assets/images/ImagePlaceholder.png?resize&size=600').src
 
 		const defaultSections: IMAGE_PROPERTY['sections'] = {
 			date: false,
@@ -188,17 +192,12 @@
 
 				LocalDate: new Object() as FORMATED_DATE,
 
-				Source: PLACEHOLDER_L,
+				Source: PLACEHOLDER,
 
 				Modal: false,
 				ImageFocus: false,
 
 			}
-		},
-		async fetch() {
-
-			this.LocalDate = await this.GetLocalTime(this.content.date)
-
 		},
 		watch: {
 			'content.path': {
@@ -209,8 +208,10 @@
 				}
 			},
 		},
-		mounted() {
+		async mounted() {
 			if ( this.CLIENT_RENDER_CHECK ) {
+
+				this.LocalDate = await this.GetLocalTime(this.content.date)
 
 				setTimeout(() => {
 					this.$nextTick(() => requestAnimationFrame(this.getImage))
@@ -229,7 +230,7 @@
 
 				const URL = await this.GetImageURL({ 
 					_path: this.content.path,
-					_size: (this.$refs.ImageHolder as HTMLElement).getBoundingClientRect().width * window.devicePixelRatio
+					_size: (this.$refs.ImageHolder as HTMLElement)?.getBoundingClientRect().width * window.devicePixelRatio || 720
 				})
 
 				this.$AnimeJS({

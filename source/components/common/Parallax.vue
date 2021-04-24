@@ -139,10 +139,12 @@
 
 				const ELEMENT = this.$refs.Wrapper as Element
 
-				this.ElementPosition = {
-					Top: ELEMENT.getBoundingClientRect().top + pageYOffset, 
-					Bottom: ELEMENT.getBoundingClientRect().bottom + pageYOffset,
-				}
+				this.$nextTick(() => {
+					this.ElementPosition = {
+						Top: ELEMENT.getBoundingClientRect().top + pageYOffset, 
+						Bottom: ELEMENT.getBoundingClientRect().bottom + pageYOffset,
+					}
+				})
 
 				new IntersectionObserver((entry) => {
 					this.inViewport = entry.pop()?.isIntersecting || false 

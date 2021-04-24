@@ -1,3 +1,5 @@
+$mobile-breakpoint: 768px;
+
 %button_switch {
 	border: 1px solid rgba(var(--color-4),.5);
 	&:hover {
@@ -80,17 +82,29 @@
 
 @mixin gradient_border($side: both) {
 
-	border-image: linear-gradient(to left, rgb(var(--color-def-2)), rgb(var(--color-def-3)), rgb(var(--color-def-2)));
-	border-image-slice: 1;
+	$GRAD: 
+		rgb(var(--color-def-2)), 
+		rgb(var(--color-def-3)), 
+		rgb(var(--color-def-2));
 
 	@if $side == both {
+		border-image: linear-gradient(to left, $GRAD);
 		border: {
 			top: 1px solid transparent;	
 			bottom: 1px solid transparent;	
 		}
-	} @else if $side == top or bottom {
-		border-#{$side}: 1px solid transparent;	
 	}
+	@else if $side == top or bottom {
+		border-image: linear-gradient(to left, $GRAD);
+		border-#{$side}: 1px solid transparent;
+	}
+	@else if $side == left or right {
+		border-#{$side}: 1px solid transparent;
+		border-image: linear-gradient(to top, $GRAD);
+		border-image-width: 1;
+	}  
+
+	border-image-slice: 1;
 	
 }
 

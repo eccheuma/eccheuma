@@ -157,6 +157,7 @@
 		margin: 2vh 0;
 		background-color: rgb(var(--color-2));
 		color: rgb(var(--color-6));
+		font-size: var(--font-size-4);
 	}
 	&-header {
 		@include gradient_border(bottom);
@@ -196,6 +197,8 @@
 			overflow-y: scroll;
 
 			padding: 0 1vw;
+
+			font-weight: 600;
 
 			.active {
 				background-color: rgb(var(--color-3));

@@ -61,7 +61,7 @@
 		&_item {
 			border-radius: .7rem;
 			border: 1px solid rgb(var(--color-3));
-			padding: 10px 15px 20px;
+			padding: 2vh 1vw;
 			margin: 3vh 0;
 			color: rgb(var(--color-6));
 		}
@@ -110,7 +110,7 @@
 			font-size: .8rem;
 			font-weight: 700;
 			background-color: rgb(var(--color-5));
-			@media screen and ( max-width: var(--mobile-breakpoint)) {
+			@media screen and ( max-width: $mobile-breakpoint ) {
 				height: 20vh;
 			}
 		}

@@ -53,6 +53,9 @@ import { ActionTree, MutationTree} from 'vuex'
 				if ( LC.getItem(REF) ) { return LC.getItem(REF) } 
 	
 				URL = await firebase.storage().ref(REF).getDownloadURL()
+
+				// PRELOAD IMAGE;
+				new Image().src = URL;
 	
 				// SET IN LOCAL STORAGE
 				window.localStorage.setItem(REF, URL)

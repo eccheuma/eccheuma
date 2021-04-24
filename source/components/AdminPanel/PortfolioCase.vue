@@ -1,61 +1,50 @@
 <template>
-	<div class="CMS">
+	<div class="admin_case-container" @keypress.ctrl.enter="sendCase">
 
-		<!-- <Loader 
-			LoadMessage="Отправляем"
-			:ElementLoad="ElementLoad"
-			:ElementLoadComplete="StoreGetCaseStats.Complete">
-			{{ StoreGetCaseStats.Error == null ? 'Готово' : 'Отмена' }}
-		</Loader> -->
+		<work-case :content="Content" :properties="Config" />
 
-		<div class="container">
-			<div class="row p-4">
-
-				<work-case
-					:ID="0"
-					:content="Content"
-					:properties="Config"
-					:images="Images"
-				/>
-
-			</div>
-			<div class="row CMS-Input justify-content-center">
-				<div class="col-10">
-					<div class="row mb-3">
-						<div class="col-3 CMS-Input_Section">
-							<span>Изображения</span>
-						</div>
-						<div class="col-9">
-							<div class="row">
-								<div class="col-12 mb-3">
-									<input v-model="Images[0].content.path" type="text">
-								</div>
-								<div class="col-4">
-									<input v-model="Images[1].content.path"  type="text">
-								</div>
-								<div class="col-4">
-									<input v-model="Images[2].content.path"  type="text">
-								</div>
-								<div class="col-4">
-									<input v-model="Images[3].content.path" type="text">
-								</div>
-							</div>
-						</div>
-					</div>
-					<div class="row" v-for="(item, index) in Content" :key="`I-${ index }`">
-						<div class="col-3 CMS-Input_Section"><span> {{ index }} </span></div>
-						<div class="col">
-							<input v-model="Content[index]" :placeholder="item">
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="row">
-				<button @click="SendCase">Отправить</button>
-			</div>
+		<div class="admin_case-config">
+			<section class="admin_case-config-item">
+				<select v-model="Config.type">
+					<template v-for="item in CaseTypes">
+						<option :key="item" :value="item">
+							{{ item }}
+						</option>
+					</template>
+				</select>
+			</section>
+			<section class="admin_case-config-item">
+				<template v-for="item in Content.images">
+					<input 
+						:key="item.ID" 
+						v-model="item.content.path" 
+						type="text"
+					>
+				</template>
+				<button @click="addImage"></button>
+			</section>
 		</div>
+
+		<button @click="sendCase">JNGHFDSFS</button>
+
 	</div>
 </template>
+
+<style lang="scss">
+
+.admin_case {
+	&-config {
+		&-item {
+			select {
+				padding: 2vh 3vw;
+				background-color: rgb(var(--color-1));
+				color: rgb(var(--color-6))
+			}
+		}
+	}
+}
+
+</style>
 
 <script lang="ts">
 
@@ -78,10 +67,27 @@
 	import WorkCase from '~/components/common/WorkCase.vue'
 	import Loader 	from '~/components/common/Loader.vue'
 
+	// CLASSES
+	class Image {
+
+		private ID: number = 0;
+		private content: IMAGE_PROPERTY['content'] = {
+			path: 'Other/1'
+		}
+
+		constructor(_path: string) {
+			this.content.path ??= _path
+		}
+
+		getImage(): IMAGE_PROPERTY {
+			return { ID: this.ID, content: this.content }
+		}
+
+	}
+
 	export default Vue.extend({
 		components: {
 			WorkCase,
-			Loader
 		},
 		data() {
 			return {
@@ -89,26 +95,24 @@
 				ElementLoad: false,
 				ElementLoadError: false,
 
+				CaseTypes: ['Logo', 'Landings', 'Banners'] as PORTFOLIO_SECTION[],
+
 				Content: {
-					name: '',
-					time: '',
-					theme: '',
-					tech_request: '',
+					name: 'Placeholder',
+					time: '6 часов',
+					theme: 'Placeholder',
+					tech_request: 'Placeholder',
 					link: '',
 					cost: 0,
-					description: '',
+					description: 'Placeholder',
+					images: [
+						{ ID: 0, content: { path: 'Other/1' } },
+					] as IMAGE_PROPERTY[]
 				} as CONTENT,
 
 				Config: {
 					type: 'Landings',
 				} as WORKCASE['properties'],
-
-				Images: [
-					{ ID: 0, content: { path: 'Other/1' }},
-					{ ID: 1, content: { path: 'Other/1' }},
-					{ ID: 2, content: { path: 'Other/1' }},
-					{ ID: 3, content: { path: 'Other/1' }},
-				] as IMAGE_PROPERTY[]
 
 			}
 		},
@@ -117,12 +121,32 @@
 				ChilderCount: state => (state as VuexModules).AdminPanel.NewCase.ChilderCount
 			}),
 		},
+		mounted() {
+
+			const TYPES: PORTFOLIO_SECTION[] = ['Logo', 'Landings', 'Banners']
+
+			TYPES.forEach(( type: PORTFOLIO_SECTION ) => {
+				this.DBCaseCount(type)
+			})
+
+		},
 		methods: {
 			...mapActions({
 				DBCaseCount: 	'AdminPanel/NewCase/DBCaseCount',
 				SetCase: 			'AdminPanel/NewCase/CaseSet',
 			}),
-			SendCase() {
+
+			addImage() {
+
+				const I = this.Content.images;
+
+				if ( I.length < 4 ) { 
+					I.push( new Image('Other/1').getImage() ) 
+				}
+
+			},
+
+			sendCase() {
 
 				const CASE: WORKCASE =  {
 					ID: this.ChilderCount[this.Config.type],
@@ -136,24 +160,6 @@
 
 			},
 		},
-		mounted() {
-
-			const TYPES: PORTFOLIO_SECTION[] = ['Logo', 'Landings', 'Banners']
-
-			TYPES.map(( type: PORTFOLIO_SECTION ) => {
-				this.DBCaseCount(type)
-			})
-
-		},
-		filters: {
-			ColSizeFilter(value: number) {
-				if ( value == 13 ) {
-					return 'lg'
-				} else {
-					return value
-				}
-			}
-		}
 	})
 
 </script>

@@ -29,28 +29,28 @@
 	import { mapState } from 'vuex'
 
 // VUEX MODULE TYPE MAP
-	import type { Application, Container } 	from 'pixi.js'
-	import type { VuexModules } from '~/types/VuexModules'
-
-// TYPES
-	type FILE = {
-		[index: string]: {
-			source: string
-		}
-	}
+	import type { Application, Container, Sprite, Texture, Graphics, TilingSprite } from 'pixi.js'
+	import type { AnimeInstance } 																									from 'animejs'
+	import type { VuexModules } 																										from '~/types/VuexModules'
 
 // FILES
-	const Files: FILE = {
-		Background: {
-			source: require('~/assets/images/Background.png?format=webp&size=900').src
+	const ASSETS = [
+		{
+			name: 'Background',
+			path: require('~/assets/images/Background.png?format=webp&size=900').src
 		},
-		Noise: {
-			source: require('~/assets/images/Noise.png?format=webp&size=1140').src
+		{
+			name: 'Noise',
+			path: require('~/assets/images/Noise.png?format=webp&size=1140').src
 		},
-		Stripes: {
-			source: require('~/assets/images/SVG/Stripes.svg')
-		},
-	}
+		{
+			name: 'Stripes',
+			path: require('~/assets/images/SVG/Stripes.svg')
+		}
+	]
+	const HEAD_LINKS = ASSETS.map((asset) => { 
+		return { rel: 'prefetch', href: asset.path, as: 'fetch', crossorigin: true, targetload: 'canvas-test' }
+	})
 
 // MODULE
 	export default Vue.extend({
@@ -59,51 +59,49 @@
 
 				GlobalAnimationDuration: 4e4,
 
-				canvasElement: this.$refs.canvas as HTMLCanvasElement,
-
 				app: 				new Object() as Application,
 				container: 	new Object() as Container,
 
-				SpriteMap: new Map(),
+				SpriteMap: new Map() as Map<string, Sprite | TilingSprite>,
 
 				MousePosition: { Y: 0, X: 0 },
 
-				AnimeJSTargets: [] as any[],
+				AnimeJSInstances: [] as AnimeInstance[],
 
 			}
 		},
 		head: {
-			link: [
-				{ rel: 'prefetch', href: Files.Background.source, as: 'fetch', crossorigin: true, targetload: 'canvas' },
-				{ rel: 'prefetch', href: Files.Noise.source, 			as: 'fetch', crossorigin: true, targetload: 'canvas' },
-				{ rel: 'prefetch', href: Files.Stripes.source, 		as: 'fetch', crossorigin: true, targetload: 'canvas' },
-			]
+			link: HEAD_LINKS
 		},
 		computed: {
 			...mapState({
 				isDesktop: state => (state as VuexModules).isDesktop,
 			}),
+
+			ViewOrientation(): 'width' | 'height' {
+				return this.$isMobile ? 'height' : 'width'
+			}
+
+		},
+		created() {
+
+			this.ApplicationInit();
+
 		},
 		mounted() {
 
-			this.canvasElement = this.$refs.canvas as HTMLCanvasElement;
-
-			this.ApplicationInit();
+			( this.$refs.canvas as HTMLCanvasElement ).appendChild(this.app.view)
 
 			window.addEventListener('mousemove', this.ChangeMouseCoordinate, { capture: true })
 
 		},
 		destroyed() {
 
-			this.AnimeJSTargets.forEach((item: any) => {
-				this.$AnimeJS.remove(item);
+			this.$AnimeJS.running.forEach(( instance ) => {
+				instance.pause(); this.$AnimeJS.remove(instance)	
 			})
 
-			setTimeout(() => {
-
-				this.app.destroy(true, { texture: true, baseTexture: true });
-
-			}, 1000)
+			setTimeout(() => this.app.destroy(true), 3000)
 
 			window.removeEventListener('mousemove', this.ChangeMouseCoordinate, { capture: true })
 
@@ -117,10 +115,7 @@
 					width: window.innerWidth,
 					resolution: 1,
 					backgroundColor: 0x000000,
-					// antialias: true,
 				})
-
-				this.canvasElement.appendChild(this.app.view)
 
 				this.container = new this.$PIXI.Container()
 
@@ -134,22 +129,11 @@
 
 				console.time('Loader')
 
-				if (!Object.keys(this.$PIXI.utils.TextureCache).length) {
+				const Loader = new this.$PIXI.Loader();
 
-					const Loader = new this.$PIXI.Loader()
+				ASSETS.forEach(asset => Loader.add(asset.name, asset.path))
 
-					for (const name in Files) {
-						Loader.add(name, Files[name].source)
-					}
-
-					Loader.load(({ resources }) => {
-
-						this.Composite(resources)
-
-					})
-				} else {
-					this.Composite(this.$PIXI.utils.TextureCache)
-				}
+				Loader.load(({ resources }) => this.Composite(resources))
 
 				console.timeEnd('Loader')
 
@@ -159,92 +143,34 @@
 
 				console.time('Composite')
 
-				const ViewOrientation = this.isDesktop ? 'width' : 'height'
+				const Layers = [
+					this.backgroundLayer(resources.Background),
+					this.flickLayer(),
+					this.noiseLayer(),
+					this.stripeLayer(resources.Stripes),
+					this.scratchLayer(resources.Noise)
+				]
 
-				const Background = this.$PIXI.Sprite.from(resources.Background.texture ?? resources.Background)
-				Background.scale.x = Background.scale.y = this.app.screen[ViewOrientation] / Background[ViewOrientation]
-				Background.anchor.x = Background.anchor.y = .5
-				Background.y = this.app.screen.height / 2
-				Background.x = this.app.screen.width / 2
+				Promise.all(Layers).then(( layers ) => {
 
-				this.SpriteMap.set('Background', Background)
+					layers.forEach( layer => this.container.addChild(layer) )
 
-				const BackgroundAnimationState = {
-					angle: 0,
-					scale: 1,
-					alpha: 1,
-				}
+				}).then(() => {
 
-				const BackgroundScale = {
-					x: Background.scale.x,
-					y: Background.scale.y
-				}
+					console.timeEnd('Composite')
 
-				this.AnimeJSTargets.push(BackgroundAnimationState);
+					this.AnimeJSInstances.forEach(instance => instance.play())
 
-				const BackgroundAnimation = this.$AnimeJS({
-					autoplay: false,
-					targets: BackgroundAnimationState,
-					angle: [0, 25],
-					scale: [1, 1.5],
-					alpha: [1, .25],
-					direction: 'alternate',
-					easing: 'easeInOutQuad',
-					duration: this.GlobalAnimationDuration,
-					loop: true,
-					update() {
-						requestAnimationFrame(() => {
-							Background.angle 		= BackgroundAnimationState.angle;
-							Background.alpha 		= BackgroundAnimationState.alpha;
-							Background.scale.y 	= BackgroundScale.y * BackgroundAnimationState.scale;
-							Background.scale.x 	= BackgroundScale.x * BackgroundAnimationState.scale
-						})
-					}
+					this.$AnimeJS({
+						targets: this.$refs.canvas,
+						opacity: [0, 1],
+						duration: 5000,
+						ease: 'easeInOutQuad'
+					})
+
+					this.$emit('ready')
+
 				})
-
-				BackgroundAnimation.play();
-
-				this.container.addChild(Background);
-
-				// ------------------------------------------------------------
-
-				// Add Flick layer
-				this.FlickLayer()
-
-				// Add Noise layer
-				this.NoiseLayer()
-
-				const Stripes = new this.$PIXI.TilingSprite(resources.Stripes.texture ?? resources.Stripes)
-				Stripes.tileScale.x = Stripes.tileScale.y = .2
-				Stripes.width = this.app.screen.width
-				Stripes.height = this.app.screen.height
-				Stripes.blendMode = this.$PIXI.BLEND_MODES.MULTIPLY
-
-				this.SpriteMap.set('Stripes', Stripes)
-
-				this.container.addChild(Stripes)
-
-				const Noise = this.$PIXI.Sprite.from(resources.Noise.texture ?? resources.Noise)
-				Noise.anchor.x = Noise.anchor.y = .5
-				Noise.y = this.app.screen.height / 2
-				Noise.x = this.app.screen.width / 2
-				Noise.alpha = .1
-				Noise.scale.y = Noise.scale.x = this.app.screen[ViewOrientation] / Noise[ViewOrientation]
-
-				this.SpriteMap.set('Noise', Noise)
-
-				this.container.addChild(Noise);
-
-				console.timeEnd('Composite')
-
-				this.$AnimeJS({
-					targets: this.canvasElement,
-					opacity: [0, 1],
-					duration: 8e3,
-					ease: 'easeInOutQuad'
-				})
-
-				this.$emit('ready')
 
 			},
 
@@ -278,8 +204,8 @@
 
 				// Соотношение удалённости курсора от центра до края viewport'a
 				const D = {
-					Y: +(Math.abs(CenterScene.Y - this.MousePosition.Y) / CenterScene.Y).toFixed(1),
-					X: +(Math.abs(CenterScene.X - this.MousePosition.X) / CenterScene.X).toFixed(1),
+					Y: Number((Math.abs(CenterScene.Y - this.MousePosition.Y) / CenterScene.Y).toFixed(1)),
+					X: Number((Math.abs(CenterScene.X - this.MousePosition.X) / CenterScene.X).toFixed(1)),
 				}
 
 				//
@@ -299,71 +225,167 @@
 
 			},
 
-			FlickLayer() {
+			// ANIMATIONS
+				backgroundAnimation(s: Sprite) {
 
-				const Layer = new this.$PIXI.Container()
-
-				const Flick = new this.$PIXI.Graphics()
-				Flick.beginFill(0x000000);
-				Flick.drawRect(0, 0, this.app.screen.width, this.app.screen.height);
-				Flick.x = 0;
-				Flick.y = 0;
-
-				Layer.addChild(Flick)
-
-				const FLICK_ANIMATION_STATE = {
-					alpha: 1,
-				}
-
-				this.$AnimeJS({
-					targets: FLICK_ANIMATION_STATE,
-					alpha: [0, 1],
-					direction: 'alternate',
-					easing: 'linear',
-					duration: 4e4,
-					loop: true,
-					update: () => {
-						requestAnimationFrame(() => {
-							Flick.alpha = FLICK_ANIMATION_STATE.alpha * (0.25 + (0.25 * Math.random()));
-						})
+					const BackgroundAnimationState = {
+						angle: 0,
+						scale: 1,
+						alpha: 1,
 					}
-				})
 
-				this.AnimeJSTargets.push(FLICK_ANIMATION_STATE)
+					const BackgroundScale = {
+						x: s.scale.x,
+						y: s.scale.y
+					}
 
-				this.container.addChild(Layer)
+					const BA = this.$AnimeJS({
+						autoplay: false,
+						targets: BackgroundAnimationState,
+						angle: [0, 25],
+						scale: [1, 1.5],
+						alpha: [1, .25],
+						direction: 'alternate',
+						easing: 'easeInOutQuad',
+						duration: this.GlobalAnimationDuration,
+						loop: true,
+						update() {
+							requestAnimationFrame(() => {
+								s.angle 		= BackgroundAnimationState.angle;
+								s.alpha 		= BackgroundAnimationState.alpha;
+								s.scale.y 	= BackgroundScale.y * BackgroundAnimationState.scale;
+								s.scale.x 	= BackgroundScale.x * BackgroundAnimationState.scale
+							})
+						}
+					})
 
-			},
+					this.AnimeJSInstances.push(BA);
 
-			NoiseLayer() {
+				},
+				flickAnimation(g: Graphics) {
 
-				const Layer = new this.$PIXI.Container()
+					const FA = this.$AnimeJS({
+						autoplay: false,
+						targets: g,
+						alpha: [0, 1],
+						direction: 'alternate',
+						easing: 'linear',
+						duration: 4e4,
+						loop: true,
+						update: () => { g.alpha *= (0.5 + (0.25 * Math.random())) }
+					})
 
-				const NoiseFilter = new this.$PIXI.filters.NoiseFilter()
-				NoiseFilter.resolution = 0.5
-				NoiseFilter.noise = 1
-				NoiseFilter.seed = Math.random()
-				NoiseFilter.blendMode = this.$PIXI.BLEND_MODES.SCREEN
+					this.AnimeJSInstances.push(FA);
 
-				const GRAPH = new this.$PIXI.Graphics()
-				GRAPH.beginFill(0x000000);
-				GRAPH.drawRect(0, 0, this.app.screen.width, this.app.screen.height);
-				// -----------------------------
-				GRAPH.alpha = .5;
-				GRAPH.x = 0;
-				GRAPH.y = 0;
-				// -----------------------------
-				GRAPH.filters = [NoiseFilter];
+				},
 
-				Layer.addChild(GRAPH)
+			// LAYERS
+				backgroundLayer({ texture }: { texture: Texture }): Promise<Sprite> {
 
-				this.container.addChild(Layer)
+					return new Promise((resolve) => {
 
-				this.app.ticker.add(() => {
-					NoiseFilter.seed = Math.random()
-				})
+						const Background = this.$PIXI.Sprite.from(texture)
+								Background.scale.x 	= Background.scale.y = this.app.screen[this.ViewOrientation] / Background[this.ViewOrientation]
+								Background.anchor.x = Background.anchor.y = .5
+								Background.y 				= this.app.screen.height / 2
+								Background.x 				= this.app.screen.width / 2
 
-			},
+						this.SpriteMap.set('Background', Background);
+
+						resolve(Background)
+
+						this.backgroundAnimation(Background);
+
+					})
+
+				},
+				flickLayer(): Promise<Container> {
+
+					return new Promise(( resolve ) => {
+
+						const Layer = new this.$PIXI.Container();
+
+						const Flick = new this.$PIXI.Graphics();
+									Flick.beginFill(0x000000);
+									Flick.drawRect(0, 0, this.app.screen.width, this.app.screen.height);
+									Flick.x = 0;
+									Flick.y = 0;
+
+						Layer.addChild(Flick); 
+						
+						resolve(Layer);
+
+						this.flickAnimation(Flick)
+
+					})
+
+				},
+				noiseLayer(): Promise<Container> {
+
+					return new Promise(( resolve ) => {
+
+						const Layer = new this.$PIXI.Container();
+
+						const NoiseFilter = new this.$PIXI.filters.NoiseFilter();
+									NoiseFilter.resolution 	= 0.25;
+									NoiseFilter.noise 			= 1;
+									NoiseFilter.seed 				= Math.random();
+									NoiseFilter.blendMode 	= this.$PIXI.BLEND_MODES.SCREEN;
+
+						const GRAPH = new this.$PIXI.Graphics()
+									GRAPH.beginFill(0x000000);
+									GRAPH.drawRect(0, 0, this.app.screen.width, this.app.screen.height);
+									// -----------------------------
+									GRAPH.alpha = .5;
+									GRAPH.x = 0;
+									GRAPH.y = 0;
+									// -----------------------------
+									GRAPH.filters = [NoiseFilter];
+
+						Layer.addChild(GRAPH)
+
+						resolve(Layer)
+
+						this.app.ticker.add(() => {
+							NoiseFilter.seed = Math.random()
+						})
+
+					})
+
+				},
+				stripeLayer({ texture }: { texture: Texture }): Promise<TilingSprite> {
+
+					return new Promise(( resolve ) => {
+
+						const Stripes = new this.$PIXI.TilingSprite(texture)
+								Stripes.tileScale.x = Stripes.tileScale.y = .2
+								Stripes.width = this.app.screen.width
+								Stripes.height = this.app.screen.height
+								Stripes.blendMode = this.$PIXI.BLEND_MODES.MULTIPLY
+
+						this.SpriteMap.set('Stripes', Stripes)
+
+						resolve(Stripes)
+
+					})
+
+				},
+				scratchLayer({ texture }: { texture: Texture }): Promise<Sprite> {
+					return new Promise((resolve) => {
+
+						const Noise = this.$PIXI.Sprite.from(texture)
+							Noise.anchor.x = Noise.anchor.y = .5
+							Noise.y = this.app.screen.height / 2
+							Noise.x = this.app.screen.width / 2
+							Noise.alpha = .1
+							Noise.scale.y = Noise.scale.x = this.app.screen[this.ViewOrientation] / Noise[this.ViewOrientation]
+
+						this.SpriteMap.set('Noise', Noise)
+
+						resolve(Noise)
+
+					})
+				}
 
 		},
 	})

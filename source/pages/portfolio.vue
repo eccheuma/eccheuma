@@ -105,7 +105,7 @@ main {
 		height: 1px
 		transform: scaleX(1) translateY(-47px)
 		background-color: rgba(var(--color-6),1)
-		@media screen and ( max-width: var(--mobile-breakpoint))
+		@media screen and ( max-width: $mobile-breakpoint )
 			transform: scaleX(1) translateY(-36px) 
 
 $TransitionDuration: .25s

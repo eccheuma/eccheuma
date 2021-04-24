@@ -41,11 +41,11 @@
 
 		<section class="gallery-content">
 
-			<pagination :payload="PageParams" />
+			<pagination :payload="PaginationParams" />
 
 			<nuxt-child :key="$route.path" />
 
-			<pagination :payload="PageParams" />
+			<pagination :payload="PaginationParams" />
 
 		</section>
 
@@ -61,10 +61,6 @@
 		padding: 10px 15px;
 		gap: 15px;
 		grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
-
-		@media screen and ( max-width: var(--mobile-breakpoint)) {
-			grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-		}
 		
 	}
 	&-container {
@@ -85,7 +81,7 @@
 
 		grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
 
-		@media screen and ( max-width: var(--mobile-breakpoint)) {
+		@media screen and ( max-width: $mobile-breakpoint ) {
 			grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
 		}
 
@@ -131,14 +127,17 @@
 
 	import TransitionSound from '~/assets/mixins/TransitionSound'
 
+// COMPONENTS
+	import PromoBanner from '~/components/promo/PromoBanner.vue'
+
 // LOAD POLITIC
 	import { load_ranges } from '~/config/LoadPolitic.ts'
 
 // MODULE
 	export default Vue.extend({ 
 		components: {
+			PromoBanner,
 			Pagination: 	() => import('~/components/common/Pagination.vue'),
-			PromoBanner: 	() => import('~/components/promo/PromoBanner.vue'),
 			VueImage: 		() => import('~/components/common/ImageComponent/Image.vue'),
 		},
 		mixins: [ TransitionSound ],
@@ -151,10 +150,8 @@
 
 				LoadRange: load_ranges.gallery,
 
-				PageParams: {
-					scrollTarget: 1833, 
+				PaginationParams: {
 					section: 'gallery', 
-					collumns: 2, 
 					params: `range=${ load_ranges.gallery }`
 				},
 

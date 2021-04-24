@@ -1,24 +1,26 @@
 <template>
 	
-	<section class="swiper-container" ref="swiperContainer" 
-		@mousedown.prevent	="MouseDown" 
-		@mouseup.prevent		="MouseUp"
-		@mouseleave	="mouseData.isHover = false" 
-		@mouseenter	="mouseData.isHover = true">
+	<section 
+		ref="swiperContainer" 
+		class="swiper-container" 
+		@mousedown.prevent="MouseDown" 
+		@mouseup.prevent="MouseUp"
+		@mouseleave="mouseData.isHover = false" 
+		@mouseenter="mouseData.isHover = true">
 
-		<div class="swiper-buttons" ref="swiperButtons" v-if="Configuration.buttons">
-			<slot name="icon-prev" :onEdge="ActiveIndex == 0"></slot>
-			<slot name="icon-next" :onEdge="ActiveIndex == Quantity - 1"></slot>
+		<div v-if="Configuration.buttons" ref="swiperButtons" class="swiper-buttons">
+			<slot name="icon-prev" :onEdge="ActiveIndex == 0" />
+			<slot name="icon-next" :onEdge="ActiveIndex == Quantity - 1" />
 		</div>
 
-		<div class="swiper-pagination" v-if="Configuration.indicators" ref="swiperIndicators">
+		<div v-if="Configuration.indicators" ref="swiperIndicators" class="swiper-pagination">
 			<template v-for="item in Quantity">
-				<slot name="pagination" :active="ActiveIndex == item - 1"></slot>
+				<slot name="pagination" :active="ActiveIndex == item - 1" />
 			</template>
 		</div>
 
-		<div class="swiper-content" ref="swiperContent" :style="`width: ${ this.ContainerWidth * this.Quantity }px`">
-			<slot :activeIndex="ActiveIndex"/>
+		<div ref="swiperContent" class="swiper-content" :style="`width: ${ ContainerWidth * Quantity }vw`">
+			<slot :activeIndex="ActiveIndex" />
 		</div>
 
 	</section>
@@ -100,6 +102,8 @@ export default Vue.extend({
 	data() {
 		return {
 
+			slotChecks: 0,
+
 			wasInit: false,
 
 			Configuration: DefaultConfiguration,
@@ -133,57 +137,51 @@ export default Vue.extend({
 	},
 	mounted() { 
 
-		// Из-за того, что VUE порой "ПО ОСОБЕННОМУ" обрабатывает виртуальный ДОМ, 
-		// и не всегда присылает содержимое слотов - Приходится изощряться, и делать 
-		// некое подобие EventLoop'а на минималках. Криво? - Да. Но по другому никак.
-
-		// Подробнее тут: https://vuejs.org/v2/api/#vm-scopedSlots
-
 		if ( !this.wasInit ) {
-			this.SlotChecker(); 
+			this.slotChecker();
 		}
 
 	},
 	methods: {
-		SlotChecker() {
+		getRelativeWindowSize(px: number): number {
 
-			const I = setInterval(() => {
+			return 100 / ( window.innerWidth / px )
 
-				if (( this.$refs.swiperContent as HTMLElement )?.children.length ) {
-					this.$nextTick().then(() => { clearInterval(I); this.Init() })
-				}
+		},
+		slotChecker(): void {
 
+			if ( this.slotChecks === 10 ) {
+				console.log("Swiper content may be empty, and it can't be mounted."); return
+			}
+			setTimeout(() => {
+				( this.$refs.swiperContent as Element ).childElementCount 
+					? this.$nextTick().then(this.Init)
+					: this.$nextTick().then(this.slotChecker);
 			}, 250)
 
-			const T = setTimeout(() => {
-
-				if ( ( this.$refs.swiperContent as HTMLElement )?.children.length ) {
-					clearInterval(I); clearTimeout(T); console.warn("You probably not fill slot of content...")
-				}
-
-			}, 10e3 );
+			this.slotChecks += 1;
 
 		},
 		UpdateStyles() {
 
 			const contentNode = this.$refs.swiperContent as HTMLElement;
 
-			const MD 				= this.mouseData
-			const SHIFT 		= MD.isDown ? ( MD.clickPosition - MD.hoverPosition ) : 0;
-			const DURATION 	= this.Configuration.animationDuration
+			const MD 				= this.mouseData;
+			const SHIFT 		= this.getRelativeWindowSize( MD.isDown ? ( MD.clickPosition - MD.hoverPosition ) : 0 );
+			const DURATION 	= this.Configuration.animationDuration;
 
 			// CSS HOUDINI SUPPORT 
 			if ( window.CSS && CSS.number ) {
 
-				const Y = (this.ContainerWidth * this.ActiveIndex) + SHIFT 
+				const Y = (this.ContainerWidth * this.ActiveIndex) + SHIFT
 
 				const TRANSFORM = new CSSTransformValue([
-					new CSSTranslate(CSS.px(-Y), CSS.px(0), CSS.px(0))
+					new CSSTranslate(CSS.vw(-Y), CSS.px(0), CSS.px(0))
 				])
 
 				requestAnimationFrame(() => {
 
-					contentNode.attributeStyleMap.set('width', CSS.px( this.ContainerWidth * this.Quantity ))
+					contentNode.attributeStyleMap.set('width', CSS.vw( this.ContainerWidth * this.Quantity ))
 					contentNode.attributeStyleMap.set('transform', TRANSFORM)
 					contentNode.attributeStyleMap.set('transition-duration', CSS.ms( MD.isDown ? 0 : DURATION ))
 
@@ -191,33 +189,43 @@ export default Vue.extend({
 
 			} else {
 
-				const styles = contentNode.style.cssText
+				// const styles = contentNode.style.cssText
 
 				requestAnimationFrame( () => {
 					contentNode.setAttribute('style', `
 						width: ${ contentNode.style.width };
 						transition-duration: ${ MD.isDown ? 0 : DURATION };
-						transform: translate3D( -${ (this.ContainerWidth * this.ActiveIndex) + SHIFT }px, 0px, 0px );
+						transform: translate3D( -${ (this.ContainerWidth * this.ActiveIndex) + SHIFT }vw, 0px, 0px );
 					`)
 				})
 
 			}
 
 		},
-		Init() {
+		setContainerWidth(el: HTMLElement): Promise<number> {
+			return new Promise((resolve) => {
+
+				const F = () => el.getBoundingClientRect().width;
+
+				F() === 0 ? this.$nextTick(F) : resolve(F());
+
+			})
+
+		},
+		async Init() {
 
 			const containerNode = this.$refs.swiperContainer 	as HTMLElement;
 			const contentNode 	= this.$refs.swiperContent 		as HTMLElement;
 
 			this.Quantity 			= contentNode.children.length;
-			this.ContainerWidth = containerNode.getBoundingClientRect().width
+			this.ContainerWidth = this.getRelativeWindowSize(await this.setContainerWidth(containerNode))
 
 			Object.values( contentNode.children ).map((el, i) => {
 
 				const DefaultClasses = el.getAttribute('class')
 				
-				el.setAttribute("class", `${ DefaultClasses || '' } swiper-item`.trim() )
-				el.setAttribute("style", `width: ${ this.ContainerWidth }px`)
+				el.setAttribute('class', `${ DefaultClasses || '' } swiper-item`.trim() )
+				el.setAttribute('style', `width: ${ this.ContainerWidth }vw`)
 
 			})
 
@@ -240,22 +248,14 @@ export default Vue.extend({
 		},
 		AutoChange(kill: boolean = false) {
 
-			const T = this.Configuration.interval;
-	
-			const CB = () => {
+			const CALLBACK = () => {
 				if ( !this.mouseData.isHover ) {
 					this.ChangeSlide('NEXT');
 				}
 			}
 
 			// Custom interval function
-			const CIF = () => {
-				const ST = setTimeout(() => {
-					CB(); clearTimeout(ST); CIF();
-				}, 8000)
-			}
-
-			CIF();
+			const TICKER = () => { setTimeout(() => { CALLBACK(); TICKER() }, 8000) }; TICKER();
 
 		},
 		DotsEvents() {

@@ -1,9 +1,9 @@
 <template>
-	<nav :key="$route.path" class="page_selector">
+	<nav :key="$route.path" class="pagination">
 
 		<nuxt-link
 			tag="span" 
-			class="page_selector-link"
+			class="pagination-link"
 			:class="{ disabled: PageSelector.Page == 1 }"  
 			:to="getPath(PageSelector.Page - 1)"  
 			>
@@ -11,7 +11,7 @@
 		</nuxt-link>
 
 		<span 
-			class="page_selector-link"
+			class="pagination-link"
 			style="pointer-events: none; color: #FFF"
 			>
 			Cтраница {{ PageSelector.Page }} 
@@ -19,7 +19,7 @@
 
 		<nuxt-link 
 			tag="span"
-			class="page_selector-link"
+			class="pagination-link"
 			:class="{ disabled: PageSelector.Page == PageSelector.PageQuantity }"  
 			:to="getPath(PageSelector.Page + 1)" 
 			>
@@ -31,7 +31,7 @@
 
 <style lang="scss">
 
-.page_selector {
+.pagination {
 	display: grid; z-index: 1000;
 	grid-template-columns: repeat(3, 1fr);
 	justify-content: center;
@@ -39,9 +39,14 @@
 	border-top: 1px solid rgb(var(--color-2));
 	text-align: center;
 	padding: 0 10vw;
-	@media screen and ( max-width: var(--mobile-breakpoint)) {
+
+	width: calc(max(60vw, 360px));
+	margin: 0 auto;
+
+	@media screen and ( max-width: $mobile-breakpoint ) {
 		padding: unset;
 	}
+
 	input {
 		text-align: center;
 		margin: 18px 0px;
@@ -65,7 +70,7 @@
 		padding: 20px 0px;
 		display: block;
 		color: rgb(var(--color-4));
-		font-size: 10px;
+		font-size: var(--font-size-5);
 		font-weight: 700;
 		border-radius: 12px;
 		margin-bottom: 6px;
@@ -102,10 +107,8 @@
 	import type { VuexModules } from '~/types/VuexModules'
 
 	type PageSelectorProperty = {
-		scrollTarget: number
 		section: string
 		params?: string
-		delay?: number
 	}
 
 	export default Vue.extend({

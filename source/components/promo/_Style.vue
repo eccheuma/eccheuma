@@ -2,10 +2,10 @@
 	<section class="promo_body">
 
 		<vue-image
-			:content="{ path: 'Promo/4' }" 
+			:content="{ path: 'Promo/3' }" 
 			:sections="{ date: false, description: false, zoom: false }" 
-			:property="{ fit: 'cover', type: 'promo', collumn: 7 }">
-		</vue-image>
+			:property="{ fit: 'cover', type: 'promo', collumn: 7 }"
+		/>
 
 		<section>
 			<h4>Наглядный результат.</h4>
@@ -29,7 +29,7 @@
 	padding: 5vh 5vw;
 	align-items: center;
 	background-color: rgb(var(--color-2));
-	@media screen and ( max-width: var(--mobile-breakpoint)) {
+	@media screen and ( max-width: $mobile-breakpoint ) {
 		grid-template-columns: 1fr;
 		text-align: center;
 	}

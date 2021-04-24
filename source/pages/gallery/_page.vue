@@ -1,25 +1,44 @@
 <template>
-	<section class="gallery-page">
+	<section ref="page" class="gallery-page">
 
-		<vue-image
-			v-for="(image, index) in Images" 
+		<template v-if="$isMobile">
+			<vue-image
 
-			:id="`GalleryImage_${ index }`"
-			:key="`GALLERY-IMAGE-${ image.ID }`"
+				v-for="(image, index) in Images"
 
-			ref="images" 
-		
-			class="gallery-item"
-			:style="`order: ${( BasePoint - image.ID ) + Images.length }`"
+				:id="`GalleryImage_${ index }`"
+				:key="`GALLERY-IMAGE-${ image.ID }`"
 
-			:content="image.content" 
-			:sections="{ date: true, description: true, zoom: true }" 
-			:property="{ fit: 'cover', type: 'gallery', collumn: 10 }"
-		>
+				:ref="'images'" 
+				:style="`order: ${( BasePoint - image.ID ) + Images.length }`"
 
-			{{ image.content.description }}
+				:content="image.content" 
+				:sections="{ date: true, description: true, zoom: true }" 
+				:property="{ fit: 'cover', type: 'gallery', collumn: 10 }"
+			>
 
-		</vue-image>
+				{{ image.content.description }}
+
+			</vue-image>
+		</template>
+
+		<template v-for="(image, index) in Images" v-else>
+			<intesection-component :key="`GALLERY-IMAGE-${ image.ID }`" :rootMargin="5" @isIntersecting="animateImage">
+				<vue-image
+					:id="`GalleryImage_${ index }`"
+					:ref="'images'" 
+					:style="`order: ${( BasePoint - image.ID ) + Images.length }`"
+
+					:content="image.content" 
+					:sections="{ date: true, description: true, zoom: true }" 
+					:property="{ fit: 'cover', type: 'gallery', collumn: 10 }"
+				>
+
+					{{ image.content.description }}
+
+				</vue-image>
+			</intesection-component>
+		</template>
 
 	</section>
 </template>
@@ -41,23 +60,38 @@
 	// MIXINS
 		import ResetPageContent 				from '~/assets/mixins/ResetPageContent.ts'
 		import PageTransitionProperty 	from '~/assets/mixins/PageTransitionProperty.ts'
-		import IntersectionObserver 		from '~/assets/mixins/IntersectionObserver.ts'
 
 	// TYPES
-		import type { PAYLOAD } 				from '~/store/PageContent'
+		import type { PAYLOAD } 					from '~/store/PageContent'
+		import type { ANIMATION_PAYLOAD } from '~/assets/mixins/IntersectionObserver'
 
 	// LOAD POLITIC
 		import { load_ranges } from '~/config/LoadPolitic.ts'
 
 	// COMPONENTS
-		import VueImage from '~/components/common/ImageComponent/Image.vue'
+		import VueImage 						from '~/components/common/ImageComponent/Image.vue'
+		import IntesectionComponent from '~/components/intersectionComponent.vue'
+
+	// INTERSECTION_ANIMATION
+	const Animation: ANIMATION_PAYLOAD = {
+		in: {
+			opacity: [0, 1],
+			translateY: [100, 0],
+			duration: () => 500 + 500 * Math.random(),
+		},
+		out: {
+			opacity: [1, 0],
+			translateY: [0, 100],
+			duration: () => 500 + 500 * Math.random(),
+		}
+	}
 
 	// MODULE
 	export default Vue.extend({
 		components: {
-			VueImage
+			VueImage, IntesectionComponent
 		},
-		mixins: [ ResetPageContent, PageTransitionProperty, IntersectionObserver ],
+		mixins: [ ResetPageContent, PageTransitionProperty ],
 		async middleware({ params, query, redirect }) {
 
 			const PAGE 			= Number( params.page.slice(-1) ) // Parse page_1: str => 1: int
@@ -113,10 +147,10 @@
 						this.Ready = true
 					})
 				}
-			}
+			},
 		},
 		created() {
-			this.ChangePage(this.Page)
+			this.ChangePage(this.Page); console.log(this.Images.length)
 		},
 		methods: {
 			
@@ -143,7 +177,20 @@
 
 				await this.GetContent(PAYLOAD)
 
+			},
+
+			animateImage(intersection: boolean, slotNode: Node) {
+
+				this.$AnimeJS({
+					targets: slotNode,
+					easing: 'linear',
+
+					...Animation[intersection ? 'in' : 'out']
+
+				})
+
 			}
+
 		},
 	})
 	

@@ -44,13 +44,13 @@
 	export const actions: ActionTree<RootState, RootState> = {
 		GetLocalTime({ commit }, n = null) {
 
-			const Properties = {
+			const Properties: {[key: string]: Intl.DateTimeFormatOptions} = {
 				D: { year: 'numeric', month: 'long', day: 'numeric' },
 				T: { hour: '2-digit', minute: '2-digit' }
 			}
 			
 			const DATA = {
-				Day: Intl.DateTimeFormat('ru-RU', Properties.D).format(n),
+				Day: 	Intl.DateTimeFormat('ru-RU', Properties.D).format(n),
 				Time: Intl.DateTimeFormat('ru-RU', Properties.T).format(n)
 			}
 

@@ -11,73 +11,93 @@
 		out: AnimeAnimParams
 	}
 
+	type OPTIONS = {
+		animation_target: Element | HTMLElement 
+	}
+
+	type PAYLOAD = {
+		el: Element, 
+		animation: ANIMATION_PAYLOAD, 
+		_threshold?: number, 
+		_options?: OPTIONS,
+		_cb?: (entry: IntersectionObserverEntry[]) => any
+	}
+
 // DECLARE FUNC
 
 	declare module 'vue/types/vue' {
 		interface Vue {
-			initIntersectionObserver: (
-				el: Element, 
-				animation: ANIMATION_PAYLOAD, 
-				_threshold?: number, 
-				_cb?: (entry: IntersectionObserverEntry[]) => any ) => void
+			initIntersectionObserver: (payload: PAYLOAD) => void
 		}
 	}
 
 // MODULE
 
-	export default Vue.extend({
-		data() {
-			return {
-				IntersectionObserverInstances: new Map() as Map<Element, { animated: boolean }>
+export default Vue.extend({
+	data() {
+		return {
+			ObserversMap: 	new Map() as Map<Element, IntersectionObserver>,
+			AnimationState: new Map() as Map<Element, boolean>,
+		}
+	},
+	methods: {
+
+		initIntersectionObserver(payload: PAYLOAD) {
+
+			const DEF_CB = (isIntersecting: boolean) => {
+				this.animateElement(
+
+				isIntersecting 
+					? 'in' 
+					: 'out', 
+				payload._options?.animation_target || payload.el, 
+				payload.animation)
 			}
+	
+			const OPTIONS = {
+				threshold: payload._threshold ?? this.$isMobile ? 0 : .25
+			};
+	
+			const OBSERVER = new IntersectionObserver((entry) => {
+				payload._cb ? payload._cb(entry) : DEF_CB(entry.pop()!.isIntersecting)
+			}, OPTIONS);
+
+			this.ObserversMap.set(payload.el, OBSERVER);
+			this.AnimationState.set(payload.el, false)
+
+			OBSERVER.observe(payload.el)
+
 		},
-		methods: {
 
-			initIntersectionObserver(
-				el: Element, 
-				animation: ANIMATION_PAYLOAD, 
-				_threshold?: number, 
-				_cb?: (entry: IntersectionObserverEntry[]) => any ) {
+		animateElement(mode: ANIMATION_MODE, el: Element, animation: ANIMATION_PAYLOAD) {
 
-				const DEF_CB = (isIntersecting: boolean) => {
-					this.animateElement(isIntersecting ? 'in' : 'out', el, animation)
-				}
-		
-				const OPTIONS = {
-					threshold: _threshold ?? this.$isMobile ? 0 : .25
-				};
-		
-				new IntersectionObserver((entry) => {
-					_cb ? _cb(entry) : DEF_CB(entry.pop()!.isIntersecting)
-				}, OPTIONS).observe(el)
+			const AS = this.AnimationState
 
-			},
+			const DUR = 500;
 
-			animateElement(mode: ANIMATION_MODE, el: Element, animation: ANIMATION_PAYLOAD) {
+			const ANIMATION = this.$AnimeJS({
+				targets: el,
+				duration: DUR,
+				easing: 'linear',
 
-				const IO_Inst = this.IntersectionObserverInstances
+				...animation[mode],
 
-				if ( IO_Inst.get(el)?.animated === false || undefined ) {
-
-					this.$AnimeJS({
-						targets: el,
-						duration: 500,
-						easing: 'linear',
-	
-						...animation[mode],
-
-						begin: () => {
-							IO_Inst.set(el, { animated: true })
-						},
-						complete: () => {
-							IO_Inst.set(el, { animated: false })
-						}
-	
-					})
-
+				begin: () => {
+					AS.set(el, true)
+				},
+				complete: () => {
+					setTimeout(() => {
+						AS.set(el, false)
+					}, 250);
 				}
 
+			})
+
+			if ( AS.get(el) === false ) {
+				ANIMATION.play() 
 			}
 
 		}
-	})
+
+	}
+})

@@ -2,10 +2,10 @@
 	<section class="promo_body">
 		
 		<vue-image
-			:content="{ path: 'Promo/2' }" 
+			:content="{ path: 'Promo/4' }" 
 			:sections="{ date: false, description: false, zoom: false }" 
-			:property="{ fit: 'cover', type: 'promo', collumn: 7 }">
-		</vue-image>
+			:property="{ fit: 'cover', type: 'promo', collumn: 7 }"
+		/>
 
 		<section>
 			<h4>Наглядный результат.</h4>
@@ -25,15 +25,24 @@
 .promo {
 	&_body {
 		@include gradient_border(both);
-		display: grid; grid-template-columns: minmax(40vw, 2fr) 1fr; 
-		column-gap: 30px; row-gap: 3vh;
+
+		max-width: 1200px;
+
+		display: grid; 
+		grid-template: {
+			columns: 1fr 45ch;
+		}
+
+		column-gap: 30px; 
+		row-gap: 3vh;
 		padding: 2vh 5vw;
 		align-items: center;
-		background-color: rgb(var(--color-2));
-		@media screen and ( max-width: var(--mobile-breakpoint)) {
+
+		@media screen and ( max-width: $mobile-breakpoint ) {
 			grid-template-columns: 1fr;
 			text-align: center;
 		}
+
 	}
 }
 

@@ -48,7 +48,7 @@
 		Change_SoundSource(state, payload) {
 			state.SoundSource.set(payload.path, new Howl({ src: payload.src, ...payload.prop }))
 		},
-		Change_SoundGlobalVolume(state, prop) {
+		Change_SoundGlobalVolume(state, prop: number) {
 			state.Global.Volume = prop
 		},
 		Change_GlobalMute(state, prop) {
@@ -101,27 +101,26 @@
 		},
 		Set_GlobalSoundProperty({ state, commit }, { _volume, _duration }: { _volume: number, _duration: number }) {
 
+			const PROPERTY = { volume: state.Global.Volume };
+
 			if ( !state.Global.inChange ) {
-
-				commit('setChangeStatus', true)
-
-				const PROPERTY = { volume: state.Global.Volume, }
 
 				$AnimeJS({
 					targets: PROPERTY,
 					volume: [ PROPERTY.volume, _volume ],
-					easing: 'easeInOutCubic',
+					easing: 'linear',
 					duration: _duration,
 					round: 100,
 					begin: () => {
-						commit('Change_GlobalMute', _volume === 0 )
+						commit('Change_GlobalMute', state.Global.Volume);
+						commit('setChangeStatus', true);
 					},
 					update: () => { 
-						Howler.volume(PROPERTY.volume) 
+						Howler.volume(PROPERTY.volume);
 					},
 					complete: () => {
-						commit('Change_SoundGlobalVolume', PROPERTY.volume); 
-						commit('setChangeStatus', false)
+						commit('Change_SoundGlobalVolume', _volume); 
+						commit('setChangeStatus', false);
 					}
 				});
 

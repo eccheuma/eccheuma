@@ -2,33 +2,27 @@ import Vue from 'vue'
 
 import firebase from 'firebase/app'; import 'firebase/database'
 
-type PAGE_CONTENT = 'Posts' | 'Gallery'
+export default async () => {
 
-const LOAD_RANGES: {[K in PAGE_CONTENT]: number} = {
-	Posts: 4,
-	Gallery: 8
-}
+	Vue.config.ignoredElements = ['eccheuma-wrapper', 'eccheuma-layout']
 
-export default () => {
-
-	Vue.prototype.CLIENT_RENDER_CHECK = process.browser
-	Vue.prototype.LOAD_RANGES 				= LOAD_RANGES
-	Vue.prototype.DEVELOPMENT 				= process.env.NODE_ENV === 'development'
-
-	firebase.database()
+	const APP = await firebase.database()
 		.ref('/App')
 		.once('value')
-		.then(( data ) => {
-			Vue.prototype.__SELF_KEY__ = data.val().__SELF_KEY__
-		})
+		.then( data => data.val())
+
+	Vue.prototype.APP_VERSION					= APP.Version;
+	Vue.prototype.CLIENT_RENDER_CHECK = process.browser;
+	Vue.prototype.DEVELOPMENT 				= process.env.NODE_ENV === 'development';
+	Vue.prototype.__SELF_KEY__ 				= APP.__SELF_KEY__
 
 }
 
 declare module 'vue/types/vue' {
 	interface Vue {
+		APP_VERSION: string
 		CLIENT_RENDER_CHECK: boolean
 		DEVELOPMENT: boolean
 		__SELF_KEY__: string
-		LOAD_RANGES: typeof LOAD_RANGES
 	}
 }

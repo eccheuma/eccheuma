@@ -43,7 +43,7 @@
 <style lang="scss" scoped>
 
 .works_swiper {
-  max-width: 50vw;
+  width: calc(max(50vw, 360px));
   justify-self: center;
   &-item {
     padding: 0 5vw;
@@ -177,7 +177,7 @@ export default Vue.extend({
 
 						const D = Object.values(data.val()) as WORKCASE[]
 
-						this.Works[item] = D; this.Ready = true
+						this.Works[item] = D; this.Ready = true;
 
 					});
 

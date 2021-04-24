@@ -35,6 +35,7 @@ module.exports = {
 		'camelcase': 0,
 		'template-curly-spacing': 0,
 		'no-console': 0,
+		'nuxt/no-globals-in-created': 0,
 		'no-alert': 1,
 		'no-loop-func': 2,
 		'no-self-compare': 2,

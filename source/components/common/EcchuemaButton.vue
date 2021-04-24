@@ -7,9 +7,10 @@
 	</button>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
 	button {
+		@include light-button;
 		position: relative;
 	}
 
