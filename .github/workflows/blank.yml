@@ -27,4 +27,4 @@ jobs:
 
       # Runs a single command using the runners shell
       - name: deploy build
-        run: nuxt-ts build && nuxt-ts generate && firebase deploy --only hosting
+        run: npm run BGD
