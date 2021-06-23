@@ -4,13 +4,13 @@ import 'firebase/database'
 import { ActionTree, MutationTree } from 'vuex'
 
 // INTERFACES & TYPES
-	import { POST } from '~/types/Post'
+	import { POST } from '~/typescript/Post'
 
 // CURENT STATE
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/types/VuexModules' {
+	declare module '~/typescript/VuexModules' {
 		interface VuexModules {
 			Posts: CurentState
 		}

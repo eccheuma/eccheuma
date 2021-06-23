@@ -216,11 +216,11 @@
 	import PostContent 	from '~/components/post/PostContent.vue'
 
 	// VUEX MODULE TYPE MAP
-	import type { VuexModules } from '~/types/VuexModules'
+	import type { VuexModules } from '~/typescript/VuexModules'
 
 	// TYPES
-	import type { POST, POST_CONTENT } 	from '~/types/Post.ts'
-	import type { IMAGE_PROPERTY } 			from '~/types/Image.ts'
+	import type { POST, POST_CONTENT } 	from '~/typescript/Post.ts'
+	import type { IMAGE_PROPERTY } 			from '~/typescript/Image.ts'
 
 	// BLOCK TYPES
 	type BLOCK_TYPES = 'h5' | 'p' | 'blockquote' | 'img' | 'ul' | 'hr'

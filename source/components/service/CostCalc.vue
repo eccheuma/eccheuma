@@ -341,14 +341,14 @@
 // VUEX
 	import { mapState } from 'vuex'
 
-	import type { VuexModules } from '~/types/VuexModules.ts'
+	import type { VuexModules } from '~/typescript/VuexModules.ts'
 
 // FIREBASE 
 	import firebase from 'firebase/app'; import 'firebase/database'
 
 // TYPES 
-	import type { CATEGOTIES, PRODUCTS, ADDICTION, SERVICE } 		from '~/types/Services.ts'
-	import type { WebApplications, GraphicalDesign, HTMLcode } 	from '~/types/Services.ts'
+	import type { CATEGOTIES, PRODUCTS, ADDICTION, SERVICE } 		from '~/typescript/Services.ts'
+	import type { WebApplications, GraphicalDesign, HTMLcode } 	from '~/typescript/Services.ts'
 
 	export default Vue.extend({
 		props: {

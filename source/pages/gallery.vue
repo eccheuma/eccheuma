@@ -13,7 +13,7 @@
 
 		<section class="gallery-pinned">
 			<vue-image
-				:content="{ path: 'Promo/1', title: 'TEST' }" 
+				:content="{ path: 'Promo/1.png', title: 'TEST' }" 
 				:sections="{ date: false, description: true, zoom: true }" 
 				:property="{ fit: 'cover', type: 'promo', collumn: 6 }">
 
@@ -22,7 +22,7 @@
 			</vue-image>
 
 			<vue-image 
-				:content="{ path: 'Promo/4', title: 'TEST' }" 
+				:content="{ path: 'Promo/4.png', title: 'TEST' }" 
 				:sections="{ date: false, description: true, zoom: true }" 
 				:property="{ fit: 'cover', type: 'promo', collumn: 6 }">
 

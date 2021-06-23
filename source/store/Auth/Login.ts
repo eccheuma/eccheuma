@@ -5,7 +5,7 @@ import 'firebase/auth'
 // VUEX
 	import type { ActionTree, MutationTree } from 'vuex'
 
-	import type { VuexModules } from '~/types/VuexModules'
+	import type { VuexModules } from '~/typescript/VuexModules'
 
 // TYPES
 	import type { REGISTER_FORM } from './Auth'
@@ -14,7 +14,7 @@ import 'firebase/auth'
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/types/VuexModules' {
+	declare module '~/typescript/VuexModules' {
 		interface Auth {
 			Login: CurentState
 		}

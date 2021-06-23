@@ -1,5 +1,5 @@
 <template>
-	<div ref="collapse" class="eccheuma_collapse-container" :style="styleObject">
+	<div class="eccheuma_collapse-container" :style="styleObject">
 		<div ref="wrap" class="eccheuma_collapse-wrap">
 			<slot />
 		</div>
@@ -10,7 +10,7 @@
 
 .eccheuma_collapse {
 	&-container {
-		overflow: hidden;
+		overflow-y: hidden;
 		will-change: height;
 		transition: {
 			property: height;
@@ -39,7 +39,7 @@ export default Vue.extend({
 			required: false,
 			default() {
 				return {
-					duration: 500,
+					duration: 750,
 				}
 			}
 		} as PropOptions<{ duration: number }>
@@ -55,11 +55,13 @@ export default Vue.extend({
 		}
 	},
 	computed: {
-		styleObject(): any {
+		styleObject(): Partial<CSSStyleDeclaration> {
+
 			return {
-				'height': this.Collapse ? `${ this.InnerHeight }px` : '0px',
-				'transition-duration': this.InChange ? `${ this.options.duration }ms` : '',
+				height: 						this.Collapse ? `${ this.InnerHeight }px` 			: '0px',
+				transitionDuration: this.InChange ? `${ this.options.duration }ms` 	: 'unset',
 			}
+
 		}
 	},
 	watch: {
@@ -71,8 +73,12 @@ export default Vue.extend({
 			},
 		},
 	},
-	mounted() {
-		this.Collapse = this.active;
+	async mounted() {
+
+		this.Collapse = this.active; 
+		
+		this.InnerHeight = await this.GetInnerHeight();
+
 	},
 	updated() {
 
@@ -84,9 +90,7 @@ export default Vue.extend({
 
 	},
 	methods: {
-		async ToggleCollapse() {
-
-			this.InnerHeight = await this.GetInnerHeight();
+		ToggleCollapse() {
 
 			this.$nextTick().then(() => {
 

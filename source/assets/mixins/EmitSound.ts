@@ -1,9 +1,11 @@
 
-// Mixin for sound emit in Howler.js via store
-import { mapActions } from 'vuex'
+import Vue from 'vue';
 
-// INTERFACES
-import type { PROPERTY } from '~/store/Sound'
+// Mixin for sound emit in Howler.js via store
+import 			{ mapActions, mapState } 	from 'vuex'
+import type { Howl, HowlOptions } from 'howler'
+
+import type { VuexModules } from '~/typescript/VuexModules'
 
 // TYPES
 export type FILE_NAME = 'Holl' 
@@ -14,33 +16,72 @@ export type FILE_NAME = 'Holl'
 	| 'Tap'
 	| 'Translate'
 
+export type SoundInstance = {
+	file: FILE_NAME,
+	name: string,
+	settings?: Partial<HowlOptions>
+}
+
 // DECLARE INSTANCE
 declare module 'vue/types/vue' {
 	interface Vue {
-		EmitSound: (_source: FILE_NAME, _setting?: Partial<PROPERTY>) => void
+		setSounds: (sounds_arr: SoundInstance[]) => void,
+		playSound: (howl: Howl | undefined) => void
+		Sounds: Map<string, Howl>,
 	}
 }
 
 // MODULE
-export default {
-	methods: {
-		...mapActions({
-			ActivateSound: 'Sound/ActivateSound'
-		}),
-		EmitSound(_source: FILE_NAME, _setting?: PROPERTY ) {
+export default Vue.extend({
+	data() {
+		return {
+			Sounds: new Map() as Map<string, Howl>
+		}
+	},
+	computed: {
 
-			const default_setting = {
-				status: true,
+		...mapState({
+			sounds: state => (state as VuexModules).Sound.sounds
+		})
+
+	},
+	methods: {
+
+		...mapActions({
+			playSound: 			'Sound/playSound',
+			registerSound: 	'Sound/registerSound'
+		}),
+
+		predefineProperty(sound: SoundInstance): SoundInstance {
+
+			const DEFAULT_SETTINGS: Partial<HowlOptions> = {
+				src: `/audio/${ sound.file }.ogg`,
 				volume: .75,
 				loop: false,
 				rate: 1,
 			};
 
-			this.ActivateSound({ 
-				_path: _source, 
-				_prop: { ...default_setting, ..._setting }
-			})
+			return { 
+				file: sound.file,
+				name: sound.name, 
+				settings: { ...DEFAULT_SETTINGS, ...sound.settings } 
+			}
 
 		},
+
+		setSounds(sounds_arr: SoundInstance[]) {
+
+			sounds_arr.forEach((sound) => {
+				this.registerSound(this.predefineProperty(sound)).then((howl: Howl) => {
+
+					howl.load();
+
+					this.Sounds.set(sound.name, howl);
+
+				})
+			})
+
+		}
+
 	}
-}
+})

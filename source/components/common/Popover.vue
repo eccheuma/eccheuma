@@ -47,10 +47,6 @@
 
 		z-index: 9999;
 
-		// background: {
-		// 	color: rgb(0, 255, 0);
-		// }
-
 		color: rgb(var(--color-def-6)) !important;
 
 		z-index: 9999;
@@ -74,7 +70,7 @@
 		}
 
 		font: {
-			size: .65rem;
+			size: var(--font-size-5);
 		}
 
 		text: {
@@ -160,7 +156,7 @@
 						y: TARGET.offsetTop 	+ ( ParentRect.height / 2 ),
 					}
 
-					const MARGIN = (mar: number = 20): number => {
+					const MARGIN = (mar: number = 40): number => {
 
 						const U = (ParentRect.height / 2) + mar
 

@@ -1,10 +1,10 @@
-.cooled {
+.utils\:\:cooled {
 	
-	&_node {
+	&-node {
 		display: none !important
 	}
 	
-	&_sections {
+	&-sections {
 		section {
 			display: none !important
 		}
@@ -24,11 +24,45 @@
 	}	
 }
 
+.pattern_bg {
+
+	position: relative;
+	z-index: 1;
+
+	&::before {
+
+		content: '';
+
+		position: absolute;
+		top: 0; left: 0;
+
+		z-index: -1;
+
+		display: block;
+		width: 100%;
+		height: 100%;
+
+		background: {
+			image: url('~assets/images/__PATTERN__.png?size=350');
+			color: rgb(var(--color-2));
+		};
+
+		opacity: 3%;
+
+	}
+
+}
+
 .disabled {
 	pointer-events: none;
 	opacity: .25;
 }
 
-.glassy {
-	backdrop-filter: blur(10px)
+.utils\:\:glassy {
+	backdrop-filter: blur(3px)
+}
+
+.utils\:\:voided {
+	height: 0px;
+	width: 0px;
 }

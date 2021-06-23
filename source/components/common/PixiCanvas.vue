@@ -13,6 +13,8 @@
 	top: 0; left: 0;
 	height: 100vh; width: 100vw;
 
+	overflow: hidden;
+
 	background: {
 		color: rgb(var(--color-1));
 	}
@@ -31,21 +33,21 @@
 // VUEX MODULE TYPE MAP
 	import type { Application, Container, Sprite, Texture, Graphics, TilingSprite } from 'pixi.js'
 	import type { AnimeInstance } 																									from 'animejs'
-	import type { VuexModules } 																										from '~/types/VuexModules'
+	import type { VuexModules } 																										from '~/typescript/VuexModules'
 
 // FILES
 	const ASSETS = [
 		{
 			name: 'Background',
-			path: require('~/assets/images/Background.png?format=webp&size=900').src
+			path: require('~/assets/images/Background.png?format=webp&size=1440').src
 		},
 		{
 			name: 'Noise',
-			path: require('~/assets/images/Noise.png?format=webp&size=1140').src
+			path: require('~/assets/images/Noise.png?format=webp&size=1440').src
 		},
 		{
 			name: 'Stripes',
-			path: require('~/assets/images/SVG/Stripes.svg')
+			path: require('~/assets/images/Stripes.png?format=webp').src
 		}
 	]
 	const HEAD_LINKS = ASSETS.map((asset) => { 
@@ -159,16 +161,17 @@
 
 					console.timeEnd('Composite')
 
-					this.AnimeJSInstances.forEach(instance => instance.play())
-
 					this.$AnimeJS({
 						targets: this.$refs.canvas,
 						opacity: [0, 1],
 						duration: 5000,
-						ease: 'easeInOutQuad'
+						easing: 'easeInOutQuad',
+						begin: () => {
+							this.$emit('ready')
+						},
 					})
 
-					this.$emit('ready')
+					this.AnimeJSInstances.forEach(instance => instance.play())
 
 				})
 
@@ -290,9 +293,9 @@
 								Background.y 				= this.app.screen.height / 2
 								Background.x 				= this.app.screen.width / 2
 
-						this.SpriteMap.set('Background', Background);
+						resolve(Background);
 
-						resolve(Background)
+						this.SpriteMap.set('Background', Background);
 
 						this.backgroundAnimation(Background);
 
@@ -327,9 +330,9 @@
 						const Layer = new this.$PIXI.Container();
 
 						const NoiseFilter = new this.$PIXI.filters.NoiseFilter();
-									NoiseFilter.resolution 	= 0.25;
+									NoiseFilter.resolution 	= 0.1;
 									NoiseFilter.noise 			= 1;
-									NoiseFilter.seed 				= Math.random();
+									NoiseFilter.seed 				= 1;
 									NoiseFilter.blendMode 	= this.$PIXI.BLEND_MODES.SCREEN;
 
 						const GRAPH = new this.$PIXI.Graphics()
@@ -357,15 +360,15 @@
 
 					return new Promise(( resolve ) => {
 
-						const Stripes = new this.$PIXI.TilingSprite(texture)
-								Stripes.tileScale.x = Stripes.tileScale.y = .2
-								Stripes.width = this.app.screen.width
-								Stripes.height = this.app.screen.height
-								Stripes.blendMode = this.$PIXI.BLEND_MODES.MULTIPLY
+						const Stripes = new this.$PIXI.TilingSprite(texture);
+									Stripes.tileScale.x = Stripes.tileScale.y = .2
+									Stripes.width 			= this.app.screen.width
+									Stripes.height 			= this.app.screen.height
+									Stripes.blendMode 	= this.$PIXI.BLEND_MODES.MULTIPLY
+
+						resolve(Stripes);
 
 						this.SpriteMap.set('Stripes', Stripes)
-
-						resolve(Stripes)
 
 					})
 
@@ -380,9 +383,9 @@
 							Noise.alpha = .1
 							Noise.scale.y = Noise.scale.x = this.app.screen[this.ViewOrientation] / Noise[this.ViewOrientation]
 
-						this.SpriteMap.set('Noise', Noise)
+						resolve(Noise);
 
-						resolve(Noise)
+						this.SpriteMap.set('Noise', Noise)
 
 					})
 				}

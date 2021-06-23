@@ -5,12 +5,12 @@
 
 // INTERFACES AND TYPES 
 
-	import { VuexModules } from '~/types/VuexModules'
+	import { VuexModules } from '~/typescript/VuexModules'
 
-	import type { SELECTED_SERVICE, REQUEST_STATUS } from '~/types/Services.ts'
+	import type { SELECTED_SERVICE, REQUEST_STATUS } from '~/typescript/Services.ts'
 	import type { Message as MESSAGE } from '~/store/User/Messages'
 
-	import type { NOTIFICATION_CONTENT } from '~/types/Notification.ts'
+	import type { NOTIFICATION_CONTENT } from '~/typescript/Notification.ts'
 
 	interface WORK_REQUEST extends SELECTED_SERVICE {
 		ID: number
@@ -31,7 +31,7 @@
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/types/VuexModules' {
+	declare module '~/typescript/VuexModules' {
 		interface User {
 			WorkRequest: CurentState
 		}

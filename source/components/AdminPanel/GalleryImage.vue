@@ -68,7 +68,7 @@
 		import { mapActions } from 'vuex'
 
 	// TYPES 
-		import type { IMAGE_PROPERTY } from '~/types/Image.ts'
+		import type { IMAGE_PROPERTY } from '~/typescript/Image.ts'
 
 	// COMPONENTS
 		import VueImage from '~/components/common/ImageComponent/Image.vue'

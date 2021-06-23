@@ -1,12 +1,12 @@
 <template>
-	<div class="auth_login-container" @mouseenter.once="inFocus = true">
+	<div class="auth_login-container" @mouseenter.once="inFocus = true" @keydown.enter.prevent="sendForm()">
 
 		<section class="auth_login-header">
 
-			<i class="fas fa-user" />
+			<!-- <i class="fas fa-user" /> -->
 
 			<div class="auth_login-header-wrap">
-				<i class="fas fa-user" />
+				<icon name="Auth" />
 				<span>Авторизация</span>  
 			</div>
 
@@ -16,30 +16,34 @@
 
 			<div class="auth_login-body-email">
 				<span>Ваш email</span>
-				<input 
-					v-model="Form.email"
-					type="email"
-					:class="[
-						{ invalid: $v.Form.email.$invalid && $v.Form.email.$dirty },
-						{ valid: !$v.Form.email.$anyError && $v.Form.email.$dirty },
-					]"
-					@input="inputSound"
-					@change.once="$v.Form.email.$touch()"
-				>
+				<template v-if="$v.Form.email">
+					<input 
+						v-model="Form.email"
+						type="email"
+						:class="[
+							{ invalid: $v.Form.email.$invalid && $v.Form.email.$dirty },
+							{ valid:	!$v.Form.email.$anyError && $v.Form.email.$dirty },
+						]"
+						@input="inputSound"
+						@change.once="$v.Form.email && $v.Form.email.$touch()"
+					>
+				</template>
 			</div>
 
 			<div class="auth_login-body-password">
 				<span>Ваш пароль</span>
-				<input 
-					v-model="Form.password"
-					type="password"
-					:class="[
-						{ invalid: $v.Form.password.$invalid && $v.Form.password.$dirty },
-						{ valid: !$v.Form.password.$anyError && $v.Form.password.$dirty }
-					]"
-					@input="inputSound"
-					@change.once="$v.Form.password.$touch()"
-				>
+				<template v-if="$v.Form.password">
+					<input 
+						v-model="Form.password"
+						type="password"
+						:class="[
+							{ invalid: $v.Form.password.$invalid && $v.Form.password.$dirty },
+							{ valid: !$v.Form.password.$anyError && $v.Form.password.$dirty }
+						]"
+						@input="inputSound"
+						@change.once="$v.Form.password && $v.Form.password.$touch()"
+					>
+				</template>
 			</div>
 
 			<div class="auth_login-body-social">
@@ -52,13 +56,13 @@
 
 				<div class="auth_login-body-social-wrap">
 					<button>
-						<i class="fab fa-vk" />
+						<icon name="VK" />
 					</button>
 					<button>
-						<i class="fab fa-facebook-f" />
+						<icon name="Telegramm" />
 					</button>
 					<button>
-						<i class="fab fa-telegram" />
+						<icon name="Google" />
 					</button>
 				</div>
 
@@ -92,8 +96,6 @@
 
 	&-container {
 
-		margin: 4px;
-
 		background: {
 			color: rgb(var(--color-6));
 		}
@@ -110,6 +112,7 @@
 			@include push-button {
 
 				padding: 4px 10%;
+				line-height: 21px;
 
 				background: {
 					color: transparent;
@@ -130,21 +133,6 @@
 			bottom: 1px solid rgb(var(--color-5));
 		}
 
-		> i {
-			
-			$s: 15vh;
-
-			position: absolute;
-			color: rgb(var(--color-5));
-
-			top: 0; left: -#{$s / 4};
-
-			font: {
-				size: $s;
-			}
-
-		}
-
 		&-wrap {
 
 			margin: auto;
@@ -158,13 +146,8 @@
 			}
 
 			i {
-
-				margin: { bottom: 1vh };
-
-				font: {
-					size: 2rem;
-					weight: 700;
-				}
+				@include icon-size(10vh);
+				background-color: rgb(var(--color-3));
 			}
 
 			span {
@@ -252,6 +235,10 @@
 
 			}
 
+			i {
+				background-color: rgb(var(--color-3));
+			}
+
 			&-wrap {
 				margin: 2vh auto;
 				width: 75%;
@@ -275,6 +262,7 @@
 			width: 75%;
 			margin: 1vh auto;
 			display: block;
+			line-height: 21px;
 		}
 
 		.disabled {
@@ -303,13 +291,19 @@ import Vue from 'vue'
 // TYPES 
 
 	// VUEX MODULE TYPE MAP
-	import type { VuexModules } from '~/types/VuexModules'
+	import type { VuexModules } from '~/typescript/VuexModules'
 
 	// OTHER TYPES
-	import type { REGISTER_FORM } 	from '~/store/Auth/Auth.ts'
+	import type { REGISTER_FORM } from '~/store/Auth/Auth'
+
+	// COMPONENTS
+	import Icon 					from '~/components/Icon.vue';
 
 // MODULE
 	export default Vue.extend({
+		components: {
+			Icon,
+		},
 		mixins: [ EmitSound ],
 		data() {
 			return {
@@ -336,6 +330,20 @@ import Vue from 'vue'
 			})
 
 		},
+		created() {
+			this.setSounds([
+				{
+					file: 'Tap',
+					name: 'InputIncrement',
+					settings: { rate: 1.10 },
+				},
+				{
+					file: 'Tap',
+					name: 'InputDecrement',
+					settings: { rate: 0.95 },
+				},
+			])
+		},
 		methods: {
 
 			...mapActions({
@@ -349,9 +357,9 @@ import Vue from 'vue'
 			inputSound(input: InputEvent) {
 
 				if ( this.inFocus ) {
-					input.data 
-						? this.EmitSound('Tap', { rate: 1.10 }) 
-						: this.EmitSound('Tap', { rate: 0.95 }) 
+
+					this.playSound(this.Sounds.get(input.data ? 'InputIncrement' : 'InputDecrement'))
+
 				}
 
 			},

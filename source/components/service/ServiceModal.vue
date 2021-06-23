@@ -138,9 +138,9 @@
 	import Loader 	from '~/components/common/Loader.vue'
 
 // TYPES
-	import type { VuexModules } from '~/types/VuexModules'
+	import type { VuexModules } from '~/typescript/VuexModules'
 
-	import type { SELECTED_SERVICE, CATEGOTIES } from '~/types/Services.ts'
+	import type { SELECTED_SERVICE, CATEGOTIES } from '~/typescript/Services.ts'
 
 // MODULE
 	export default Vue.extend({

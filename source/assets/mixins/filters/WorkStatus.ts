@@ -1,6 +1,6 @@
 import Vue from 'vue'
 
-import { REQUEST_STATUS } from '~/types/Services'
+import { REQUEST_STATUS } from '~/typescript/Services'
 
 type VALUES = REQUEST_STATUS[keyof REQUEST_STATUS] | 'Не определён';
 

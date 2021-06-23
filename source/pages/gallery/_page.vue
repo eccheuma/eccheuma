@@ -23,16 +23,20 @@
 		</template>
 
 		<template v-for="(image, index) in Images" v-else>
-			<intesection-component :key="`GALLERY-IMAGE-${ image.ID }`" :rootMargin="5" @isIntersecting="animateImage">
+			<intesection-component 
+				:key="`GALLERY-IMAGE-${ image.ID }`" 
+				:style="`order: ${( BasePoint - image.ID ) + Images.length }`"
+				:rootMargin="5" 
+				@isIntersecting="animateImage"
+				>
 				<vue-image
 					:id="`GalleryImage_${ index }`"
 					:ref="'images'" 
-					:style="`order: ${( BasePoint - image.ID ) + Images.length }`"
 
 					:content="image.content" 
 					:sections="{ date: true, description: true, zoom: true }" 
 					:property="{ fit: 'cover', type: 'gallery', collumn: 10 }"
-				>
+					>
 
 					{{ image.content.description }}
 
@@ -55,18 +59,18 @@
 		import 'firebase/database'
 
 	// VUEX MODULE TYPE MAP
-		import type { VuexModules } from '~/types/VuexModules';
+		import type { VuexModules } from '~/typescript/VuexModules';
 
 	// MIXINS
-		import ResetPageContent 				from '~/assets/mixins/ResetPageContent.ts'
-		import PageTransitionProperty 	from '~/assets/mixins/PageTransitionProperty.ts'
+		import ResetPageContent 				from '~/assets/mixins/ResetPageContent'
+		import PageTransitionProperty 	from '~/assets/mixins/PageTransitionProperty'
 
 	// TYPES
 		import type { PAYLOAD } 					from '~/store/PageContent'
 		import type { ANIMATION_PAYLOAD } from '~/assets/mixins/IntersectionObserver'
 
 	// LOAD POLITIC
-		import { load_ranges } from '~/config/LoadPolitic.ts'
+		import { load_ranges } from '~/config/LoadPolitic'
 
 	// COMPONENTS
 		import VueImage 						from '~/components/common/ImageComponent/Image.vue'

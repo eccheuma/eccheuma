@@ -1,60 +1,39 @@
 <template>
 	<eccheuma-layout key="Application" ref="ApplicationNode" :class="`ui-theme-${ UI }`">
 
-		<!-- Лоадер -->
-		<page-loader />
+		<section class="fixed-node">
 
-		<client-only>
-			
-			<!-- Модальный портал -->
-			<portal-target name="Modal" :transition="MIXIN_Transition('opacity-transition')" slim />
+			<page-loader />
 
-			<!-- Модуль регистрации -->
-			<registration />
-
-		</client-only>
-
-		<!-- Верхняя шапка -->
-		<Header-Top />
-
-		<client-only>
-
-			<!-- Нотификация -->
 			<notification />
 
-			<!-- Профиль пользователя -->
-			<user-profile v-if="LoginStatus == true && !$isMobile" />
+			<client-only>
+		
+				<portal-target name="Modal" :transition="MIXIN_Transition('opacity-transition')" slim />
 
-		</client-only>
+				<registration />
 
-		<!-- Карусель -->
+				<vk-messages />
+
+			</client-only>
+
+		</section>
+
+		<header-top />
+
 		<header-carousel />
 
-		<!-- Навигация -->
+		<header-navigation :search="true" :background="true" />
 
-		<template v-if="$isMobile">
-			<mobile-navigation />
-		</template>
-
-		<template v-else>
-			<header-navigation :search="true" :background="true" />
-		</template>
-
-		<!-- Основной контент -->	
 		<section class="content-wrapper">
 
 			<scroll-bar v-if="!$isMobile" />
 
-			<nuxt class="content-container" />
+			<nuxt keep-alive :keep-alive-props="{ max: 2 }" class="content-container" />
 
 		</section>
 
-		<!-- Футер -->
 		<footer-component />
-
-		<client-only>
-			<vk-messages />
-		</client-only>
 
 	</eccheuma-layout>    
 </template>
@@ -62,13 +41,19 @@
 <style lang="scss">
 
 eccheuma-layout {
-	display: block;
-}
 
-.AppNoScroll {
-	position: fixed;
-	height: 100vh;
-	overflow: hidden;
+	position: relative;
+
+	display: grid;
+	grid-template: {
+		columns: 100%;
+		rows: 10vh 70vh 15vh;
+	};
+
+	.fixed-node {
+		position: absolute;
+	}
+
 }
 
 .content {
@@ -76,7 +61,7 @@ eccheuma-layout {
 
 		display: grid;
 		grid-template: {
-			columns: 3vw auto 3vw;
+			columns: 4vw 1fr 4vw;
 			rows: 1fr;
 		}
 
@@ -100,7 +85,7 @@ eccheuma-layout {
 	}
 	&-dark {
 		transition-duration: .75s;
-		background-color: rgb(var(--color-1));
+		background-color: rgb(var(--color-0));
 	}
 }
 
@@ -141,9 +126,9 @@ eccheuma-layout {
 	import PageLoader 		from '~/components/common/PageLoader.vue'
 
 	// TYPES
-	import type { NOTIFICATION_CONTENT } from '~/types/Notification.ts'
+	import type { NOTIFICATION_CONTENT } from '~/typescript/Notification'
 
-	import type { VuexModules } from '~/types/VuexModules.ts'
+	import type { VuexModules } from '~/typescript/VuexModules'
 
 	// MODULE
 	export default Vue.extend({ 
@@ -152,7 +137,6 @@ eccheuma-layout {
 			HeaderCarousel,
 			HeaderTop,
 			// Async components ========================================= //
-			UserProfile: 			() => import('~/components/user/UserProfile.vue'),
 			Registration: 		() => import('~/components/user/Registration.vue'),
 			HeaderNavigation: () => import('~/components/header/HeaderNavigation.vue'),
 			VkMessages: 			() => import('~/components/common/VK_Messages.vue'),
@@ -160,7 +144,7 @@ eccheuma-layout {
 			Notification: 		() => import('~/components/common/Notification.vue'),
 			FooterComponent: 	() => import('~/components/common/Footer.vue'),
 			/// Mobile components ========================================= //
-			MobileNavigation: () => import('~/components/_mobile/HeaderNavigation.vue'),
+			// MobileNavigation: () => import('~/components/_mobile/HeaderNavigation.vue'),
 		},
 		mixins: [ Transition ],
 		transition: 'layout-transition',
@@ -177,39 +161,35 @@ eccheuma-layout {
 			}
 		},
 		computed: {
+
 			...mapState({
 				UI:						state => (state as VuexModules).App.UI,
 				LoginStatus:	state => (state as VuexModules).Auth.Auth.LoginStatus,
-				Muted:				state => (state as VuexModules).Sound.Global.Mute,
-				AppScroll:		state => (state as VuexModules).AppScroll
+				Muted:				state => (state as VuexModules).Sound.global.mute,
 			}),
-			LocalThemeStatus() {
-				return localStorage.theme
-			},
+
 		},
 		mounted() {
 
-			if ( !this.Muted ) {
-				setTimeout(() => {
-					this.$store.dispatch( 'Sound/Set_GlobalSoundProperty', 1 )
-				}, 750);
-			}
+			setTimeout(() => {
 
-			setTimeout( this.setRegisterNatification, 6e5 );
+				if ( !this.LoginStatus ) { this.setRegNotification() }
+
+			}, 6e5 );
 
 		},
 		methods: {
 
 			...mapMutations({
-				SetDeviceType: 'SetDeviceType',
-				ChangeNotificationState: 'Notification/Change_Status'
+				SetDeviceType: 						'SetDeviceType',
+				ChangeNotificationState: 	'Notification/Change_Status'
 			}),
 
 			...mapActions({
-				Set_Notification: 'Notification/Set_Notification'
+				setNotification: 'Notification/Set_Notification',
 			}),
 
-			setRegisterNatification() {
+			setRegNotification() {
 
 				const C: NOTIFICATION_CONTENT = {
 					message: 'Если вы ещё не зарегистрированны - То сейчас самое лучшее время!',
@@ -218,7 +198,7 @@ eccheuma-layout {
 				}
 
 				if ( !this.LoginStatus ) {
-					this.Set_Notification(C)
+					this.setNotification(C)
 				}
 
 			}

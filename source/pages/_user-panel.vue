@@ -22,7 +22,7 @@
 
 	import { mapMutations } from 'vuex'
 
-	import type { VuexModules } from '~/types/VuexModules'
+	import type { VuexModules } from '~/typescript/VuexModules'
 
 	import UserProfile from '~/components/user/UserProfile.vue'
 	

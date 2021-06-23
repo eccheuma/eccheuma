@@ -39,7 +39,7 @@
 	import ServiceItem from '~/components/service/ServiceItem.vue'
 
 	// TYPES 
-	import type { CATEGOTIES, SERVICES_CARD } from '~/types/Services.ts'
+	import type { CATEGOTIES, SERVICES_CARD } from '~/typescript/Services.ts'
 
 	// MODULE
 	export default Vue.extend({

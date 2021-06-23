@@ -14,38 +14,19 @@
 				class="home-content"
 			/>
 
-			<pagination :payload="{ order: -1, scrollTarget: 445, section: 'home', delay: 0 }" />
+			<pagination style="align-self: end" :payload="{ order: -1, scrollTarget: 445, section: 'home', delay: 0 }" />
 
 		</main>
 
 		<aside>
 
 			<client-only>
+
 				<auth v-if="!$isMobile" />
+
+				<vk-posts-container />
+
 			</client-only>
-
-			<div class="vk_post_container">
-
-				<div class="vk_post_header">
-					<i class="fab fa-vk" />
-					<i class="fab fa-vk" />
-					<span>Посты из Вконтакте</span>
-				</div>
-
-				<div class="vk_post_wrapper"> 
-
-					<!-- @scroll.passive="Test" -->
-
-					<client-only>
-						<VKPostWidget
-							v-for="prop in VKPost"
-							:key="prop.PostKey"
-							:payload="prop"
-						/>
-					</client-only>
-
-				</div>
-			</div>
 			
 		</aside>
 
@@ -53,6 +34,22 @@
 </template>
 
 <style lang="scss" scoped>
+
+aside {
+
+	padding: 5px;
+	display: grid;
+	row-gap: 2vh;
+	align-content: start;
+
+}
+
+main {
+	display: grid;
+	row-gap: 2vh;
+	align-content: start;
+	padding: 2vh 5px;
+}
 
 .home {
 	&-container {
@@ -64,7 +61,8 @@
 		}
 	}
 	&-content {
-		min-height: 75vh;
+		display: grid;
+		row-gap: 2vh;
 	}
 }
 
@@ -80,25 +78,25 @@
 	import 'firebase/database'
 
 // MIXINS
-	import TransitionSound 		from '~/assets/mixins/TransitionSound.ts'
-	import TransitionProperty from '~/assets/mixins/PageTransitionProperty.ts'
+	import TransitionSound 		from '~/assets/mixins/TransitionSound'
+	import TransitionProperty from '~/assets/mixins/PageTransitionProperty'
 
 // COMPONENTS
 	import Pagination 			from '~/components/common/Pagination.vue'
 	import Auth 							from '~/components/auth/Wrap.vue'
 
 // TYPES
-	import type { VuexModules } from '~/types/VuexModules'
+	import type { VuexModules } from '~/typescript/VuexModules'
 
 // LOAD POLITIC
-	import { load_ranges } from '~/config/LoadPolitic.ts'
+	import { load_ranges } from '~/config/LoadPolitic'
 
 // MODULE
 	export default Vue.extend({ 
 		components: {
 			Pagination,
 			Auth,
-			VKPostWidget: () => import('~/components/common/VKPostWidget.vue'),
+			VkPostsContainer: () => import('~/components/common/VkPostsContainer.vue'),
 		},
 		mixins: [ TransitionSound, TransitionProperty ],
 		layout: 'Application', 
@@ -110,31 +108,6 @@
 
 				LoadRange: load_ranges.posts,
 
-				VKPost: [
-					{
-						ID: '-158755478',
-						PostKey: 17,
-						Hash: 'w29AkYYd9i4Jh7t0SORRF1-mZg4',
-					},
-					{
-						ID: '-158755478',
-						PostKey: 14,
-						Hash: 'vYYjqYns8GMqZpbxETGHiY4enUg'
-					},
-				],
-
-				PostHolder: [
-					{
-						ID: '-158755478',
-						PostKey: 17,
-						Hash: 'w29AkYYd9i4Jh7t0SORRF1-mZg4',
-					},
-					{
-						ID: '-158755478',
-						PostKey: 14,
-						Hash: 'vYYjqYns8GMqZpbxETGHiY4enUg'
-					},
-				]
 			}
 		},
 		head () {
@@ -144,7 +117,7 @@
 					{ 
 						hid: 'description', 
 						name: 'description', 
-						content: 'Главная страница. Тут собраны статьи на завязанные на профильную тему.' ,
+						content: 'Главная страница. Тут собраны статьи на завязанные на профильную тему.',
 					},
 					{
 						hid: 'og:title', 

@@ -85,8 +85,8 @@
 <style lang="scss">
 
 .header_top-container {
-	display: grid; height: 8vh;
-	padding: 1vh 1vw;
+	display: grid;
+	padding: 1vh 4vw;
 	grid-template-columns: repeat(3, 1fr); 
 	background-color: rgb(var(--color-1));
 	align-items: center;
@@ -105,7 +105,7 @@
 		}
 	}
 	svg {
-		height: 50%;
+		height: 33%;
 		cursor: pointer;
 		grid-column: 2/3;
 		transition-duration: .5s;

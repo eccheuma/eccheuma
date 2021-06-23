@@ -2,13 +2,13 @@
 	<section class="promo_body">
 
 		<vue-image
-			:content="{ path: 'Promo/3' }" 
+			:content="{ path: 'Promo/3.png' }" 
 			:sections="{ date: false, description: false, zoom: false }" 
 			:property="{ fit: 'cover', type: 'promo', collumn: 12 }"
 		/>
 
 		<section>
-			<h4>Адаптивная вёрстка</h4>
+			<h4>Для чего это?</h4>
 			<p>
 				Основная причина для чего нужна разный подход к вёрстке и функционалу - Это разные методы взаимодействия с приложением \ сайтом с разных типов устройств. 
 			</p>
@@ -23,16 +23,37 @@
 <style lang="scss" scoped>
 
 .promo_body {
+
 	display: grid;
-	grid-template-columns: minmax(40vw, 2fr) 1fr; 
-	column-gap: 30px; row-gap: 3vh;
-	padding: 2vh 2vw;
+
+	grid-template: {
+		columns: 1fr 30ch;
+		rows: 100%;
+	}
+
+	column-gap: 30px; 
+	row-gap: 3vh;
+	
+	padding: 10vh 2vw;
+
 	align-items: center;
 	background-color: rgb(var(--color-2));
+
 	@media screen and ( max-width: $mobile-breakpoint ) {
 		grid-template-columns: 1fr;
 		text-align: center;
 	}
+
+	width: 100%;
+
+	h4 {
+		font-weight: 800;
+	}
+
+	p {
+		font-size: var(--font-size-4)
+	}
+
 }
 
 </style>
@@ -41,8 +62,7 @@
 
 	export default {
 		components: {
-			VueImage: () => import  ( '~/components/common/ImageComponent/Image.vue' ),
+			VueImage: () => import( '~/components/common/ImageComponent/Image.vue' ),
 		},
 	}
 </script>
-

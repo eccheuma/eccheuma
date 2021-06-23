@@ -4,7 +4,7 @@
 		<div class="registration-wrap" v-if="RegistrationModal"  
 			@click.self="ChangeModalStatus(false)"
 			@keydown.shift.enter="Auth"
-			:class="{ glassy: CLIENT_RENDER_CHECK && $PIXI.utils.isWebGLSupported() }">
+			:class="{ 'utils::glassy': CLIENT_RENDER_CHECK && $PIXI.utils.isWebGLSupported() }">
 
 			<loader
 				:ElementLoad="LoaderStatus.Load"
@@ -92,7 +92,7 @@
 
 	// VUEX
 		import { mapState, mapMutations, mapActions } from 'vuex'
-		import type { VuexModules } from '~/types/VuexModules'
+		import type { VuexModules } from '~/typescript/VuexModules'
 
 	// TYPES & INTERFACES & ENUMS
 		import type { REGISTER_FORM, AUTH_ERRORS } from '~/store/Auth/Auth'

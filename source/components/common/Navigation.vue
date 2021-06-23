@@ -10,10 +10,10 @@
 
 			<i :class="link.icon" /> {{ link.name }}
 
-			<popover target="Navigation">
+			<!-- <popover target="Navigation">
 				<i class="fas fa-info-circle" />
 				{{ link.discription }}
-			</popover>
+			</popover> -->
 
 		</nuxt-link>
 
@@ -140,13 +140,13 @@
 	import Vue, { PropOptions } from 'vue'
 
 	// COMPONENTS
-	import Popover from '~/components/common/Popover.vue'
+	// import Popover from '~/components/common/Popover.vue'
 
 	// MIXINS
 	import EmitSound from '~/assets/mixins/EmitSound'
 
 	// TYPES
-	import type { ROUTES } from '~/types/Navigation.ts'
+	import type { ROUTES } from '~/typescript/Navigation'
 
 	type NAV_ITEM = {
 		ID: number 
@@ -159,9 +159,9 @@
 
 	// MODULE
 	export default Vue.extend({
-		components: {
-			Popover
-		},
+		// components: {
+		// 	Popover
+		// },
 		mixins: [ EmitSound ],
 		props: {
 			category: {
@@ -174,19 +174,25 @@
 				return this.$route.path as ROUTES
 			},
 		},
+		created() {
+			this.setSounds([
+				{
+					file: 'Tap',
+					name: 'PortfolionNavHover',
+					settings: { rate: 1.25 }
+				},
+			])
+		},
 		mounted() {
 
 			const LINK_COMPONENTS = this.$refs.links as Vue[]
 
 			LINK_COMPONENTS.forEach((component) => {
-				component.$el.addEventListener('mouseenter', this.hoverSound)
+				component.$el.addEventListener('mouseenter', () => this.playSound(this.Sounds.get('PortfolionNavHover')))
 			})
 
 		},
 		methods: {
-			hoverSound() {
-				this.EmitSound('Tap', { rate: 1.25 })
-			},
 			GoRouterTo(path: ROUTES) {
 
 				if ( this.$route.path !== path ) {

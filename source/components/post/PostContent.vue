@@ -95,8 +95,8 @@
 			padding: { bottom: 20px }
 
 			font: {
-				size: 1.3rem;
-				weight: 600;
+				size: var(--font-size-2);
+				weight: 700;
 			}
 
 			&:before {
@@ -127,7 +127,7 @@
 	import Vue, { PropOptions } from 'vue'
 
 	// TYPES
-	import type { POST_CONTENT } from '~/types/Post'
+	import type { POST_CONTENT } from '~/typescript/Post'
 
 	// MODULE
   export default Vue.extend({

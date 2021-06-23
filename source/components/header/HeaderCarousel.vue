@@ -1,124 +1,167 @@
 <template>
-	<section class="eccheuma_swiper">
-		<eccheuma-swiper :options="{ buttons: true, indicators: true, auto: true }">
+	<section class="header-carousel-container">
 
-			<template #icon-prev="{ onEdge }">
-				<button 
-					class="eccheuma_swiper-buttons" 
-					:class="[
-						{ onEdge }, { glassy: CLIENT_RENDER_CHECK && !$isMobile && $PIXI.utils.isWebGLSupported() }
-					]"
-					@click="EmitSound(`Off`, { volume: .3, rate: .75})" 
-					@mouseenter="CarouselFocus = true" 
-					@mouseleave="CarouselFocus = false"
-					>
-					<i class="fas fa-angle-left" />
-				</button>
-			</template>
+		<user-profile v-if="LoginStatus && !$isMobile" />
 
-			<template #icon-next="{ onEdge }">
-				<button 
-					class="eccheuma_swiper-buttons" 
-					:class="[
-						{ onEdge }, { glassy: CLIENT_RENDER_CHECK && !$isMobile && $PIXI.utils.isWebGLSupported() }
-					]"
-					@click="EmitSound(`Off`, { volume: .3, rate: .75})" 
-					@mouseenter="CarouselFocus = true" 
-					@mouseleave="CarouselFocus = false"
-					>
-					<i class="fas fa-angle-right" />
-				</button>
-			</template>
+		<section class="eccheuma_swiper">
+			<eccheuma-swiper :options="{ buttons: true, indicators: true, auto: true }">
 
-			<template #pagination="{ active }">
-				<span 
-					class="eccheuma_swiper-dots" 
-					:class="{ active_dot: active }" 
-					@mouseenter="CarouselFocus = true" 
-					@mouseleave="CarouselFocus = false"
-				/>
-			</template>
+				<template #icon-prev="{ onEdge }">
+					<button 
+						class="eccheuma_swiper-buttons" 
+						:class="[
+							{ onEdge }, { 'utils::glassy': CLIENT_RENDER_CHECK && !$isMobile && $PIXI.utils.isWebGLSupported() && !CarouselFocus }
+						]"
+						@click="playSound(Sounds.get('CarouselButton'))" 
+						@mouseenter="CarouselFocus = true" 
+						@mouseleave="CarouselFocus = false"
+						>
+						<icon name="Arrow" style="transform: rotate(0deg)" />
+					</button>
+				</template>
 
-			<template #default="{ activeIndex }">
-				<section v-for="(item, index) in PostContent" :key="item.ID" class="eccheuma_swiper-item" @dblclick="GoToPost(item.ID)">
+				<template #icon-next="{ onEdge }">
+					<button 
+						class="eccheuma_swiper-buttons" 
+						:class="[
+							{ onEdge }, { 'utils::glassy': CLIENT_RENDER_CHECK && !$isMobile && $PIXI.utils.isWebGLSupported() && !CarouselFocus }
+						]"
+						@click="playSound(Sounds.get('CarouselButton'))" 
+						@mouseenter="CarouselFocus = true" 
+						@mouseleave="CarouselFocus = false"
+						>
+						<icon name="Arrow" style="transform: rotate(180deg)" />
+					</button>
+				</template>
 
-						<client-only>
+				<template #pagination="{ active }">
+					<span 
+						class="eccheuma_swiper-dots" 
+						:class="{ active_dot: active }" 
+						@mouseenter="CarouselFocus = true" 
+						@mouseleave="CarouselFocus = false"
+					/>
+				</template>
 
-							<template v-if="CLIENT_RENDER_CHECK && !$isMobile && $PIXI.utils.isWebGLSupported()">
-								<eccheuma-parallax :options="{ OpacityFade: true, OpacityFadeOffset: 100 }">
+				<template #default="{ activeIndex }">
+					<section v-for="(item, index) in PostContent" :key="item.ID" class="eccheuma_swiper-item" @dblclick="GoToPost(item.ID)">
 
+							<client-only>
+
+								<template v-if="CLIENT_RENDER_CHECK && !$isMobile && $PIXI.utils.isWebGLSupported()">
+									<eccheuma-parallax :options="{ OpacityFade: true, OpacityFadeOffset: 100 }">
+
+										<picture ref="ImageHolder" class="eccheuma_swiper-image" :class="!CarouselFocus ? `focused` : `unfocused`">
+											<template v-if="PostImages[item.ID]">
+												<source :srcset="PostImages[item.ID].avif" type="image/avif">
+												<img :src="PostImages[item.ID].webp">
+											</template>
+											<template v-else>
+												<img :src="ImagePlaceholder">
+											</template>
+										</picture>
+
+									</eccheuma-parallax>
+								</template>
+
+								<template v-else>
 									<div 
 										ref="ImageHolder" 
 										class="eccheuma_swiper-image" 
-										:style="`background-image: url(${ item.image })`"
-										:class="!CarouselFocus ? `focused` : `unfocused`" 
+										:style="`background-image: url(${ item.image })`" 
 									/>
-
-								</eccheuma-parallax>
-							</template>
-
-							<template v-else>
-								<div 
-									ref="ImageHolder" 
-									class="eccheuma_swiper-image" 
-									:style="`background-image: url(${ item.image })`" 
-								/>
-							</template>
-
-							<section slot="placeholder">
-								<div 
-									ref="ImageHolder" 
-									class="eccheuma_swiper-image" 
-									:class="{'content-hidden': index > ( activeIndex + 1 ) || index < ( activeIndex - 1 )}"
-									:style="`background-image: url(${ ImagePlaceholder })`" />
-							</section>
-
-						</client-only>
-
-						<div class="eccheuma_swiper-post" :class="{'content-hidden': index > ( activeIndex + 1 ) || index < ( activeIndex - 1 )}">
-
-							<section class="eccheuma_swiper-tags">
-								<span>{{ item.tags }}</span>
-							</section>
-
-							<section class="eccheuma_swiper-caption">
-								<h2>{{ item.title }}</h2>
-								<h6>{{ item.description }}</h6>
-								<span @click="GoToPost(item.ID)">
-									<i class="fas fa-link" /> Перейти к посту
-								</span>
-							</section>
-
-							<section class="eccheuma_swiper-info">
-								<template v-if="PostReliseTime[index]">
-									<span>{{ PostReliseTime[index].Day }} в {{ PostReliseTime[index].Time }}</span>
 								</template>
-							</section>
 
-						</div>
+								<section slot="placeholder">
+									<div 
+										ref="ImageHolder" 
+										class="eccheuma_swiper-image" 
+										:class="{'content-hidden': index > ( activeIndex + 1 ) || index < ( activeIndex - 1 )}"
+										:style="`background-image: url(${ ImagePlaceholder })`" 
+									/>
+								</section>
 
-				</section>
-			</template>
+							</client-only>
 
-		</eccheuma-swiper>
+							<div class="eccheuma_swiper-post" :class="{'content-hidden': index > ( activeIndex + 1 ) || index < ( activeIndex - 1 )}">
+
+								<section class="eccheuma_swiper-tags">
+									<tag>{{ item.tags }}</tag>
+								</section>
+
+								<section class="eccheuma_swiper-caption">
+									<h2>{{ item.title }}</h2>
+									<h6>{{ item.description }}</h6>
+									<span @click="GoToPost(item.ID)">
+										<i class="fas fa-link" /> Перейти к посту
+									</span>
+								</section>
+
+								<section class="eccheuma_swiper-info">
+									<template v-if="PostReliseTime[index]">
+										<tag>{{ PostReliseTime[index].Day }} в {{ PostReliseTime[index].Time }}</tag>
+									</template>
+								</section>
+
+							</div>
+
+					</section>
+				</template>
+
+			</eccheuma-swiper>
+		</section>
+
 	</section>
 </template>
 
 <style lang="scss">
 
-$swiperHeight: 70vh;
+.header-carousel-container {
+
+	position: relative; 
+	width: 100vw;
+	height: 100%;
+
+}
 
 .eccheuma_swiper {
 
-	width: 100vw; height: $swiperHeight; position: relative; 
-	background-color: rgb(var(--color-1)); color: rgb(var(--color-6));
+	position: relative; 
+
+	width: 100vw;
+	height: 100%; 
+
+	background: rgb(var(--color-1)); 
+	color: rgb(var(--color-6));
 
 	.content-hidden {
 		display: none;
 	}
 
 	&-item {
-		display: inline-block; width: 100vw; height: 100%; position: relative;
+
+		position: relative;
+		display: inline-block; 
+
+		width: 100vw; 
+		height: 100%; 
+
+		&:after {
+
+			content: "";
+			position: absolute; 
+			z-index: 1;
+
+			top: 0; 
+			left: 0; 
+
+			width: 100%; 
+			height: 100%;
+
+			background-image: url(~assets/images/Stripes.png?format=webp&size=15);
+			opacity: .50;
+		}
+
 	}
 
 	.focused {
@@ -136,21 +179,13 @@ $swiperHeight: 70vh;
 		height: 100%; width: 100%;
 		background: { size: cover; position: center }
 		transition: all 500ms ease-in-out;
-		// &:before {
-		// 	content: "";
-		// 	position: absolute;
-		// 	top: 0;
-		// 	width: 100%;
-		// 	height: 100%;
-		// 	background-image: url(~assets/images/SVG/Stripes.svg);
-		// 	background-size: 20px;
-		// 	opacity: .25;
-		// 	z-index: 1;
-		// 	mix-blend-mode: darken;
-		// 	@media screen and ( max-width: $mobile-breakpoint ) { 
-		// 		mix-blend-mode: none;
-		// 	}
-		// }
+
+		img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+
 	}
 
 	.onEdge {
@@ -158,17 +193,15 @@ $swiperHeight: 70vh;
 	}
 
 	&-buttons {
+		
 		cursor: pointer;
 		color: rgb(var(--color-6));
-		background-color: rgba(var(--color-1), .25);
+		background-color: rgba(var(--color-1), .75);
 		border: 1px solid rgba(var(--color-6), .0);
 		border-radius: .7rem;
 		padding: 0 3vh;
 		transition-duration: .5s;
-		mix-blend-mode: hard-light; 
-		@media screen and ( max-width: $mobile-breakpoint ) {
-			mix-blend-mode: unset;
-		}
+
 		&:hover {
 			background-color: rgba(var(--color-1),.0);
 			&:nth-of-type(1) {
@@ -211,11 +244,17 @@ $swiperHeight: 70vh;
 	
 	&-post {
 
-		position: absolute; top: 0; left: 0; width: 100vw; height: $swiperHeight; z-index: 1010;
+		position: absolute; 
+		z-index: 1010;
+		top: 0; left: 0; 
+		
+		width: 100vw;
+		height: 100%;
+
+		padding: 5vh 10vw;
 
 		display: grid;
 		grid-template: {
-			columns: 100vw;
 			rows: 2fr 75% 2fr
 		}
 
@@ -223,36 +262,29 @@ $swiperHeight: 70vh;
 			text-align: center;
 		}
 
+		section {
+
+			display: inline-grid;
+
+			align: {
+				self: start; 
+				content: center;
+			}
+
+			justify: {
+				self: center;
+				content: center;
+			}
+
+			width: 100%; height: 100%;
+
+		}
+
 	}
 
-	&-tags {
+	// &-tags {} 
 
-		align-self: end; justify-self: center;
-
-		span {
-			font-weight: 600;
-			font-size: var(--font-size-5);
-			word-spacing: 10px;
-			padding: 7px 50px;
-			border-radius: .7rem;
-			color: rgb(var(--color-6));
-			background-color: rgb(var(--color-1));
-		}
-	} 
-
-	&-info {
-
-		align-self: start; justify-self: center;
-
-		span {
-			font-weight: 600;
-			font-size: var(--font-size-5);
-			padding: 7px 50px;
-			border-radius: .7rem;
-			color: rgb(var(--color-6));
-			background-color: rgb(var(--color-1));
-		}
-	}
+	// &-info {}
 
 	&-caption {
 
@@ -260,21 +292,21 @@ $swiperHeight: 70vh;
 		$TBLO: 	.5;
 		$TBR: 	.5px;
 
-		align-self: center;
+		justify-content: start !important;
 
-		padding: 0 8.5vw;
-
+		// eslint-disable-next-line no-mixed-spaces-and-tabs
 		text-shadow: 
-			 #{ $TBR }  #{ $TBR } $TBL rgba(var(--color-2), $TBLO ),
+			#{ $TBR  }  #{ $TBR } $TBL rgba(var(--color-2), $TBLO ),
 			-#{ $TBR } -#{ $TBR } $TBL rgba(var(--color-2), $TBLO ),
 			-#{ $TBR }  #{ $TBR } $TBL rgba(var(--color-2), $TBLO ),
-			 #{ $TBR } -#{ $TBR } $TBL rgba(var(--color-2), $TBLO ),
-			 #{  0px }  #{ 2px  } 0px  rgba(var(--color-1), $TBLO );
+			#{ $TBR  } -#{ $TBR } $TBL rgba(var(--color-2), $TBLO ),
+			#{  0px  }  #{ 2px  } 0px  rgba(var(--color-1), $TBLO );
 
 		h2 {
-			font-weight: 600;
-			font-size: var(--font-size-2);
+			font-weight: 700;
+			font-size: calc(var(--font-size-1) * 1.25);
 		}
+
 		h6 {
 			white-space: pre-wrap;
 			font: {
@@ -284,36 +316,23 @@ $swiperHeight: 70vh;
 			margin: 0 0 1vh;
 			width: calc(min(100%, 60ch));
 		}
+
+		span {
+
+			display: inline-flex;
+			gap: 10px;
+
+			align-items: center;
+
+			font: {
+				size: var(--font-size-4);
+			}
+
+		}
+
 	}
-		// position: absolute
-		// color: rgb(var(--color-6)) 
-		// text-shadow: $TextBorder $TextBorder $TextBlur rgba(var(--color-2),$TextBlurOpa),
-		// (-+$TextBorder) (-+$TextBorder) $TextBlur rgba(var(--color-2),$TextBlurOpa),
-		// (-+$TextBorder) $TextBorder $TextBlur rgba(var(--color-2),$TextBlurOpa),
-		// $TextBorder (-+$TextBorder) $TextBlur rgba(var(--color-2),$TextBlurOpa),
-		// 0px 2px 3px rgba(var(--color-1),.5) 
-		// top: 3px
-		// height: $HeaderHeight
-		// width: 100%
-		// padding: ($HeaderHeight - 35vh) 10vw
-		// z-index: 40
-		// i 
-		// 	margin-right: .5vw
-		// a 
-		// 	color: rgb(var(--color-6))
-		// 	font-size: var(--font-size-4)
-		// 	font-weight: 700
-		// 	opacity: .5
-		// 	transition-duration: .5s
-		// 	&:hover
-		// 		opacity: 1	
-		// @media screen and ( max-width: $mobile-breakpoint )
-		// 	text-align: center
-		// 	color: rgb(var(--color-6))
-		// 	padding: 35vh 10vw
 
 }
-
 
 </style>
 
@@ -326,26 +345,36 @@ $swiperHeight: 70vh;
 		import 'firebase/database'
 	
 	// VUEX
-		import { mapActions } from 'vuex'
+		import { mapActions, mapState } from 'vuex'
 
 	// COMPONENTS
-		import EccheumaParallax from '~/components/common/Parallax.vue'
-		import EccheumaSwiper 	from '~/components/common/SwiperProto.vue'
+		import EccheumaParallax 			from '~/components/common/Parallax.vue';
+		import EccheumaSwiper 				from '~/components/common/SwiperProto.vue';
+		import Icon 									from '~/components/Icon.vue';
+		import Tag 										from '~/components/common/Tag.vue';
 	
 	// MIXINS
 		import EmitSound from '~/assets/mixins/EmitSound'
 
 	// TYPES
-		import type { POST } from '~/types/Post'
-
 		import type { FORMATED_DATE } from '~/store'
+		import type { IMAGE_URL } 		from '~/typescript/Image'
+		import type { POST } 					from '~/typescript/Post'
+
+		import type { VuexModules } from '~/typescript/VuexModules'
 
 	// VARS
 		const PLACEHOLDER_L = `${ require('~/assets/images/ImagePlaceholder.png?resize&size=600')}`
 	
 	// MODULE
 	export default Vue.extend({
-		components: { EccheumaParallax, EccheumaSwiper },
+		components: { 
+			EccheumaParallax, 
+			EccheumaSwiper,
+			Icon,
+			Tag,
+			UserProfile: () => import('~/components/user/UserProfile.vue'),
+		},
 		mixins: [ EmitSound ],
 		data() {
 			return {
@@ -357,9 +386,9 @@ $swiperHeight: 70vh;
 
 				PostForRequest: 4,
 
-				PostContent: [] as POST[],
-
+				PostContent: 		[] as POST[],
 				PostReliseTime: [] as FORMATED_DATE[],
+				PostImages: 		[] as IMAGE_URL[],
 
 			}
 		},
@@ -368,54 +397,74 @@ $swiperHeight: 70vh;
 			await this.GetPosts();
 
 		},
+		computed: {
+
+			...mapState({
+				LoginStatus:	state => (state as VuexModules).Auth.Auth.LoginStatus,
+			})
+
+		},
 		watch: {
 			PostContent: {
-				handler() {
+				async handler() {
 
-					this.get_PostImage();
-
-					this.PostContent.forEach(async (item, i) => {
-						this.PostReliseTime[i] = await this.GetLocalTime(item.date)
+					this.PostContent.forEach(async (post) => {
+						this.PostReliseTime[post.ID] = await this.GetLocalTime(post.date);
 					})
+
+					this.PostImages = await this.getImages(this.PostContent);
 
 				}
 			}
 		},
-		mounted() {
-			if ( this.CLIENT_RENDER_CHECK ) {
-				this.get_PostImage();
-			}
+		created() {
+
+			this.setSounds([
+				{
+					file: 'Off',
+					name: 'CarouselButton',
+					settings: { rate: .75, volume: .25 }
+				},
+			])
+
 		},
 		methods: {
 
 			...mapActions({
 				GetFirebaseImageURL: 	'Images/GetImageURL',
-				GetLocalTime:						'GetLocalTime',
+				getImageURL: 					'Images/getImageURL',
+				decodeImage:					'Images/decodeImage',
+				GetLocalTime:					'GetLocalTime',
 			}),
 
-			get_PostImage() {
+			getImages(posts: POST[]): Promise<IMAGE_URL[]> {
 
-				this.PostContent.forEach(async (el) => {
-
-					el.image = await this.GetFirebaseImageURL({ 
-						_path: el.image,
+				const PROMISES = posts.map(async (post): Promise<IMAGE_URL> => {
+					return await this.getImageURL({ 
+						_path: post.image,
 						_size: window.innerWidth * window.devicePixelRatio
 					})
-
 				})
 
-			},
+				return Promise.all(PROMISES)
+
+			}, 
+
 			async GetPosts() {
 
-				const POSTS = await firebase.database().ref('Posts').once('value');
-			
-				const DATA 	= await firebase.database()
-					.ref('Posts')
-					.orderByChild('ID')
-					.startAt( POSTS.numChildren() - this.PostForRequest )
-					.once('value')
+				const REF = firebase.database().ref('Posts');
 
-				this.PostContent = Object.values(DATA.val())
+				const QUANTITY = await REF
+					.once('value')
+					.then(posts => posts.numChildren());
+			
+				const DATA = await REF
+					.orderByChild('ID')
+					.startAt( QUANTITY - this.PostForRequest )
+					.once('value')
+					.then(posts => Object.values(posts.val()) as POST[])
+
+				this.PostContent = DATA;
 				
 			},
 			GoToPost(ID: number) {

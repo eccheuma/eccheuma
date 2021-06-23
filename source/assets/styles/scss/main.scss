@@ -9,7 +9,8 @@
 
 ::selection {
 	background-color: rgb(var(--accent));
-	color: rgb(var(--color-5));
+	color: rgb(var(--color-2));
+	padding: 20px
 }
 
 * { 
@@ -37,7 +38,7 @@
 }
 
 body {
-	background-color: rgb(var(--color-0));
+	background-color: rgb(var(--color-1));
 	width: 100vw;
 	height: 100vh;
 	overflow-x: hidden;
@@ -46,10 +47,45 @@ body {
 	line-height: 1.65;
 	color: rgb(var(--color-6));
 	font-family: var(--default-font), sans-serif;
+
+	@keyframes mainBefore {
+		from {
+			opacity: 1;
+		}
+		to {
+			opacity: 0;
+		}
+	}
+
+	&:before {
+		content: 'Добро пожаловать';
+		position: absolute;
+		width: 100vw; 
+		height: 100vh;
+		text-align: center;
+		line-height: 100vh;
+		z-index: 0;
+
+		color: rgb(var(--color-6));
+		font-size: var(--font-size-5);
+		font-weight: 800;
+		text-transform: uppercase;
+		letter-spacing: .25ch;
+
+		animation: {
+			name: mainBefore;
+			duration: 1s;
+			delay: 1s;
+			fill-mode: forwards;
+		}
+	}
+
 }
 
 main {
+
 	background-color: rgb(var(--color-1));
+
 }
 
 aside {

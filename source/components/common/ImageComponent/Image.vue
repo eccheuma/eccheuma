@@ -1,148 +1,245 @@
 <template>
-	<div class="image_wrapper">
+	<div class="eccheuma-image-wrapper">
 
-		<template v-if="sections ? sections.zoom : false">
-			<keep-alive>
+		<modal 
+			:v-if="Modal"
+			:modalState="Modal" 
+			:path="content.path"
+			:title="content.title" 
+			:description="content.description"
+			@toggle-modal="ToggleModal" 
+		/>
 
-				<modal 
-					:modalState="Modal" 
-					:path="content.path"
-					:title="content.title" 
-					:description="content.description"
-					@toggle-modal="ToggleModal" 
-				/>
+		<div 
+			class="eccheuma-image-container"
+			:class="`type::${ property && property.type || 'default' }`" 
+			@mouseenter="ImageFocus = true" 
+			@mouseleave="ImageFocus = false"
+			>
 
-			</keep-alive>
-		</template>
-
-		<div ref="ImageHolder" class="image_container" @mouseenter="ImageFocus = true" @mouseleave="ImageFocus = false">
-
-			<template v-if="sections ? sections.zoom : false">
-				<i class="fas fa-search" @mouseenter="EmitSound('On', { rate: .5, volume: .25 })" @click.self="ToggleModal" />
-			</template>
-
-			<picture @dblclick="ToggleModal">
-				<img :src="Source" :alt="content.description" :class="`image_type-${ property ? property.type : 'default' }`">
-			</picture>
-
-			<template v-if="CLIENT_RENDER_CHECK && !$isMobile && sections ? sections.description : false">
-				<transition name="DescriptionAnima">
-					<section v-if="ImageFocus" :class="{ glassy: CLIENT_RENDER_CHECK && $PIXI.utils.isWebGLSupported() }">
-						<span>{{ content.title }}</span>
-
-						<slot /> 
-
-					</section>
+			<section v-if="sections && sections.zoom" class="eccheuma-image-search">
+				<transition name="eccheuma-image-transitions-search" mode="out-in">
+					<span v-show="ImageFocus" @click="Modal = true">
+						<icon name="Search" />
+					</span>
 				</transition>
-			</template>
+			</section>
+
+			<section ref="holder" class="eccheuma-image-picture" :style="`background-image: url(${ Source[ AVIF_SUPPORT ? 'avif' : 'webp' ] })`">
+				<picture>
+					<source v-if="AVIF_SUPPORT" :srcset="Source.avif" type="image/avif">
+					<img class="utils::voided" :src="Source.webp" :alt="content.description">
+				</picture>
+			</section>
+
+			<transition name="eccheuma-image-transitions-description" mode="out-in">
+				<section v-if="sections && sections.description" v-show="ImageFocus" class="eccheuma-image-description utils::glassy">
+					<span>
+						<slot />
+					</span>
+					<span>
+						{{ content.description }}
+					</span>
+				</section>
+			</transition>
 
 		</div>
 
-		<client-only>
-			<template v-if="sections ? sections.date : false">
-				<span class="image_date">
-					{{ LocalDate.Day }} в {{ LocalDate.Time }}
-				</span>
-			</template>
-		</client-only>
+		<tag v-if="sections && sections.date" :transparent="false">
+			{{ LocalDate.Day }} в {{ LocalDate.Time }}
+		</tag>
 
 	</div>
-
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 
-.DescriptionAnima {
-	&-enter {
-		opacity: 0;
-		&-active {
-			transform: translateY(5vh);
-			transition: all .5s ease;
-		}
-		&-to {
-			opacity: 1;
-			transform: translateY(0);
-		}
-	}
-	&-leave {
-		opacity: 1;
-		&-active {
-			transform: translateY(0);
-			transition: all .5s ease;
-		}
-		&-to {
-			opacity: 0;
-			transform: translateY(5vh);
-		}
-	}
-}
+.eccheuma-image {
 
-.image {
-	&_type {
-		&-gallery {
-			height: 45vh;
-			width: 100%;
-			object-fit: cover;
-		}
-		&-promo {
-			height: 50vh;
-			width: 100%;
-			object-fit: cover;
-		}
-		&-case {
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
-		}
-	}
-	&_date {
-		margin: 10px auto; padding: 5px 1vw; 
-		background-color: rgb(var(--color-1));
-		text-align: center; font-size: var(--font-size-5);
-		border-radius: .7rem;
-	}
-	&_wrapper {
+	&-wrapper {
 		display: grid;
+		width: 100%;
+		height: 100%;
+		justify-items: center;
 		grid-template-columns: 1fr;
+
+		.type\:\:gallery {
+			height: 50vh !important;
+		}
+
+		.type\:\:promo {
+			height: 50vh !important;
+			margin: auto !important;
+		}
+
+		.type\:\:case {
+			height: 100% !important;
+		}
+
 	}
-	&_container {
+
+	&-container {
+
 		position: relative;
+		display: grid;
+	
+		grid-template: {
+			columns: 100%;
+			rows: 2fr 8fr;
+		};
+	
+		width: 100%;
+		height: 100%;
+
+		height: 40vh;
+		
+		padding: 10px;
+	
+		border-radius: .7rem;
 		overflow: hidden;
-		i { 
-			$size: 30px;
+
+	}
+
+	&-transitions {
+
+		$dur: 500ms;
+		$offset: 10px;
+
+		&-search {	
+
+			&-enter {
+
+				opacity: 0;
+				transform: translateY(-#{ $offset });
+
+				&-active {
+					transition: all $dur;
+				}
+
+				&-to {
+					opacity: 1;
+					transform: translateY(0vh);
+				}
+
+			}
+
+			&-leave {
+
+				opacity: 1;
+				transform: translateY(0vh);
+
+				&-active {
+					transition: all $dur ease-in-out;
+				}
+
+				&-to {
+					opacity: 0;
+					transform: translateY(-#{ $offset });
+				}
+
+			}
+
+		}
+
+		&-description {
+
+			&-enter {
+				opacity: 0;
+				transform: translateY($offset);
+
+				&-active {
+					transition: all $dur;
+				}
+
+				&-to {
+					opacity: 1;
+					transform: translateY(0vh);
+				}
+			}
+
+			&-leave {
+				opacity: 1;
+				transform: translateY(0vh);
+
+				&-active {
+					transition: all $dur;
+				}
+
+				&-to {
+					opacity: 0;
+					transform: translateY($offset);
+				}
+			}
+
+		}
+
+	}
+
+	&-search {
+		position: relative;
+		z-index: 1;
+		span {
+			background: rgba(var(--color-1), .75);
+			backdrop-filter: blur(10px);
+			width: fit-content;
+			height: fit-content;
+			padding: 5px;
+			display: block;
+			margin: auto;
+			border-radius: .7rem;
 
 			cursor: pointer;
 
-			position: absolute; top: 10px; left: calc(50% - #{ $size / 2 });
-			height: $size; width: $size;
-			color: #FFFFFF; background-color: rgba(var(--color-1), .75);
-			text-align: center; line-height: $size;
-			border-radius: .7rem;
-			opacity: .25;
-			transition: all 100ms ease-in-out;
-			&:hover {
-				opacity: 1;
-			}
-		}
-		picture {
-			img {
-				object-position: center;
-				min-width: 250px;
-				border-radius: .7rem;
-			}
-		}
-		section {
-			$pad: 10px;
-			position: absolute; bottom: $pad; left: $pad;
-			width: calc(100% - #{ $pad * 2 }); padding: 10px 20px;
-			background-color: rgba(var(--color-1), .75); border-radius: .7rem;
-			font-size: var(--font-size-4);
-			span {
-				font-size: var(--font-size-3); font-weight: 700;
-				display: block; 
+			i {
+				@include icon-size(24px);
 			}
 		}
 	}
+
+	&-picture {
+
+		position: absolute;
+
+		top: 0;
+		left: 0;
+
+		height: 100%;
+		width: 100%;
+
+		background: {
+			size: cover;
+			repeat: no-repeat;
+			position: center;
+		}
+
+	}
+
+	&-description {
+
+		background: rgba(var(--color-1), .75);
+
+		border-radius: .7rem;
+
+    position: relative;
+		z-index: 1;
+
+    height: fit-content;
+    padding: 2vh 1vw;
+		align-self: end;
+
+		span {
+			display: block;
+			&:nth-of-type(1) {
+				font-size: var(--font-size-3);
+				font-weight: 800;
+			}
+			&:nth-of-type(2) {
+				font-size: var(--font-size-4)
+			}
+		}
+
+	}
+
 }
 
 </style>
@@ -152,33 +249,45 @@
 	import Vue, { PropOptions } from 'vue';
 
 	// VUEX
-		import { mapActions } from 'vuex'
+	import { mapActions, mapState } from 'vuex'
+
+	// COMPONENTS
+	import Icon 			from '~/components/Icon.vue';
+	import Tag				from '~/components/common/Tag.vue'
 	
 	// MIXINS
-		import EmitSound from '~/assets/mixins/EmitSound'
+	import EmitSound from '~/assets/mixins/EmitSound'
 
 	// TYPES
-		import type { FORMATED_DATE } 	from '~/store'
-		import type { IMAGE_PROPERTY } 	from '~/types/Image.ts'
+	import type { VuexModules } from '~/typescript/VuexModules'
+
+	import type { FORMATED_DATE } 	from '~/store'
+	import type { IMAGE_PROPERTY, IMAGE_URL } 			from '~/typescript/Image'
+	import type { DirectionOptions, AnimeCallBack } from '~/../node_modules/@types/animejs'
 
 	// VARS
-		const PLACEHOLDER = require('~/assets/images/ImagePlaceholder.png?resize&size=600').src
+	const PLACEHOLDER: IMAGE_URL = {
+		avif: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src,
+		webp: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src
+	}
 
-		const defaultSections: IMAGE_PROPERTY['sections'] = {
-			date: false,
-			description: false,
-			zoom: true,
-		}
+	const defaultSections: IMAGE_PROPERTY['sections'] = {
+		date: false,
+		description: false,
+		zoom: true,
+	}
 
-		const defaultProperty: IMAGE_PROPERTY['property'] = {
-			fit: 'cover',
-			type: 'gallery',
-			collumn: 'auto',
-		}
+	const defaultProperty: IMAGE_PROPERTY['property'] = {
+		fit: 'cover',
+		type: 'gallery',
+		collumn: 'auto',
+	}
 
 	// MODULE
 	export default Vue.extend({
 		components: {
+			Icon,
+			Tag,
 			Modal: () => import('~/components/common/ImageComponent/Modal.vue')
 		},
 		mixins: [ EmitSound ],
@@ -192,12 +301,17 @@
 
 				LocalDate: new Object() as FORMATED_DATE,
 
-				Source: PLACEHOLDER,
+				Source: PLACEHOLDER as IMAGE_URL,
 
 				Modal: false,
 				ImageFocus: false,
 
 			}
+		},
+		computed: {
+			...mapState({
+				AVIF_SUPPORT: state => (state as VuexModules).Images.AVIF_SUPPORT
+			})
 		},
 		watch: {
 			'content.path': {
@@ -207,6 +321,27 @@
 					}
 				}
 			},
+			Modal: {
+				handler() {
+					this.playSound(this.Sounds.get('ImageToggleModal'))
+				}
+			}
+		},
+		created() {
+
+			this.setSounds([
+				{
+					file: 'On',
+					name: 'ImageSearchIcon',
+					settings: { rate: .5, volume: .25 }
+				},
+				{
+					file: 'Tap',
+					name: 'ImageToggleModal',
+					settings: { rate: 1.25 }
+				}
+			])
+
 		},
 		async mounted() {
 			if ( this.CLIENT_RENDER_CHECK ) {
@@ -222,35 +357,50 @@
 		methods: {
 			
 			...mapActions({
-				GetImageURL: 'Images/GetImageURL',
+				getImageURL: 	'Images/getImageURL',
+				decodeImage:  'Images/decodeImage',
 				GetLocalTime: 'GetLocalTime'
 			}),
 
 			async getImage(): Promise<void> {
 
-				const URL = await this.GetImageURL({ 
+				const IMAGE_CONTAINER = this.$refs.holder as Element
+
+				const URL: IMAGE_URL = await this.getImageURL({ 
 					_path: this.content.path,
-					_size: (this.$refs.ImageHolder as HTMLElement)?.getBoundingClientRect().width * window.devicePixelRatio || 720
+					_size: IMAGE_CONTAINER?.getBoundingClientRect().width * window.devicePixelRatio || 720
 				})
 
-				this.$AnimeJS({
-					targets: this.$refs.ImageHolder,
-					opacity: [1, 0],
-					duration: 500,
-					endDelay: 250,
-					direction: 'alternate',
-					easing: 'linear',
-					update: (anime) => {
-						if ( anime.progress === 100 ) {
-							this.Source = URL
-						}
+				const ANIMATION = (u_direction: DirectionOptions, cb?: AnimeCallBack ) => {
+					this.$AnimeJS({
+
+						targets: IMAGE_CONTAINER,
+						opacity: [1, 0],
+						duration: 250,
+						direction: u_direction,
+						easing: 'linear',
+
+						...cb
+
+					})
+				}
+
+				ANIMATION('normal', {
+					complete: () => { 
+
+						this.Source = URL;
+
+						this.decodeImage(URL).then(() => ANIMATION('reverse'))
+
 					}
 				})
 
 			},
 
 			ToggleModal() {
-				this.Modal = !this.Modal; this.EmitSound('Tap', { rate: 1.25 })
+
+				this.Modal = !this.Modal;
+
 			}
 
 		},

@@ -56,12 +56,12 @@
 	// VUEX
 	import { mapState, mapActions } from 'vuex'
 
-	import type { VuexModules } from '~/types/VuexModules'
+	import type { VuexModules } from '~/typescript/VuexModules'
 
 	// TYPES
-	import type { CONTENT, WORKCASE } 			from '~/types/WorkCase.ts'
-	import type { IMAGE_PROPERTY } 					from '~/types/Image.ts'
-	import type { PORTFOLIO_SECTION } 			from '~/types/Portfolio.ts'
+	import type { CONTENT, WORKCASE } 			from '~/typescript/WorkCase.ts'
+	import type { IMAGE_PROPERTY } 					from '~/typescript/Image.ts'
+	import type { PORTFOLIO_SECTION } 			from '~/typescript/Portfolio.ts'
 
 	// COMPONENTS
 	import WorkCase from '~/components/common/WorkCase.vue'

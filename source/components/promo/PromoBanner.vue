@@ -6,11 +6,9 @@
 			<p>{{ moduleContent.subtitle }}</p>
 		</section>
 
-		<template v-if="!Cooled">
-			<keep-alive>
-				<component :is="PromoType" />
-			</keep-alive>
-		</template>
+		<keep-alive>
+			<component :is="PromoType" class="pattern_bg" />
+		</keep-alive>
 
 		<section class="promo_footer" :class="{ cooled: Cooled }">
 
@@ -20,9 +18,9 @@
 
 			<hr>
 
-			<eccheuma-button @click.native="routeTo(moduleContent.link.path)">
+			<common-button @click.native="routeTo(moduleContent.link.path)">
 				{{ moduleContent.link.name }}
-			</eccheuma-button>
+			</common-button>
 
 		</section>
 
@@ -43,20 +41,18 @@
 
 		grid-template: {
 			columns: 1fr;
-			rows: 20vh 70vh 30vh
+			rows: 20vh 60vh 30vh
 		}
 
 		overflow: hidden;
+
+		background-color: rgb(var(--color-2));
 
 		@media screen and ( max-width: $mobile-breakpoint ) {
 			grid-template: {
 				columns: 1fr;
 				rows: 30vh 120vh 50vh
 			}
-		}
-
-		background: {
-			color: rgb(var(--color-2));
 		}
 
 		> section {
@@ -77,13 +73,13 @@
 		}
 
 		h4 {
-			font-weight: 600;
+			font-weight: 800;
 			width: 100%;
-			font-size: var(--font-size-1);
+			font-size: var(--font-size-2);
 		}
 		p {
 			font-weight: 500;
-			font-size: var(--font-size-3);
+			font-size: var(--font-size-4);
 			width: calc(min(100%, 70ch));
 			color: rgb(var(--color-4));
 		}
@@ -112,23 +108,13 @@
 			font-weight: 700;
 			padding: 0 5vw;
 			color: rgb(var(--color-4));
+			text-align: center;
 		}
 		hr {
 			background-color: rgb(var(--color-4));
 			width: 50%;
 			height: .5px;
 			border-top: unset;
-		}
-		button {
-
-			@include light-button { 
-				width: 25%; 
-				justify-self: center; 
-				margin-top: 15px; 
-			}
-
-			position: relative;
-
 		}
 	}
 }
@@ -140,7 +126,7 @@
 	import Vue, { PropOptions } from 'vue'
 
 	// MIXINS
-	import IntersectionCooler 	from '~/assets/mixins/IntersectionCooler.ts'
+	// import IntersectionCooler from '~/assets/mixins/IntersectionCooler'
 
 	// TYPES
 	type MODULES = 'Works' | 'Style' | 'Gallery' | 'Adaptation'
@@ -163,10 +149,10 @@
 			Gallery: 		() => import('~/components/promo/_Gallery.vue'),
 			Adaptation: () => import('~/components/promo/_Adaptation.vue'),
 			// OTHERS 
-			EccheumaButton: () => import('~/components/common/EcchuemaButton.vue')
+			CommonButton: () => import('~/components/buttons/CommonButton.vue')
 		},
 		mixins: [
-			IntersectionCooler
+			// IntersectionCooler
 		],
 		props: {
 			PromoType: {
@@ -209,9 +195,9 @@
 						}
 					},
 					Adaptation: {
-						title: 'Последние выполненные заказы',
+						title: 'Адаптивная вёрстка для ваших сайтов',
 						subtitle: 'Последние выполненые работы за этот месяц, начиная от логотипов, и заканчивая полновестными макетами сайтов',
-						footer: 'Mich neu getäuscht macht der mein mein, jenem ihr trüben mein hören naht mich zauberhauch,.',
+						footer: 'Wiederholt sang lispelnd nach trüben meinem ihr um liebe längst zerstreuet, lied blick vom zu bilder. Nun labyrinthisch aus mein bilder ihr lauf folgt. Äolsharfe mein bang ernsten nach seelen wenn wird busen, der es wohl steigen wirklichkeiten vor euch mich sich erste, was welt euch lauf geneigt wirklichkeiten, weiten der in ein die folgenden schmerz der nebel. Nun und.',
 						link: {
 							path: '/portfolio',
 							name: 'Перейти к портфолио'
@@ -226,7 +212,7 @@
 			}
 		},
 		mounted() {
-			this.initCooler(this.$el, (cooled: boolean) => { this.Cooled = cooled })
+			// this.initCooler(this.$el, (cooled: boolean) => { this.Cooled = cooled })
 		},
 		methods: {
 			routeTo(path: string) {

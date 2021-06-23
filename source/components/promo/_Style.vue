@@ -2,13 +2,13 @@
 	<section class="promo_body">
 
 		<vue-image
-			:content="{ path: 'Promo/3' }" 
+			:content="{ path: 'Promo/3.png' }" 
 			:sections="{ date: false, description: false, zoom: false }" 
 			:property="{ fit: 'cover', type: 'promo', collumn: 7 }"
 		/>
 
 		<section>
-			<h4>Наглядный результат.</h4>
+			<h4>Наглядный результат и да.</h4>
 			<p>
 				А если говорить проще, то можно представить, что у вас есть некая болванка в виде кнопки или блока с "чем-то", и раньше бы приходилось копировать эту болванку, заполнять её нужным "чем-то" в копированном элементе и молиться богам, чтобы это всё пошло не по пизде и адекватно заработало.
 			</p> 
@@ -23,20 +23,39 @@
 <style lang="scss" scoped>
 
 .promo_body {
+
+	@include gradient_border(both);
+
 	display: grid;
-	grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
-	column-gap: 30px; row-gap: 3vh;
-	padding: 5vh 5vw;
+
+	grid-template: {
+		columns: 40vw 30ch;
+	}
+
+	column-gap: 30px; 
+	row-gap: 3vh;
+	
+	padding: 10vh 2vw;
+
 	align-items: center;
+	justify-content: center;
 	background-color: rgb(var(--color-2));
+
 	@media screen and ( max-width: $mobile-breakpoint ) {
 		grid-template-columns: 1fr;
 		text-align: center;
 	}
-	section {
-		margin: 0 auto;
-		width: 75%;
+
+	width: 100%;
+
+	h4 {
+		font-weight: 800;
 	}
+
+	p {
+		font-size: var(--font-size-4)
+	}
+
 }
 
 </style>

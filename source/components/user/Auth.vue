@@ -94,7 +94,7 @@
 								<span>Ваш логин и емайл</span>
 								<input
 									v-model="User.email"
-									:class="$v.User.email.$invalid ? 'Input_Valid' : 'Input_Invalid' "
+									:class="$v.User.email && $v.User.email.$invalid ? 'Input_Valid' : 'Input_Invalid' "
 									type="email" 
 									placeholder="example@gmail.com"
 								>
@@ -102,7 +102,7 @@
 								<span>Пароль</span>
 								<input 
 									v-model="User.password"
-									:class="!$v.User.password.$invalid ? 'Input_Valid' : 'Input_Invalid' "
+									:class="$v.User.password && !$v.User.password.$invalid ? 'Input_Valid' : 'Input_Invalid' "
 									type="password" 
 									placeholder="Не менее шести знаков"
 								>
@@ -429,10 +429,10 @@
 	// TYPES
 
 		// VUEX MODULE TYPE MAP
-		import type { VuexModules } from '~/types/VuexModules'
+		import type { VuexModules } from '~/typescript/VuexModules'
 
 		// AUTH TYPES
-		import type { REGISTER_FORM } 	from '~/store/Auth/Auth.ts'
+		import type { REGISTER_FORM } 	from '~/store/Auth/Auth'
 
 		type AuthMethod = 'Auth/Logout/Logout' | 'Auth/Login/SignIn'
 
@@ -474,16 +474,37 @@
 			LoginStatus: {
 				handler() {
 					this.LoginStatus 
-						? this.EmitSound('In', { rate: 1 }) 
-						: this.EmitSound('In', { rate: .75 })
+						? this.playSound(this.Sounds.get('LoginIn'))
+						: this.playSound(this.Sounds.get('LoginOut'))
 				}
 			},
 			User: {
 				handler() {
-					this.EmitSound('Tap', { rate: 1.5, volume: .5 })
+					this.playSound(this.Sounds.get('AuthInputHacnge'))
 				},
 				deep: true
 			},
+		},
+		created() {
+
+			this.setSounds([
+				{
+					file: 'In',
+					name: 'LoginIn',
+					settings: { rate: 1 },
+				},
+				{
+					file: 'In',
+					name: 'LoginOut',
+					settings: { rate: .75 },
+				},
+				{
+					file: 'Tap',
+					name: 'AuthInputHacnge',
+					settings: { rate: 1 },
+				}
+			])
+
 		},
 		methods: {
 

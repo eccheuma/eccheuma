@@ -1,21 +1,34 @@
-import firebase from "firebase/app"
-import "firebase/storage"
+import firebase from 'firebase/app'
+import 'firebase/storage'
 
-import { ActionTree, MutationTree} from 'vuex'
+import { ActionTree, MutationTree } from 'vuex'
+
+// TYPES
+	import type { FORMATS, IMAGE_URL } from '~/typescript/Image'
+
+// // VARS
+// 	globalThis.XMLHttpRequest = require('xhr2');
 
 // VARIABLES
-	const SIZES = [ 360, 720, 900, 1440, 1920 ]
+	const SIZES = [ 100, 360, 720, 1280, 1440 ]
+
+	type STATUS = {
+		[K in FORMATS]: boolean
+	}
 
 // STATE
 	export const state = () => ({
-			ImageURLs: new Map() as Map<string, string>
+
+		AVIF_SUPPORT: false,
+
+		ImageURLs: new Map() as Map<string, IMAGE_URL>
 	})
 
 // CURENT STATE
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/types/VuexModules' {
+	declare module '~/typescript/VuexModules' {
 		interface VuexModules {
 			Images: CurentState
 		}
@@ -23,49 +36,124 @@ import { ActionTree, MutationTree} from 'vuex'
 
 // MUTATIONS
 	export const mutations: MutationTree<CurentState> = {
-		mapURL(state, { _ref, _url }: { _ref: string, _url: string }) {
-			state.ImageURLs.set(_ref, _url)
+
+		mapURL(state, { _ref, _urls }: { _ref: string, _urls: IMAGE_URL }) {
+			state.ImageURLs.set(_ref, _urls)
+		},
+
+		setAVIF( state, status: boolean ) {
+
+			state.AVIF_SUPPORT = status;
+
 		}
+
 	}
 
 // ACTIONS
 	export const actions: ActionTree<CurentState, CurentState> = {
-		async GetImageURL({ commit }, { _path = 'Other/1', _size }: {_path: string, _size: number }) {
 
-			let URL = ''
+		setCache(_store, payload: { id: string, urls: IMAGE_URL }) {
+			window.localStorage.setItem(payload.id, JSON.stringify(payload.urls))
+		},
 
-			if ( process.client ) {
+		getCache(_store, id: string): IMAGE_URL {
+			return JSON.parse(window.localStorage.getItem(id)!) as IMAGE_URL
+		},
 
-				const LC = window.localStorage
+		checkCache(_store, id: string): boolean {
+			return Boolean(window.localStorage.getItem(id))
+		},
 
-				// MATHC SIZES = 0 / CW = 37 => / 100
-				const MATCHED = SIZES.filter( size => Math.trunc(_size) < size )
-	
-				// DEFINE SIZE
-				const SIZE = MATCHED.length ? MATCHED[0] : 'original'
-	
-				// DEFINE NAME. "Other/1" => "1" => "1@SIZE .webp" => "1@720.webp" or "1@original.webp"
-				const NAME = `${ _path.split('/').pop() }@${ SIZE }.webp`
+		// name format: image.jpg
+		async getImageURL(store, { _path, _size }: { _path: string, _size: number }): Promise<IMAGE_URL | null> {
 
-				const REF = `${ _path }/${ NAME }`
+			const FORMATS_LIST: FORMATS[] = ['avif', 'webp'];
 	
-				// IF LINK HAS IN LOCAL STORAGE, WE GET THEY FROM IT.
-				if ( LC.getItem(REF) ) { return LC.getItem(REF) } 
-	
-				URL = await firebase.storage().ref(REF).getDownloadURL()
+			const ROOT_REF 	= 'images';
+			const SIZE			= SIZES.find(value => value >= _size) || SIZES.pop();
 
-				// PRELOAD IMAGE;
-				new Image().src = URL;
-	
-				// SET IN LOCAL STORAGE
-				window.localStorage.setItem(REF, URL)
-	
-				// SET IN MAP
-				commit('mapURL', { _ref: REF, _url: URL })
+			const LOCAL_ID 	= `${ _path }-${ SIZE }`;
+
+			if ( process.browser ) {
+
+				if ( await store.dispatch('checkCache', LOCAL_ID) ) {
+
+					// console.log('get urls from cache')
+
+					return store.dispatch('getCache', LOCAL_ID) as Promise<IMAGE_URL>;
+
+				} 
+
+				// console.log('get urls from firebase')
+
+				const PA = await Promise.all(FORMATS_LIST.map((format) => {
+
+					return new Promise<Partial<IMAGE_URL>>((resolve) => {
+						firebase.storage()
+							.ref(`${ ROOT_REF }/${ _path }/${ format }/${ SIZE }.${ format }`)
+							.getDownloadURL()
+							.then(url => resolve({ [format]: url }))
+					})
+
+				}))
+
+				const URLS = PA.reduce((a, b) => Object.assign(a, b)) as IMAGE_URL
+
+				store.dispatch('setCache', { id: LOCAL_ID, urls: URLS })
+
+				return URLS;
 
 			}
 
-			return URL
+			// console.log('get nothing')
+
+			return null
+
+		},
+
+		decodeImage(store, urls: IMAGE_URL): Promise<null> {
+
+			const DECODE_STATUS: STATUS = {
+				avif: false,
+				webp: false
+			}
+
+			const PROMISES = Object.values(urls).map((inner_url, i) => {
+
+				const FORMAT = Object.keys(urls)[i] as FORMATS;
+
+				return new Promise<void>((resolve) => {
+
+					const IMAGE = new Image(); IMAGE.src = inner_url
+
+					IMAGE.decode()
+						.then(() => {
+
+							// DECODE_STATUS[FORMAT] = true;
+
+							// store.commit('setAVIF', true)
+
+							resolve(); 
+
+						})
+						.catch((error) => {
+
+							console.warn(`[eccheuma] ${ error } | Your browser, probably, can't decode avif image format. `)
+
+							DECODE_STATUS[FORMAT] = false;
+
+							store.commit('setAVIF', false)
+
+							resolve(); 
+
+						})
+
+				})
+
+			})
+
+			return Promise.all(PROMISES).then(() => null)
 
 		}
+
 	}

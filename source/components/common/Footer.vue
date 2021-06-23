@@ -1,5 +1,5 @@
 <template>
-  <footer class="footer-container" :class="[{ cooled_sections: Cooled }]">
+  <footer class="footer-container" :class="[{ 'utils::cooled-sections': Cooled }]">
 
 		<section class="footer-social">
 			<h5>Социальные сети</h5>
@@ -42,7 +42,7 @@
 
 			<section v-if="!$isMobile" class="footer-info-power_by">
 				<i class="fab fa-vuejs" />
-				<span>Powered by vue and nuxt</span>
+				<span>Работает на костях Vue and Nuxt</span>
 			</section>
 
 		</section>
@@ -121,10 +121,12 @@
 
 		a {
 			display: block; color: rgb(var(--color-6));
+			
 			font: {
 				weight: 600;
-				size: var(--font-size-4);
+				size: var(--font-size-5);
 			}
+
 			opacity: .5;
 			line-height: 3vh;
 			transition-duration: .25s;
@@ -153,7 +155,11 @@
 		@include section_position($area: about);
 
 		a {
-			width: 30ch; display: inline-flex; padding: 0 10px; margin: 5px 0;
+			width: 30ch; 
+			display: inline-flex; 
+			padding: 0 10px; 
+			margin: 5px 0;
+
 			border: {
 				left: 1px solid rgb(var(--color-4))
 			}
@@ -213,13 +219,13 @@
 			justify-content: center;
 			i {
 				font: {
-					size: 5vh
+					size: var(--font-size-5)
 				}
 			}
 			span {
 				margin: auto 1vw;
 				font: {
-					size: var(--font-size-4);
+					size: var(--font-size-5);
 					weight: 700;
 				}
 			}
@@ -268,9 +274,9 @@
 			span {
 				align-self: center;
 				color: rgb(var(--color-3));
-				font-weight: 800;
 				letter-spacing: .5ch;
-				font-size: var(--font-size-5);
+				font-size: var(--font-size-6);
+				font-weight: 800;
 			}
 		}
 	}
@@ -286,7 +292,7 @@
 	import SearchBar from '~/components/common/SearchBar.vue'
 
 	// MIXINS
-	import IntersectionCooler 	from '~/assets/mixins/IntersectionCooler.ts'
+	import IntersectionCooler from '~/assets/mixins/IntersectionCooler'
 
 	// TYPES
 	type LINK = {

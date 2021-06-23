@@ -141,7 +141,7 @@
 	left: 0px
 	height: 10px
 	width: 10px
-	background-color: rgb(var(--color-6))
+	background-color: rgb(var(--color-def-6))
 	z-index: 9999
 	border-radius: 100%
 	filter: blur(3px)
@@ -153,6 +153,6 @@
 		left: 0
 		width: 100%
 		height: 100%
-		-webkit-mask-image: radial-gradient(circle, rgba(var(--color-1), 1) 55%, rgba(var(--color-1), 0) 100%)
+		-webkit-mask-image: radial-gradient(circle, black 50%, transparent 100%)
 
 </style>

@@ -5,13 +5,13 @@
 		import type { ActionTree, MutationTree} from 'vuex'
 
 	// TYPES
-		import type { PORTFOLIO_SECTION } from '~/types/Portfolio.ts'
+		import type { PORTFOLIO_SECTION } from '~/typescript/Portfolio.ts'
 
 	// CURENT STATE
 		export type CurentState = ReturnType<typeof state>
 
 	// DECALARE MODULE
-		declare module '~/types/VuexModules' {
+		declare module '~/typescript/VuexModules' {
 			interface AdminPanel {
 				NewCase: CurentState
 			}

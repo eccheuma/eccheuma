@@ -7,17 +7,17 @@
 	// VUEX
 		import type { MutationTree, ActionTree } from 'vuex'
 
-		import type { VuexModules } from '~/types/VuexModules'
+		import type { VuexModules } from '~/typescript/VuexModules'
 
 		import type { REGISTER_FORM } from '~/store/Auth/Auth'
 		import type { Message } 			from '~/store/User/Messages'
-		import type { USER_STATE }		from '~/types/User'
+		import type { USER_STATE }		from '~/typescript/User'
 
 	// CURENT STATE
 		export type CurentState = ReturnType<typeof state>
 
 	// DECALARE MODULE
-		declare module '~/types/VuexModules' {
+		declare module '~/typescript/VuexModules' {
 			interface Auth {
 				Register: CurentState
 			}

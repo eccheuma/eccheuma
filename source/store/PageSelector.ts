@@ -4,7 +4,7 @@ import { ActionTree, MutationTree } from 'vuex'
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/types/VuexModules' {
+	declare module '~/typescript/VuexModules' {
 		interface VuexModules {
 			PageSelector: CurentState
 		}

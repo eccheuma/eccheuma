@@ -1,5 +1,4 @@
 <template>
-
 	<section 
 		id="header-navigation" 
 		class="navigation-container" 
@@ -14,48 +13,52 @@
 			<CursorFX v-if="Ready && CursorInArea && !$isMobile" />
 		</client-only>
 
-		<nav class="navigation-items" :style="`--hngic: ${ $isMobile ? 1 : HeaderMenu.length }`">
+		<nav class="navigation-items">
 
-			<div 
-				v-for="prop in HeaderMenu" 
-
-				:id="`HNI-${prop.ID}`"  
-				:key="prop.ID" 
+			<template v-for="prop in HeaderMenu">
 				
-				class="navigation-item"
-				:class="{ disabled: prop.disabled }"
-
-				@mouseenter="EmitSound('On', { rate: 1.25 })" 
-				@click="EmitSound('On', { rate: 1 })"
-				>
-
-				<transition name="route_selector">
-					<span v-if="CurentRoute === prop.route" />
-				</transition>
-
-				<nuxt-link 
-					:id="`nav_item-${ prop.ID }`"
-					:to="prop.route"
-
-					:class="[{ active: CurentRoute === prop.route }]"
+				<div 
+					:key="prop.ID" 
 					
-					no-prefetch
+					class="navigation-item"
+					:class="{ disabled: prop.disabled }"
+					@mouseenter="playSound(Sounds.get('NavEnter'))" 
+					@click="playSound(Sounds.get('NavClick'))"
+					>
 
-					@click="ScrollPage"
-				>
+					<transition name="route_selector">
+						<span v-if="CurentRoute === prop.route" />
+					</transition>
 
-						<i class="fas" :class="prop.icon" style="pointer-events: none" />
+					<nuxt-link 
+						:id="`nav_item-${ prop.ID }`"
+						:to="prop.route"
 
-						{{ prop.name }}		
+						:class="[{ active: CurentRoute === prop.route }]"
+						
+						prefetch
 
-				</nuxt-link>
-				
-				<popover v-if="!prop.disabled || !$isMobile" :target="`nav_item-${ prop.ID }`">
-					<!-- <i class="fas fa-info-circle"></i> -->
-					{{ prop.discription }}
-				</popover>
+						@click="ScrollPage"
+					>
 
-			</div>
+							<!-- <i class="fas" :class="prop.icon" style="pointer-events: none" /> -->
+
+							<icon :name="prop.icon" />
+
+							{{ prop.name }}		
+
+					</nuxt-link>
+					
+					<popover v-if="!prop.disabled || !$isMobile" :target="`nav_item-${ prop.ID }`">
+						<!-- <i class="fas fa-info-circle" /> -->
+						{{ prop.discription }}
+					</popover>
+
+				</div>
+
+				<span :key="`${ prop.ID }-separator`" class="navigation-separator" />
+
+			</template>
 
 		</nav>
 
@@ -133,22 +136,29 @@ $TransitionDuration: .25s;
 	&-items {
 
 		width: 100%;
-    display: grid;
-    justify-content: center;
-    grid-template-columns: repeat(auto-fill, minmax(100px, calc(100% / var(--hngic))));
+    height: 100%;
+    display: inline-flex;
+    justify-content: space-evenly;
 
 	}
 	&-search {
-		padding: 0 10%;
 
+		padding: 0 1vw;
+		
 		@media screen and ( max-width: $mobile-breakpoint ) {
 			display: none;
 		}
 
 	}
 	&-item {
+
 		position: relative;
+
+		display: grid;
+		align-content: center;
 		text-align: center;
+
+		width: 100%;
 
 		@media screen and ( max-width: $mobile-breakpoint ) {
 			margin: .5vh 0;
@@ -163,27 +173,9 @@ $TransitionDuration: .25s;
 			transition-duration: .5s;
 		}
 
-		&:after {
-			content: ''; display: block; position: absolute;
-			top: 4.5vh; left: -0.125rem;
-			width: .25rem; height: 10px;
-			opacity: 1 !important;
-			background-color: rgb(var(--color-4)) !important;
-			border-radius: .7rem;
-			@media screen and ( max-width: $mobile-breakpoint ) {
-				display: none;
-			}
-		}
-
 		&:hover {
 			&:before {
 				opacity: 1
-			}
-		}
-
-		&:nth-child(1) {
-			&:after {
-				display: none
 			}
 		}
 
@@ -196,14 +188,17 @@ $TransitionDuration: .25s;
 		}
 
 		a {
+
+			display: inline-grid;
+			justify-items: center;
+
 			cursor: pointer;
-			display: block;
 			line-height: 6vh;
 			font-size: var(--font-size-4);
 			font-weight: 600;
-			border-radius: 12px;
 			transition-duration: $TransitionDuration;
 			color: rgb(var(--color-4));
+
 			z-index: 2000;
 
 			@media screen and ( max-width: $mobile-breakpoint ) {
@@ -212,9 +207,14 @@ $TransitionDuration: .25s;
 			}
 
 			i {
+
+				$size: 30px;
+
+				width:  $size;
+				height: $size;
+
 				display: block;
-				// font-size: var(--font-size-3);
-				color: rgb(var(--color-3));
+				background-color: rgb(var(--color-4));
 				padding: 2vh 0 0px;
 				transition-duration: $TransitionDuration;
 				filter: drop-shadow(0px -5vh 0px rgba(var(--color-6),0));
@@ -225,6 +225,7 @@ $TransitionDuration: .25s;
 				}
 
 			}
+
 			&:hover {
 				text-decoration: none;
 				color: rgb(var(--color-6));
@@ -232,6 +233,7 @@ $TransitionDuration: .25s;
 				i {
 					color: rgb(var(--color-6));
 					transform: scale(1.5) translateY(-5vh);
+					background-color: rgb(var(--color-5));
 				}
 
 				@media screen and ( max-width: $mobile-breakpoint ) {
@@ -247,6 +249,7 @@ $TransitionDuration: .25s;
 				}
 
 			}
+
 		}
 
 		.disabled {
@@ -274,12 +277,30 @@ $TransitionDuration: .25s;
 				font-size: var(--font-size-3);
 				color: rgb(var(--color-5)) !important;
 
+				background-color: rgb(var(--color-5));
+
 				@media screen and ( mix-width: $mobile-breakpoint ) {
 					transform: scale(1.5) translateY(-5vh) !important;
 				}
 
 			}
 
+		}
+
+	}
+	&-separator {
+
+		display: block;
+		align-self: center;
+
+		width: 2%; 
+		height: 10px;
+
+		background-color: rgb(var(--color-4));
+		border-radius: .7rem;
+
+		&:last-of-type {
+			display: none;
 		}
 
 	}
@@ -291,14 +312,23 @@ $TransitionDuration: .25s;
 
 	import Vue from 'vue'
 
-	import EmitSound from '~/assets/mixins/EmitSound.ts'
+	// MIXINS
+	import EmitSound from '~/assets/mixins/EmitSound'
 
+	// COMPONENTS
+	import Popover 		from '~/components/common/Popover.vue'
+	import Icon				from '~/components/Icon.vue'
+
+	// MODULE
 	export default Vue.extend({
 		components: {
+
+			Popover,
+			Icon,
 			// ASYNC COMPONENTS
-			Popover: 		() => import('~/components/common/Popover.vue'),
 			SearchBar: 	() => import('~/components/common/SearchBar.vue'),
 			CursorFX: 	() => import('~/components/common/CursorFX.vue'),
+
 		},
 		mixins: [ EmitSound ],
 		props: {
@@ -320,28 +350,43 @@ $TransitionDuration: .25s;
 
 				HeaderMenu: [ // Пункты меню
 					{
-						ID: 0, disabled: false,
-						route: '/home', name: 'Главная', icon: 'fa-scroll',
+						ID: 0, 
+						disabled: false,
+						route: '/home', 
+						name: 'Главная', 
+						icon: 'Home',
 						discription: 'Главная страница. Тут собраны статьи на завязанные на профильную тему.'
 					},
 					{
-						ID: 1, disabled: false,
-						route: '/gallery', name: 'Галерея', icon: 'fa-clone',
+						ID: 1, 
+						disabled: false,
+						route: '/gallery', 
+						name: 'Галерея', 
+						icon: 'Gallery',
 						discription: 'Галлерея изображений. Начиная от логотипов и полноценных макетов, заканчивая всякими набросками и непринятыми вариантами работ.'
 					},
 					{
-						ID: 2, disabled: true,
-						route: '/recomend', name: 'Рекомендации', icon: 'fa-fire',
+						ID: 2, 
+						disabled: true,
+						route: '/recomend', 
+						name: 'Рекомендации', 
+						icon: 'Fire',
 						discription: 'Предложения по оказанию услуг. В зависимости от сезона и нагруженности тут появляются выгодные предложения на разные виды услуг.'
 					},
 					{
-						ID: 3, disabled: false,
-						route: '/portfolio', name: 'Портфолио', icon: 'fa-layer-group',
+						ID: 3, 
+						disabled: false,
+						route: '/portfolio', 
+						name: 'Портфолио', 
+						icon: 'Portfolio',
 						discription: 'Принятые работы. С указанием сроков, цены, комментариев, и отзывов на выполненую работу.'
 					},
 					{
-						ID: 4, disabled: false,
-						route: '/service', name: 'Услуги', icon: 'fa-ruble-sign',
+						ID: 4, 
+						disabled: false,
+						route: '/service', 
+						name: 'Услуги', 
+						icon: 'Service',
 						discription: 'Услуги. Перечень оказываемых услуг, калькулятор стоимости, и форма обратной связи.'
 					},
 				]
@@ -351,6 +396,19 @@ $TransitionDuration: .25s;
 			CurentRoute(): string { // Текущий рут
 				return this.$route.matched?.[0].path
 			},
+		},
+		created() {
+			this.setSounds([
+				{
+					file: 'On',
+					name: 'NavEnter',
+					settings: { rate: 1.25 },
+				}, {
+					file: 'On',
+					name: 'NavClick',
+					settings: { rate: 1 },
+				}
+			])
 		},
 		mounted() {
 			this.Ready = true;

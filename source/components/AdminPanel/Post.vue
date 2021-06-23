@@ -154,11 +154,11 @@
 	import PostContent 	from '~/components/post/PostContent.vue'
 
 	// TYPES
-	import type { POST, POST_CONTENT } 	from '~/types/Post.ts'
-	import type { IMAGE_PROPERTY } 			from '~/types/Image.ts'
+	import type { POST, POST_CONTENT } 	from '~/typescript/Post.ts'
+	import type { IMAGE_PROPERTY } 			from '~/typescript/Image.ts'
 
 	// VUEX MODULE TYPE MAP
-	import type { VuexModules } from '~/types/VuexModules'
+	import type { VuexModules } from '~/typescript/VuexModules'
 
 	// BLOCK TYPES
 	type BLOCK_TYPES = 'h5' | 'p' | 'blockquote' | 'img' | 'hr'
@@ -233,6 +233,14 @@
 			})
 		},
 		methods: {
+
+			updateHASH() {
+
+				firebase.database()
+					.ref('App/Cache/Posts')
+					.set(Math.random().toString(36).substring(2))
+
+			},
 
 			SetCurentBlock(index: number) {
 
@@ -328,7 +336,7 @@
 
 				firebase.database()
 					.ref(`Posts/PostID-${ this.PostsQuantity || 0 }`)
-					.set(CONTENT);
+					.set(CONTENT, () => this.updateHASH());
 
 			}
 

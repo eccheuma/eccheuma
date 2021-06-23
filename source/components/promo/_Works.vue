@@ -1,17 +1,5 @@
 <template>
-  <section class="promo_body" @mouseenter="SwipeSwitch">
-    <!-- <transition name="page_transition">
-			<template v-if="SwipeNotification">
-				<div class="promo_swipe">
-					<i class="fas fa-angle-left"></i>
-					<i class="fas fa-mitten"></i>
-					<i class="fas fa-angle-right"></i>
-				</div>	
-			</template>
-		</transition> -->
-
-    <!-- :options="{ auto: true, interval: 5000 }" -->
-
+  <section class="promo-body" @mouseenter="SwipeSwitch">
     <eccheuma-swiper v-if="Ready" :options="{ auto: true, interval: 8000 }" class="works_swiper">
       <template #default>
         <template v-for="section in Works.Landings">
@@ -22,6 +10,7 @@
           >
             
             <vue-image
+              style="height: 40vh"
               :content="{ path: item.content.path }"
               :sections="{ date: false, description: false, zoom: true }"
               :property="{ fit: 'cover', type: 'promo', collumn: 7 }"
@@ -29,10 +18,13 @@
               {{ section.content.name }}
             </vue-image>
 
+            <hr>
+
             <div class="works_swiper-item-description">
               <span>{{ section.content.name }}</span>
               <span>{{ section.content.theme }}</span>
             </div>
+            
           </section>
         </template>
       </template>
@@ -43,31 +35,28 @@
 <style lang="scss" scoped>
 
 .works_swiper {
-  width: calc(max(50vw, 360px));
-  justify-self: center;
+  display: block;
   &-item {
+
     padding: 0 5vw;
+    display: inline-grid;
+
+    hr {
+      background-color: rgb(var(--color-3));
+      width: 75%;
+    }
 
     &-description {
-      $w: 75%;
 
-      display: block;
-      width: $w;
-      margin: {
-        top: 5vh;
-        left: #{(100% - $w) / 2};
-        right: #{(100% - $w) / 2};
-      }
+      justify-self: center;
       text-align: center;
-      border: {
-        top: 1px solid rgb(var(--color-3));
-      }
+
       span {
         display: block;
         &:nth-child(1) {
           color: rgb(var(--color-5));
           font-size: var(--font-size-1);
-          font-weight: 700;
+          font-weight: 800;
         }
         &:nth-child(2) {
           color: rgb(var(--color-4));
@@ -76,46 +65,18 @@
         }
       }
     }
+
   }
 }
 
 .promo {
-  &_swipe {
-    pointer-events: none;
-    position: absolute;
-    width: 100%;
-    top: -10px;
-    text-align: center;
-    z-index: 10;
-    i {
-      letter-spacing: 20px;
-      color: rgb(var(--color-6));
-      &:nth-child(2) {
-        transform: translateX(0px);
-        animation: swipe 0.5s infinite alternate;
-        @keyframes swipe {
-          0% {
-            transform: translateX(-5px);
-          }
-          100% {
-            transform: translateX(10px);
-          }
-        }
-      }
-    }
-  }
-  &_body {
+  &-body {
     @include gradient_border(both);
     position: relative;
     width: 100%;
     overflow: hidden;
+    padding: 0 !important; 
     background-color: rgb(var(--color-2));
-  }
-  &_carousel {
-    position: relative;
-    cursor: pointer;
-    min-width: 60vw;
-    width: 100%;
   }
 }
 </style>
@@ -132,8 +93,8 @@ import 'firebase/database'
 import EmitSound from '~/assets/mixins/EmitSound'
 
 // TYPES
-import type { PORTFOLIO_SECTION } from '~/types/Portfolio.ts'
-import type { WORKCASE } 					from '~/types/WorkCase.ts'
+import type { PORTFOLIO_SECTION } from '~/typescript/Portfolio'
+import type { WORKCASE } 					from '~/typescript/WorkCase'
 
 export default Vue.extend({
 	components: {

@@ -35,7 +35,9 @@
 			</div>
 			<div class="work_case-content">
 
-				<vue-image v-for="(item, index) in content.images" :key="`IMAGE-${ index }`"
+				<vue-image 
+					v-for="(item, index) in content.images" 
+					:key="`IMAGE-${ index }`"
 					:class="$isMobile ? '' 
 						: !index ? 'main' : 'other'
 					"
@@ -44,7 +46,8 @@
 					"
 					:content="item.content" 
 					:sections="{ date: false, description: false, zoom: true }" 
-					:property="{ fit: 'cover', type: 'case' }">
+					:property="{ fit: 'cover', type: 'case' }"
+				>
 					{{ content.name }}
 				</vue-image>
 
@@ -58,7 +61,7 @@
 .work_case {
 	&-container {
 
-		max-height: 60vh;
+		height: 60vh;
 
 		margin: 5vh 1vw;
 
@@ -71,13 +74,15 @@
 			rows: 100%;
 		}
 
+		opacity: 0;
+
 		@media screen and ( max-width: $mobile-breakpoint ) {
 
 			max-height: unset;
 
 			grid-template: {
 				columns: 1fr;
-    		rows: min-content auto;
+				rows: min-content auto;
 			}
 		}
 
@@ -181,7 +186,7 @@
 
 			grid-template: {
 				columns: 1fr;
-    		rows: unset;
+				rows: unset;
 			}
 		}
 
@@ -205,14 +210,15 @@
 	// VUEX
 	import { mapState } from 'vuex';
 
-	// MIXINS
-	import IntersectionObserver from '~/assets/mixins/IntersectionObserver.ts'
-
 	// TYPES
-	import type { WORKCASE, CONTENT } from '~/types/WorkCase.ts'
+	import type { AnimeAnimParams } 	from 'animejs'
+	import type { WORKCASE, CONTENT } from '~/typescript/WorkCase.ts'
 
 	// VUEX MODULE TYPE MAP
-	import type { VuexModules } from '~/types/VuexModules'
+	import type { VuexModules } from '~/typescript/VuexModules'
+
+	// MIXINS
+	import IntersectionObserver from '~/assets/mixins/IntersectionObserver.ts'
 
 	// MODULE
 	export default Vue.extend({
@@ -242,10 +248,11 @@
 
 			setObserver(elements: Vue | Vue[] | Element | Element[]) {
 
-				const ANIMATION = {
+				const ANIMATION: {[key in 'in' | 'out']: AnimeAnimParams} = {
 					in: {
 						opacity: [0, 1],
-						translateY: [100, 0]
+						translateY: [100, 0],
+						delay: 750,
 					},
 					out: {
 						opacity: [1, 0],

@@ -55,10 +55,10 @@
 		import { mapState, mapActions } from 'vuex'
 
 	// VUEX MODULE TYPE MAP
-		import type { VuexModules } from '~/types/VuexModules'
+		import type { VuexModules } from '~/typescript/VuexModules'
 
 	// TYPES
-		import { USER_STATE } from '~/types/User'
+		import { USER_STATE } from '~/typescript/User'
 
 	// VUELIDATE
 		import type { validationMixin } 						from "vuelidate"

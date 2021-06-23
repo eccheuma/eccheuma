@@ -17,9 +17,9 @@
 			<p>{{ RecivedData.Comment }}</p>
 			
 			<template v-if="LoginStatus">
-				<button v-if="UserState.UserID === Author.UserID" @click="RemoveComment">
+				<common-button v-if="UserState.UserID === Author.UserID" @click.native="RemoveComment">
 					Удалить комментарий
-				</button>
+				</common-button>
 			</template>
 		</section>
 
@@ -116,15 +116,16 @@
 		}
 
 		span {
-			font-weight: 700;
+			font-weight: 900;
 			display: block;
 			&:nth-of-type(1) {
-				font-size: var(--font-size-3);
+				font-size: var(--font-size-4);
 				color: rgb(var(--color-3));
+				text-transform: uppercase;
 			}
 			&:nth-of-type(2) {
+				font-size: var(--font-size-5);
 				color: rgb(var(--color-4));
-				font-size: var(--font-size-4);
 			}
 		}
 
@@ -141,10 +142,16 @@
 		}
 
 		p {
-			font-weight: 500;
-			font-size: var(--font-size-3);
-			font-family: var(--second-font);
-			color: rgb(var(--color-2));
+
+			line-height: 2.5vh;
+			color: rgb(var(--color-3));
+			font: {
+				size: 	var(--font-size-4);
+				weight: 600;
+			}
+
+			width: 65ch;
+			padding: 3vh 0;
 
 			@media screen and ( max-width: $mobile-breakpoint ) {
 				padding: 0 5vw;
@@ -169,26 +176,35 @@
 
 <script lang="ts">
 
-	import Vue, { PropOptions } from 'vue'
+	import Vue, { PropOptions } from 'vue';
 
 	// FIREBASE
-	import firebase from 'firebase/app'
-	import 'firebase/database'
+	import firebase from 'firebase/app';
+	import 'firebase/database';
 
 	// VUEX
-	import { mapActions, mapState } from 'vuex'
-	import type { VuexModules } from '~/types/VuexModules'
+	import { mapActions, mapState } from 'vuex';
 
 	// MIXINS
-	import EmitSound from '~/assets/mixins/EmitSound'
+	import EmitSound from '~/assets/mixins/EmitSound';
 
 	// TYPES
-	import type { COMMENT, POST } 	from '~/types/Post.ts'
-	import type { USER_STATE }			from '~/types/User.ts'			
-	import type { FORMATED_DATE } 		from '~/store'
+	import type { VuexModules } 			from '~/typescript/VuexModules';
+
+	import type { COMMENT, POST } 		from '~/typescript/Post';
+	import type { USER_STATE }				from '~/typescript/User';		
+	import type { FORMATED_DATE } 		from '~/store';
+
+	// COMPONENTS
+	// import Tag from '~/components/common/Tag.vue'
+	// import EccheumaButton 	from '~/components/common/EccheumaButton.vue'
+	import CommonButton 			from '~/components/buttons/CommonButton.vue'
 
 	// MODULE
 	export default Vue.extend({
+		components: {
+			CommonButton
+		},
 		mixins: [ EmitSound ],
 		props: {
 			postID: {
@@ -229,6 +245,14 @@
 		},
 		async created() {
 
+			this.setSounds([
+				{
+					file: 'Tap',
+					name: 'SendComment',
+					settings: { rate: .33, volume: .25 },
+				}
+			])
+
 			firebase.database()
 				.ref(`Users/${ this.userID }/state`)	
 				.on('value', (data) => {
@@ -255,9 +279,7 @@
 				firebase.database()
 					.ref(`Posts/PostID-${ this.postID }/comments/Hash-${ this.commentID }`)
 					.remove()
-					.then(() => {
-						this.EmitSound('Tap', { rate: .33, volume: .25 });
-					})
+					.then(() => this.playSound(this.Sounds.get('SendComment')))
 
 			}
 

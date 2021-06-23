@@ -3,15 +3,18 @@
 
 		<div class="user_profile-component-messages">
 
-			<div v-for="item in Messages" :key="item.ID"
+			<div 
+				v-for="item in Messages" 
+				:key="item.ID"
 				:style="`order: ${ Messages.length - item.ID}`"
-				@mouseenter="CheckMessage(item.ID, item.Read)"
 				:class="[
-					{ 'message-support': 		 item.UserID == 'SUPPORT' },
-					{ 'message-owner': 	 item.UserID == 'Admin' },
+					{ 'message-support': item.UserID == 'SUPPORT' },
+					{ 'message-owner': item.UserID == 'ADMIN' },
 					{ 'message-unread': !item.Read && UserState.UserName != item.From }
 				]"
-				class="user_profile-component-messages_item">
+				class="user_profile-component-messages_item"
+				@mouseenter="CheckMessage(item.ID, item.Read)"
+				>
 
 				<message :payload="{ From: item.From, Date: item.Date, Message: item.Message }" />
 
@@ -21,12 +24,15 @@
 
 		<div class="user_profile-component-textarea">
 
-			<textarea v-model="Message" @input="EmitSound(`Off`)" 
+			<textarea 
+				v-model="Message" 
+				placeholder="Напишите что нибудь!" 
 				@keydown.ctrl.enter="SendMessage"
-				placeholder="Напишите что нибудь!">
-			</textarea>
+			/>
 
-			<button @click="SendMessage"> Отправить </button>
+			<button @click="SendMessage">
+				Отправить
+			</button>
 
 		</div>
 
@@ -118,36 +124,34 @@
 
 }
 
-
-
 </style>
 
 <script lang="ts">
 
 	import Vue from 'vue'
 
+	// VUELIDATE
+	import { required } from 'vuelidate/lib/validators';
+
 	// VUEX
-		import { mapState, mapActions } from 'vuex'
-		import type { VuexModules } from '~/types/VuexModules'
+	import { mapState, mapActions } from 'vuex';
+	import type { VuexModules } from '~/typescript/VuexModules';
 
 	// TYPES
-		import type { Message as MessageTYPE } from '~/store/User/Messages'
-
-	// VUELIDATE
-		import { required } from 'vuelidate/lib/validators'
+	import type { Message as MessageTYPE } from '~/store/User/Messages';
 	
 	// MIXINS
-		import EmitSound from '~/assets/mixins/EmitSound'
+	import EmitSound from '~/assets/mixins/EmitSound';
 
 	// COMPONENTS
-		import Message from '~/components/user/ProfileComponents/_message.vue'
+	import Message from '~/components/user/ProfileComponents/_message.vue';
 
 	// MODULE
 	export default Vue.extend({
-		mixins: [ EmitSound ],
 		components: {
 			Message
 		},
+		mixins: [ EmitSound ],
 		data() {
 			return {
 				PrevMessage: '',
@@ -159,13 +163,6 @@
 			Message: { required },
 
 		},
-		watch: {
-			StoreMessages: {
-				handler() {
-					this.$store.dispatch('User/Messages/CheckNewMessage')
-				}
-			}
-		},
 		computed: {
 			...mapState({
 				// MODULES
@@ -173,6 +170,13 @@
 				Messages:								state => ( state as VuexModules ).User.Messages.Messages,
 				GetRequestsQuantity:		state => ( state as VuexModules ).User.WorkRequest.RequestQuantity
 			}),
+		},
+		watch: {
+			StoreMessages: {
+				handler() {
+					this.$store.dispatch('User/Messages/CheckNewMessage')
+				}
+			}
 		},
 		methods: {
 			...mapActions({
@@ -200,7 +204,7 @@
 
 					this.PrevMessage = this.Message; this.Message = '';
 
-					this.EmitSound(`Translate`, { rate: 1.25, volume: .5 })   
+					// this.EmitSound(`Translate`, { rate: 1.25, volume: .5 })   
 
 				}
 			},

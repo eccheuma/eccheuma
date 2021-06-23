@@ -4,14 +4,7 @@
 		<transition name="Fading">
 			<section v-if="LoginStatus" id="ScrollMessage" class="scroll_panel-messages">
 
-				<i 
-					class="fas" 
-					:class="[
-						{ 'fa-envelope-open-text active': NewMessages > 0 },
-						{ 'fa-envelope': NewMessages == 0 },
-					]"
-					@click="scrollPage(0)" 
-					/>
+				<icon :name="NewMessages ? 'Unread' : 'Message'" />
 
 				<span>{{ NewMessages }}</span>
 				
@@ -24,16 +17,19 @@
 
 		<section class="scroll_panel-mute">
 			<span
-				:class="[{ active: GlobalVolume.Mute && !GlobalVolume.inChange }, { change: GlobalVolume.inChange }]"
-				@click="changeGlobalVolume({ _volume: Number(GlobalVolume.Mute), _duration: 1000 })"
+				:class="[{ active: GlobalHowler.mute && !GlobalHowler.inChange }, { change: GlobalHowler.inChange }]"
+				@click="globalMute(!GlobalHowler.mute)"
 			>
-				<i class="fas" :class="GlobalVolume.Mute ? `fa-volume-mute` : `fa-volume-up`" />
+				<!-- <i class="fas" :class="GlobalHowler.mute ? `fa-volume-mute` : `fa-volume-up`" /> -->
+
+				<icon name="Mute" />
+
 			</span>
 		</section>
 
 		<section class="scroll_panel-switch">
 
-			<i class="fas fa-adjust" />
+			<icon name="Theme" />
 
 			<div 
 				id="ScrollTheme" 
@@ -47,9 +43,9 @@
 
 		<section class="scroll_panel-arrows">
 
-			<i class="fas fa-sort-up" @click="scrollPage(0)" />
+			<icon name="Arrow" @click.native="scrollPage(0)" />
 
-			<i class="fas fa-sort-down" @click="scrollPage(9999)" />
+			<icon name="Arrow" @click.native="scrollPage(9999)" />
 
 		</section>
 
@@ -58,7 +54,7 @@
 
 <style lang="scss">
 
-$scroll_w: 3vw;
+$scroll_w: 4vw;
 
 %TopBorder {
 	$s: 75%;
@@ -66,7 +62,7 @@ $scroll_w: 3vw;
 	&:before {
 		content: '';
 		position: absolute; top: 0; left: #{ (100% - $s) / 2 };
-		width: $s; height: 0.25px; background-color: rgb(var(--color-3));
+		width: $s; height: 1px; background-color: rgb(var(--color-3));
 	}
 };
 
@@ -82,17 +78,20 @@ $scroll_w: 3vw;
 
 	}
 	&-messages {
+
 		grid-row: -4;
 		text-align: center;
-		i {
-			display: block; width: 100%; padding: 10px 0;
-			color: rgb(var(--color-4));
+
+		i { @include icon-size(1.75vw);
+			background-color: rgb(var(--color-4));
 		}
+
 		span {
 			color: rgb(var(--color-4)); 
 			font-weight: 700; 
 			font-size: var(--font-size-4);
 		}
+
 	}
 	&-mute {
 
@@ -120,71 +119,112 @@ $scroll_w: 3vw;
 		padding: 2vh 0 5px;
 
 		span {
+
 			$size: $scroll_w / 1.5;
 
 			cursor: pointer;
 			display: flex;
 			width: $size;
 			height: $size;
-			color: rgb(var(--color-4));
-			font-size: #{$size / 3};
 			background-color: rgb(var(--color-1));
-			border: 1px solid rgb(var(--color-3));
+			border: 2px solid rgb(var(--color-3));
 			border-radius: 100%;
 			opacity: 1;
 			margin: auto;
 
 			transition: all 250ms ease-in-out;
 
-			i {
-				margin: auto;
+			i { @include icon-size(1.6vw);
+				background-color: rgb(var(--color-4));
 			}
+
 		}
 	}
-	&-switch {
+	&-switch { @extend %TopBorder;
+
 		grid-row: -2;
 		text-align: center; color: rgb(var(--color-3));
 		background-color: rgb(var(--color-1));
 		padding: 10px 0;
-		@extend %TopBorder;
+
+		i { @include icon-size(1.75vw);
+			background-color: rgb(var(--color-4));
+		}
+
 		&-checker {
-			position: relative; margin: 0px auto; margin-top: 10px;
-			height: calc(#{$scroll_w} + 15px); width: 50%; 
+
+			position: relative;
+			cursor: pointer;
+
+			margin: 10px auto 0; 
+
+			height: calc(#{$scroll_w} + 15px); 
+			width: 50%; 
+
 			background-color: rgb(var(--color-3));
 			border: {
-				radius: .7rem
+				radius: 4rem
 			}
 
 			span { 
-				position: absolute; top: 0; left: 0;
-				height: calc(#{$scroll_w} / 2); width: calc(#{$scroll_w} / 2);
+
+				position: absolute;
+				display: block;
+
+				top: 0px;
+
+				height: calc(#{$scroll_w} / 2); 
+				width: 	calc(#{$scroll_w} / 2);
 				background-color: rgb(var(--color-2));
 				transform: scale(.75);
-				transition-duration: 500ms;
 				border: {
 					radius: 100%
 				}
+
+				transition-duration: 500ms;
+
 			}
 
 			.active {
-				top: calc(#{$scroll_w} - 10px);
+
+				top: calc(100% - #{$scroll_w / 2});
 				background-color: rgb(var(--color-5));
+
 			}
 
 		}
 	}
-	&-arrows {
+	&-arrows { @extend %TopBorder;
+
 		grid-row: -1;
 		padding: 20px 0;
-		@extend %TopBorder;
-		i {
-			display: block; width: 100%;
+
+		display: grid;
+		justify-content: center;
+
+		row-gap: 1vh;
+
+		i { @include icon-size(2.25vw);
+
 			text-align: center; font-size: 1.5vw;
-			color: rgb(var(--color-4));
 			transition: color 250ms ease; will-change: color;
+
+			background-color: rgb(var(--color-4));
+
+			cursor: pointer;
+
 			&:hover {
-				color: rgb(var(--color-6))
+				background-color: rgb(var(--color-6));
 			} 
+
+			&:nth-of-type(1) {
+				transform: rotate(90deg)
+			}
+
+			&:nth-of-type(2) {
+				transform: rotate(-90deg)
+			}
+
 		}
 	}
 }
@@ -200,23 +240,24 @@ $scroll_w: 3vw;
 
 // COMPONENTS
 	// import Popover from '~/components/common/Popover.vue'
+	import Icon									from '~/components/Icon.vue'
 
 // TYPES
-	import type { VuexModules } from '~/types/VuexModules'
-	import type { APP_THEME } 	from '~/types/App.ts'
+	import type { VuexModules } from '~/typescript/VuexModules'
+	import type { APP_THEME } 	from '~/typescript/App'
 
 // MIXINS
-	import EmitSound from '~/assets/mixins/EmitSound'
+	import EmitSound, { SoundInstance } from '~/assets/mixins/EmitSound'
 
 // MODULE
 	export default Vue.extend({
-		// components: {
-		// 	Popover
-		// },
+		components: {
+			Icon
+		},
 		mixins: [ EmitSound ],
 		data() {
 			return {
-				LocalStatusOfTumbler: false
+				LocalStatusOfTumbler: false,
 			}
 		},
 		computed: {
@@ -226,8 +267,30 @@ $scroll_w: 3vw;
 				LoginStatus: 		state => (state as VuexModules).Auth.Auth.LoginStatus,
 				Messages: 			state => (state as VuexModules).User.Messages.Messages,
 				NewMessages: 		state => (state as VuexModules).User.Messages.NewMessagesCount,
-				GlobalVolume: 	state => (state as VuexModules).Sound.Global,
+				GlobalHowler: 	state => (state as VuexModules).Sound.global,
 			}),
+
+		},
+		created() {
+
+			const S: SoundInstance[] = [
+				{
+					file: 'Off',
+					name: 'ThemeLight',
+					settings: { rate: 1.25, volume: .25 },
+				},
+				{
+					file: 'Off',
+					name: 'ThemeDark',
+					settings: { rate: .75, volume: .25 },
+				},
+				{
+					file: 'On',
+					name: 'ScrollButton',
+				}
+			]
+
+			this.setSounds(S)
 
 		},
 		mounted() {
@@ -244,7 +307,7 @@ $scroll_w: 3vw;
 		methods: {
 
 			...mapActions({
-				changeGlobalVolume: 'Sound/Set_GlobalSoundProperty', 
+				globalMute: 'Sound/globalMute',
 			}),
 
 			...mapMutations({
@@ -253,7 +316,7 @@ $scroll_w: 3vw;
 
 			scrollPage(to: 0 | 9999) {
 
-				this.EmitSound('On', { rate: .5, volume: .25 })
+				this.playSound(this.Sounds.get('ScrollButton')!)
 
 				window.scrollTo({
 					top: to,
@@ -261,6 +324,7 @@ $scroll_w: 3vw;
 					behavior: 'smooth'
 				});
 			},
+
 			changeTheme(theme: APP_THEME) {
 
 				this.setUI(theme); 
@@ -268,16 +332,21 @@ $scroll_w: 3vw;
 				switch (theme) {
 
 					case 'light': 
-						this.EmitSound('Off', { rate: 1.25, volume: .25 }); 
+
+						this.playSound(this.Sounds.get('ThemeLight')!)
+
 					break;
 
-					case 'dark': 	
-						this.EmitSound('Off', { rate: .75, volume: .25 }); 
+					case 'dark': 
+					
+						this.playSound(this.Sounds.get('ThemeDark')!)
+
 					break;
 
 				}
 
 			},
+
 		},
 	})
 

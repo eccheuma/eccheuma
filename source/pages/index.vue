@@ -1,9 +1,12 @@
 <template>
+
 	<main
 		key="main"
+		ref="index"
 		class="holl-container"
-		@mouseover="ChangeGlobalVolume(1)"
-		@mouseleave="ChangeGlobalVolume(0)"
+		style="opacity: 0"
+		@mouseover="changeGlobalVolume(1)"
+		@mouseleave="changeGlobalVolume(0)"
 	>
 
 		<!-- <transition name="opacity-transition">
@@ -11,15 +14,15 @@
 		</transition> -->
 
 		<client-only>
-			<pixi-canvas v-if="CLIENT_RENDER_CHECK && $PIXI.utils.isWebGLSupported()" key="canvas" @ready="Animate" />
+			<pixi-canvas v-if="CLIENT_RENDER_CHECK && $PIXI.utils.isWebGLSupported()" key="canvas" @ready.once="Animate" />
 		</client-only>
 
 		<section class="holl-mute">
 			<span
-				:class="{ active: Muted }"
-				@click="ChangeVolume({ _volume: Number(Muted), _duration: 1000 })"
+				:class="{ active: mute }"
+				@click="globalMute(!mute)"
 			>
-				<i class="fas" :class="Muted ? `fa-volume-mute` : `fa-volume-up`" />
+				<i class="fas" :class="mute ? `fa-volume-mute` : `fa-volume-up`" />
 			</span>
 		</section>
 
@@ -59,12 +62,14 @@
 		</template>
 
 		<section class="holl-links">
+
+			<!-- @mouseenter="EmitSound(`On`)" -->
+			<!-- @click="EmitSound(`Tap`, { rate: 0.5 })" -->
+
 			<a
 				v-for="(item, index) in Links"
 				:key="index"
 				:href="item.link"
-				@mouseenter="EmitSound(`On`)"
-				@click="EmitSound(`Tap`, { rate: 0.5 })"
 			>
 			
 				<i :class="item.icon" class="fab" />{{ item.title }}
@@ -107,7 +112,7 @@
 		height: 100vh;
 
 		background: {
-			color: rgba(var(--color-1), .1);
+			color: rgba(var(--color-1), 1);
 		}
 
 		// line-height: 100vh;
@@ -203,6 +208,7 @@
 			position: relative;
 			z-index: 1000;
 		}
+
 	}
 	&-mute {
 		@include section_position($area: mute);
@@ -237,7 +243,7 @@
 
 		span {
 			color: rgb(var(--color-4));
-			font-size: var(--font-size-5);
+			font-size: var(--font-size-6);
 			font-weight: 800;
 			letter-spacing: 1ch;
 			text-align: center;
@@ -345,7 +351,7 @@
 			margin: 0 15px;
 			font-weight: 700;
 			margin: 0px 10px;
-			font-size: var(--font-size-4);
+			font-size: var(--font-size-5);
 			color: rgb(var(--color-3));
 			transition-duration: 0.5s;
 			&:hover {
@@ -375,12 +381,10 @@
 
 // TYPES
 	import type { AnimeInstance, AnimeAnimParams } 	from 'animejs'
-	import type { VuexModules } 										from '~/types/VuexModules'
-
-	import type { FILE_NAME } from '~/assets/mixins/EmitSound.ts'
+	import type { VuexModules } 										from '~/typescript/VuexModules'
 
 // MIXINS
-	import EmitSound from '~/assets/mixins/EmitSound.ts'
+	import EmitSound from '~/assets/mixins/EmitSound'
 
 // COMPONENTS
 	import HeaderNavigation from  '~/components/header/HeaderNavigation.vue'
@@ -428,45 +432,64 @@
 				HollVolume: 0,
 
 				AnimeInstance: [] as AnimeInstance[],
-
-				HollAmbient: {
-					path: 'Holl' as FILE_NAME,
-					volume: .5,
-					loop: true,
-					rate: .5,
-				}
 				
 			}
 		},
-		head(): any {
-			return {
-				link: [
-					{ rel: 'icon', 			href: 'Icon.svg' },
-					{ rel: 'preload', 	href: '/static/sounds/Holl.ogg', 	as: 'prefetch', crossorigin: true },
-					{ rel: 'preload', 	href: PLACEHOLDER, 								as: 'prefetch', crossorigin: true },
-				]
-			}
+		head: {
+			link: [
+				{ rel: 'icon', 			href: 'Icon.svg' },
+				{ rel: 'preload', 	href: '/static/sounds/Holl.ogg', as:'xhr', crossorigin: true },
+				{ rel: 'prefetch', 	href: PLACEHOLDER },
+			]
 		},
 		computed: {
 
 			...mapState({
-				Muted: ( state: any ) => (state as VuexModules).Sound.Global.Mute,
+				mute: ( state: any ) => (state as VuexModules).Sound.global.mute,
 			}),
 
+		},
+		watch: {
+			CanvasReady: {
+				handler() {
+
+					const AMBIENT = this.Sounds.get('Ambient')!;
+								AMBIENT.volume(0)
+
+					const DUR = 3000;
+
+					this.$AnimeJS({
+
+						targets: this.$refs.index,
+						opacity: [0, 1],
+						duration: DUR,
+						easing: 'easeOutQuad',
+
+						begin: () => {
+
+							this.playSound(this.Sounds.get('Ambient'))
+
+							AMBIENT.fade(0, .5, DUR)
+
+						}
+
+					})
+
+				}
+			},
+		},
+		created() {
+			this.setSounds([
+				{
+					file: 'Holl',
+					name: 'Ambient',
+					settings: { rate: .75, volume: .5, loop: true },
+				}
+			])
 		},
 		mounted() {
 
 			this.initQuoteChanger();
-
-			if ( this.CLIENT_RENDER_CHECK ) {
-
-				const H = this.HollAmbient
-
-				this.EmitSound( H.path, { rate: H.rate, loop: H.loop })
-	
-				this.ChangeVolume({ _volume: 1, _duration: 10000 })
-
-			}
 
 		},
 		beforeDestroy() {
@@ -475,7 +498,9 @@
 				anim.pause();
 			})
 
-			this.ChangeSoundVolume({ path: this.HollAmbient.path, volume: 0 })
+			const HOWL = this.Sounds.get('Ambient')!;
+
+			HOWL.fade(HOWL.volume(), 0, 5e3);
 
 		},
 		methods: {
@@ -485,8 +510,8 @@
 			}),
 
 			...mapActions({
-				ChangeVolume: 			'Sound/Set_GlobalSoundProperty', 
-				ChangeSoundVolume: 	'Sound/ChangeSoundVolume',
+				changeGlobalVolume: 'Sound/changeGlobalVolume',
+				globalMute: 				'Sound/globalMute',
 			}),
 
 			Animate() {
@@ -544,26 +569,6 @@
 
 			},
 
-			ChangeGlobalVolume(value: number) {
-
-				if ( !this.Muted) {
-
-					const V = this.HollVolume
-
-					this.$AnimeJS({
-						targets: this.$data,
-						HollVolume: [V, value],
-						duration: 1000,
-						easing: 'easeInOutSine',
-						update: () => {
-							this.Howler.volume(this.HollVolume)
-						}
-					})
-
-				}
-
-			},
-
 			initQuoteChanger() {
 
 				this.CurentQuoteIndex = Math.trunc( Math.random() * this.Quotes.length )
@@ -577,8 +582,8 @@
 					duration: 500,
 					endDelay: 250,
 					delay: 8000,
-					update: ( anim ) => {
-						if ( anim.progress === 100 ) {
+					update: ({ progress }) => {
+						if ( progress === 100 ) {
 
 							switch (this.CurentQuoteIndex) {
 

@@ -6,7 +6,8 @@
 		@mousedown.prevent="MouseDown" 
 		@mouseup.prevent="MouseUp"
 		@mouseleave="mouseData.isHover = false" 
-		@mouseenter="mouseData.isHover = true">
+		@mouseenter="mouseData.isHover = true"
+	>
 
 		<div v-if="Configuration.buttons" ref="swiperButtons" class="swiper-buttons">
 			<slot name="icon-prev" :onEdge="ActiveIndex == 0" />
@@ -56,16 +57,17 @@
 			height: 75%; top: 12.5%;	
 
 			&:nth-of-type(1) {
-				left: 2vw;
+				left: 3vw;
 			}
 			&:nth-of-type(2) {
-				right: 2vw;
+				right: 3vw;
 			}
 
 		}
 	}
 	&-item {
-		display: inline-block; height: 100%;
+		display: inline-grid; 
+		height: 100%;
 	}
 }
 
@@ -179,25 +181,17 @@ export default Vue.extend({
 					new CSSTranslate(CSS.vw(-Y), CSS.px(0), CSS.px(0))
 				])
 
-				requestAnimationFrame(() => {
-
-					contentNode.attributeStyleMap.set('width', CSS.vw( this.ContainerWidth * this.Quantity ))
-					contentNode.attributeStyleMap.set('transform', TRANSFORM)
-					contentNode.attributeStyleMap.set('transition-duration', CSS.ms( MD.isDown ? 0 : DURATION ))
-
-				})
+				contentNode.attributeStyleMap.set('width', CSS.vw( this.ContainerWidth * this.Quantity ))
+				contentNode.attributeStyleMap.set('transform', TRANSFORM)
+				contentNode.attributeStyleMap.set('transition-duration', CSS.ms( MD.isDown ? 0 : DURATION ))
 
 			} else {
 
-				// const styles = contentNode.style.cssText
-
-				requestAnimationFrame( () => {
-					contentNode.setAttribute('style', `
-						width: ${ contentNode.style.width };
-						transition-duration: ${ MD.isDown ? 0 : DURATION };
-						transform: translate3D( -${ (this.ContainerWidth * this.ActiveIndex) + SHIFT }vw, 0px, 0px );
-					`)
-				})
+				contentNode.setAttribute('style', `
+					width: ${ contentNode.style.width };
+					transition-duration: ${ MD.isDown ? 0 : DURATION }ms;
+					transform: translate3D( -${ (this.ContainerWidth * this.ActiveIndex) + SHIFT }vw, 0px, 0px );
+				`)
 
 			}
 
@@ -319,9 +313,9 @@ export default Vue.extend({
 		},
 		MouseHover( e: Event ) {
 
-			requestAnimationFrame( () => {
+			// requestAnimationFrame( () => {
 				this.mouseData.hoverPosition = (e as MouseEvent).x;
-			})
+			// })
 
 		},
 		MouseDown( e: MouseEvent ) {

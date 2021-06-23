@@ -1,6 +1,6 @@
 import Vue from 'vue'
 
-import animeJS from 'animeJS'
+import animeJS from 'animejs'
 
 Vue.prototype.$AnimeJS = animeJS;
 

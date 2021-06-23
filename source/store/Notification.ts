@@ -1,7 +1,7 @@
 import { ActionTree, MutationTree } from 'vuex'
 
 // TYPES AND INTERFACES
-	import type { NOTIFICATION_CONTENT } from '~/types/Notification.ts'
+	import type { NOTIFICATION_CONTENT } from '~/typescript/Notification.ts'
 
 // STATE
 	export const state = () => ({
@@ -16,7 +16,7 @@ import { ActionTree, MutationTree } from 'vuex'
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/types/VuexModules' {
+	declare module '~/typescript/VuexModules' {
 		interface VuexModules {
 			Notification: CurentState
 		}

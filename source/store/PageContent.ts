@@ -7,8 +7,8 @@ import { ActionTree, MutationTree } from 'vuex'
 
 // INTERFACES & TYPES
 
-	import type { POST } from '~/types/Post.ts'
-	import type { IMAGE_PROPERTY } 	from '~/types/Image.ts'
+	import type { POST } from '~/typescript/Post.ts'
+	import type { IMAGE_PROPERTY } 	from '~/typescript/Image.ts'
 
 	type REFS = 'Posts' | 'Gallery';
 
@@ -38,7 +38,7 @@ import { ActionTree, MutationTree } from 'vuex'
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/types/VuexModules' {
+	declare module '~/typescript/VuexModules' {
 		interface VuexModules {
 			PageContent: CurentState
 		}
@@ -74,7 +74,7 @@ import { ActionTree, MutationTree } from 'vuex'
 
 			// --------------------------------
 
-			const CACHED_DATA = STORAGE.getItem(CACHE_KEY)
+			const CACHED_DATA = STORAGE.getItem(CACHE_KEY) || '';
 
 			if ( CACHED_DATA && LOCAL_HASH === SERVER_HASH ) {
 
@@ -88,7 +88,7 @@ import { ActionTree, MutationTree } from 'vuex'
 					.limitToFirst(_payload.LOAD_PROPERTY.LoadRange || 1)
 					.startAt(_payload.LOAD_PROPERTY.LoadPoint || 0)
 					.once('value')
-					.then( data => Object.values(data.val()) )
+					.then( data => Object.values(data.val() || {}) )
 
 				commit('setContent', { data: DATA, from: 'firebase', to: _payload.REF });
 

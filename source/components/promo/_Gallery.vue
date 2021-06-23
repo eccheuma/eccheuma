@@ -2,7 +2,7 @@
 	<section class="promo_body">
 		
 		<vue-image
-			:content="{ path: 'Promo/4' }" 
+			:content="{ path: 'Promo/4.png' }" 
 			:sections="{ date: false, description: false, zoom: false }" 
 			:property="{ fit: 'cover', type: 'promo', collumn: 7 }"
 		/>
@@ -26,21 +26,35 @@
 	&_body {
 		@include gradient_border(both);
 
+		display: grid;
 		max-width: 1200px;
 
-		display: grid; 
 		grid-template: {
-			columns: 1fr 45ch;
+			columns: 40vw 30ch;
 		}
 
 		column-gap: 30px; 
 		row-gap: 3vh;
-		padding: 2vh 5vw;
+		
+		padding: 10vh 2vw;
+
 		align-items: center;
+		justify-content: center;
+		background-color: rgb(var(--color-2));
 
 		@media screen and ( max-width: $mobile-breakpoint ) {
 			grid-template-columns: 1fr;
 			text-align: center;
+		}
+
+		width: 100%;
+
+		h4 {
+			font-weight: 800;
+		}
+
+		p {
+			font-size: var(--font-size-4)
 		}
 
 	}

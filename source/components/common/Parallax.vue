@@ -25,7 +25,7 @@
 
 	import Vue, { PropOptions } from 'vue'
 
-	import type { CCSTypedObjectModel } from '~/types/CSSTypedOM.ts'
+	import type { CCSTypedObjectModel } from '~/typescript/CSSTypedOM.ts'
 
 	interface Options {
 		Multiplier: number

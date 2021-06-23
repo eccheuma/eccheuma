@@ -2,8 +2,6 @@
 const ChunkSizeMultiplier = 1.25;
 const IN_BUILD = process.env.NODE_ENV !== 'development';
 
-const MODE = mode => (!(mode === 'SPA' && !IN_BUILD));
-
 // TYPES
 export default {
   srcDir: 'source',
@@ -13,11 +11,11 @@ export default {
     id: globalName => `${globalName}`
   },
 
-  ssr: MODE('SSR'),
+  ssr: true,
 
   // modern: IN_BUILD,
   
-  target: 'static',
+  target: IN_BUILD ? 'static' : 'server',
 
   server: {
     port: 3000,
@@ -31,7 +29,7 @@ export default {
   },
 
   generate: { 
-    dir: 'application',
+    dir: 'app',
     exclude: ['/Admin'] 
   },
 
@@ -104,18 +102,6 @@ export default {
     link: [
       {
         rel: 'preload',
-        href: '/fonts/webfonts/fa-brands-400.woff2',
-        as: 'font',
-        crossorigin: true
-      },
-      {
-        rel: 'preload',
-        href: '/fonts/webfonts/fa-solid-900.woff2',
-        as: 'font',
-        crossorigin: true
-      },
-      {
-        rel: 'preload',
         href: '/static/fonts/Montserrat-SemiBold.woff2',
         as: 'font',
         crossorigin: true
@@ -132,7 +118,10 @@ export default {
         as: 'font',
         crossorigin: true
       }
-    ]
+    ],
+    // script: [
+    //   { src: 'https://vk.com/js/api/xd_connection.js?2', type: 'text/javascript' }
+    // ]
   },
 
   css: [
@@ -211,7 +200,6 @@ export default {
     // Common plugins
     { src: '~/plugins/Firebase.ts' },
     { src: '~/plugins/VuePortal.js' },
-    // { src: '~/plugins/VueBootstrap.js' },
     { src: '~/plugins/MobileDetection.ts' },
     // Client plugins TypeScript
     { src: '~/plugins/Pixi.ts',       mode: 'client' },

@@ -1,18 +1,8 @@
 
-	import $AnimeJS from 'animeJS'
+	import $AnimeJS from 'animejs'
 
 // VUEX
 	import type { ActionTree, MutationTree } from 'vuex'
-
-// CURENT STATE
-	export type CurentState = ReturnType<typeof state>
-
-// DECALARE MODULE
-	declare module '~/types/VuexModules' {
-		interface VuexModules {
-			Loader: CurentState
-		}
-	}
 
 // STATE
 	export const state = () => ({
@@ -26,6 +16,16 @@
 		}
 
 	})
+
+// CURENT STATE
+	export type CurentState = ReturnType<typeof state>
+
+// DECALARE MODULE
+	declare module '~/typescript/VuexModules' {
+		interface VuexModules {
+			Loader: CurentState
+		}
+	}
 
 // MUTATIONS
 	export const mutations: MutationTree<CurentState> = {

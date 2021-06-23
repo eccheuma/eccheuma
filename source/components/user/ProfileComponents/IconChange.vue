@@ -215,7 +215,7 @@
 
 	// VUEX
 	import { mapState, mapActions } from 'vuex'
-	import type { VuexModules } from '~/types/VuexModules'
+	import type { VuexModules } from '~/typescript/VuexModules'
 
 	// TYPES 
 	type EXTENSIONS = [ string, 'png' | 'jpg' | 'jpeg' | 'webp' ]

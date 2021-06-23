@@ -91,3 +91,9 @@ sw.*
 
 # firebase functions 
 functions
+
+# VSCode
+.vscode
+
+# Firebase
+.firebase

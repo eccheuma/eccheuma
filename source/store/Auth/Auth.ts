@@ -21,7 +21,7 @@ import 'firebase/auth'
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/types/VuexModules' {
+	declare module '~/typescript/VuexModules' {
 		interface Auth {
 			Auth: CurentState
 		}

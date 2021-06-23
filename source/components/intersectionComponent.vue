@@ -1,6 +1,6 @@
 <template>
 	<eccheuma-wrapper class="intersection-component">
-		<slot />
+		<slot :in-view="inView" />
 	</eccheuma-wrapper>
 </template>
 
@@ -39,6 +39,7 @@
 		},
 		created() {
 
+			// eslint-disable-next-line no-undef
 			const OPTIONS: IntersectionObserverInit = {
 				rootMargin: ` ${ process.browser ? ( window.innerHeight / 100) * -( this.rootMargin ) : 0 }px 0px`
 			};

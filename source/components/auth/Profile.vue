@@ -43,8 +43,6 @@
 .auth_profile {
 	&-container {
 
-		margin: 4px;
-
 		color: rgb(var(--color-2));
 
 		overflow: {
@@ -168,7 +166,7 @@
 			display: block;
 
 			font: {
-				size: .9rem;
+				size: var(--font-size-3);
 			}
 		}
 
@@ -202,6 +200,14 @@
 					column: title;
 					row: 		title;
 				}
+
+				font: {
+					size: var(--font-size-5);
+					weight: 700;
+				}
+
+				color: rgb(var(--color-4))
+
 			}
 
 			span {
@@ -297,8 +303,8 @@
 	import F_WorkStatus from '~/assets/mixins/filters/WorkStatus'
 
 // TYPES
-	import type { VuexModules } from '~/types/VuexModules'
-	import type { USER_STATE 	} from '~/types/User.ts' 
+	import type { VuexModules } from '~/typescript/VuexModules'
+	import type { USER_STATE 	} from '~/typescript/User.ts' 
 
 	type PROFILE_AREA = {
 		title: string

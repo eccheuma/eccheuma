@@ -22,6 +22,11 @@ $mobile-breakpoint: 768px;
 	border: 1px solid rgb(var(--color-6));  
 }
 
+@mixin icon-size($size: 21px) {
+	width: $size;
+	height: $size;
+}
+
 @mixin push-button {
 
 	border: 1px solid rgba(var(--color-4),.5);
@@ -31,7 +36,6 @@ $mobile-breakpoint: 768px;
 	border-radius: .7rem;
 	color: rgb(var(--color-3));
 	font-size: .65rem;
-	line-height: 20px;
 	font-weight: 700;
 	transition: all 200ms ease-in-out;
 
@@ -82,10 +86,7 @@ $mobile-breakpoint: 768px;
 
 @mixin gradient_border($side: both) {
 
-	$GRAD: 
-		rgb(var(--color-def-2)), 
-		rgb(var(--color-def-3)), 
-		rgb(var(--color-def-2));
+	$GRAD: transparent, rgb(var(--color-def-3)), transparent;
 
 	@if $side == both {
 		border-image: linear-gradient(to left, $GRAD);

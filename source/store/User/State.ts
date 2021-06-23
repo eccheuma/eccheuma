@@ -4,10 +4,10 @@ import 'firebase/database'
 // VUEX
 	import type { ActionTree, MutationTree } from 'vuex'
 
-	import type { VuexModules } from '~/types/VuexModules'
+	import type { VuexModules } from '~/typescript/VuexModules'
 
 // TYPES
-	import { USER_STATE } from '~/types/User'
+	import { USER_STATE } from '~/typescript/User'
 
 // STATE
 	export const state = () => ({
@@ -22,7 +22,7 @@ import 'firebase/database'
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/types/VuexModules' {
+	declare module '~/typescript/VuexModules' {
 		interface User {
 			State: CurentState
 		}

@@ -1,9 +1,8 @@
 <template>
 	<section
-		:id="`PostID-${ payload.ID }`" 
+		:id="`PostID-${ HashGenerator(12) }`" 
 		class="post-container"
 		:class="`interface-${ UI }`" 
-		:style="`order:${ order }`"
 		@keydown.ctrl.enter="sendComment"
 		> 
 
@@ -12,13 +11,22 @@
 			ref="ImageHolder" 
 			class="post-header"
 			:class="[
-				{ cooled_sections: Cooled },
+				{ 'utils::cooled-sections': Cooled },
 			]" 
-			:style="`background-image: url(${ ImageURL })`"
 		>
 
+			<!-- <displacement-filter :name="filter.name" :status="filter.status" /> -->
+			<!-- <img :src="ImageURL.webp" :alt="payload.description" :style="`filter: url(#filter::${ filter.name })`"> -->
+
+			<picture class="post-header-image">
+				<source :srcset="ImageURL.avif" type="image/avif">
+				<img :src="ImageURL.webp" :alt="payload.description">
+			</picture>
+
 			<section class="post-header-tags">
-				<span>{{ payload.tags }}</span>
+				<tag>
+					{{ payload.tags }}
+				</tag>
 			</section>
 
 			<section class="post-header-title">
@@ -27,7 +35,9 @@
 			</section>
 
 			<section class="post-header-time">
-				<span>{{ PostDate.Day }} в {{ PostDate.Time }}</span>
+				<tag>
+					{{ PostDate.Day }} в {{ PostDate.Time }}
+				</tag>
 			</section>
 
 		</div>
@@ -36,7 +46,7 @@
 		<div 
 			class="post-footer" 
 			:class="[
-				{ cooled_sections: Cooled },
+				{ 'utils::cooled-sections': Cooled },
 				{ 'rounded-bottom': !ContentSection && !CommentSection },
 			]"
 			>
@@ -50,15 +60,15 @@
 						{ disabled: !LoginStatus }
 					]"
 					@click="sendLike"
-					@mouseenter="EmitSound('On', { rate: .45, volume: .25 })"
+					@mouseenter="playSound(Sounds.get('PostSocialButton'))"
 					>
 
-					<i class="fas fa-fire" />
+					<icon name="Fire" />
 
 					<client-only>
 						
 						<template v-if="Object.keys(Likes || {}).length">
-							<span class="post_btn_counter pl-2">{{ Object.keys(Likes || {}).length }}</span>
+							<span>{{ Object.keys(Likes || {}).length }}</span>
 						</template>
 
 						<span slot="placeholder" />
@@ -75,15 +85,15 @@
 					:id="`CommentPopOver-${ payload.ID }`" 
 					:class="{ active: CommentSection }"
 					@click="toggleSection(!CommentSection, 'CommentSection')"
-					@mouseenter="EmitSound('On', { rate: .45, volume: .25 })" 
+					@mouseenter="playSound(Sounds.get('PostSocialButton'))"
 					>
 
-					<i class="fas fa-comment" />
+					<icon name="Comment" />
 
 					<client-only>
 
 						<template v-if="sortedComments.length">
-							<span class="post_btn_counter pl-2">{{ sortedComments.length }}</span>
+							<span>{{ sortedComments.length }}</span>
 						</template>
 
 						<span slot="placeholder" />
@@ -107,7 +117,9 @@
 			<section class="post-footer-author">
 
 				<template v-if="AuthorInfo">
-					<span>{{ AuthorInfo.UserName }}</span>
+					<tag>
+						{{ AuthorInfo.UserName }}
+					</tag>
 					<i :style="`background-image: url(${ AuthorInfo.UserImageID })`" />
 				</template>
 
@@ -118,16 +130,13 @@
 		<!-- Comments and Content -->
 		<client-only>
 
-			<component 
-				:is="`eccheuma-collapse`" 
-				:active="ContentSection"
-				>
+			<eccheuma-collapse :active="ContentSection">
 
 				<article 
 					class="post-content" 
 					:class="[
-						{ 'rounded': !ContentSection },
-						{ 'rounded-bottom': !CommentSection }
+						{ 'rounded': !ContentSection && !CommentSection },
+						{ 'rounded-bottom': ContentSection && !CommentSection }
 					]"
 				>
 
@@ -147,21 +156,20 @@
 
 					<footer class="post-content-footer">
 						<h6>Теги: </h6>
-						<span>{{ payload.tags }}</span>
+						<tag :transparent="false">
+							{{ payload.tags }}
+						</tag>
 						<hr>
-						<button @click="toggleSection(!CommentSection, 'CommentSection')">
+						<common-button class="interface-dark" @click.native="toggleSection(!CommentSection, 'CommentSection')">
 							Открыть комментарии
-						</button>
+						</common-button>
 					</footer>
 
 				</article>
 				
-			</component>
+			</eccheuma-collapse>
 
-			<component 
-				:is="`eccheuma-collapse`" 
-				:active="CommentSection"
-				>	
+			<eccheuma-collapse :active="CommentSection">	
 
 				<div 
 					class="post-comments" 
@@ -173,7 +181,9 @@
 
 					<template v-if="!sortedComments.length">
 						<section class="post-comments-first">
-							<span>" <i>Тут ещё нет комментариев, но это пока...</i> "</span>
+							<span>
+								" Тут ещё нет комментариев, но это пока... "
+							</span>
 						</section>
 					</template>
 
@@ -199,7 +209,7 @@
 								name="comment_section" 
 								maxlength="400" 
 								placeholder="Напишите тут что-то в ответ." 
-								@input="EmitSound(`On`)"
+								@input="playSound(Sounds.get('PostInput'))"
 							/>
 	
 							<button :class="$v.Message.$invalid ? 'disabled' : '' " type="button" @click="sendComment">
@@ -217,7 +227,7 @@
 
 				</div>
 
-			</component>
+			</eccheuma-collapse>
 
 		</client-only>
 
@@ -231,12 +241,6 @@
 
 		@include gradient_border(top);
 
-		padding: 0 4px;
-
-		margin: {
-			bottom: 2vh;
-		}
-
 		.rounded {
 
 			border-radius: .7rem;
@@ -244,18 +248,21 @@
 			&-top {
 				border-radius: 0 0 .7rem .7rem;
 			}
-
 			&-bottom {
 				border-radius: 0 0 .7rem .7rem;
 			}
-
 		}
 
 	}
 	&-header {
 
+		display: grid;
+		position: relative;
+
 		background-color: rgb(var(--color-2));
-		min-height: 40vh;
+
+		border-radius: .7rem .7rem 0 0;
+    overflow: hidden;
 
 		background: {
 			size: cover;
@@ -263,23 +270,17 @@
 			repeat: no-repeat;
 		}
 
-		display: grid;
-
 		grid-template: {
 			columns: 1fr;
-			rows: 1fr 4fr 1fr;
+			rows: 10vh 20vh 10vh;
 		}
-
-		position: relative;
 
 		&:before {
 			content: "";
 			position: absolute; top: 0; left: 0; z-index: 1;
 			width: 100%; height: 100%;
-			background-image: url(~assets/images/SVG/Stripes.svg);
-			background-size: 12px;
-			opacity: 1;
-			mask-image: linear-gradient(0deg, rgba(var(--color-1), 1) 0%, rgba(var(--color-1), .5) 25%);
+			background-image: url(~assets/images/Stripes.png?format=webp&size=20);
+			opacity: .75;
 		}
 
 		&:after {
@@ -290,20 +291,32 @@
 			opacity: .5;
 		}
 
+		&-image {
+			position: absolute;
+			display: block;
+			width: 100%;
+			height: 100%;
+			img {
+				position: relative;
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
+			}
+		}
+
 		&-tags {
 
 			z-index: 3;
 
-			justify-self: center;
-			align-self: center;
+			position: relative;
+			display: grid;
 
-			span {
-				padding: 4px 15px;
-				font-weight: 700;
-				font-size: var(--font-size-5);
-				background-color: rgb(var(--color-def-1));
-				border-radius: .7rem;
-			}
+			width: 100%;
+			height: 100%;
+
+			align-content: center;
+			justify-content: center;
+
 		}
 
 		&-title {
@@ -315,7 +328,8 @@
 			padding: 0 40px;
 
 			h4 {
-				font-weight: 600;
+				font-weight: 700;
+				font-size: var(--font-size-1);
 			}
 			h6 {
 				font-weight: 500;
@@ -328,16 +342,15 @@
 
 			z-index: 3;
 
-			justify-self: center;
-			align-self: center;
+			position: relative;
+			display: grid;
 
-			span {
-				padding: 4px 15px;
-				font-weight: 600;
-				font-size: var(--font-size-5);
-				background-color: rgb(var(--color-def-1));
-				border-radius: .7rem;
-			}
+			width: 100%;
+			height: 100%;
+
+			align-content: center;
+			justify-content: center;
+
 		}
 
 	}
@@ -349,11 +362,15 @@
 
 		display: grid;
 
+		padding: 0 2vw;
+
 		grid-template: {
 			columns: 1fr 3fr 1fr;
 			rows: 10vh;
 			areas: 'social collapse author'
 		}
+
+		border-bottom: 1px solid rgba(var(--color-5), .25);
 
 		@media screen and ( max-width: $mobile-breakpoint ) {
 
@@ -371,9 +388,14 @@
 		}
 
 		.active {
-			transition-duration: 250ms;
-			background-color: rgb(var(--color-def-2));
-			color: rgb(var(--color-def-6));
+
+			background-color: rgb(var(--color-2));
+			color: rgb(var(--color-5));
+
+			i {
+				background-color: rgb(var(--color-5));
+			}
+
 		}
 
 		.disabled {
@@ -383,7 +405,7 @@
 
 		&-social {
 
-			justify-self: center;
+			justify-self: start;
 			align-self: center;
 			
 			grid: { 
@@ -392,10 +414,30 @@
 			}
 
 			button {
+
+				display: inline-flex;
+
+				column-gap: 4px;
+
 				@include push-button {
+
 					background-color: transparent;
-					padding: 6px 20px;
+					padding: 6px 15px;
 					margin-right: 1ch;
+
+					color: rgb(var(--color-2));
+
+					transition-duration: 250ms;
+
+					i {
+						background-color: rgb(var(--color-2));
+					}
+
+					span {
+						line-height: 21px;
+						padding: 0 4px;
+					}
+
 				}
 			}
 
@@ -414,6 +456,8 @@
 			button {
 				@include push-button {
 					background-color: transparent;
+					padding: 6px 6vw;
+					line-height: 21px;
 					width: 100%;
 				}
 			}
@@ -431,32 +475,23 @@
 
 			z-index: 3;
 
-			transform: translateY(-#{$iconSize / 2});
+			display: inline-grid;
+			row-gap: 2vh;
 
-			justify-self: center;
-			align-self: center;
+			transform: translateY(calc((#{ $iconSize } - 10vh) - #{ $iconSize / 2 }));
+
+			justify: {
+				self: end;
+				items: center;
+			}
+
+			align: {
+				self: flex-end;
+			}
 			
 			grid: { 
 				row: 		author; 
 				column: author; 
-			}
-
-			span {
-
-				display: block;width: 100%;
-
-				background-color: rgb(var(--color-def-1));
-				border-radius: .7rem;
-
-				margin: { bottom: 1vh };
-
-				font: {
-					size: var(--font-size-4);
-					weight: 700;
-				}
-
-				text-align: center;
-
 			}
 
 			i {
@@ -494,31 +529,34 @@
 		padding: 5vh 3vw;
 
 		&-header {
-			height: 100%;
-			p {
-				display: inline-block;
-				font-size: 12px;
-				font-weight: 700;
-				opacity: .75;		
+
+			color: rgb(var(--color-3));
+
+			h4 {	
+				font: {
+					size: var(--font-size-1);
+					weight: 800;
+				}
+			}
+			h6 {
+				font: {
+					size: var(--font-size-3);
+					weight: 600;
+				}
+			}
+			span {
+				font: {
+					size: var(--font-size-5);
+					weight: 500;
+				}
 			}
 		}
 		&-footer {
 
-			button {
-				@include push-button {
-					background-color: transparent;
-				};
-			}
+			display: grid;
 
-			span {
-				width: 100px;
-				text-align: center;
-				padding: 4px 20px;
-				border-radius: .7rem;
-				background-color: rgb(var(--color-1));
-				color: rgb(var(--color-6));
-				font-size: var(--font-size-5);
-				font-weight: 700;
+			button {
+				margin: 0 25%;
 			}
 
 		}
@@ -532,9 +570,10 @@
 
 		&-first {
 			text-align: center;
-			padding: 8vh 0;
-			font-size: var(--font-size-2);
-			font-weight: 600;
+			padding: 5vh 0 4vh;
+			font-size: var(--font-size-4);
+			color: rgb(var(--color-3));
+			font-weight: 500;
 		}
 
 		&-content {
@@ -547,15 +586,15 @@
 			padding: 4vh 3vw;
 			h5 {
 				color: rgb(var(--color-3));
-				font-size: var(--font-size-1);
+				font-size: var(--font-size-2);
 				text-align: center;
-				font-weight: 700;
+				font-weight: 800;
 			}
 			p {
 				white-space: pre-wrap;
 				text-align: center;
 				font-weight: 500;
-				font-size: var(--font-size-3);
+				font-size: var(--font-size-4);
 			}
 			textarea {
 				resize: none;
@@ -564,6 +603,7 @@
 				height: 90px;
 				border-radius: .7rem;
 				padding: 15px 20px;
+				margin-top: 4vh;
 				font-size: 12px;
 				background-color: rgb(var(--color-6));
 				color: rgb(var(--color-1));
@@ -598,27 +638,42 @@
 	import 'firebase/database'
 
 	// MIXINS
-	import EmitSound 			from '~/assets/mixins/EmitSound.ts'
-	import HashGenerator 	from '~/assets/mixins/HashGenerator.ts'
-
-	import IntersectionCooler 	from '~/assets/mixins/IntersectionCooler.ts'
+	import EmitSound 						from '~/assets/mixins/EmitSound'
+	import HashGenerator 				from '~/assets/mixins/HashGenerator'
+	import IntersectionCooler 	from '~/assets/mixins/IntersectionCooler'
 
 	// COMPONETS
 	import EccheumaCollapse 		from '~/components/common/EccheumaCollapse.vue'
 	import Popover 							from '~/components/common/Popover.vue'
+	import Tag 									from '~/components/common/Tag.vue'
+	import Icon									from '~/components/Icon.vue'
+	import CommonButton 				from '~/components/buttons/CommonButton.vue'
+
+	//	С фильтрами происходит что-то не совсем ясное. 
+	//  Нормально работают в хроме, но лиса отказывается с ними адекватно дружить.
+
+	// FILTERS
+	// import DisplacementFilter		from '~/components/filters/displacement.vue'
+	// import NoiseFilter					from '~/components/filters/noise.vue'
 
 	// VUEX MODULE TYPE MAP
-	import type { VuexModules } from '~/types/VuexModules'
+	import type { VuexModules } from '~/typescript/VuexModules'
 
 	// TYPES & INTERFACES
-	import type { POST, POST_CONTENT, COMMENT, LIKE } 	from '~/types/Post.ts'
-	import type { USER_STATE } 													from '~/types/User.ts'
+	import type { POST, POST_CONTENT, COMMENT, LIKE } 	from '~/typescript/Post'
+	import type { USER_STATE } 													from '~/typescript/User'
+	import type { IMAGE_URL } 													from '~/typescript/Image'
 	import type { FORMATED_DATE } 											from '~/store'
+
+	import type { DirectionOptions, AnimeCallBack } from '~/../node_modules/@types/animejs'
 
 	type SECTIONS = 'Likes' | 'Comments' | 'Content'
 
 	// // IMAGE PLACEHOLDER
-	const PLACEHOLDER = require('~/assets/images/ImagePlaceholder.png?resize&size=600').src as string
+	const PLACEHOLDER: IMAGE_URL = {
+		avif: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=avif').src,
+		webp: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src
+	}
 
 	// VALIDATE REGULAR EXPRESSION
 	const CYRILLIC_VALIDATION = helpers.regex('alpha', /^[а-яА-ЯЁё\n\t\s\w\W]*$/)
@@ -627,7 +682,12 @@
 	export default Vue.extend({
 		components: {
 			EccheumaCollapse,
+			CommonButton,
 			Popover,
+			Tag,
+			Icon,
+			// DisplacementFilter,
+			// NoiseFilter,
 			PostComment: () => import('~/components/post/PostComment.vue'),
 			PostContent: () => import('~/components/post/PostContent.vue'),
 		},
@@ -653,6 +713,11 @@
 		},
 		data() {
 			return {
+
+				// filter: {
+				// 	name: 'XXX',
+				// 	status: false,
+				// },
 
 				Cooled: process.browser,
 
@@ -722,10 +787,44 @@
 				if ( Watcher ) {
 					this.updateImage(); Watcher()
 				}
-			}) 
+			}); 
 
-			this.getAuthor()
-			this.listenSnapshots(['Likes', 'Comments', 'Content'])
+			this.getAuthor();
+			this.listenSnapshots(['Likes', 'Comments', 'Content']);
+
+			// @mouseenter="EmitSound('On', { rate: .45, volume: .25 })
+
+			this.setSounds([
+				{
+					file: 'On',
+					name: 'PostSocialButton',
+					settings: { rate: .45, volume: .25 },
+				},
+				{
+					file: 'On',
+					name: 'PostInput',
+				},
+				{
+					file: 'Out',
+					name: 'PostToggleIn',
+					settings: { rate: .8, volume: .25 },
+				},
+				{
+					file: 'Out',
+					name: 'PostToggleOut',
+					settings: { rate: .6, volume: .25 },
+				},
+				{
+					file: 'Tap',
+					name: 'PostLikeInc',
+					settings: { rate: .75, volume: .25 },
+				},
+				{
+					file: 'Tap',
+					name: 'PostLikeDec',
+					settings: { rate: .5, volume: .25 },
+				},
+			]);
 
 		},
 		mounted() {
@@ -753,7 +852,8 @@
 
 			...mapActions({
 				GetLocalTime: 'GetLocalTime',
-				GetImageURL: 'Images/GetImageURL'
+				getImageURL: 'Images/getImageURL',
+				decodeImage:  'Images/decodeImage',
 			}),
 			
 			getAuthor() {
@@ -782,9 +882,13 @@
 
 			toggleSection(status: boolean, section: 'ContentSection' | 'CommentSection'): void {
 
+				// if ( section === 'ContentSection' ) {
+				// 	this.filter.status = status;
+				// }
+
 				this[section] = status;
 
-				this.EmitSound('Out', { rate: status ? 0.8 : 0.6, volume: .25 }); 
+				this.playSound(this.Sounds.get(status ? 'PostToggleIn' : 'PostToggleOut'));
 
 			},
 
@@ -792,23 +896,32 @@
 
 				const IMAGE_CONTAINER = this.$refs.ImageHolder as Element
 
-				const I = await this.GetImageURL({ 
+				const URL: IMAGE_URL = await this.getImageURL({ 
 					_path: this.payload.image,
 					_size: IMAGE_CONTAINER.getBoundingClientRect().width * window.devicePixelRatio
-				}) as string
+				})
 
-				this.$AnimeJS({
-					targets: this.$refs.ImageHolder,
-					opacity: [1, 0],
-					delay: 500,
-					duration: 500,
-					endDelay: 250,
-					direction: 'alternate',
-					easing: 'easeInQuad',
-					update: (anime) => {
-						if (anime.progress === 100) {
-							this.ImageURL = I
-						}
+				const ANIMATION = (u_direction: DirectionOptions, cb?: AnimeCallBack ) => {
+					this.$AnimeJS({
+
+						targets: IMAGE_CONTAINER,
+						opacity: [1, 0],
+						duration: 500,
+						direction: u_direction,
+						easing: 'linear',
+
+						...cb
+
+					})
+				} 
+
+				ANIMATION('normal', {
+					complete: () => { 
+
+						this.ImageURL = URL;
+
+						this.decodeImage(URL).finally(() => ANIMATION('reverse'))
+
 					}
 				})
 
@@ -834,9 +947,7 @@
 					firebase.database()
 						.ref(`Posts/PostID-${ this.payload.ID }/${ SECTION.toLowerCase() }/Hash-${ HASH }`)
 						.set( COMMENT )
-						.then(() => {
-							this.EmitSound('Tap', { rate: .75, volume: .25 }); this.Message = '';
-						})
+						.then(() => { this.Message = '' })
 
 				}
 
@@ -850,13 +961,13 @@
 
 				if ( this.userLiked && this.LoginStatus ) {
 
-					this.EmitSound('Tap', { rate: .5, volume: .25 })
+					this.playSound(this.Sounds.get('PostLikeDec'));
 
 					firebase.database().ref(REF).remove()
 
 				} else {
 
-					this.EmitSound('Tap', { rate: .75, volume: .25 })
+					this.playSound(this.Sounds.get('PostLikeInc'));
 
 					firebase.database().ref(REF).set({
 						hash: this.HashGenerator()

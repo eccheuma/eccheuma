@@ -1,43 +1,40 @@
 // LIBS
-	import { Howler, Howl } from 'howler'
-	import $AnimeJS from 'animeJS'
+	import 			{ Howler, Howl } 	from 'howler'
+	import type { HowlOptions } 	from 'howler';
 
 // VUEX
-	import { ActionTree, MutationTree } from 'vuex'
+	import type { ActionTree, MutationTree } from 'vuex'
 
-// INTERFACES & TYPES
-	export interface PROPERTY {
-		status?: boolean,
-		volume: number,
-		loop: boolean,
-		rate: number,
-	}
+	import animeJS from 'animejs'
+	import type { SoundInstance } from '~/assets/mixins/EmitSound';
 
-	export interface SOUND {
-		path: string,
-		src: string[],
-		prop: PROPERTY
-	}
+// TYPES 
+	interface GLOBAL_PROPERTY {
+		mute: boolean
+		volume: number
+		inChange: boolean
+	};
 
-// STORE
+	type GLOBAL_VALUES = GLOBAL_PROPERTY[keyof GLOBAL_PROPERTY];
+
+// STATE
 	export const state = () => ({
 
-		Global: {
+		global: {
+			mute: false,
+			volume: 1,
 			inChange: false,
-			Mute: true,
-			Volume: 0,
-			TransitiondDurarion: 750
-		},
+		} as GLOBAL_PROPERTY,
 
-		SoundSource: new Map()
+		sounds: new Map() as Map<string, Howl>,
 
 	})
 
-// CURENT STATE
+// STATE INTERFACE
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/types/VuexModules' {
+	declare module '~/typescript/VuexModules' {
 		interface VuexModules {
 			Sound: CurentState
 		}
@@ -45,86 +42,102 @@
 
 // MUTATIONS
 	export const mutations: MutationTree<CurentState> = {
-		Change_SoundSource(state, payload) {
-			state.SoundSource.set(payload.path, new Howl({ src: payload.src, ...payload.prop }))
+
+		setSound(state, { name, howl }: { name: string, howl: Howl }) {
+			state.sounds.set(name, howl);	
 		},
-		Change_SoundGlobalVolume(state, prop: number) {
-			state.Global.Volume = prop
+
+		deleteSound(state, name: string) {
+			state.sounds.delete(name)
 		},
-		Change_GlobalMute(state, prop) {
-			state.Global.Mute = prop ?? !state.Global.Mute
-		},
-		setChangeStatus(state, status: boolean) {
-			state.Global.inChange = status
+
+		setGlobalProperty(state, prop: { type: keyof GLOBAL_PROPERTY, value: GLOBAL_VALUES }) {
+
+			( state.global[prop.type] as number | boolean ) = prop.value
+
 		}
+
 	}
 
 // ACTIONS
 	export const actions: ActionTree<CurentState, CurentState> = {
-		ActivateSound({ commit, state }, { _path, _prop }: { _path: string, _prop: PROPERTY}) {
 
-			const PAYLOAD: SOUND = {
-				path: _path,
-				src: [`/sounds/${_path}.ogg`],
-				prop: {
-					volume: _prop.volume,
-					loop: 	_prop.loop,
-					rate: 	_prop.rate
-				}
+		registerSound(vuex, sound: SoundInstance ): Howl {
+
+			const PREDEFINED_OPTIONS: Partial<HowlOptions> = {
+				preload: true,
 			}
 
-			commit('Change_SoundSource', PAYLOAD); 
-			
-			const SOUND: Howl = state.SoundSource.get(_path)
-			
-			// Проверка тригерра воспроизведения.
-			_prop.status ? SOUND.play() : SOUND.stop()
+			const CURRENT_HOWL: Howl = new Howl({ ...PREDEFINED_OPTIONS, ...sound.settings });
+
+			vuex.commit('setSound', { name: sound.name, howl: CURRENT_HOWL });
+
+			return vuex.state.sounds.get(sound.name)!
 
 		},
-		ChangeSoundVolume({ state }, prop) {
 
-			const SOUND: Howl = state.SoundSource.get(prop.path);
+		playSound(_vuex, howl: Howl) {
 
-			const V = { volume: SOUND.volume() }; 
+			howl ? howl.play() : console.warn('That sound probably not even registred.');
 
-			$AnimeJS({
-				targets: V,
-				volume: [V.volume, prop.volume],
-				easing: 'easeInOutCubic',
-				duration: 1500,
-				round: 100,
-				update: () => { 
-					SOUND.volume(V.volume)
+		},
+
+		globalMute(vuex, value: boolean ) {
+
+			vuex.dispatch('changeGlobalVolume', Number(!value)).then(() => { 
+
+				vuex.commit('setGlobalProperty', { type: 'mute', value }); Howler.mute(value);
+
+			})
+
+		},
+
+		changeGlobalVolume(vuex, value: number) {
+
+			// animeJS.running.forEach(anim => anim.pause());
+
+			if ( process.browser ) {
+
+				const GLOBAL_PROPERTY: { type: keyof GLOBAL_PROPERTY, value: GLOBAL_VALUES } = {
+					type: 'inChange',
+					value: true
 				}
-			});
 
-		},
-		Set_GlobalSoundProperty({ state, commit }, { _volume, _duration }: { _volume: number, _duration: number }) {
-
-			const PROPERTY = { volume: state.Global.Volume };
-
-			if ( !state.Global.inChange ) {
-
-				$AnimeJS({
-					targets: PROPERTY,
-					volume: [ PROPERTY.volume, _volume ],
+				const TARGET 	= { volume: window.$nuxt.Howler.volume() };
+	
+				let prevValue: number;
+	
+				animeJS({
+					targets: TARGET,
+					volume: [TARGET.volume, value],
+					duration: 3000,
+					round: 10,
 					easing: 'linear',
-					duration: _duration,
-					round: 100,
 					begin: () => {
-						commit('Change_GlobalMute', state.Global.Volume);
-						commit('setChangeStatus', true);
+
+						GLOBAL_PROPERTY.value = true;
+						vuex.commit('setGlobalProperty', GLOBAL_PROPERTY)
+
 					},
-					update: () => { 
-						Howler.volume(PROPERTY.volume);
+					change: () => {
+						if ( TARGET.volume !== prevValue ) {
+
+							prevValue = TARGET.volume; 
+							
+							window.$nuxt.Howler.volume(TARGET.volume) 
+
+						}
 					},
 					complete: () => {
-						commit('Change_SoundGlobalVolume', _volume); 
-						commit('setChangeStatus', false);
+
+						GLOBAL_PROPERTY.value = false;
+						vuex.commit('setGlobalProperty', GLOBAL_PROPERTY)
+
 					}
-				});
+				})
 
 			}
 
 		}
+
 	}

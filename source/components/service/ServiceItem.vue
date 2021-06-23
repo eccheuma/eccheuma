@@ -60,17 +60,17 @@
 					" Euren die lebt lied vom naht schwebet verschwand euch lebens. Schmerz wie auf dem besitze. Lebens herauf und tränen fühl.. "
 				</span>
 
-				<eccheuma-button @click.native="ToggleRegisterModal">
+				<common-button @click.native="ToggleRegisterModal">
 					Зарегистрироваться
-				</eccheuma-button>
+				</common-button>
 
 				<hr>
 
 			</template>
 
-			<eccheuma-button :class="{ disabled: !LoginStatus }" @click.native="ToggleModal(true)">
+			<common-button :class="{ disabled: !LoginStatus }" @click.native="ToggleModal(true)">
 				Заказать
-			</eccheuma-button>
+			</common-button>
 
 		</div>
 	</section>
@@ -91,14 +91,14 @@
 	import ServiceModal from './ServiceModal.vue'
 
 	// TYPES 
-	import type { SERVICE, SERVICES_CARD } 	from '~/types/Services.ts'
-	import type { VuexModules } 						from '~/types/VuexModules.ts'
+	import type { SERVICE, SERVICES_CARD } 	from '~/typescript/Services'
+	import type { VuexModules } 						from '~/typescript/VuexModules'
 
 	// MODULE
 	export default Vue.extend({
 		components: {
 			ServiceModal,
-			EccheumaButton: () => import('~/components/common/EcchuemaButton.vue')
+			CommonButton: () => import('~/components/buttons/CommonButton.vue')
 		},
 		props: {
 			payload: {

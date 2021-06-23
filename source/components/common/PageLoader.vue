@@ -61,16 +61,23 @@
 
 		&:before {
 			content: '';
-			position: absolute; top: 0; left: 0;  z-index: -1;
-			width: 100vw; height: 100vh; opacity: .5;
-			background: {
-				image: url('~assets/images/SVG/Stripes.svg');
-				size: 20px;
-			}
+
+			position: absolute; z-index: -1;
+
+			top: 0; 
+			left: 0; 
+
+			width: 100vw; 
+			height: 100vh; 
+			
+			opacity: 1;
+			background-image: url('~assets/images/Stripes.png?format=webp&size=30');
 			mix-blend-mode: multiply;
+
 			@media screen and ( max-width: $mobile-breakpoint ) {
 				mix-blend-mode: unset;
 			}
+			
 		}
 
 		&:after {
@@ -176,27 +183,20 @@
 
 }
 
-
 </style>
 
 <script lang="ts">
 
 	import Vue from 'vue'
 
-	//VUEX
-	import { mapState, mapMutations } from 'vuex'
-
-	import type { VuexModules } from '~/types/VuexModules'
-
-	// MIXINS
-	import EmitSound from '~/assets/mixins/EmitSound';
+	// VUEX
+	import { mapMutations } from 'vuex'
 
 	// TYPES
 	type LoadStage = { LoadPoint: number, Message: string }
 
 	// MODULE
 	export default Vue.extend({
-		mixins: [ EmitSound ],
 		data() {
 			return {
 
@@ -215,13 +215,6 @@
 
 			} 
 		},
-		// head(): any {
-
-		// 	return {
-		// 		title: this.Message
-		// 	}
-
-		// },
 		computed: {
 			Message(): string {
 				return this.LoadStages[this.CurentStage].Message
@@ -286,7 +279,7 @@
 
 					})
 
-			}
+			},
 
 			// changeCounter() {
 

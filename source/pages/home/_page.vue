@@ -1,44 +1,29 @@
 <template>
 	<section class="home-page">
 
-		<intesection-component 
-			v-for="( item, index ) in Posts" 
-			:key="`Post-${ index }`" 
+		<template v-for="( item, index ) in Posts">
+			<!-- v-if="index === 0" -->
+			<intesection-component 
+				:key="`Post-${ index }`" 
 
-			:style="`order: ${ Posts.length - index }`"
-			:rootMargin="5"
+				:style="`order: ${ Posts.length - index }`"
+				:rootMargin="5"
 
-			@isIntersecting="animateIntersection"
-		>
-			<post :order="0" :payload="item" />
-		</intesection-component>
-
-		<promo-banner 
-			v-if="Posts.length >= 1"
-			key="PromoID_Works"
-			promo-type="Works"
-			:style="`order: ${ 1 }`"
-		/>
+				@isIntersecting="animateIntersection"
+			>
+				<post :order="0" :payload="item" />
+			</intesection-component>
+		</template>
 		
 		<promo-banner 
-			v-if="Posts.length >= 3"
-			key="PromoID_Adaptation"
+			v-if="Posts.length >= 1"
+			key="Adaptation"
 			promo-type="Adaptation"
-			:style="`order: ${ 3 }`"
+			:style="`order: ${ 1 }`"
 		/>
 
 	</section>
 </template>
-
-<style lang="scss">
-
-.home {
-	&-page {
-		display: grid;
-	}
-}
-
-</style>
 
 <script lang="ts">
 
@@ -52,11 +37,11 @@
 	import 'firebase/database';
 
 	// VUEX MODULE TYPE MAP
-	import type { VuexModules } from '~/types/VuexModules';
+	import type { VuexModules } from '~/typescript/VuexModules';
 
 	// MIXINS
-	import ResetPageContent 				from '~/assets/mixins/ResetPageContent.ts'
-	import PageTransitionProperty 	from '~/assets/mixins/PageTransitionProperty.ts'
+	import ResetPageContent 				from '~/assets/mixins/ResetPageContent'
+	import PageTransitionProperty 	from '~/assets/mixins/PageTransitionProperty'
 
 	// TYPES
 	import type { PAYLOAD } from '~/store/PageContent';
@@ -67,7 +52,7 @@
 	import IntesectionComponent from '~/components/intersectionComponent.vue'
 
 	// LOAD POLITIC
-	import { load_ranges } from '~/config/LoadPolitic.ts'
+	import { load_ranges } from '~/config/LoadPolitic'
 
 	// INERSECTION OBSERVER ANIMATION
 	const OBSERVER_ANIMATION = {
@@ -138,14 +123,6 @@
 			...mapState({
 				Posts: state => (state as VuexModules).PageContent.Content.Posts
 			}),
-		},
-		watch: {
-			Posts: {
-				handler() {
-					console.log('Something!')
-					
-				}
-			}
 		},
 		created() {
 			this.ChangePage(this.PAGE)

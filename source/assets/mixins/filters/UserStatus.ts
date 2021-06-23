@@ -1,6 +1,6 @@
 import Vue from 'vue';
 
-import type { USER_STATUS } from '~/types/User.ts'
+import type { USER_STATUS } from '~/typescript/User.ts'
 
 type VALUES = USER_STATUS[keyof USER_STATUS]
 

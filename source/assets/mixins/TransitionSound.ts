@@ -7,18 +7,28 @@ import EmitSound from '~/assets/mixins/EmitSound'
 
 export default Vue.extend({
 	mixins: [ EmitSound ],
+	created() {
+		this.setSounds([
+			{
+				file: 'In',
+				name: 'TransitionSoundIn',
+				settings: { rate: .75, volume: .25 }
+			},
+			{
+				file: 'Out',
+				name: 'TransitionSoundOut',
+				settings: { rate: .33, volume: .25 }
+			}
+		])
+	},
 	mounted() {
 
-		// setTimeout(() => {
-		// 	this.EmitSound('In', { rate: .5, volume: .25 })
-		// }, 500);
+		// setTimeout(() => this.playSound(this.Sounds.get('TransitionSoundIn')), 500);
 
 	},
 	destroyed() {
 
-		setTimeout(() => {
-			this.EmitSound('Out', { rate: .6, volume: .25 })
-		}, 250);
+		setTimeout(() => this.playSound(this.Sounds.get('TransitionSoundOut')), 250);
 
 	},
 })

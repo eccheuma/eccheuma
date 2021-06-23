@@ -1,7 +1,7 @@
 import { MutationTree } from 'vuex'
 
 // TYPES
-	import type { APP_THEME } from '~/types/App'
+	import type { APP_THEME } from '~/typescript/App'
 
 // STATE
 	export const state = () => ({
@@ -14,7 +14,7 @@ import { MutationTree } from 'vuex'
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/types/VuexModules' {
+	declare module '~/typescript/VuexModules' {
 		interface VuexModules {
 			App: CurentState
 		}

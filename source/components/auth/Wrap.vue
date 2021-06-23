@@ -15,25 +15,28 @@
 	color: rgb(var(--color-1));
 	border-radius: .7rem;
 	overflow: hidden;
+	width: 100%;
 }
 
 </style>
 
 <script lang="ts">
+
 	import Vue from 'vue'
-// VUEX
+
+	// VUEX
 	import { mapState } from 'vuex'
 
-// COMPONENTS
+	// COMPONENTS
 	import Loader from '~/components/common/Loader.vue'
 
 	import AuthLogin 			from '~/components/auth/Login.vue'
 	import AuthProfile 		from '~/components/auth/Profile.vue'
 
-// TYPES
-	import type { VuexModules } from '~/types/VuexModules.ts'
+	// TYPES
+	import type { VuexModules } from '~/typescript/VuexModules'
 
-// MODULE
+	// MODULE
 	export default Vue.extend({
 		components: {
 			Loader,
@@ -41,18 +44,17 @@
 			AuthProfile,
 		},
 		computed: {
+
 			...mapState({
 
-				// UserInterface
-				UI:							state => (state as VuexModules).App.UI,
+				UI:							state => ( state as VuexModules ).App.UI,
 
-				// LOADER
 				LoaderMessage: 	state => ( state as VuexModules ).Loader.Message,
 				LoaderStatus:		state => ( state as VuexModules ).Loader.Status,
+				LoginStatus: 		state => ( state as VuexModules ).Auth.Auth.LoginStatus,
 
-				// USER
-				LoginStatus: 		state => (state as VuexModules).Auth.Auth.LoginStatus
 			})
+
 		}
 	})
 	

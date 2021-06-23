@@ -17,7 +17,7 @@
 				</section>
 
 				<section class="user_profile-info-body">
-					<i ref="UserIcon" :style="`background-image: url(${ UserState.UserImageID })`" />
+					<i ref="UserIcon" :style="`background-image: url(${ UserState.UserImageID }); transform: scale(0)`" />
 					<span>{{ UserState.UserName }}</span>
 				</section>
 
@@ -84,18 +84,18 @@
 
 				<section class="user_profile-navigation-body">
 
-					<eccheuma-button 
+					<common-button 
 						v-for="(item, index) in PreferencesArea" 
 						:key="`navigation-button-${ index }`"
 						:class="{ active: CurentPreferencesComponent == item.Component }" 
 						@click.native="AreaToggle( item.Component )"
 						>
 						{{ item.Name }}
-					</eccheuma-button>
+					</common-button>
 
-					<button @click="Logout">
+					<common-button @click="Logout">
 						Выход из аккаунта
-					</button>
+					</common-button>
 
 				</section>
 
@@ -112,8 +112,6 @@
 .user_profile-collapse {
 	position: absolute; z-index: 1000;
 }
-
-$HeaderHeight: 70vh;
 
 .UserProfileComponentTransition {
 	&-enter {
@@ -170,7 +168,7 @@ $HeaderHeight: 70vh;
 	&-container {
 
 		// position: absolute; z-index: 1000;
-		width: calc(100vw - 10px); height: $HeaderHeight;
+		width: calc(100vw - 10px);
 
 		overflow: hidden;
 
@@ -405,12 +403,10 @@ $HeaderHeight: 70vh;
 
 	// TYPES
 		import type { AnimeAnimParams } from 'animejs';
-		import type { VuexModules } 		from '~/types/VuexModules'
+		import type { VuexModules } 		from '~/typescript/VuexModules'
 
 	// MIXINS
-		import EmitSound 			from '~/assets/mixins/EmitSound'
 		import D_WorkStatus 	from '~/assets/mixins/filters/WorkStatus'
-		// import D_UserStatus 	from '~/assets/mixins/filters/UserStatus'
 
 	// COMPONENTS
 		import EccheumaCollapse from '~/components/common/EccheumaCollapse.vue'
@@ -450,9 +446,9 @@ $HeaderHeight: 70vh;
 			IconChange: 	() => import('~/components/user/ProfileComponents/IconChange.vue'),
 			WorkRequests: () => import('~/components/user/ProfileComponents/WorkRequests.vue'),
 			// Button 
-			EccheumaButton: () => import('~/components/common/EcchuemaButton.vue')
+			CommonButton: () => import('~/components/buttons/CommonButton.vue')
 		},
-		mixins: [ EmitSound, D_WorkStatus ],
+		mixins: [ D_WorkStatus ],
 		data() {
 			return {
 

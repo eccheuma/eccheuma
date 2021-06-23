@@ -1,7 +1,9 @@
 <template>
 	<div class="row no-gutters Portfolio-Case">
 
-		<work-case v-for="workcase in Case" :key="workcase.ID" 
+		<work-case
+			v-for="workcase in Case"
+			:key="workcase.ID" 
 			:content="workcase.content"
 			:properties="workcase.properties"
 		/>
@@ -13,13 +15,19 @@
 
 	import Vue from 'vue'
 
-	import firebase from "firebase/app"
-	import "firebase/database"
+	import firebase from 'firebase/app'
+	import 'firebase/database'
 
-	import type { WORKCASE } from '~/types/WorkCase'
+	import type { WORKCASE } from '~/typescript/WorkCase'
 
 	export default Vue.extend({
-		transition: 'page_transition',
+		components: {
+			WorkCase: () => import('~/components/common/WorkCase.vue')
+		},
+		transition: {
+			name: 'opacity-enterDelayed-transition',
+			mode: 'out-in',
+		},
 		data() {
 			return {
 
@@ -27,8 +35,10 @@
 
 			}
 		},
-		components: {
-			WorkCase: () => import (`~/components/common/WorkCase.vue`)
+		mounted() {
+
+			this.GetCases()
+
 		},
 		methods: {
 			GetCases() {
@@ -39,16 +49,11 @@
 
 				firebase.database()
 					.ref(`Cases/${ PATH }`)
-					.on( 'value', data => {
+					.on( 'value', (data) => {
 						this.Case = Object.values( data.val() )
 					})
 
 			},
-		},
-		mounted() {
-
-			this.GetCases()
-
 		}
 	})
 

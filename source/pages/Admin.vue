@@ -98,7 +98,7 @@
 	import { mapState } from 'vuex'  
 
 	// VUEX MODULE TYPE MAP
-	import type { VuexModules } from '~/types/VuexModules'
+	import type { VuexModules } from '~/typescript/VuexModules'
 
 	// COMPONENTS 
 

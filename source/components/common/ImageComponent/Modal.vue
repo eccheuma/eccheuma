@@ -3,7 +3,7 @@
 
 		<div 
 			class="modal-wrap"
-			:class="{ glassy: CLIENT_RENDER_CHECK && (!$isMobile || $PIXI.utils.isWebGLSupported()) }" 
+			:class="{ 'utils::glassy': CLIENT_RENDER_CHECK && (!$isMobile || $PIXI.utils.isWebGLSupported()) }" 
 			@mousewheel.prevent="changeZoom"
 			@click.self="ToggleModal" 
 		>
@@ -28,18 +28,19 @@
 					>
 				
 					<picture>
-						<img :src="URL" :style="Zoom ? zoomStyle : ''">
+						<source :srcset="URL.avif" type="image/avif">
+						<img :src="URL.webp" :style="Zoom ? zoomStyle : ''">
 					</picture>
 
 				</div>
 
 				<div class="modal-footer">
-					<eccheuma-button @click.native="Zoom = !Zoom">
+					<common-button @click.native="Zoom = !Zoom">
 						{{ Zoom ? 'Уменьшить' : 'Увеличить' }}
-					</eccheuma-button>
-					<eccheuma-button @click.native="ToggleModal">
+					</common-button>
+					<common-button @click.native="ToggleModal">
 						Закрыть
-					</eccheuma-button>
+					</common-button>
 				</div>
 
 			</div>
@@ -159,19 +160,23 @@
 
 	// VUEX
 	import { mapActions } from 'vuex'
+	import { IMAGE_URL } from '~/typescript/Image'
 
 	// VUEX MODULE TYPE MAP
-	import type { VuexModules } from '~/types/VuexModules'
+	// import type { VuexModules } from '~/typescript/VuexModules'
 
 	// TYPES
 	type PREVIEW_MODE = 'cover' | 'contain' | 'zoom'
 
 	// VARIABLES
-	const PLACEHOLDER = `${ require('~/assets/images/ImagePlaceholder.png?resize&size=1000')}`
+	const PLACEHOLDER: IMAGE_URL = {
+		avif: require('~/assets/images/ImagePlaceholder.png?resize&size=1000&format=avif').src,
+		webp: require('~/assets/images/ImagePlaceholder.png?resize&size=1000&format=webp').src,
+	}
 
 	export default Vue.extend({
 		components: {
-			EccheumaButton: () => import('~/components/common/EcchuemaButton.vue')
+			CommonButton: () => import('~/components/buttons/CommonButton.vue')
 		},
 		props: {
 			modalState: { 
@@ -219,30 +224,37 @@
 			}
 		},
 		async created() {
-			this.URL = await this.GetImageURL({ 
-				_path: this.path
-			})
+			if ( this.CLIENT_RENDER_CHECK ) {
+				this.URL = await this.getImageURL({ 
+					_path: this.path,
+					_size: 1440,
+				}) as IMAGE_URL
+			}
 		},
 		methods: {
 
 			...mapActions({
-				GetImageURL: 'Images/GetImageURL',
+				getImageURL: 'Images/getImageURL',
 			}),
 
 			changeZoom(event: WheelEvent) {
 
 				const STEP = 20;
 
-				this.ZoomRate += (Math.sign(event.deltaY) > 0 ? STEP : -STEP );
+				if ( this.ZoomRate > 100 ) {
+					this.ZoomRate += (Math.sign(event.deltaY) > 0 ? STEP : -STEP );
+				}
 
 			},
 
 			ToggleModal() {
 				this.$emit('toggle-modal', !this.modalState)
 			},
+
 			ChangePreviewMode(mode: PREVIEW_MODE): void {
 				this.PreviewMode = mode
 			},
+
 			Grab(value: boolean) {
 
 				if ( this.Zoom ) {
@@ -250,6 +262,7 @@
 				}
 
 			}
+
 		},
 	})
 </script>
