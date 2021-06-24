@@ -68,8 +68,14 @@ typings/
 # nuxt.js build output
 .nuxt
 
+# VSCode
+.vscode
+
+# Firebase
+.firebase
+
 # Nuxt generate
-application
+app
 
 # vuepress build output
 .vuepress/dist
@@ -91,9 +97,3 @@ sw.*
 
 # firebase functions 
 functions
-
-# VSCode
-.vscode
-
-# Firebase
-.firebase
