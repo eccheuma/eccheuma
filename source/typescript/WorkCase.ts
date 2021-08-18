@@ -19,4 +19,5 @@ export type WORKCASE = {
 	properties: {
 		type: PORTFOLIO_SECTION
 	}
+	rating: number
 }

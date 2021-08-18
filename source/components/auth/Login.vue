@@ -97,7 +97,7 @@
 	&-container {
 
 		background: {
-			color: rgb(var(--color-6));
+			color: rgb(var(--color-mono-200));
 		}
 
 		border: {
@@ -128,18 +128,17 @@
 		display: flex;
 
 		min-height: 15vh;
-
+	
 		border: {
-			bottom: 1px solid rgb(var(--color-5));
+			bottom: 1px solid rgb(var(--color-mono-400));
 		}
 
 		&-wrap {
 
 			margin: auto;
+			padding-bottom: 2vh;
 
 			display: block;
-
-			color: rgb(var(--color-3));
 
 			text: {
 				align: center;
@@ -147,11 +146,23 @@
 
 			i {
 				@include icon-size(10vh);
-				background-color: rgb(var(--color-3));
+				background-color: rgb(var(--color-mono-700));
 			}
 
 			span {
 				display: block;
+				color: rgb(var(--color-mono-700));
+
+				&:nth-of-type(1) {
+					font: {
+						size: var(--font-size-1);
+						family: var(--decor-font);
+					}
+
+					letter-spacing: .25ch;
+					line-height: var(--size-1);
+				}
+
 				font: {
 					size: .75rem;
 					weight: 700;
@@ -170,7 +181,7 @@
 
 		span {
 			display: block;
-			color: rgb(var(--color-4));
+			color: rgb(var(--color-mono-500));
 			margin: { bottom: .5vh };
 			font: {
 				size: .65rem;
@@ -182,7 +193,7 @@
 
 			width: 100%;
 
-			border: 1px solid rgb(var(--color-5));
+			border: 1px solid rgb(var(--color-mono-400));
 			border: {
 				radius: .7rem;
 			}
@@ -200,11 +211,11 @@
 		}
 
 		.valid {
-			border: 1px solid var(--color-Success);
+			border: 1px solid var(--color-accent-pass);
 		}
 
 		.invalid {
-			border: 1px solid var(--color-Wrong);
+			border: 1px solid var(--color-accent-error);
 		}
 
 		&-email {
@@ -236,7 +247,7 @@
 			}
 
 			i {
-				background-color: rgb(var(--color-3));
+				background-color: rgb(var(--color-mono-400));
 			}
 
 			&-wrap {
@@ -255,7 +266,7 @@
 		padding: 2vh 0;
 
 		border: {
-			top: 1px solid rgb(var(--color-5));
+			top: 1px solid rgb(var(--color-mono-400));
 		}
 
 		button {

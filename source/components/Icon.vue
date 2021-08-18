@@ -14,12 +14,18 @@
     width:  $size;
     height: $size;
 
-    background-color: rgb(var(--color-5));
+    background: {
+      color: rgb(var(--color-mono-800));
+    }
 
     mask: {
       size: contain;
       repeat: no-repeat;
     };
+
+    // CHROME TRANSFORM CORNER FIX
+    background-clip: padding-box;
+    border: 0.1px solid transparent;
 
   }
 

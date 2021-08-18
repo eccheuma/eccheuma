@@ -2,7 +2,7 @@
   "rules": {
     "App": {
       ".read": true,
-      ".write": false,
+      ".write": false
     },
     "Posts": {
       ".indexOn": "ID",
@@ -12,12 +12,12 @@
         ".write": "auth.uid === 'tGOrAx0PyvWmxQ64gYcUxn3roNB3'",
         "$areas": {
           ".read": true,
-          ".write": "auth.uid === 'tGOrAx0PyvWmxQ64gYcUxn3roNB3'",
+          ".write": "auth.uid === 'tGOrAx0PyvWmxQ64gYcUxn3roNB3'"
         },
 				"comments": {
           ".read": true,
           "$HASH": {
-            ".write": "newData.child('UserID').val() === auth.uid || !newData.exists() && auth.uid !== null",
+            ".write": "newData.child('UserID').val() === auth.uid || !newData.exists() && auth.uid !== null"
           }
         },
         "likes": {
@@ -26,7 +26,7 @@
             ".write": "auth.uid === $HASH"
           }
         }
-      },
+      }
     },
     "Users": {
       "$USER": {
@@ -37,7 +37,7 @@
     "$OTHER_SECTIONS": {
       ".indexOn": "ID",
       ".read": true,
-      ".write": "auth.uid === 'tGOrAx0PyvWmxQ64gYcUxn3roNB3'",
+      ".write": "auth.uid === 'tGOrAx0PyvWmxQ64gYcUxn3roNB3'"
     }
   }
 }

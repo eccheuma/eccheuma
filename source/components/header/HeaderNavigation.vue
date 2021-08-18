@@ -71,7 +71,7 @@
 
 <style lang="scss" scoped>
 
-$TransitionDuration: .25s;
+$TransitionDuration: 250ms;
 
 .route_selector {
 	&-enter {
@@ -107,7 +107,7 @@ $TransitionDuration: .25s;
 	}
 	&-background {
 
-		--navigation-background: rgb(var(--color-1));
+		--navigation-background: rgb(var(--color-mono-200));
 		@extend %gradient_border;
 
 	}
@@ -116,7 +116,9 @@ $TransitionDuration: .25s;
 .navigation {
 	&-container {
 
-		position: sticky; top: 0; z-index: 1010; padding: 0 5vw;
+		position: sticky; top: 0; z-index: 1010;
+
+		padding-inline: 6vw;
 
 		display: grid; 
 		
@@ -169,7 +171,7 @@ $TransitionDuration: .25s;
 			display: block; position: absolute; top: -1px;
 			width: 100%; height: .6px;
 			opacity: 0;
-			background: linear-gradient(90deg, rgba(var(--color-6),.0) 0%, rgba(var(--color-6),1) 50%, rgba(var(--color-6),.0) 100%) !important ;
+			background: linear-gradient(90deg, rgba(var(--color-mono-900),.0) 0%, rgba(var(--color-mono-900),1) 50%, rgba(var(--color-mono-900),.0) 100%) !important ;
 			transition-duration: .5s;
 		}
 
@@ -183,7 +185,7 @@ $TransitionDuration: .25s;
 			display: block; position: absolute; top: -1px;
 			width: 100%; height: .6px;
 			opacity: 1;
-			background: linear-gradient(90deg, rgba(var(--color-6),.0) 0%, rgba(var(--color-6),1) 50%, rgba(var(--color-6),.0) 100%) !important ;
+			background: linear-gradient(90deg, rgba(var(--color-mono-900),.0) 0%, rgba(var(--color-mono-900),1) 50%, rgba(var(--color-mono-900),.0) 100%) !important ;
 			transition-duration: .5s;
 		}
 
@@ -193,11 +195,18 @@ $TransitionDuration: .25s;
 			justify-items: center;
 
 			cursor: pointer;
+
+			;
+			font: {
+				size: var(--font-size-2);
+				family: var(--decor-font);
+			}
+
 			line-height: 6vh;
-			font-size: var(--font-size-4);
-			font-weight: 600;
+			letter-spacing: .2ch;
+
 			transition-duration: $TransitionDuration;
-			color: rgb(var(--color-4));
+			color: rgb(var(--color-mono-400));
 
 			z-index: 2000;
 
@@ -213,11 +222,13 @@ $TransitionDuration: .25s;
 				width:  $size;
 				height: $size;
 
+				pointer-events: none;
+
 				display: block;
-				background-color: rgb(var(--color-4));
+				background-color: rgb(var(--color-mono-400));
 				padding: 2vh 0 0px;
 				transition-duration: $TransitionDuration;
-				filter: drop-shadow(0px -5vh 0px rgba(var(--color-6),0));
+				filter: drop-shadow(0px -5vh 0px rgba(var(--color-mono-900),0));
 
 				@media screen and ( max-width: $mobile-breakpoint ) {
 					margin-right: 1ch;
@@ -227,13 +238,17 @@ $TransitionDuration: .25s;
 			}
 
 			&:hover {
+
 				text-decoration: none;
-				color: rgb(var(--color-6));
+				color: rgb(var(--color-mono-900));
 				transform: translateY(-1.5vh);
+				
+				// filter: drop-shadow(0px 0px 10px white);
+
 				i {
-					color: rgb(var(--color-6));
-					transform: scale(1.5) translateY(-5vh);
-					background-color: rgb(var(--color-5));
+					color: rgb(var(--color-mono-900));
+					transform: scale(2) translateY(-5vh);
+					background-color: rgb(var(--mono-800));
 				}
 
 				@media screen and ( max-width: $mobile-breakpoint ) {
@@ -264,7 +279,7 @@ $TransitionDuration: .25s;
 
 		.active {
 
-			color: rgb(var(--color-5)) !important;
+			color: rgb(var(--color-mono-800)) !important;
 
 			@media screen and ( mix-width: $mobile-breakpoint ) {
 				transform: translateY(-1.5vh);
@@ -275,9 +290,9 @@ $TransitionDuration: .25s;
 				transition-duration: $TransitionDuration;
 				display: block;
 				font-size: var(--font-size-3);
-				color: rgb(var(--color-5)) !important;
+				color: rgb(var(--color-mono-800)) !important;
 
-				background-color: rgb(var(--color-5));
+				background-color: rgb(var(--color-mono-800));
 
 				@media screen and ( mix-width: $mobile-breakpoint ) {
 					transform: scale(1.5) translateY(-5vh) !important;
@@ -296,7 +311,7 @@ $TransitionDuration: .25s;
 		width: 2%; 
 		height: 10px;
 
-		background-color: rgb(var(--color-4));
+		background-color: rgb(var(--color-mono-400));
 		border-radius: .7rem;
 
 		&:last-of-type {

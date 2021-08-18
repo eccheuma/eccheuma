@@ -8,6 +8,8 @@
 
 	import Vue from 'vue'
 
+	const CURSOR_OFFSET = 4;
+
 	// MODULE
 	export default Vue.extend({
 		data() {
@@ -63,8 +65,8 @@
 
 				requestAnimationFrame( () => {
 					if ( this.CursorNode && this.ParentNode ) {
-						this.CursorNode.style.top 	= `${ event.y - this.ParentNode.getBoundingClientRect().y }px`;
-						this.CursorNode.style.left 	= `${ event.x - this.ParentNode.getBoundingClientRect().x }px`;
+						this.CursorNode.style.top 	= `${ event.y - this.ParentNode.getBoundingClientRect().y - CURSOR_OFFSET }px`;
+						this.CursorNode.style.left 	= `${ event.x - this.ParentNode.getBoundingClientRect().x - CURSOR_OFFSET }px`;
 					}
 				})
 
@@ -118,9 +120,10 @@
 						this.setCursorPosition(event)
 
 						this.animateCursor({
-							opacity: [this.CursorNode?.style.opacity ?? 1, .5],
-							scale: [10, 5],
-							duration: 250,
+							opacity: [this.CursorNode?.style.opacity ?? 1, 1],
+							scale: [10, .5],
+							filter: ['blur(3px)', 'blur(0px)'],
+							duration: 500,
 							direction: 'alternate',
 						}); break;
 
@@ -141,11 +144,11 @@
 	left: 0px
 	height: 10px
 	width: 10px
-	background-color: rgb(var(--color-def-6))
+	background-color: rgb(var(--mono-900))
 	z-index: 9999
 	border-radius: 100%
 	filter: blur(3px)
-	mix-blend-mode: hard-light
+	// mix-blend-mode: hard-light
 	&-Wrap
 		overflow: hidden
 		position: absolute

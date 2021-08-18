@@ -43,7 +43,7 @@
 .auth_profile {
 	&-container {
 
-		color: rgb(var(--color-2));
+		color: rgb(var(--color-mono-300));
 
 		overflow: {
 			y: hidden;
@@ -55,7 +55,7 @@
 		}
 
 		background: {
-			color: rgb(var(--color-6));
+			color: rgb(var(--color-mono-200));
 		}
 
 	}
@@ -74,7 +74,7 @@
 		justify-content: center;
 		align-content: center;
 
-		color: rgb(var(--color-2));
+		color: rgb(var(--color-mono-800));
 
 		overflow: hidden;
 
@@ -92,7 +92,7 @@
 			width: 100%; height: 100%;
 
 			background: {
-				color: rgba(var(--color-6), 1);
+				color: rgba(var(--color-mono-900), 1);
 			}
 
 			mix-blend-mode: color;
@@ -109,8 +109,8 @@
 
 			background: radial-gradient(
 				closest-side, 
-				rgba(var(--color-6), .75) 0%, 
-				rgba(var(--color-6), 1) 100%
+				rgba(var(--color-mono-200), .75) 0%, 
+				rgba(var(--color-mono-200), 1) 100%
 			);
 
 			z-index: 1;
@@ -138,7 +138,7 @@
 				position: center;
 			}
 
-			border: 3px solid rgb(var(--color-5));
+			border: 3px solid rgb(var(--color-mono-800));
 			border: {
 				radius: 100%;
 			}
@@ -202,11 +202,11 @@
 				}
 
 				font: {
-					size: var(--font-size-5);
+					size: var(--font-size-6);
 					weight: 700;
 				}
 
-				color: rgb(var(--color-4))
+				color: rgb(var(--color-mono-500))
 
 			}
 
@@ -219,13 +219,15 @@
 
 				padding: .5vh 1vw;
 
-				border: 1px solid rgb(var(--color-5));
+				color: rgb(var(--color-mono-800));
+
+				border: 1px solid rgb(var(--color-mono-400));
 				border: {
 					radius: .7rem;
 				}
 
 				font: {
-					size: .65rem;
+					size: var(--font-size-5);
 					weight: 600;
 				}
 
@@ -243,7 +245,7 @@
 				justify-self: center;
 				align-self: center;
 
-				color: rgb(var(--color-4));
+				color: rgb(var(--color-mono-500));
 
 				font: {
 					size: 1rem;
@@ -251,7 +253,7 @@
 
 				transition: color, transform 250ms ease-in-out;
 				&:hover {
-					color: rgb(var(--color-2));
+					color: rgb(var(--color-mono-300));
 					transform: scale(1.25);
 				}
 			}
@@ -268,7 +270,7 @@
 
 		padding: 3vh 0;
 
-		border-top: 1px solid rgb(var(--color-5));
+		border-top: 1px solid rgb(var(--color-mono-400));
 
 		button {
 			@include push-button {

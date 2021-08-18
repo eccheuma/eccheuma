@@ -23,9 +23,9 @@
 <style lang="sass" scoped>
 
 .container
-	background-color: rgb(var(--color-1))
+	background-color: rgb(var(--color-mono-200))
 	height: 100vh
-	color: rgb(var(--color-6))
+	color: rgb(var(--color-mono-900))
 	&::before
 		content: ''
 		display: block

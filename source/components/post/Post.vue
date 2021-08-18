@@ -2,7 +2,6 @@
 	<section
 		:id="`PostID-${ HashGenerator(12) }`" 
 		class="post-container"
-		:class="`interface-${ UI }`" 
 		@keydown.ctrl.enter="sendComment"
 		> 
 
@@ -24,9 +23,11 @@
 			</picture>
 
 			<section class="post-header-tags">
-				<tag>
-					{{ payload.tags }}
+
+				<tag v-for="(item, i) in payload.tags" :key="i">
+					#{{ item }}
 				</tag>
+
 			</section>
 
 			<section class="post-header-title">
@@ -109,9 +110,14 @@
 			</section>
 
 			<section class="post-footer-collapse">
-				<button @click="toggleSection(!ContentSection, 'ContentSection')">
+				<!-- <button @click="toggleSection(!ContentSection, 'ContentSection')">
 					{{ !ContentSection ? 'Развернуть пост' : 'Свернуть пост' }}
-				</button>
+				</button> -->
+
+				<common-button :scheme="UI" @click.native="toggleSection(!ContentSection, 'ContentSection')">
+					{{ !ContentSection ? 'Развернуть пост' : 'Свернуть пост' }}
+				</common-button>
+
 			</section>				
 
 			<section class="post-footer-author">
@@ -154,16 +160,20 @@
 						<post-content :source="Content" />
 					</template>
 
-					<footer class="post-content-footer">
+					<section class="post-content-tags">
 						<h6>Теги: </h6>
-						<tag :transparent="false">
-							{{ payload.tags }}
+						<tag v-for="(item, i) in payload.tags" :key="i" :transparent="false" :light="UI !== 'light'">
+							#{{ item }}
 						</tag>
-						<hr>
-						<common-button class="interface-dark" @click.native="toggleSection(!CommentSection, 'CommentSection')">
+					</section>
+
+					<hr>
+
+					<section class="post-content-comments">
+						<common-button class="interface-dark" scheme="dark" @click.native="toggleSection(!CommentSection, 'CommentSection')">
 							Открыть комментарии
 						</common-button>
-					</footer>
+					</section>
 
 				</article>
 				
@@ -219,6 +229,7 @@
 						</template>
 
 						<template v-else>
+							<icon name="Info" />
 							<h5>Для комментирования необходима авторизация</h5>
 							<p>Это не так уж и сложно, да и получите сверху ещё больше функионала.</p>
 						</template>
@@ -239,17 +250,20 @@
 .post {
 	&-container {
 
-		@include gradient_border(top);
+		@include gradient_border(block);
+		@include component-shadow;
+
+		border-radius: .7rem;
 
 		.rounded {
 
 			border-radius: .7rem;
 
 			&-top {
-				border-radius: 0 0 .7rem .7rem;
+				border-radius: 0 0 .7rem .7rem !important;
 			}
 			&-bottom {
-				border-radius: 0 0 .7rem .7rem;
+				border-radius: 0 0 .7rem .7rem !important;
 			}
 		}
 
@@ -259,7 +273,7 @@
 		display: grid;
 		position: relative;
 
-		background-color: rgb(var(--color-2));
+		background-color: rgb(var(--color-mono-300));
 
 		border-radius: .7rem .7rem 0 0;
     overflow: hidden;
@@ -287,7 +301,7 @@
 			content: "";
 			position: absolute; top: 0; left: 0; z-index: 2;
 			width: 100%; height: 100%;
-			background-color: rgb(var(--color-def-1));
+			background-color: rgb(var(--mono-200));
 			opacity: .5;
 		}
 
@@ -309,13 +323,15 @@
 			z-index: 3;
 
 			position: relative;
-			display: grid;
+			display: inline-flex;
 
 			width: 100%;
 			height: 100%;
 
-			align-content: center;
+			align-items: center;
 			justify-content: center;
+
+			column-gap: calc(min(5px, .5vw));
 
 		}
 
@@ -328,12 +344,13 @@
 			padding: 0 40px;
 
 			h4 {
-				font-weight: 700;
+				font-weight: 900;
 				font-size: var(--font-size-1);
 			}
 			h6 {
-				font-weight: 500;
+				font-weight: 700;
 				font-size: var(--font-size-3);
+				width: 60ch;
 			}
 
 		}
@@ -358,7 +375,7 @@
 
 		transition: border-radius 250ms ease-in-out;
 
-		background-color: rgb(var(--color-6));
+		background-color: rgb(var(--color-mono-200));
 
 		display: grid;
 
@@ -370,7 +387,7 @@
 			areas: 'social collapse author'
 		}
 
-		border-bottom: 1px solid rgba(var(--color-5), .25);
+		// border-bottom: 1px solid rgba(var(--color-mono-800), .25);
 
 		@media screen and ( max-width: $mobile-breakpoint ) {
 
@@ -389,11 +406,11 @@
 
 		.active {
 
-			background-color: rgb(var(--color-2));
-			color: rgb(var(--color-5));
+			background-color: rgb(var(--color-mono-300));
+			color: rgb(var(--color-mono-800));
 
 			i {
-				background-color: rgb(var(--color-5));
+				background-color: rgb(var(--color-mono-800));
 			}
 
 		}
@@ -425,12 +442,12 @@
 					padding: 6px 15px;
 					margin-right: 1ch;
 
-					color: rgb(var(--color-2));
+					color: rgb(var(--color-mono-700));
 
 					transition-duration: 250ms;
 
 					i {
-						background-color: rgb(var(--color-2));
+						background-color: rgb(var(--color-mono-700));
 					}
 
 					span {
@@ -453,14 +470,14 @@
 				column: collapse; 
 			}
 
-			button {
-				@include push-button {
-					background-color: transparent;
-					padding: 6px 6vw;
-					line-height: 21px;
-					width: 100%;
-				}
-			}
+			// button {
+			// 	@include push-button {
+			// 		background-color: transparent;
+			// 		padding: 6px 6vw;
+			// 		line-height: 21px;
+			// 		width: 100%;
+			// 	}
+			// }
 
 		}
 
@@ -470,7 +487,7 @@
 
 			@media screen and ( max-width: $mobile-breakpoint ) {
 				transform: unset;
-				border-bottom: 1px solid rgb(var(--color-5));
+				border-bottom: 1px solid rgb(var(--color-mono-200));
 			}
 
 			z-index: 3;
@@ -501,15 +518,15 @@
 				background: {
 					size: cover;
 					position: center;
-					color: rgb(var(--color-5));
+					color: rgb(var(--color-mono-800));
 				}
 
-				border: 4px solid rgb(var(--color-6)); border-radius: 100%;
+				border: 4px solid rgb(var(--color-mono-200)); border-radius: 100%;
 
 				height: $iconSize; 
 				width: $iconSize;
 
-				box-shadow: 0px 1vh 0px 0px rgb(var(--color-5));
+				box-shadow: 0px 1vh 0px 0px rgba(var(--color-mono-000), .25);
 
 			}
 
@@ -523,69 +540,107 @@
 			padding: 0 5vw;
 		}
 
-		background-color: rgb(var(--color-6));
-		color: rgb(var(--color-1));
+		background-color: rgb(var(--color-mono-200));
+		color: rgb(var(--color-mono-800));
 		min-height: 50vh;
 		padding: 5vh 3vw;
 
+		display: grid;
+		row-gap: 2vh;
+
+		hr {
+			width: 100%;
+			background-color: rgb(var(--color-mono-400))
+		}
+
 		&-header {
 
-			color: rgb(var(--color-3));
+			color: rgb(var(--color-mono-700));
 
 			h4 {	
 				font: {
 					size: var(--font-size-1);
-					weight: 800;
+					weight: 900;
 				}
 			}
 			h6 {
 				font: {
 					size: var(--font-size-3);
-					weight: 600;
+					weight: 800;
 				}
 			}
 			span {
+
 				font: {
-					size: var(--font-size-5);
+					size: var(--font-size-3);
 					weight: 500;
 				}
+
+				color: rgb(var(--color-mono-600));
+
 			}
 		}
-		&-footer {
 
-			display: grid;
+		&-tags {
 
-			button {
-				margin: 0 25%;
+			h6 {
+				margin-right: 1vw;
+				font-weight: 800;
+				font-size: var(--font-size-3);
 			}
 
+			display: inline-flex;
+			align-items: baseline;
+			column-gap: calc(min(5px, .5vw));
 		}
+
+		&-comments {
+			place-self: center;
+		}
+
 	}
 	&-comments {
 
 		transition: border-radius 250ms ease-in-out;
 
-		background-color: rgb(var(--color-6));
-		color: rgb(var(--color-1));
+		background-color: rgb(var(--color-mono-200));
+		color: rgb(var(--color-mono-800));
 
 		&-first {
+
 			text-align: center;
-			padding: 5vh 0 4vh;
-			font-size: var(--font-size-4);
-			color: rgb(var(--color-3));
-			font-weight: 500;
+			padding-block: 5vh 6vh;
+
+			color: rgb(var(--color-mono-700));
+			font: {
+				size: var(--font-size-1);
+				family: var(--decor-font);
+				weight: 500;
+			}
+
+			border-bottom: 1px solid rgb(var(--color-mono-300));
+			border-top: 1px solid rgb(var(--color-mono-300));
+
 		}
 
 		&-content {
 			display: inline-grid;
 			width: 100%;
+			padding-inline: 2vh;
 		}
 
 		&-answer {
-			border-top: 1px solid rgb(var(--color-5));
-			padding: 4vh 3vw;
+			border-top: 1px solid rgb(var(--color-mono-200));
+			padding: 2vh 3vw 5vh;
+
+			i {
+				@include icon-size(10vh);
+				margin-bottom: 1vh;
+				background-color: rgb(var(--color-mono-400))
+			}
+
 			h5 {
-				color: rgb(var(--color-3));
+				color: rgb(var(--color-mono-700));
 				font-size: var(--font-size-2);
 				text-align: center;
 				font-weight: 800;
@@ -605,8 +660,8 @@
 				padding: 15px 20px;
 				margin-top: 4vh;
 				font-size: 12px;
-				background-color: rgb(var(--color-6));
-				color: rgb(var(--color-1));
+				background-color: rgb(var(--color-mono-900));
+				color: rgb(var(--color-mono-200));
 			}
 			button {
 				@include push-button {

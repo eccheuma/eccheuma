@@ -86,7 +86,9 @@
 							<div class="eccheuma_swiper-post" :class="{'content-hidden': index > ( activeIndex + 1 ) || index < ( activeIndex - 1 )}">
 
 								<section class="eccheuma_swiper-tags">
-									<tag>{{ item.tags }}</tag>
+									<tag v-for="(tag_content, i) in item.tags" :key="i">
+										{{ tag_content }}
+									</tag>
 								</section>
 
 								<section class="eccheuma_swiper-caption">
@@ -118,9 +120,8 @@
 
 .header-carousel-container {
 
-	position: relative; 
+	position: relative;
 	width: 100vw;
-	height: 100%;
 
 }
 
@@ -131,8 +132,8 @@
 	width: 100vw;
 	height: 100%; 
 
-	background: rgb(var(--color-1)); 
-	color: rgb(var(--color-6));
+	background: rgb(var(--mono-200)); 
+	color: rgb(var(--mono-800));
 
 	.content-hidden {
 		display: none;
@@ -144,7 +145,7 @@
 		display: inline-block; 
 
 		width: 100vw; 
-		height: 100%; 
+		height: 100%;
 
 		&:after {
 
@@ -195,20 +196,20 @@
 	&-buttons {
 		
 		cursor: pointer;
-		color: rgb(var(--color-6));
-		background-color: rgba(var(--color-1), .75);
-		border: 1px solid rgba(var(--color-6), .0);
+		color: rgb(var(--color-mono-900));
+		background-color: rgba(var(--color-mono-200), .75);
+		border: 1px solid rgba(var(--color-mono-900), .0);
 		border-radius: .7rem;
 		padding: 0 3vh;
 		transition-duration: .5s;
 
 		&:hover {
-			background-color: rgba(var(--color-1),.0);
+			background-color: rgba(var(--color-mono-200),.0);
 			&:nth-of-type(1) {
-				box-shadow: 1px 0px 0px 0px rgba(var(--color-6),.25)
+				box-shadow: 1px 0px 0px 0px rgba(var(--color-mono-900),.25)
 			}
 			&:nth-of-type(2) {
-				box-shadow: -1px 0px 0px 0px rgba(var(--color-6),.25)
+				box-shadow: -1px 0px 0px 0px rgba(var(--color-mono-900),.25)
 			}
 		}
 
@@ -220,7 +221,7 @@
 		&:before {
 			content: ''; 
 			width: 100%; height: 1px; margin: auto 4px; opacity: 1;
-			background-color: rgb(var(--color-6)); 
+			background-color: rgb(var(--color-mono-900)); 
 			transition: opacity, margin 250ms ease-in-out;
 		}
 	}
@@ -231,8 +232,8 @@
 		&:before {
 			content: ''; 
 			width: 100%; height: 1px; margin: auto 0; opacity: .5;
-			box-shadow: 0px 1px 0px rgb(var(--color-1));
-			background-color: rgb(var(--color-6)); 
+			box-shadow: 0px 1px 0px rgb(var(--color-mono-200));
+			background-color: rgb(var(--color-mono-900)); 
 			transition: opacity, margin 250ms ease-in-out;
 		}
 		&:hover {
@@ -282,7 +283,11 @@
 
 	}
 
-	// &-tags {} 
+	&-tags {
+		display: inline-flex !important;
+		column-gap: calc(min(5px, .5vw));
+		align-items: center;
+	} 
 
 	// &-info {}
 
@@ -296,21 +301,21 @@
 
 		// eslint-disable-next-line no-mixed-spaces-and-tabs
 		text-shadow: 
-			#{ $TBR  }  #{ $TBR } $TBL rgba(var(--color-2), $TBLO ),
-			-#{ $TBR } -#{ $TBR } $TBL rgba(var(--color-2), $TBLO ),
-			-#{ $TBR }  #{ $TBR } $TBL rgba(var(--color-2), $TBLO ),
-			#{ $TBR  } -#{ $TBR } $TBL rgba(var(--color-2), $TBLO ),
-			#{  0px  }  #{ 2px  } 0px  rgba(var(--color-1), $TBLO );
+			#{ $TBR  }  #{ $TBR } $TBL rgba(var(--mono-300), $TBLO ),
+			-#{ $TBR } -#{ $TBR } $TBL rgba(var(--mono-300), $TBLO ),
+			-#{ $TBR }  #{ $TBR } $TBL rgba(var(--mono-300), $TBLO ),
+			#{ $TBR  } -#{ $TBR } $TBL rgba(var(--mono-300), $TBLO ),
+			#{  0px  }  #{ 2px  } 0px  rgba(var(--mono-200), $TBLO );
 
 		h2 {
-			font-weight: 700;
-			font-size: calc(var(--font-size-1) * 1.25);
+			font-size: var(--font-size-0);
+			font-weight: 900;
 		}
 
 		h6 {
 			white-space: pre-wrap;
 			font: {
-				size: var(--font-size-3);
+				size: var(--font-size-2);
 				weight: 500;
 			}
 			margin: 0 0 1vh;
@@ -325,7 +330,7 @@
 			align-items: center;
 
 			font: {
-				size: var(--font-size-4);
+				size: var(--font-size-5);
 			}
 
 		}

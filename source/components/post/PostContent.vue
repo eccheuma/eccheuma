@@ -18,7 +18,7 @@
 
 			<template v-else>
 				<component :is="item.type" :key="index" :class="{ EditableBlock: editableBlock == index }">
-					{{ item.value }} 
+					{{ item.value }}
 				</component>
 			</template>
 
@@ -34,7 +34,8 @@
 
 		padding: 5vh 0vw;
 
-		color: rgb(var(--color-1));
+		color: rgb(var(--color-mono-800));
+		font-family: var(--read-font);
 
 		iframe {
 			overflow: hidden;
@@ -56,11 +57,10 @@
 				weight: 500;
 			}
 
-			color: rgb(var(--color-2));
-			background-color: rgba(var(--color-1),.15);
+			background-color: rgba(var(--color-mono-200),.15);
 			margin: 30px 0;
 			padding: 20px 30px;
-			border-left: 3px solid rgb(var(--color-3));
+			border-left: 3px solid rgb(var(--color-mono-400));
 
 		}
 
@@ -68,20 +68,17 @@
 		// 	display: inline-block
 		// 	overflow: hidden
 		// 	border-radius: .7rem
-		// 	border: 1px solid rgba(var(--color-4),.25)
+		// 	border: 1px solid rgba(var(--color-mono-500),.25)
 		// 	margin: 40px 10px
 		// 	width: 100%
 		// 	max-height: 420px	
 		// }
 
 		p {
-			white-space: pre-wrap;
-			margin: 20px 0px 0px;
-			padding-right: 20% !important;
-			font-size: .9rem;
+			font-size: var(--font-size-3);
 			font-weight: 500;
 			line-height: 1.4rem;
-			color: rgb(var(--color-2));
+			width: 75ch;
 		}
 
 		h5 {
@@ -89,13 +86,10 @@
 			display: block;
 			position: relative;
 
-			margin: 40px 0% 20px;
-			color: rgb(var(--color-3));
-
 			padding: { bottom: 20px }
 
 			font: {
-				size: var(--font-size-2);
+				size: var(--font-size-1);
 				weight: 700;
 			}
 
@@ -104,7 +98,7 @@
 				content: "";
 
 				background: {
-					color: rgba(var(--color-4), .25);
+					color: rgba(var(--color-mono-500), .25);
 				}
 
 				position: absolute;

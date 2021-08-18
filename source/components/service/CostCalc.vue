@@ -159,8 +159,8 @@
 		input {
 			-webkit-appearance: none;
 			overflow: hidden;
-			background-color: rgb(var(--color-2));
-			border: 1px solid rgb(var(--color-3));
+			background-color: rgb(var(--color-mono-300));
+			border: 1px solid rgb(var(--color-mono-400));
 			border-radius: .7rem;
 			width: 100%;
 			&:focus {
@@ -178,12 +178,12 @@
 					height: 100%;
 					width: 6px;
 					border-radius: .7rem;
-					background-color: rgb(var(--color-4));
+					background-color: rgb(var(--color-mono-500));
 					cursor: pointer;
 					transition-duration: .5s;
 					&:hover {
 						transform: scale(1.5);
-						background-color: rgb(var(--color-6));
+						background-color: rgb(var(--color-mono-900));
 					}
 				}
 			}
@@ -193,14 +193,14 @@
 	&-main {
 
 		border: {
-			right: 1px solid rgb(var(--color-3))
+			right: 1px solid rgb(var(--color-mono-400))
 		}
 
 		&-title {
 			display: block;
 			padding: 2vh 0 0;
 			font: {
-				size: var(--font-size-4);
+				size: var(--font-size-5);
 				weight: 700;
 			}
 		}
@@ -230,19 +230,19 @@
 			outline: none;
 			width: 90%;
 			border-radius: .7rem;
-			background-color: rgb(var(--color-1));
-			border: 1px solid rgb(var(--color-3));
-			color: rgba(var(--color-6), .75);
+			background-color: rgb(var(--color-mono-200));
+			border: 1px solid rgb(var(--color-mono-400));
+			color: rgba(var(--color-mono-900), .75);
 			font-weight: 700;
-			font-size: var(--font-size-4);
+			font-size: var(--font-size-5);
 			padding: 1vh 15px;
 			margin: { bottom: 1vh; top: 1vh };
 		}
 
 		option {
-			border: 0px solid rgb(var(--color-6));
+			border: 0px solid rgb(var(--color-mono-900));
 			font-size: var(--font-size-3);
-			color: rgba(var(--color-6), .75);
+			color: rgba(var(--color-mono-900), .75);
 			font-weight: 700;
 		}
 
@@ -261,15 +261,15 @@
 		}
 
 		hr {
-			background-color: rgb(var(--color-3));
+			background-color: rgb(var(--color-mono-400));
 		}
 
 		&-info {
-			color: rgb(var(--color-6));
+			color: rgb(var(--color-mono-900));
 			width: 60ch;
 			margin: { left: 1vw };
 			font: {
-				size: var(--font-size-4)
+				size: var(--font-size-5)
 			}
 			i {
 				margin-right: .5ch;
@@ -278,15 +278,15 @@
 				padding: 0 6px;
 				margin: 0 1ch;
 				line-height: 10px;
-				background-color: var(--color-Success);
-				color: rgb(var(--color-1));
+				background-color: var(--color-accent-pass);
+				color: rgb(var(--color-mono-200));
 				border-radius: .7rem;
 			}
 		}
 
 		&-header {
 			@include gradient_border(bottom);
-			background-color: rgb(var(--color-1));
+			background-color: rgb(var(--color-mono-200));
 			text-align: center;
 			padding: 2vh 1vw;
 			margin: unset !important;
@@ -302,7 +302,7 @@
 				display: block;
 				margin: { left: 1vw };
 				strong {
-					color: rgb(var(--color-6));
+					color: rgb(var(--color-mono-900));
 				}
 			}
 		}
@@ -320,11 +320,11 @@
 				margin: { left: 1vw };
 				padding: 2vh 0;
 				font: {
-					size: var(--font-size-1);
+					size: var(--font-size-2);
 					weight: 700;
 				}
 				strong {
-					color: rgb(var(--color-3));
+					color: rgb(var(--color-mono-400));
 				}
 			}
 		}

@@ -12,7 +12,7 @@ section {
 	display: grid;
 	grid-template-columns: 70% 30%;
 	row-gap: 15px;
-	font-size: var(--font-size-4);
+	font-size: var(--font-size-5);
 	strong {
 		text-align: left;
 	}

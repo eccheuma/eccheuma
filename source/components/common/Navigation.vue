@@ -1,21 +1,21 @@
 <template>
-	<nav id="Navigation" class="portfolio_navigation-container">
+	<nav id="Navigation" class="common_navigation-container">
 	<template v-for="(link, index) in category">
 
-		<nuxt-link ref="links" :key="index" :to="link.route" :class="{ active: link.route === $route.path }">
+		<nuxt-link ref="links" :key="index" :to="link.route">
 
 			<transition name="opacity-transition">
 				<span v-if="link.route === $route.path" />
 			</transition>
 
-			<i :class="link.icon" /> {{ link.name }}
-
-			<!-- <popover target="Navigation">
-				<i class="fas fa-info-circle" />
-				{{ link.discription }}
-			</popover> -->
+			<icon :name="link.icon" />
+			{{ link.name }}
 
 		</nuxt-link>
+
+		<template v-if="index < category.length - 1">
+			<span :key="`${ index }-separator`" class="common_navigation-separator" />
+		</template>
 
 	</template>
 	</nav>
@@ -23,112 +23,95 @@
 
 <style lang="scss">
 
-.portfolio_navigation {
+.common_navigation {
 	&-container {
 
-		@include gradient_border(both);
+		@include gradient_border(block);
+		@include component-shadow;
 
+		height: 15vh;
 		width: 100%;
-		display: grid;
+		display: inline-grid;
+		background-color: rgb(var(--color-mono-200));
+
+		padding: 0 20vw;
+		border-radius: .7rem;
 
 		grid-template: {
-			columns: repeat(auto-fit, minmax(160px, 1fr));
-		}
+			columns: repeat(auto-fit, minmax(10px, min-content));
+		};
 
-		padding: 0 25%;
+		column-gap: 5vw;
 
-		.active {
-
-			opacity: 1 !important;
-			color: rgb(var(--color-5));
-
-			i {
-				transform: rotate(15deg);
-				color: rgb(var(--color-5));
-			}
-
-		}
+		align-items: center;
+		justify-content: center;
 
 		a {
 
+			--nav-color: rgb(var(--color-mono-600));
+
+			display: grid;
+			row-gap: 1vh;
+			align-content: center;
+			justify-items: center;
 			position: relative;
 
-			justify-self: center;
-
-			width: 100%;
-
-			color: rgb(var(--color-4));
-
-			padding: 20px 3vw;
-
-			text: {
-				align: center;
-			}
-
-			transition: all 250ms ease-in-out;
-
+			height: 100%;
+	
+			color: var(--nav-color);
 			font: {
-				weight: 700;
-				size: .65rem;
+				size: var(--font-size-2);
+				family: var(--decor-font);
 			}
+
+			letter-spacing: .25ch;
 
 			span {
-				content: '';
 				position: absolute;
-
-				top: -1px; left: 0;
-				height: .1px; width: 100%;
-
-				background: linear-gradient(90deg, transparent 0%, rgb(var(--color-5)) 50%, transparent 100%);
-
+				top: -1px;
+				left: 0;
+				width: 100%;
+				height: 1px;
+				background: linear-gradient(90deg, transparent 0%, rgb(var(--color-mono-900)) 50%, transparent 100%)
 			}
 
 			i {
-
-				transition: all 500ms ease-in-out;
-
-				color: rgb(var(--color-4));
-
-				display: block;
-
-				font: {
-					size: 1rem;
-				}
-
-				margin: { bottom: 2vh };
-
+				@include icon-size(32px);
+				background-color: var(--nav-color);
+				transition-duration: 500ms;
 			}
 
-			&:after {
-
-				$W: 4px; $H: 10px;
-
-				content: '';
-
-				position: absolute;
-
-				width: $W; height: $H; 
-
-				top: calc(50% - #{$H / 2}); right: #{$W / 2};
-
-				border-radius: .7rem;
-
-				background: {
-					color: rgb(var(--color-3));
-				}
-			}
-
-			&:last-of-type {
-				&:after {
-					display: none;
-				}
-			}
+			transition-duration: 500ms;
 
 			&:hover {
-				text-decoration: none;
+				--nav-color: rgb(var(--color-mono-800));
+				i {
+					transform: translateY(-10vh) rotate(15deg) scale(1.5);
+				}
 			}
-
+			
 		}
+
+		.active {
+
+			--nav-color: rgb(var(--color-mono-800));
+
+			a {
+				color: rgb(var(--color-mono-800));
+			}
+			
+		}
+
+	}
+	&-separator {
+
+		align-self: center;
+
+		width: 5px;
+    aspect-ratio: 1/3;
+
+		background-color: rgb(var(--color-mono-500));
+		border-radius: .7rem;
 
 	}
 }
@@ -141,6 +124,7 @@
 
 	// COMPONENTS
 	// import Popover from '~/components/common/Popover.vue'
+	import Icon from '~/components/Icon.vue'
 
 	// MIXINS
 	import EmitSound from '~/assets/mixins/EmitSound'
@@ -159,9 +143,9 @@
 
 	// MODULE
 	export default Vue.extend({
-		// components: {
-		// 	Popover
-		// },
+		components: {
+			Icon
+		},
 		mixins: [ EmitSound ],
 		props: {
 			category: {

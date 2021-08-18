@@ -27,17 +27,17 @@
 	display: grid;
 
 	grid-template: {
-		columns: 1fr 30ch;
+		columns: 1fr 45ch;
 		rows: 100%;
 	}
 
 	column-gap: 30px; 
 	row-gap: 3vh;
 	
-	padding: 10vh 2vw;
+	padding: 0vh 2vw;
 
 	align-items: center;
-	background-color: rgb(var(--color-2));
+	background-color: rgb(var(--color-mono-300));
 
 	@media screen and ( max-width: $mobile-breakpoint ) {
 		grid-template-columns: 1fr;
@@ -47,11 +47,15 @@
 	width: 100%;
 
 	h4 {
-		font-weight: 800;
+		font-weight: 700;
+		font-size: var(--font-size-1);
 	}
 
 	p {
-		font-size: var(--font-size-4)
+		font-size: var(--font-size-3);
+    font-family: var(--read-font);
+    font-weight: 500;
+    color: rgb(var(--color-mono-700));
 	}
 
 }

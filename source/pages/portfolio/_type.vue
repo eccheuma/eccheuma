@@ -1,5 +1,5 @@
 <template>
-	<div class="row no-gutters Portfolio-Case">
+	<div class="cases-container">
 
 		<work-case
 			v-for="workcase in Case"
@@ -10,6 +10,15 @@
 		
 	</div>
 </template>
+
+<style lang="scss">
+
+.cases-container {
+	padding: 2vh 0;
+	min-height: 50vh;
+}
+
+</style>
 
 <script lang="ts">
 

@@ -22,6 +22,13 @@
 			:style="`order: ${ 1 }`"
 		/>
 
+		<promo-banner 
+			v-if="Posts.length >= 4"
+			key="Style"
+			promo-type="Style"
+			:style="`order: ${ 3 }`"
+		/>
+
 	</section>
 </template>
 
@@ -111,7 +118,9 @@
 		},
 		async fetch() {
 
-			await this.GetData();
+			if ( !process.browser ) {
+				await this.GetData();
+			}
 
 		},
 		head(): any {
@@ -125,7 +134,14 @@
 			}),
 		},
 		created() {
-			this.ChangePage(this.PAGE)
+
+			this.ChangePage(this.PAGE);
+
+			// Fix fetching on diferrent routes for some reasons...
+			if ( process.browser && this.$router.currentRoute.name === 'home' ) {
+				this.GetData();
+			}
+
 		},
 		beforeDestroy() {
 		},

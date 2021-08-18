@@ -1,7 +1,10 @@
 <template>
-	<div class="popover-container" :style="`top: ${ position.y }px; left: ${ position.x }px`">
+	<div 
+		class="popover-container" 
+		:style="`top: ${ pop_position.y }px; left: ${ pop_position.x }px`"
+		>
 		<transition name="PopoverTransition">
-			<div v-show="active" ref="popover" class="popover-wrap">
+			<div v-show="active" ref="popover" class="popover-wrap" :class="[{ 'utils::glassy': !$isMobile }]">
 				<slot />
 			</div>
 		</transition>
@@ -47,7 +50,8 @@
 
 		z-index: 9999;
 
-		color: rgb(var(--color-def-6)) !important;
+		color: rgb(var(--mono-900)) !important;
+		// background: greenyellow;
 
 		z-index: 9999;
 
@@ -66,11 +70,12 @@
 		width: 40ch;
 
 		background: {
-			color: rgb(var(--color-def-1));
+			color: rgba(var(--mono-200), .75);
 		}
 
 		font: {
-			size: var(--font-size-5);
+			size: var(--font-size-4);
+			weight: 600;
 		}
 
 		text: {
@@ -79,7 +84,7 @@
 
 		&:before {
 
-			@include gradient_border(both);
+			@include gradient_border(block);
 
 			content: '';
 			
@@ -97,7 +102,7 @@
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue, { PropOptions } from 'vue'
 
 	export default Vue.extend({
 		props: {
@@ -112,7 +117,11 @@
 			endDelay: {
 				type: Number,
 				default: 250,
-			}
+			},
+			position: {
+				type: String,
+				default: 'bottom'
+			} as PropOptions<'top' | 'bottom' | undefined>
 		},
 		data() {
 			return {
@@ -120,7 +129,7 @@
 				init: false,
 				active: false,
 
-				position: {
+				pop_position: {
 					x: 0,
 					y: 0,
 				}
@@ -142,34 +151,51 @@
 
 		},
 		methods: {
-			setPosition() {
+			setPosition(): number {
 
-				const TARGET = document.getElementById(this.target)
+				const TARGET 				= document.getElementById(this.target)!
 
-				const ParentRect 	= TARGET?.getBoundingClientRect();
-				const PopoverRect = ( this.$refs.popover as HTMLElement )?.getBoundingClientRect();
+				const ParentRect 		= TARGET?.getBoundingClientRect();
+				const PopoverRect 	= ( this.$refs.popover as HTMLElement )?.getBoundingClientRect();
 
-				if ( TARGET && ParentRect && PopoverRect ) {
+				const TargetMargin: number 	= TARGET.parentElement!.getBoundingClientRect().height - ParentRect.height;
 
-					const ParentCenter = {
-						x: TARGET.offsetLeft 	+ ( ParentRect.width 	/ 2 ),
-						y: TARGET.offsetTop 	+ ( ParentRect.height / 2 ),
+				return requestAnimationFrame(() => {
+
+					if ( TARGET && PopoverRect && ParentRect ) {
+	
+						const ParentCenter = {
+							x: TARGET.offsetLeft 	+ (ParentRect.width / 2),
+							y: TARGET.offsetTop 	+ (ParentRect.height / 2),
+						}
+	
+						const MARGIN = (mar: number = 20): number => {
+	
+							const U = (ParentRect.height / 2) + mar
+	
+							switch (this.position) {
+	
+								case 'top': console.log('top')
+									return -(ParentRect.height - (TargetMargin / 2) + PopoverRect.height + mar);
+	
+								case 'bottom': console.log('bottom')
+									return ParentRect.height 
+	
+								default: 
+									return ParentRect.top - mar - PopoverRect.height < 0 
+										? U 
+										: -(U + PopoverRect.height);
+	
+							}
+	
+						};
+	
+						this.pop_position.x = ParentCenter.x;
+						this.pop_position.y = ParentCenter.y + MARGIN();
+	
 					}
 
-					const MARGIN = (mar: number = 40): number => {
-
-						const U = (ParentRect.height / 2) + mar
-
-						return ParentRect.top - mar - PopoverRect.height < 0 
-							? U
-							: -(U + PopoverRect.height)
-
-					};
-
-					this.position.x = ParentCenter.x;
-					this.position.y = ParentCenter.y + MARGIN();
-
-				}
+				})
 
 			},
 			ChangeState(status: boolean) {

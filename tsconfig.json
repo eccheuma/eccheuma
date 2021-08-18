@@ -32,7 +32,7 @@
   "include": [
     "global.d.ts",    
     "source/**/*.ts",
-    "source/**/*.vue",
+    "source/**/*.vue", "Untitled-2.ts",
   ],
   "exclude": [
     ".nuxt",

@@ -145,10 +145,10 @@
 	width: 100%	
 
 .CMS_Messages
-	color: rgb(var(--color-6))
-	background-color: rgb(var(--color-2))
+	color: rgb(var(--color-mono-900))
+	background-color: rgb(var(--color-mono-300))
 	h1
-		color: rgb(var(--color-6))
+		color: rgb(var(--color-mono-900))
 		text-align: center
 		display: block
 		width: 100%
@@ -158,14 +158,14 @@
 		font-size: 12px
 		padding: 5px 10%
 		margin: 0px 25%
-		color: rgb(var(--color-6))
-		background-color: rgb(var(--color-2))
-		border: 1px solid rgb(var(--color-3))
+		color: rgb(var(--color-mono-900))
+		background-color: rgb(var(--color-mono-300))
+		border: 1px solid rgb(var(--color-mono-400))
 		border-radius: .7rem
 		width: 100%
 	&-Item
 		border-radius: .7rem
-		border: 1px solid rgb(var(--color-3))
+		border: 1px solid rgb(var(--color-mono-400))
 		padding: 10px 20px
 		max-height: 300px
 	&-Textarea
@@ -179,7 +179,7 @@
 			font-size: .8rem
 			font-weight: 700
 	&-Wrapper
-		color: rgb(var(--color-6))
+		color: rgb(var(--color-mono-900))
 		padding: 20px 40px
 		overflow-y: scroll
 		height: calc(40vh - 40px)
@@ -189,13 +189,13 @@
 			text-align: left
 			font-weight: 700
 			font-size: 12px
-			color: rgb(var(--color-6))
+			color: rgb(var(--color-mono-900))
 		span
 			text-align: left
 			font-weight: 700
 			font-size: 12px
 			p
-				color: rgb(var(--color-4))
+				color: rgb(var(--color-mono-500))
 				float: right
 				display: inline-block
 	&-UserList
@@ -203,14 +203,14 @@
 			display: block
 			text-align: center
 			font-size: 12px
-			color: rgb(var(--color-6))
+			color: rgb(var(--color-mono-900))
 		i
 			display: block
 			margin: 0 auto
 			height: 80px
 			width: 80px
 			border-radius: 100%
-			border: 3px solid rgb(var(--color-6))
+			border: 3px solid rgb(var(--color-mono-900))
 			background-position: center center
 			background-size: cover
 			animation: UserProfile_Icon 1s 1

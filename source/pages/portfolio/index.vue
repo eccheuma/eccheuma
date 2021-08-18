@@ -1,5 +1,5 @@
 <template>
-	<div class="portfolio-container">
+	<section class="workcases-container">
 		<work-case 
 			v-for="(workcase, index) in Case" 
 			:key="workcase.ID" 
@@ -7,8 +7,17 @@
 			:content="workcase.content"
 			:properties="workcase.properties"
 		/>
-	</div>
+	</section>
 </template>
+
+<style lang="scss">
+
+.portfolio-container {
+	padding-inline: 1vw;
+	padding-block: 2vh;
+}
+
+</style>
 
 <script lang="ts">
 

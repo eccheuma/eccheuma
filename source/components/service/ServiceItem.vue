@@ -5,8 +5,8 @@
 			<service-modal :service-type="payload.path" @close-modal="ToggleModal(false)" />
 		</portal>
 
-		<div class="service_item-header">
-			<h5>{{ payload.title }}</h5>
+		<div class="service_item-header pattern_bg">
+			<span>{{ payload.title }}</span>
 			<span>{{ payload.subTitle }}</span>
 		</div>
 		<div class="service_item-body">
@@ -52,7 +52,7 @@
 
 			</section>
 		</div>
-		<div class="service_item-footer">
+		<div class="service_item-footer pattern_bg">
 
 			<template v-if="!LoginStatus">
 
@@ -155,25 +155,36 @@
 		width: 100%;
 		border-radius: .7rem;
 		margin: 2vh 0;
-		background-color: rgb(var(--color-2));
-		color: rgb(var(--color-6));
-		font-size: var(--font-size-4);
+		background-color: rgb(var(--color-mono-300));
+		color: rgb(var(--color-mono-900));
+		font-size: var(--font-size-5);
+		border: 5px solid rgb(var(--color-mono-300));
 	}
 	&-header {
 		@include gradient_border(bottom);
-		background-color: rgb(var(--color-2));
+		background-color: rgb(var(--color-mono-300));
 		border-radius: .7rem;
-		box-shadow: 0px 3px 0px 0px rgba(var(--color-1),.25);
+		box-shadow: 0px 3px 0px 0px rgba(var(--color-mono-200),.25);
 		padding: 4vh 0;
 		text-align: center;
+
 		span {
-			font-weight: 700;
-			font-size: 12px;
-			color: rgb(var(--color-4));
+			display: block;
+			&:nth-of-type(1) {
+				font-weight: 800;
+				font-size: var(--font-size-3);
+				color: rgb(var(--color-mono-800));
+			}
+			&:nth-of-type(2) {
+				font-weight: 600;
+				font-size: var(--font-size-5);
+				color: rgb(var(--color-mono-500));
+			}
 		}
+
 	}
 	&-body {
-		background-color: rgb(var(--color-1));
+		background-color: rgb(var(--color-mono-200));
 		padding: 2vh 2vw;
 
 		>section {
@@ -188,7 +199,7 @@
 		}
 
 		hr {
-			background-color: rgb(var(--color-3));
+			background-color: rgb(var(--color-mono-400));
 		}
 
 		&-container {
@@ -201,7 +212,7 @@
 			font-weight: 600;
 
 			.active {
-				background-color: rgb(var(--color-3));
+				background-color: rgb(var(--color-mono-400));
 			}
 
 			section {
@@ -211,7 +222,7 @@
 				cursor: pointer;
 				display: inline-flex;
 				width: 100%;
-				background-color: rgb(var(--color-2));
+				background-color: rgb(var(--color-mono-300));
 				border-radius: .7rem;
 				padding: 1vh 1vw;
 				margin: 1vh 0;
@@ -229,6 +240,9 @@
 		}
 
 		&-description {
+			min-height: 20vh;
+			display: grid;
+			align-content: center;
 		}
 
 		&-types {
@@ -249,27 +263,26 @@
 		}
 
 		hr {
-			background-color: rgb(var(--color-1));
+			background-color: rgb(var(--color-mono-400));
 		}
 
-		span {
+		> span {
 			display: block;
-			color: rgb(var(--color-4));
+			color: rgb(var(--color-mono-500));
 			text-align: center;
 			width: 75%;
-			margin: 0 auto;
+			margin: 4vh auto;
 			font: {
 				weight: 700;
+				size: var(--font-size-6);
 			}
 		}
 
 		button {
-			@include light-button {
-				width: 50%;
-				display: block;
-				margin: 3vh auto;
-			}
+			width: 66%;
+			margin: 2vh auto;
 		}
+
 	}
 }
 

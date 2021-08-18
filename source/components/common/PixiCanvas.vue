@@ -16,7 +16,7 @@
 	overflow: hidden;
 
 	background: {
-		color: rgb(var(--color-1));
+		color: rgb(var(--color-mono-200));
 	}
 
 }
@@ -42,8 +42,8 @@
 			path: require('~/assets/images/Background.png?format=webp&size=1440').src
 		},
 		{
-			name: 'Noise',
-			path: require('~/assets/images/Noise.png?format=webp&size=1440').src
+			name: 'Pattern',
+			path: require('~/assets/images/__PATTERN__.png?format=webp&size=512').src
 		},
 		{
 			name: 'Stripes',
@@ -86,6 +86,8 @@
 
 		},
 		created() {
+
+			console.log('canvas start')
 
 			this.ApplicationInit();
 
@@ -147,10 +149,10 @@
 
 				const Layers = [
 					this.backgroundLayer(resources.Background),
-					this.flickLayer(),
 					this.noiseLayer(),
+					this.linesLayer(resources.Pattern),
 					this.stripeLayer(resources.Stripes),
-					this.scratchLayer(resources.Noise)
+					this.flickLayer(),
 				]
 
 				Promise.all(Layers).then(( layers ) => {
@@ -330,7 +332,7 @@
 						const Layer = new this.$PIXI.Container();
 
 						const NoiseFilter = new this.$PIXI.filters.NoiseFilter();
-									NoiseFilter.resolution 	= 0.1;
+									NoiseFilter.resolution 	= 0.5;
 									NoiseFilter.noise 			= 1;
 									NoiseFilter.seed 				= 1;
 									NoiseFilter.blendMode 	= this.$PIXI.BLEND_MODES.SCREEN;
@@ -361,7 +363,7 @@
 					return new Promise(( resolve ) => {
 
 						const Stripes = new this.$PIXI.TilingSprite(texture);
-									Stripes.tileScale.x = Stripes.tileScale.y = .2
+									Stripes.tileScale.x = Stripes.tileScale.y = .15
 									Stripes.width 			= this.app.screen.width
 									Stripes.height 			= this.app.screen.height
 									Stripes.blendMode 	= this.$PIXI.BLEND_MODES.MULTIPLY
@@ -373,21 +375,23 @@
 					})
 
 				},
-				scratchLayer({ texture }: { texture: Texture }): Promise<Sprite> {
-					return new Promise((resolve) => {
+				linesLayer({ texture }: { texture: Texture }): Promise<Sprite> {
 
-						const Noise = this.$PIXI.Sprite.from(texture)
-							Noise.anchor.x = Noise.anchor.y = .5
-							Noise.y = this.app.screen.height / 2
-							Noise.x = this.app.screen.width / 2
-							Noise.alpha = .1
-							Noise.scale.y = Noise.scale.x = this.app.screen[this.ViewOrientation] / Noise[this.ViewOrientation]
+					return new Promise(( resolve ) => {
 
-						resolve(Noise);
+						const Lines = new this.$PIXI.TilingSprite(texture);
+									Lines.tileScale.x = Lines.tileScale.y = 1;
+									Lines.width 			= this.app.screen.width;
+									Lines.height 			= this.app.screen.height;
+									Lines.alpha				= .15;
+									// Lines.blendMode 	= this.$PIXI.BLEND_MODES.MULTIPLY
 
-						this.SpriteMap.set('Noise', Noise)
+						resolve(Lines);
+
+						this.SpriteMap.set('Lines', Lines)
 
 					})
+
 				}
 
 		},

@@ -27,7 +27,7 @@ export type POST = {
 	content: POST_CONTENT[],
 	likes?: Array< LIKE >
 	image: string,
-	tags: string | string[],
+	tags: string[],
 	date: number,
 	title: string
 }

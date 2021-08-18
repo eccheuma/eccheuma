@@ -68,7 +68,16 @@
 				preload: true,
 			}
 
-			const CURRENT_HOWL: Howl = new Howl({ ...PREDEFINED_OPTIONS, ...sound.settings });
+			const CURRENT_HOWL: Howl = new Howl({ 
+
+				...PREDEFINED_OPTIONS, 
+				...sound.settings,
+
+				onplayerror: () => {
+					CURRENT_HOWL.once('unlock', () => CURRENT_HOWL.play())
+				}
+
+			});
 
 			vuex.commit('setSound', { name: sound.name, howl: CURRENT_HOWL });
 

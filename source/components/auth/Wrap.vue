@@ -1,5 +1,5 @@
 <template>
-	<section class="auth_wrapper" :class="`interface-${ UI }`">
+	<section class="auth_wrapper">
 
 		<loader />
 
@@ -11,8 +11,11 @@
 <style lang="scss">
 
 .auth_wrapper {
+
+	@include component-shadow;
+
 	position: relative;
-	color: rgb(var(--color-1));
+	color: rgb(var(--color-mono-200));
 	border-radius: .7rem;
 	overflow: hidden;
 	width: 100%;

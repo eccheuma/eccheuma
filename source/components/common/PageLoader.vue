@@ -51,7 +51,7 @@
 		height: 100vh;
 
 		background: {
-			color: rgba(var(--color-1), .95)
+			color: rgba(var(--mono-200), .95)
 		}
 
 		backdrop-filter: blur(10px);
@@ -84,7 +84,7 @@
 			content: '';
 			position: fixed; top: 2vh; left: 1vw;
 			width: 97vw; height: 96vh;
-			border: 1px solid rgb(var(--color-3));
+			border: 1px solid rgb(var(--mono-400));
 			border-radius: .7rem;
 			z-index: 1;
 		}
@@ -102,62 +102,62 @@
 			height: 40px;
 			width: 40px;
 			transform: rotate(0deg);
-			border: 0px solid rgb(var(--color-5));
+			border: 0px solid rgb(var(--mono-800));
 			border-radius: .7rem;
 			opacity: 1;
 			animation-timing-function: ease-in-out;
 			animation: Loader 3s infinite;
-			filter: drop-shadow(0px 0px 0px rgb(var(--color-5)));
+			filter: drop-shadow(0px 0px 0px rgb(var(--mono-800)));
 			@media screen and (max-width: $mobile-breakpoint) {
 				filter: unset;
 			}
 			@keyframes Loader {
 				0% {
 					transform: rotate(45deg);
-					border: 3px solid rgb(var(--color-5));
+					border: 3px solid rgb(var(--mono-800));
 					border-radius: 25%;
 					opacity: 1;
-					filter: drop-shadow(0px 0px 10px rgb(var(--color-5)));
+					filter: drop-shadow(0px 0px 10px rgb(var(--mono-800)));
 					@media screen and (max-width: $mobile-breakpoint) {
 						filter: unset;
 					}
 				}
 				25% {
 					transform: rotate(90deg) scale(1.25);
-					border: 3px solid rgb(var(--color-5));
+					border: 3px solid rgb(var(--mono-800));
 					border-radius: 100%;
 					opacity: 1;
-					filter: drop-shadow(0px 0px 2px rgb(var(--color-5)));
+					filter: drop-shadow(0px 0px 2px rgb(var(--mono-800)));
 					@media screen and (max-width: $mobile-breakpoint) {
 						filter: unset;
 					}
 				}
 				50% {
 					transform: rotate(135deg);
-					border: 0px solid rgb(var(--color-5));
+					border: 0px solid rgb(var(--mono-800));
 					border-radius: 25%;
 					opacity: 0;
-					filter: drop-shadow(0px 0px 0px rgb(var(--color-5)));
+					filter: drop-shadow(0px 0px 0px rgb(var(--mono-800)));
 					@media screen and (max-width: $mobile-breakpoint) {
 						filter: unset;
 					}
 				}
 				75% {
 					transform: rotate(180deg) scale(1);
-					border: 3px solid rgb(var(--color-5));
+					border: 3px solid rgb(var(--mono-800));
 					border-radius: 100%;
 					opacity: 1;
-					filter: drop-shadow(0px 0px 2px rgb(var(--color-5)));
+					filter: drop-shadow(0px 0px 2px rgb(var(--mono-800)));
 					@media screen and (max-width: $mobile-breakpoint) {
 						filter: unset;
 					}
 				}
 				100% {
 					transform: rotate(225deg);
-					border: 3px solid rgb(var(--color-5));
+					border: 3px solid rgb(var(--mono-800));
 					border-radius: 25%;
 					opacity: 1;
-					filter: drop-shadow(0px 0px 10px rgb(var(--color-5)));
+					filter: drop-shadow(0px 0px 10px rgb(var(--mono-800)));
 					@media screen and (max-width: $mobile-breakpoint) {
 						filter: unset;
 					}
@@ -168,7 +168,7 @@
 		span {
 			display: block;
 			width: 100vw;
-			color: rgb(var(--color-6));
+			color: rgb(var(--mono-900));
 			font-weight: 700;
 			letter-spacing: .25ch;
 			text-align: center;

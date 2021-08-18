@@ -61,31 +61,53 @@ eccheuma-layout {
 
 		display: grid;
 		grid-template: {
-			columns: 4vw 1fr 4vw;
+			columns: minmax(min-content, 5vw) 1fr minmax(0, 5vw);
 			rows: 1fr;
 		}
+
+		column-gap: 1vw;
 
 		width: 100vw;
 		min-height: 100vh;
 		
 	}
 	&-container {
-		width: 90vw;
+		width: auto;
 		margin: 0 auto;
 		@media screen and ( max-width: $mobile-breakpoint ) {
 			width: 100vw;
 		}
+
+		border: {
+			right: 1px solid rgb(var(--color-mono-300));
+			left: 1px solid rgb(var(--color-mono-300));
+		}
+
 	}
 }
 
 .ui-theme {
 	&-light {
+
+		--color-mono-000: 255,255,255;
+    --color-mono-100: 230,230,230;
+    --color-mono-200: 255,255,255;
+    --color-mono-300: 240,240,240;
+    --color-mono-400: 180,180,180;
+    --color-mono-500: 65,65,65;
+    --color-mono-600: 54,54,54;
+    --color-mono-700: 65,65,70;
+    --color-mono-800: 40,40,40;
+    --color-mono-900: 28,28,28;
+
 		transition-duration: .75s;
-		background-color: rgb(var(--color-5));
+		background-color: rgb(var(--color-mono-100));
+		color: rgb(var(--color-mono-800));
+
 	}
 	&-dark {
 		transition-duration: .75s;
-		background-color: rgb(var(--color-0));
+		background-color: rgb(var(--color-mono-100));
 	}
 }
 

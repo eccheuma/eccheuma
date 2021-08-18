@@ -36,7 +36,8 @@
 		align-items: center;
 
 		width: 100%;
-		background: rgb(var(--color-5));
+		background: rgb(var(--mono-800));
+		color: rgb(var(--mono-200)); 
 		border-radius: .7rem;
 
 		overflow: hidden;
@@ -46,7 +47,7 @@
 			width: 100%;
 
 			background: {
-				color: rgb(var(--color-5));
+				color: rgb(var(--mono-800));
 			}
 
 			border: 0px solid transparent;
@@ -75,13 +76,13 @@
 			}
 
 			background: {
-				color: rgb(var(--color-3));
+				color: rgb(var(--mono-400));
 			};
 
     }
 
 		&:focus {
-			outline: 2px solid rgb(var(--color-Success)) !important;
+			outline: 2px solid rgb(var(--color-accent-pass)) !important;
 		}
 
 	}

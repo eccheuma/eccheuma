@@ -16,6 +16,7 @@ module.exports = {
 		indent: [0, 'tab'],
 		'no-tabs': 0,
 		'semi': 0,
+		'no-new': 0,
 		'no-floating-decimal': 0,
 		'space-in-parens': 0,
 		'no-new-object': 0,

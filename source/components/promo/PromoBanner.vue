@@ -36,17 +36,22 @@
 .promo {
 	&_container {
 
+		@include gradient_border(block);
+		@include component-shadow;
+
 		display: grid; 
 		justify-items: center;
 
 		grid-template: {
 			columns: 1fr;
-			rows: 20vh 60vh 30vh
+			rows: 20vh 50vh 30vh
 		}
 
 		overflow: hidden;
+		border-radius: .7rem;
 
-		background-color: rgb(var(--color-2));
+		background-color: rgb(var(--color-mono-300));
+		color: rgb(var(--color-mono-800));
 
 		@media screen and ( max-width: $mobile-breakpoint ) {
 			grid-template: {
@@ -69,19 +74,19 @@
 		@include gradient_border(bottom);
 
 		background: {
-			color: rgb(var(--color-1));
+			color: rgb(var(--color-mono-200));
 		}
 
 		h4 {
 			font-weight: 800;
 			width: 100%;
-			font-size: var(--font-size-2);
+			font-size: var(--font-size-1);
 		}
 		p {
-			font-weight: 500;
-			font-size: var(--font-size-4);
+			font-weight: 600;
+			font-size: var(--font-size-3);
 			width: calc(min(100%, 70ch));
-			color: rgb(var(--color-4));
+			color: rgb(var(--color-mono-700));
 		}
 		@media screen and ( max-width: $mobile-breakpoint ) {
 			text-align: center !important;
@@ -99,7 +104,7 @@
 		padding: 3vh 0;
 
 		background: {
-			color: rgb(var(--color-1));
+			color: rgb(var(--color-mono-200));
 		}
 
 		p {
@@ -107,11 +112,11 @@
 			font-size: 12px;
 			font-weight: 700;
 			padding: 0 5vw;
-			color: rgb(var(--color-4));
+			color: rgb(var(--color-mono-500));
 			text-align: center;
 		}
 		hr {
-			background-color: rgb(var(--color-4));
+			background-color: rgb(var(--color-mono-500));
 			width: 50%;
 			height: .5px;
 			border-top: unset;

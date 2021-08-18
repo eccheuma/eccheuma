@@ -99,7 +99,11 @@ export default Vue.extend({
 			type: Object,
 			required: false,
 			default() { return DefaultConfiguration }
-		} as PropOptions<Options>
+		} as PropOptions<Options>,
+		forcedIndex: {
+			type: Number,
+			default: 0,
+		}
 	},
 	data() {
 		return {
@@ -129,8 +133,13 @@ export default Vue.extend({
 			handler() { this.UpdateStyles() }
 		},
 		'ActiveIndex': {
-			handler() { this.UpdateStyles() }
-		}
+			handler() { this.UpdateStyles(); this.$emit('active-index', this.ActiveIndex) }
+		},
+		'forcedIndex': {
+			handler() {
+				this.ActiveIndex = this.forcedIndex;
+			}
+		}	
 	},
 	created() {
 

@@ -136,7 +136,7 @@
 	&_template
 		margin: 0px 2px
 		height: 260px
-		background-color: rgb(var(--color-1))
+		background-color: rgb(var(--color-mono-200))
 		border-radius: .7rem
 
 .CMS
@@ -147,10 +147,10 @@
 		margin: 4px 0px
 		display: inline-bl
 		padding: 10px 15px
-		background-color: rgb(var(--color-2))
-		border: 1px solid rgba(var(--color-1),.25)
+		background-color: rgb(var(--color-mono-300))
+		border: 1px solid rgba(var(--color-mono-200),.25)
 		border-radius: .7rem
-		color: rgb(var(--color-4))
+		color: rgb(var(--color-mono-500))
 		font-weight: 700
 		font-size: 14px
 	textarea
@@ -159,10 +159,10 @@
 		overflow: hidden
 		resize: none
 		padding: 10px 15px
-		background-color: rgb(var(--color-6))
-		border: 1px solid rgba(var(--color-1),.25)
+		background-color: rgb(var(--color-mono-900))
+		border: 1px solid rgba(var(--color-mono-200),.25)
 		border-radius: .7rem
-		color: rgb(var(--color-1))
+		color: rgb(var(--color-mono-200))
 		font-size: 12px
 	button
 		display: block
@@ -172,28 +172,28 @@
 		padding: 6px 0px
 		@extend %button_light !optional
 	&-ImageInfo
-		color: rgb(var(--color-6))
+		color: rgb(var(--color-mono-900))
 		margin: auto 0
 		span
 			display: block
 			strong
 				display: block
 	&-ImagePreview
-		background-color: rgb(var(--color-2))
+		background-color: rgb(var(--color-mono-300))
 		border-radius: .7rem 
 		padding: 10px 4px
 		display: block
 		width: 100%
 		height: 280px
 	&-Input
-		background-color: rgba(var(--color-2), .5)
+		background-color: rgba(var(--color-mono-300), .5)
 		&_Section
 			margin-bottom: 10px
 			padding: 10px 0
-			border-right: 1px solid rgb(var(--color-3))
+			border-right: 1px solid rgb(var(--color-mono-400))
 		span
 			padding: 4px 0
-			color: rgb(var(--color-6))
+			color: rgb(var(--color-mono-900))
 			font-weight: 700
 			font-size: .8rem
 			width: 200px
@@ -202,12 +202,12 @@
 			height: 40px
 			padding: 4px 20px
 			overflow: hidden
-			background-color: rgb(var(--color-2))
-			color: rgb(var(--color-4))
+			background-color: rgb(var(--color-mono-300))
+			color: rgb(var(--color-mono-500))
 			text-align: center
 			font-size: .8rem
 			font-weight: 700
-			border: 1px solid rgb(var(--color-3))
+			border: 1px solid rgb(var(--color-mono-400))
 			border-radius: .7rem
 			-webkit-appearance: none
 			&:focus
@@ -218,11 +218,11 @@
 				margin: 2px 0
 				width: 9px
 				border-radius: .7rem
-				background-color: rgb(var(--color-4))
+				background-color: rgb(var(--color-mono-500))
 				cursor: pointer
 				transition-duration: .5s
 				&:hover
-					background-color: rgb(var(--color-6))
+					background-color: rgb(var(--color-mono-900))
 			&::-webkit-slider-runnable-track
 				margin: 0 15px
 				width: 100%

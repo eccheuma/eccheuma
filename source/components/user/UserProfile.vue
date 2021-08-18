@@ -87,16 +87,18 @@
 					<common-button 
 						v-for="(item, index) in PreferencesArea" 
 						:key="`navigation-button-${ index }`"
-						:class="{ active: CurentPreferencesComponent == item.Component }" 
+						:class="{ active: CurentPreferencesComponent === item.Component }"
 						@click.native="AreaToggle( item.Component )"
 						>
 						{{ item.Name }}
 					</common-button>
 
-					<common-button @click="Logout">
+				</section>
+
+				<section class="user_profile-navigation-footer">
+					<common-button @click.native="Logout">
 						Выход из аккаунта
 					</common-button>
-
 				</section>
 
 			</div>
@@ -175,7 +177,7 @@
 		text-align: center;
 
 		backdrop-filter: blur(3px);
-		background-color: rgba(var(--color-1),.9);
+		background-color: rgba(var(--color-mono-200),.9);
 
 		display: grid; 
 		grid-template: {
@@ -204,13 +206,13 @@
 
 		hr {
 			width: 100%;
-			background-color: rgb(var(--color-3));
+			background-color: rgb(var(--color-mono-400));
 		}
 
 		padding: 2vh 0;
 
 		border: {
-			right: 1px solid rgb(var(--color-3));
+			right: 1px solid rgb(var(--color-mono-400));
 		} 
 
 		&-header {
@@ -220,15 +222,15 @@
 
 			h6 {
 				display: block;
-				color: rgb(var(--color-6));
+				color: rgb(var(--color-mono-900));
 				font-size: var(--font-size-3);
 				font-weight: 700;
 			}
 
 			span {
 				display: block;
-				color: rgb(var(--color-5));
-				font-size: var(--font-size-4);
+				color: rgb(var(--color-mono-800));
+				font-size: var(--font-size-5);
 				font-weight: 500;
 			}
 
@@ -243,9 +245,9 @@
 			span {
 				display: block;
 				width: 100%;
-				color: rgb(var(--color-5));
+				color: rgb(var(--color-mono-800));
 				font: {
-					size: var(--font-size-4);
+					size: var(--font-size-5);
 					weight: 700;
 				}
 			}
@@ -256,10 +258,10 @@
 				height: $s; width: $s;
 				margin: 0 auto 2vh;
 				border-radius: 100%;
-				border: 3px solid rgb(var(--color-5));
+				border: 3px solid rgb(var(--color-mono-800));
 				background-position: center center;
 				background-size: cover;
-				background-color: rgb(var(--color-5));
+				background-color: rgb(var(--color-mono-800));
 				// transform: scale(0);
 			}
 
@@ -271,7 +273,7 @@
 
 			h6 {
 				display: block;
-				color: rgb(var(--color-6));
+				color: rgb(var(--color-mono-900));
 				font-size: var(--font-size-3);
 				font-weight: 700;
 			}
@@ -286,10 +288,10 @@
 					weight: 500;
 					size: .65rem;
 				}
-				color: rgba(var(--color-5),.75);
+				color: rgba(var(--color-mono-800),.75);
 				line-height: 10px;
 				strong {
-					color: rgb(var(--color-5));
+					color: rgb(var(--color-mono-800));
 					font-weight: 700;
 					text-align: right;
 				}
@@ -307,15 +309,15 @@
 
 			h6 {
 				display: block;
-				color: rgb(var(--color-6));
+				color: rgb(var(--color-mono-900));
 				font-size: var(--font-size-3);
 				font-weight: 700;
 			}
 
 			span {
 				display: block;
-				color: rgb(var(--color-5));
-				font-size: var(--font-size-4);
+				color: rgb(var(--color-mono-800));
+				font-size: var(--font-size-5);
 				font-weight: 500;
 			}
 
@@ -329,23 +331,27 @@
 
 		padding: $padY 0;
 
+		display: grid;
+		grid-template-rows: 10vh auto 10vh;
+		justify-content: center;
+
 		border: {
-			left: 1px solid rgb(var(--color-3));
+			left: 1px solid rgb(var(--color-mono-400));
 		} 
 
 		&-header {
 			
 			h6 {
 				display: block;
-				color: rgb(var(--color-6));
+				color: rgb(var(--color-mono-900));
 				font-size: var(--font-size-3);
 				font-weight: 700;
 			}
 
 			span {
 				display: block;
-				color: rgb(var(--color-5));
-				font-size: var(--font-size-4);
+				color: rgb(var(--color-mono-800));
+				font-size: var(--font-size-5);
 				font-weight: 500;
 			}
 
@@ -354,38 +360,27 @@
 		&-body {
 
 			padding: 3vh 2vw;
-			display: grid;
-			height: calc(100% - #{ $padY * 2 });
-
-			grid-template: {
-				rows: repeat(12, auto);
-			}
-
-			.active {
-
-				width: 75%;
-
-				margin: { 
-					bottom: 2vh;
-				};
-
-				background-color: transparent;
-				color: rgb(var(--color-6));
-			}
+			display: flex;
+			flex-direction: column;
+			row-gap: 1vh;
 
 			button {
-				@include light-button { 
-					margin: { bottom: 2vh };
-					display: block;
-					width: 100%;
-					justify-self: center; 
-					line-height: 0px;
-				};
+				
+				margin: 0 auto;
+				height: fit-content;
+
 				&:last-of-type {
 					grid-row: -1;
 				}
+
+				transition-duration: 500ms;
+
 			}
 
+		}
+
+		&-footer {
+			width: 100%;
 		}
 
 	}

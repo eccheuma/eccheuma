@@ -43,7 +43,7 @@
 			padding: 2vh 3vw;
 
 			background: {
-				color: rgb(var(--color-1));
+				color: rgb(var(--color-mono-200));
 			}
 
 			display: flex;
@@ -63,7 +63,7 @@
 			}
 
 			background: {
-				color: rgb(var(--color-2));
+				color: rgb(var(--color-mono-300));
 			}
 
 		}

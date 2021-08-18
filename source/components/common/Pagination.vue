@@ -5,12 +5,12 @@
 			tag="span" 
 			:class="{ disabled: PageSelector.Page == 1 }"  
 			:to="getPath(PageSelector.Page - 1)"  
-			>
+		>
 			{{ PageSelector.Page <= 2 ? 'Начальная' : 'Предыдущая' }}
 		</nuxt-link>
 
 		<span style="pointer-events: none">
-			Cтраница {{ PageSelector.Page }} 
+			Cтраница {{ PageSelector.Page }} из {{ PageSelector.PageQuantity }} 
 		</span>
 
 		<nuxt-link 
@@ -31,13 +31,18 @@ $h: 10vh;
 .pagination {
 
 	@include gradient_border;
+	@include component-shadow;
 
 	height: $h;
 
 	display: grid;
 	grid-template: {
-		columns: repeat(3, 160px);
+		columns: repeat(3, auto);
 	};
+
+  column-gap: 4vw;
+
+	border-radius: .7rem;
 
 	align-content: center;
 	justify-content: center;
@@ -48,13 +53,16 @@ $h: 10vh;
 		cursor: pointer;
 
 		text-align: center;
+		color: rgb(var(--color-mono-700));
 
-		color: rgb(var(--color-4));
+		;
 		font: {
-			size: var(--font-size-5);
-			weight: 600;
+			size: var(--font-size-2);
+			weight: 500;
+			family: var(--decor-font);
 		}
 
+		letter-spacing: .125ch;
 		line-height: $h;
 
 		&::after {
@@ -70,7 +78,7 @@ $h: 10vh;
 			width: 100%; 
 			height: 1px;
 
-			background: linear-gradient(to left, transparent, rgb(var(--color-5)), transparent);
+			background: linear-gradient(to left, transparent, rgb(var(--color-mono-800)), transparent);
 
 			transition-duration: 250ms;
 
@@ -79,7 +87,7 @@ $h: 10vh;
 		transition-duration: 250ms;
 		&:hover {
 
-			color: rgb(var(--color-5));
+			color: rgb(var(--color-mono-800));
 
 			&::after {
 				opacity: 1;

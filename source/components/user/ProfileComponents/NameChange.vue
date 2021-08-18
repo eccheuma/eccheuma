@@ -35,9 +35,9 @@
 			font-weight: 700;
 			font-size: 12px;
 			padding: 5px 10%;
-			color: rgb(var(--color-6));
-			background-color: rgb(var(--color-2));
-			border: 1px solid rgb(var(--color-3));
+			color: rgb(var(--color-mono-900));
+			background-color: rgb(var(--color-mono-300));
+			border: 1px solid rgb(var(--color-mono-400));
 			border-radius: .7rem;
 			width: 75%;
 		}

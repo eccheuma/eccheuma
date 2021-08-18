@@ -13,7 +13,7 @@
 					{ 'message-unread': !item.Read && UserState.UserName != item.From }
 				]"
 				class="user_profile-component-messages_item"
-				@mouseenter="CheckMessage(item.ID, item.Read)"
+				@mouseenter="CheckMessage(item)"
 				>
 
 				<message :payload="{ From: item.From, Date: item.Date, Message: item.Message }" />
@@ -66,28 +66,28 @@
 
 		&_item {
 			border-radius: .7rem;
-			border: 1px solid rgb(var(--color-3));
+			border: 1px solid rgb(var(--color-mono-400));
 			padding: 2vh 1vw;
 			margin: 3vh 0;
-			color: rgb(var(--color-6));
+			color: rgb(var(--color-mono-900));
 		}
 
 		.message {
 			&-owner {
-				border: 1px solid rgb(var(--color-4)) !important
+				border: 1px solid rgb(var(--color-mono-500)) !important
 			}
 			&-support {
-				border: 1px solid var(--color-Warning) !important
+				border: 1px solid var(--color-accent-warning) !important
 			}
 			&-unread {
-				border: 1px solid rgba(var(--color-4), .25);
+				border: 1px solid rgba(var(--color-mono-500), .25);
 				animation: unread 1s infinite alternate;
 				@keyframes unread {
 					0% {
-						border: 1px solid rgba(var(--color-4), .25)
+						border: 1px solid rgba(var(--color-mono-500), .25)
 					}
 					100% {
-						border: 1px solid rgba(var(--color-4), 1)
+						border: 1px solid rgba(var(--color-mono-500), 1)
 					}
 				}
 			}	
@@ -115,7 +115,7 @@
 			padding: 15px 15px;
 			font-size: .8rem;
 			font-weight: 700;
-			background-color: rgb(var(--color-5));
+			background-color: rgb(var(--color-mono-800));
 			@media screen and ( max-width: $mobile-breakpoint ) {
 				height: 20vh;
 			}
@@ -133,12 +133,16 @@
 	// VUELIDATE
 	import { required } from 'vuelidate/lib/validators';
 
+	// FIREBASE
+	import firebase from 'firebase/app';
+	import 'firebase/database';
+
 	// VUEX
 	import { mapState, mapActions } from 'vuex';
 	import type { VuexModules } from '~/typescript/VuexModules';
 
 	// TYPES
-	import type { Message as MessageTYPE } from '~/store/User/Messages';
+	import type { Message as T_Message } from '~/store/User/Messages';
 	
 	// MIXINS
 	import EmitSound from '~/assets/mixins/EmitSound';
@@ -156,6 +160,9 @@
 			return {
 				PrevMessage: '',
 				Message: '',
+
+				MessageNotification: true,
+
 			}
 		},
 		validations: {
@@ -165,7 +172,6 @@
 		},
 		computed: {
 			...mapState({
-				// MODULES
 				UserState: 							state	=> ( state as VuexModules ).User.State.UserState,
 				Messages:								state => ( state as VuexModules ).User.Messages.Messages,
 				GetRequestsQuantity:		state => ( state as VuexModules ).User.WorkRequest.RequestQuantity
@@ -174,24 +180,35 @@
 		watch: {
 			StoreMessages: {
 				handler() {
-					this.$store.dispatch('User/Messages/CheckNewMessage')
+
+					const LAST_MESSAGE = this.Messages.pop()!;
+
+					this.$store.dispatch('User/Messages/CheckNewMessage');
+
+					if ( this.MessageNotification && LAST_MESSAGE.UserID !== this.UserState.UserID ) {
+						this.Notificate(LAST_MESSAGE)
+					}
+
 				}
 			}
 		},
 		methods: {
+
 			...mapActions({
 				MarkAsReaded:					'User/Messages/MarkAsReaded',
 				FirebaseSendMessage:	'User/Messages/FireBaseSendMessage',
 			}),
-			CheckMessage(ID: MessageTYPE['ID'], readed: boolean) {
-				if ( !readed ) { 
+
+			CheckMessage({ ID, Read }: T_Message) {
+				if ( !Read ) { 
 					this.MarkAsReaded(ID);
 				}
 			},
+
 			SendMessage() {
 				if ( this.PrevMessage !== this.Message ) {
 
-					const M: MessageTYPE = {
+					const M: T_Message = {
 						ID: this.Messages.length + 1,
 						UserID: this.UserState.UserID,
 						Date: Date.now(),
@@ -202,12 +219,27 @@
 	
 					this.FirebaseSendMessage(M)
 
-					this.PrevMessage = this.Message; this.Message = '';
-
-					// this.EmitSound(`Translate`, { rate: 1.25, volume: .5 })   
+					this.PrevMessage 	= this.Message; 
+					this.Message 			= '';
 
 				}
 			},
+
+			async Notificate({ Message, UserID }: T_Message) {
+
+				const ICON = await firebase.database().ref(`Users/${ UserID }/state/UserImageID`).once('value');
+
+				// eslint-disable-next-line no-undef
+				const CONTENT: NotificationOptions = {
+					body: Message,
+					image: ICON.val(),
+					silent: true,
+				}
+
+				new Notification('Eccheuma | Новое сообщение', CONTENT)
+
+			}
+
 		}
 	})
 

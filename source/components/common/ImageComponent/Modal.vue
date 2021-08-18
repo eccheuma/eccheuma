@@ -63,7 +63,7 @@
 	&-wrap {
 		position: fixed; top: 0; left: 0; z-index: 9999;
 		height: 100vh; width: 100vw;
-		background-color: rgba(var(--color-1), .9);
+		background-color: rgba(var(--color-mono-200), .9);
 		display: flex;
 	}
 	&-container {
@@ -78,8 +78,8 @@
     overflow: hidden;
     width: 75vw;
     height: 85vh;
-    background-color: rgb(var(--color-2));
-    border: 1px solid rgb(var(--color-3));
+    background-color: rgb(var(--color-mono-300));
+    border: 1px solid rgb(var(--color-mono-400));
     border-radius: .7rem;
     margin: auto;
 
@@ -89,18 +89,18 @@
 		width: 100%;
 		text-align: center; 
 		align-content: center;
-		color: rgb(var(--color-6)); 
-		background-color: rgb(var(--color-1));
+		color: rgb(var(--color-mono-900)); 
+		background-color: rgb(var(--color-mono-200));
 		h6 {
 			font: {
-				size: var(--font-size-2);
+				size: var(--font-size-3);
 				weight: 700;
 			}
 		}
 		span {
 			width: 100ch;
 			margin: 0 auto;
-			font-size: var(--font-size-4);
+			font-size: var(--font-size-5);
 		}
 	}
 	&-body {
@@ -124,15 +124,15 @@
 			min-height: 5px;
 			&-track {
 				border-radius: 2rem;
-				background-color: rgb(var(--color-1));
-				border: 1px solid rgb(var(--color-3));
+				background-color: rgb(var(--color-mono-200));
+				border: 1px solid rgb(var(--color-mono-400));
 			}
 			&-thumb {
 				border-radius: 2rem;
-				background-color: rgb(var(--color-4));
-				border: 2px solid rgb(var(--color-1));
+				background-color: rgb(var(--color-mono-500));
+				border: 2px solid rgb(var(--color-mono-200));
 				&:hover {
-					background-color: rgb(var(--color-6))
+					background-color: rgb(var(--color-mono-900))
 				}
 			}
 			&-button {
@@ -148,7 +148,7 @@
 		padding: 4vh 25%;
 		grid-template-columns: repeat(2, 1fr); 
 		grid-column-gap: 20px;
-		background-color: rgb(var(--color-1));
+		background-color: rgb(var(--color-mono-200));
 	}
 }
 

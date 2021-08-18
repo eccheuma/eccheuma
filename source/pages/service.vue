@@ -121,7 +121,7 @@
 	}
 
 	&-section_title {
-		@include gradient_border(both);
+		@include gradient_border(block);
 		position: relative;
 		padding: 3vh 5vw;
 		margin: 3vh 0;
@@ -129,7 +129,7 @@
 			position: absolute; top: 0; left: 0;
 			font-size: 5vh;
 			font-weight: 700;
-			color: rgb(var(--color-3));
+			color: rgb(var(--color-mono-400));
 			text-align: center;
 			display: block;
 			height: 100%;
@@ -139,7 +139,7 @@
 		p {
 			margin: 0px;
 			font-size: 12px;
-			color: rgb(var(--color-4));
+			color: rgb(var(--color-mono-500));
 		}
 	}
 }
@@ -152,12 +152,12 @@
 // 			display: inline-block
 // 		hr
 // 			width: 100%
-// 			background-color: rgb(var(--color-2))
+// 			background-color: rgb(var(--color-mono-300))
 // 		span
 // 			// background-color: red
 // 			font-size: 36px
 // 			font-weight: 700
-// 			color: rgb(var(--color-3))
+// 			color: rgb(var(--color-mono-400))
 // 			text-align: center
 // 			display: inline-block
 // 			height: 100%
@@ -165,6 +165,6 @@
 // 		p
 // 			margin: 0px
 // 			font-size: 12px
-// 			color: rgb(var(--color-4))
+// 			color: rgb(var(--color-mono-500))
 
 </style>

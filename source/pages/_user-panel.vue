@@ -11,7 +11,7 @@
 		position: relative
 		width: 100%
 		height: 100vh
-		background-color: rgb(var(--color-2))
+		background-color: rgb(var(--color-mono-300))
 		overflow-y: scroll
 
 </style>

@@ -97,3 +97,6 @@ sw.*
 
 # firebase functions 
 functions
+
+# Others
+.editorconfig

@@ -2,6 +2,8 @@
 const ChunkSizeMultiplier = 1.25;
 const IN_BUILD = process.env.NODE_ENV !== 'development';
 
+const SERVER_BUILD = false;
+
 // TYPES
 export default {
   srcDir: 'source',
@@ -15,7 +17,7 @@ export default {
 
   // modern: IN_BUILD,
   
-  target: IN_BUILD ? 'static' : 'server',
+  target: SERVER_BUILD ? 'server' : 'static',
 
   server: {
     port: 3000,
@@ -27,7 +29,7 @@ export default {
     linkActiveClass:      'active',
     linkExactActiveClass: 'exact',
   },
-
+  
   generate: { 
     dir: 'app',
     exclude: ['/Admin'] 
@@ -102,7 +104,13 @@ export default {
     link: [
       {
         rel: 'preload',
-        href: '/static/fonts/Montserrat-SemiBold.woff2',
+        href: '/static/fonts/Ebenya.woff2',
+        as: 'font',
+        crossorigin: true
+      },
+      {
+        rel: 'preload',
+        href: '/static/fonts/Montserrat-Bold.woff2',
         as: 'font',
         crossorigin: true
       },
@@ -114,10 +122,10 @@ export default {
       },
       {
         rel: 'preload',
-        href: '/static/fonts/Montserrat-Light.woff2',
+        href: '/static/fonts/Montserrat-Regular.woff2',
         as: 'font',
         crossorigin: true
-      }
+      }, 
     ],
     // script: [
     //   { src: 'https://vk.com/js/api/xd_connection.js?2', type: 'text/javascript' }

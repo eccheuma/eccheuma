@@ -129,7 +129,9 @@
 		},
 		async fetch() {
 
-			await this.GetData();
+			if ( process.server && !this.CLIENT_RENDER_CHECK ) {
+				await this.GetData();
+			}
 			
 		},
 		head(): {[index: string]: string } {
@@ -154,7 +156,12 @@
 			},
 		},
 		created() {
-			this.ChangePage(this.Page); console.log(this.Images.length)
+			this.ChangePage(this.Page);
+
+			if ( process.browser && this.$router.currentRoute.name === 'gallery' ) {
+				this.GetData();
+			}
+
 		},
 		methods: {
 			

@@ -50,7 +50,7 @@
 		width: 100vw; height: 100vh;
 
 		background: {
-			color: rgba(var(--color-1), .95);
+			color: rgba(var(--color-mono-200), .95);
 		}
 
 	}
@@ -61,7 +61,7 @@
 		align-content: center;
 
 		border: {
-			right: 1px solid rgb(var(--color-3));
+			right: 1px solid rgb(var(--color-mono-400));
 		}
 
 		i {
@@ -71,7 +71,7 @@
 
 			width: $s; height: $s;
 
-			border: 3px solid rgb(var(--color-5));
+			border: 3px solid rgb(var(--color-mono-800));
 			border: {
 				radius: 100%;
 			}
@@ -89,7 +89,7 @@
 		}
 
 		span {
-			color: rgb(var(--color-6));
+			color: rgb(var(--color-mono-900));
 			display: block;
 
 			text: {
@@ -102,7 +102,7 @@
 		}
 	}
 	&-calc {
-		color: rgb(var(--color-6));
+		color: rgb(var(--color-mono-900));
 	}
 	&-footer {
 

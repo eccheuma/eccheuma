@@ -37,8 +37,8 @@
 		&-item {
 			select {
 				padding: 2vh 3vw;
-				background-color: rgb(var(--color-1));
-				color: rgb(var(--color-6))
+				background-color: rgb(var(--color-mono-200));
+				color: rgb(var(--color-mono-900))
 			}
 		}
 	}
@@ -152,6 +152,7 @@
 					ID: this.ChilderCount[this.Config.type],
 					content: this.Content,
 					properties: this.Config,
+					rating: 5.0,
 				}
 
 				firebase.database()

@@ -6,7 +6,7 @@
 			<hr>
 			<template v-for="(item, index) in Links.Social">
 				<a :key="`link-social-${ index }`" :href="item.link">
-					<i :class="item.iconClass" /> {{ item.content }}
+					<icon :name="item.icon" /> {{ item.content }}
 				</a>
 			</template>
 		</section>
@@ -16,7 +16,7 @@
 			<hr>
 			<template v-for="(item, index) in Links.Freelance">
 				<a :key="`link-freelance-${ index }`" :href="item.link">
-					<i :class="item.iconClass" /> {{ item.content }}
+					<icon :name="item.icon" /> {{ item.content }}
 				</a>
 			</template>
 		</section>
@@ -31,7 +31,7 @@
 			</template>
 		</section>
 
-		<section class="footer-info">
+		<section class="footer-info pattern_bg">
 			
 			<SearchBar v-if="!$isMobile" />
 
@@ -53,7 +53,7 @@
 				<span>Ryova Graphical & Web Design</span>
 			</div>
 			<div class="footer-pit-logo">
-				<svg v-if="!$isMobile" ref="LOGO_SVG" fill="rgb(var(--color-2))" viewBox="0 0 157 24">
+				<svg v-if="!$isMobile" ref="LOGO_SVG" fill="rgb(var(--color-mono-300))" viewBox="0 0 157 24">
 					<path
 						ref="LOGO_PATH"
 						d="m156 7h-155c1-2 1-3 3-4 1-1 3-2 6-2h138c2 0 4 1 5 2 2 1 3 2 3 4zm-135 2h20c0 1 0 3-1 4s-3 2-7 2h-20c0-2 1-3 2-4 2-1 4-2 6-2zm135 8c0 2-1 3-3 4-1 1-3 2-5 2h-138c-3 0-5-1-6-2-2-1-2-2-3-4h155z"
@@ -62,7 +62,7 @@
 				</svg>
 			</div>
 			<div class="footer-pit-version">
-				<span>СБОРКА: {{ APP_VERSION }}</span>
+				<span>ВЕРСИЯ СБОРКИ: {{ APP_VERSION }}</span>
 			</div>
 		</section>
 
@@ -83,13 +83,17 @@
 
 		@include gradient_border(top);
 
-		display: grid; padding: 5vh 5vw 0px; gap: 30px;
+		display: grid; 
+		padding: 5vh 5vw 0px; 
+		row-gap: 2vh;
+		column-gap: 1vw;
+
 		grid-template: {
-			columns: repeat(5, 1fr);
-			rows: 20vh 4vh 10vh;
-			areas: 	"social freelance about about about"
-							"info 	info 			info 	info 	info"
-							"pit		pit				pit		pit		pit"
+			columns: 1fr 1fr 2fr;
+			rows: 20vh auto 10vh;
+			areas: 	"social freelance about"
+							"info 	info 			info "
+							"pit		pit				pit  "
 		}
 
 		@media screen and ( max-width: $mobile-breakpoint ) {
@@ -105,38 +109,44 @@
 			}
 		}
 
-		background-color: rgb(var(--color-1)); min-height: 10vh;
+		background-color: rgb(var(--color-mono-200)); min-height: 10vh;
 
 		h5 { 
-			display: block; text-align: center; color: rgb(var(--color-6));
+			display: block; 
+			text-align: left; 
+			color: rgb(var(--color-mono-800));
 			font: {
-				size: 1rem;
-				weight: 600;
+				size: var(--font-size-1);
+				family: var(--decor-font);
 			}
+
+			letter-spacing: .25ch;
+
 		}
 
 		hr {
-			background-color: rgb(var(--color-3));
+			background-color: rgb(var(--color-mono-400));
 		}
 
 		a {
-			display: block; color: rgb(var(--color-6));
-			
-			font: {
-				weight: 600;
-				size: var(--font-size-5);
+
+			display: flex;
+			align-items: center;
+			gap: 4px;
+
+			color: rgb(var(--color-mono-800));
+			font-weight: 600;
+			font-size: var(--font-size-5);
+			line-height: 3vh;
+
+			transition-duration: 0.25s;
+
+			text-decoration: underline;
+
+			i {
+				margin: unset !important;
 			}
 
-			opacity: .5;
-			line-height: 3vh;
-			transition-duration: .25s;
-			i {
-				margin: { right: 5px }
-			}
-			&:hover {
-				opacity: 1;
-				text-decoration: none;
-			}
 		}
 
 	}
@@ -161,19 +171,19 @@
 			margin: 5px 0;
 
 			border: {
-				left: 1px solid rgb(var(--color-4))
+				left: 1px solid rgb(var(--color-mono-500))
 			}
 		}
 	}
 	&-info {
 
-		@include gradient_border(both);
+		@include gradient_border(block);
 
 		@include section_position($area: info);
 
 		margin: 	0vh -5vw;
-		padding: 	2vh 5vw;
-		background-color: rgb(var(--color-2));
+		padding: 	4vh 5vw;
+		background-color: rgb(var(--color-mono-300));
 
 		display: grid;
 		grid-template: {
@@ -197,35 +207,31 @@
 			span {
 				display: block;
 				text-align: center;
-				font-weight: 700;
 				&:nth-of-type(1) {
-					color: rgb(var(--color-4));
+					color: rgb(var(--color-mono-700));
 					font: {
-						size: 12px;
+						size: var(--font-size-3);
+						weight: 500;
 					}
 				}
 				&:nth-of-type(2) {
-					color: rgb(var(--color-3));
+					color: rgb(var(--color-mono-600));
 					font: {
-						size: 10px;
+						size: var(--font-size-4);
+						weight: 700;
 					}
 				}
 			}
 		}
 
 		&-power_by {
-			color: rgb(var(--color-3));
+			color: rgb(var(--color-mono-700));
 			display: flex;
 			justify-content: center;
-			i {
-				font: {
-					size: var(--font-size-5)
-				}
-			}
 			span {
 				margin: auto 1vw;
 				font: {
-					size: var(--font-size-5);
+					size: var(--font-size-6);
 					weight: 700;
 				}
 			}
@@ -245,20 +251,23 @@
 
 		&-text {
 			span {
+
 				display: block; 
 				text-transform: uppercase;
+
 				&:nth-child(1) {
-					color: rgb(var(--color-6)); 
-					font-weight: 800; 
-					letter-spacing: 3px; 
-					font-size: .6rem
+					color: rgb(var(--color-mono-400));
+					font-weight: 500;
+					letter-spacing: .25ch;
+					font-size: var(--font-size-1);
+					font-family: var(--decor-font);
+					line-height: var(--size-1);
 				}
+
 				&:nth-child(2) {
-					color: rgb(var(--color-5)); 
-					font-weight: 700; 
-					letter-spacing: 1px; 
-					font-size: .45rem
+					color: rgb(var(--color-mono-400)); font-weight: 700; letter-spacing: 1px; font-size: .45rem
 				}
+
 			}
 		}
 		&-logo {
@@ -273,10 +282,10 @@
 			justify-content: flex-end;
 			span {
 				align-self: center;
-				color: rgb(var(--color-3));
-				letter-spacing: .5ch;
+				color: rgb(var(--color-mono-400));
+				letter-spacing: .25ch;
 				font-size: var(--font-size-6);
-				font-weight: 800;
+				font-weight: 900;
 			}
 		}
 	}
@@ -290,6 +299,7 @@
 
 	// COMPONENTS
 	import SearchBar from '~/components/common/SearchBar.vue'
+	import Icon									from '~/components/Icon.vue'
 
 	// MIXINS
 	import IntersectionCooler from '~/assets/mixins/IntersectionCooler'
@@ -298,14 +308,15 @@
 	type LINK = {
 		link: 			string
 		content: 		string 
-		iconClass?: string
+		icon?: string
 		ext?: 'PDF' | 'TXT'
 	}
 
 	type FOOTER_SECTIONS = 'Social' | 'Freelance' | 'About'
 	
+	// MODULE
 	export default Vue.extend({
-		components: { SearchBar },
+		components: { SearchBar, Icon },
 		mixins: [ IntersectionCooler ],
 		data() {
 			return {
@@ -314,14 +325,14 @@
 
 				Links: {
 					Social: [
-						{ iconClass: 'fab fa-vk', content: 'ВКонтакте', link: 'vk.com/club158755478' },
-						{ iconClass: 'fab fa-vk', content: 'ВКонтакте', link: 'vk.com/club158755478' },
-						{ iconClass: 'fab fa-vk', content: 'ВКонтакте', link: 'vk.com/club158755478' },
+						{ icon: 'VK', content: 'Группа в ВКонтакте', link: 'http://vk.com/club158755478' },
+						// { iconClass: 'fab fa-vk', content: 'ВКонтакте', link: 'vk.com/club158755478' },
+						// { iconClass: 'fab fa-vk', content: 'ВКонтакте', link: 'vk.com/club158755478' },
 					],
 					Freelance: [
-						{ iconClass: 'fab fa-vk', content: 'ВКонтакте', link: 'behance.net/Ryova' },
-						{ iconClass: 'fab fa-vk', content: 'ВКонтакте', link: 'behance.net/Ryova' },
-						{ iconClass: 'fab fa-vk', content: 'ВКонтакте', link: 'behance.net/Ryova' },
+						// { iconClass: 'fab fa-vk', content: 'ВКонтакте', link: 'behance.net/Ryova' },
+						// { iconClass: 'fab fa-vk', content: 'ВКонтакте', link: 'behance.net/Ryova' },
+						// { iconClass: 'fab fa-vk', content: 'ВКонтакте', link: 'behance.net/Ryova' },
 					],
 					About: [
 						{ 

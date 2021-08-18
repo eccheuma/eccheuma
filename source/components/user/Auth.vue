@@ -182,9 +182,9 @@
 
 .Input
 	&_Valid
-		box-shadow: 0px 0px 0px 2px rgba(var(--color-Success),.75)
+		box-shadow: 0px 0px 0px 2px rgba(var(--color-accent-pass),.75)
 	&_Invalid
-		box-shadow: 0px 0px 0px 2px rgba(var(--color-Wrong),.75)
+		box-shadow: 0px 0px 0px 2px rgba(var(--color-accent-error),.75)
 		animation: Input_Invalid .25s 4 alternate
 		@keyframes Input_Invalid
 			0%
@@ -199,8 +199,8 @@
 	margin: 0px auto 10px
 	background-size: cover
 	background-position: center
-	background-color: rgb(var(--color-5))
-	border: 3px solid rgb(var(--color-3))
+	background-color: rgb(var(--color-mono-800))
+	border: 3px solid rgb(var(--color-mono-400))
 	border-radius: 10rem
 	animation: auth_user_icon .25s 1 
 	@keyframes auth_user_icon
@@ -214,8 +214,8 @@
 .auth
 	position: relative
 	overflow: hidden
-	background-color: rgb(var(--color-6))
-	color: rgb(var(--color-3))
+	background-color: rgb(var(--color-mono-900))
+	color: rgb(var(--color-mono-400))
 	border-radius: .7rem
 	&_wrapper
 		transition: all .75s ease
@@ -224,7 +224,7 @@
 	&_header
 		overflow: hidden
 		text-align: center
-		border-bottom: 1px solid rgba(var(--color-4),.25)
+		border-bottom: 1px solid rgba(var(--color-mono-500),.25)
 		&_user
 			position: relative
 			padding: 20px 0px
@@ -238,25 +238,25 @@
 				background-repeat: no-repeat
 				z-index: 1
 				filter: saturate(0) contrast(.5) opacity(.35) brightness(1.25)
-				box-shadow: inset 0px 0px 50px 25px rgb(var(--color-6))
+				box-shadow: inset 0px 0px 50px 25px rgb(var(--color-mono-900))
 			&_wrap
 				position: relative
 				z-index: 20
 				span
 					margin-bottom: 15px
-					border: 3px solid rgb(var(--color-6))
-					filter: drop-shadow(0px 1vh 0px rgba(var(--color-1), .25))
+					border: 3px solid rgb(var(--color-mono-900))
+					filter: drop-shadow(0px 1vh 0px rgba(var(--color-mono-200), .25))
 				i
 					font-size: 50px
-					color: rgb(var(--color-3))
+					color: rgb(var(--color-mono-400))
 				p
-					text-shadow: 0px 1px 0px rgb(var(--color-6))
-					color: rgb(var(--color-3))
+					text-shadow: 0px 1px 0px rgb(var(--color-mono-900))
+					color: rgb(var(--color-mono-400))
 					margin: 0px 0px 0px
 					font-size: 1rem
 					font-weight: 700
 					&:nth-of-type(2)
-						font-size: var(--font-size-4)
+						font-size: var(--font-size-5)
 		&_register
 			position: relative
 			padding: 20px 0px
@@ -264,20 +264,20 @@
 				&:nth-child(1) 
 					font-size: 30px
 					margin: 10px 0 10px
-					color: rgb(var(--color-4))
+					color: rgb(var(--color-mono-500))
 					border-radius: 3rem 
 				&:nth-child(2) 
 					position: absolute
 					font-size: 70px
 					top:  0
 					left: -30px
-					color: rgb(var(--color-6))
-					text-shadow: 1px 0px 1px rgb(var(--color-4))
+					color: rgb(var(--color-mono-900))
+					text-shadow: 1px 0px 1px rgb(var(--color-mono-500))
 					opacity: .25
 					transform: scale(2.75)
 					// z-index: -1 
 			p
-				color: rgb(var(--color-4))
+				color: rgb(var(--color-mono-500))
 				margin: 0
 				font-size: 14px
 				font-weight: 700
@@ -286,8 +286,8 @@
 		min-height: 240px
 		&_form
 			p
-				background-color: rgb(var(--color-6))
-				border: 3px solid var(--color-Warning)
+				background-color: rgb(var(--color-mono-900))
+				border: 3px solid var(--color-accent-warning)
 				border-radius: .7rem
 				padding: 10px 15px
 				width: 100%
@@ -302,7 +302,7 @@
 			text-align: center 
 		span
 			display: block
-			color: rgb(var(--color-4))
+			color: rgb(var(--color-mono-500))
 			font-size: 10px
 			font-weight: 700
 			padding: 0 10px
@@ -315,16 +315,16 @@
 			font-size: 10px
 			font-weight: 700
 			border-radius: .7rem
-			border: 1px solid rgba(var(--color-4),.25)
+			border: 1px solid rgba(var(--color-mono-500),.25)
 			background-color: transparent
 			&:focus
 				background-color: rgba(#50c6f1,.1)
 	&_user
 		&_work
 			&-None
-				color: rgb(var(--color-5))
+				color: rgb(var(--color-mono-800))
 			&-Progress
-				color: var(--color-Warning)
+				color: var(--color-accent-warning)
 				animation: auth_user_work-Progress 1s infinite
 				animation-direction: alternate
 				@keyframes auth_user_work-Progress
@@ -333,7 +333,7 @@
 					100% 
 						opacity: 1
 			&-Done
-				color: var(--color-Success)
+				color: var(--color-accent-pass)
 				animation: auth_user_work-Done .5s infinite
 				animation-direction: alternate
 				@keyframes auth_user_work-Done
@@ -342,10 +342,10 @@
 					100% 
 						transform: scale(1.25)
 			&-Delivery
-				color: var(--color-Success)
+				color: var(--color-accent-pass)
 		span
 			display: block
-			color: rgb(var(--color-4))
+			color: rgb(var(--color-mono-500))
 			font-size: 10px
 			font-weight: 700
 			padding: 0px 5px
@@ -358,24 +358,24 @@
 			p
 				display: inline-block
 				width: 85%
-				border: 1px solid rgba(var(--color-4),.5)
+				border: 1px solid rgba(var(--color-mono-500),.5)
 				border-radius: .7rem
 				padding: 4px 10px
 				margin: 5px 0px 10px
 				text-align: right
 				font-size: .7rem
-				color: rgb(var(--color-3))
+				color: rgb(var(--color-mono-400))
 				font-weight: 700
 	&_footer
 		padding: 30px 0px
-		border-top: 1px solid rgba(var(--color-4),.25)
+		border-top: 1px solid rgba(var(--color-mono-500),.25)
 		button, p, a
 			margin: 0 10%
 			width: 80%
 			border-radius: .7rem  
 			display: block
 			text-align: center
-			color: rgb(var(--color-3))
+			color: rgb(var(--color-mono-400))
 			background-color: transparent
 			line-height: 25px
 			font-size: 10px
@@ -384,7 +384,7 @@
 			transition-duration: .2s
 			@extend %button_switch
 	&_social
-		border-top: 1px solid rgba(var(--color-4),.25)
+		border-top: 1px solid rgba(var(--color-mono-500),.25)
 		height: 100%
 		padding: 15px 0px 0px
 		outline: none
@@ -400,7 +400,7 @@
 			outline: none
 			border-radius: .7rem
 			background-color: transparent
-			color: rgb(var(--color-3))
+			color: rgb(var(--color-mono-400))
 			font-size: 14px
 			cursor: pointer
 			transition-duration: .2s

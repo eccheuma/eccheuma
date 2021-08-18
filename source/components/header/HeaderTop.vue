@@ -88,7 +88,7 @@
 	display: grid;
 	padding: 1vh 4vw;
 	grid-template-columns: repeat(3, 1fr); 
-	background-color: rgb(var(--color-1));
+	background-color: rgb(var(--color-mono-200));
 	align-items: center;
 	section {
 		@media screen and ( max-width: $mobile-breakpoint ) {
@@ -97,10 +97,15 @@
 		span {
 			display: block; text-transform: uppercase;
 			&:nth-child(1) {
-				color: rgb(var(--color-6)); font-weight: 800; letter-spacing: 3px; font-size: .6rem
+				color: rgb(var(--color-mono-800));
+				font-weight: 500;
+				letter-spacing: .25ch;
+				font-size: var(--font-size-1);
+				font-family: var(--decor-font);
+				line-height: var(--size-0);
 			}
 			&:nth-child(2) {
-				color: rgb(var(--color-5)); font-weight: 700; letter-spacing: 1px; font-size: .45rem
+				color: rgb(var(--color-mono-800)); font-weight: 700; letter-spacing: 1px; font-size: .45rem
 			}
 		}
 	}
@@ -120,14 +125,14 @@
 		grid-template-columns: 3fr 1fr;
 		justify-self: end;
 		span {
-			color: rgb(var(--color-4)); font-size: 10px; line-height: 15px;
+			color: rgb(var(--color-mono-500)); font-size: 10px; line-height: 15px;
 		}
 		i {
 			$s: 7px;
 			height: $s; width: $s;
 			justify-self: end;
 			align-self: center;
-			background-color: rgb(var(--color-5));
+			background-color: rgb(var(--color-mono-800));
 			border-radius: 100%;
 			animation: MessageNotificationSpan 1s infinite alternate;
 			@keyframes MessageNotificationSpan {
@@ -136,7 +141,7 @@
 				}
 				100% {
 					opacity: 1;
-					box-shadow: 0px 0px 6px 0px rgb(var(--color-5));
+					box-shadow: 0px 0px 6px 0px rgb(var(--color-mono-800));
 				}
 			}
 		}

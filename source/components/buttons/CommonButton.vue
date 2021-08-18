@@ -1,9 +1,9 @@
 <template>
-  <component :is="link ? 'a' : 'button'" ref="button" :style="`--color: ${ color }`">
+  <component :is="link ? 'a' : 'button'" ref="button" :class="{ 'scheme::dark': scheme === 'dark' }">
 
     <cursor-visual />
 
-    <span>
+    <span class="pattern_bg">
       <slot />
     </span>
   </component>
@@ -11,7 +11,15 @@
 
 <style lang="scss" scoped>
 
+.scheme\:\:dark {
+  --text: var(--color-mono-800);
+  --color: var(--color-mono-300);
+}
+
 button, a {
+
+  --text: var(--color-mono-300);
+  --color: var(--color-mono-800);
 
   cursor: pointer;
 
@@ -24,9 +32,10 @@ button, a {
   border-radius: .7rem;
 
   padding: 2px;
+  min-width: 180px;
 
   font-size: var(--font-size-5);
-  font-weight: 700; 
+  font-weight: 800; 
 
   span {    
     
@@ -36,7 +45,7 @@ button, a {
     text-align: center;
     line-height: 4vh;
 
-    color: rgb(var(--color-2));
+    color: rgb(var(--text));
     background-color: rgb(var(--color));
     border-radius: calc(.7rem - 4px);
 
@@ -47,12 +56,13 @@ button, a {
   }
 
   transition-duration: .25s;
+
 	&:hover {
 
 		text-decoration: none; 
 
     span {
-      color: rgb(var(--color-5));
+      color: rgb(var(--color));
       background-color: transparent;
     }
 
@@ -64,7 +74,7 @@ button, a {
 
 <script lang="ts"> 
 
-  import Vue from 'vue'
+  import Vue, { PropOptions } from 'vue'
 
   // MIXINS
 	import EmitSound      from '~/assets/mixins/EmitSound'
@@ -81,10 +91,10 @@ button, a {
         type: String,
         default: null,
       },
-      color: {
+      scheme: {
         type: String,
-        default: 'var(--color-6)'
-      }
+        default: 'light'
+      } as PropOptions<'light' | 'dark'>
     },
     data() {
       return {
@@ -95,7 +105,10 @@ button, a {
     },
     created() {
 
-      this.setSounds([{ file: 'Off', name: 'Button', settings: { rate: 1.25, volume: .5 } }])
+      this.setSounds([
+        { file: 'Off', name: 'ButtonHover', settings: { rate: 1.25, volume: .5 } },
+        { file: 'Off', name: 'ButtonClick', settings: { rate: 1, volume: .5 } }
+      ])
 
     },
     mounted() {
@@ -106,7 +119,8 @@ button, a {
         ELEMENT.setAttribute('href', this.link)
       }
 
-      ELEMENT.addEventListener('mouseenter', () => this.playSound(this.Sounds.get('Button')!))
+      ELEMENT.addEventListener('mouseenter',  () => this.playSound(this.Sounds.get('ButtonHover')!));
+      ELEMENT.addEventListener('click',       () => this.playSound(this.Sounds.get('ButtonClick')!))
 
     }
   })

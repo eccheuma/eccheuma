@@ -60,7 +60,7 @@
 
 	&-container {
 
-		@include gradient_border(both);
+		@include gradient_border(block);
 
 		position: fixed;
 		top: 0px;
@@ -75,7 +75,7 @@
 		padding: 2vh 3vw;
 
 		background: {
-			color: rgb(var(--color-1));
+			color: rgb(var(--color-mono-200));
 		}
 
 		display: grid;
@@ -83,7 +83,7 @@
 			columns: 1fr 8fr 3fr;
 		}
 
-		color: rgb(var(--color-5));
+		color: rgb(var(--color-mono-800));
 
 	}
 
@@ -101,7 +101,7 @@
 			z-index: 0; 
 			
 			top: 0; left: 0;
-			background-color: rgb(var(--color-2));		
+			background-color: rgb(var(--color-mono-300));		
 			transform: rotate(30deg) scale(8);
 
 		}
@@ -111,14 +111,14 @@
 			display: block;
 			margin: auto;
 			padding: 1vh;
-			background: rgb(var(--color-1));
-			border: 3px solid rgb(var(--color-3));
+			background: rgb(var(--color-mono-200));
+			border: 3px solid rgb(var(--color-mono-400));
 			border-radius: 100%;
 			z-index: 1000;
 
 			i {
 				@include icon-size(5vh);
-				background-color: rgb(var(--color-3));
+				background-color: rgb(var(--color-mono-400));
 				transform: translateY(-2px);
 			}
 		}
@@ -126,7 +126,8 @@
 	}
 
 	&-text {
-		justify-self: center;
+
+		justify-self: left;
 		align-self: center;
 
 		span {
@@ -134,14 +135,15 @@
 			margin-bottom: .25vh;
 			&:nth-child(1) {
 				font: {
-					size: var(--font-size-3);
-					weight: 800;
+					size: var(--font-size-2);
+					weight: 700;
 				}
 			};
 			&:nth-child(2) {
 				font: {
 					size: var(--font-size-4);
-					weight: 600;
+					weight: 500;
+					width: 65ch;
 				}
 			};
 		}

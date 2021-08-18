@@ -15,11 +15,11 @@
 .interface {
 	&-dark {
 
-		--color-6: var(--color-def-2);
-		--color-5: var(--color-def-3);
-		--color-3: var(--color-def-4);
-		--color-2: var(--color-def-5);
-		--color-1: var(--color-def-6);
+		--color-mono-900: var(--mono-200);
+		--color-mono-800: var(--mono-300);
+		--color-mono-400: var(--mono-500);
+		--color-mono-300: var(--mono-700);
+		--color-mono-200: var(--mono-800);
 
 	}	
 }
@@ -44,7 +44,7 @@
 
 		background: {
 			image: url('~assets/images/__PATTERN__.png?size=350');
-			color: rgb(var(--color-2));
+			color: rgb(var(--mono-300));
 		};
 
 		opacity: 3%;
@@ -55,14 +55,18 @@
 
 .disabled {
 	pointer-events: none;
-	opacity: .25;
+	opacity: .1;
 }
 
 .utils\:\:glassy {
-	backdrop-filter: blur(3px)
+	backdrop-filter: blur(4px)
 }
 
 .utils\:\:voided {
 	height: 0px;
 	width: 0px;
+}
+
+.utils\:\:component-shadow {
+	box-shadow: 0px 0px 10px rgba(var(--color-mono-000), .33);
 }

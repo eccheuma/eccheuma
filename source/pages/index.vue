@@ -22,7 +22,7 @@
 				:class="{ active: mute }"
 				@click="globalMute(!mute)"
 			>
-				<i class="fas" :class="mute ? `fa-volume-mute` : `fa-volume-up`" />
+				<icon name="Mute" />
 			</span>
 		</section>
 
@@ -44,7 +44,7 @@
 				/>
 			</svg>
 
-			<span />
+			<span>ECCHEUMA</span>
 			<span>GRAPHICAL & WEB APPLICATION DESIGN</span>
 
 		</section>
@@ -63,16 +63,13 @@
 
 		<section class="holl-links">
 
-			<!-- @mouseenter="EmitSound(`On`)" -->
-			<!-- @click="EmitSound(`Tap`, { rate: 0.5 })" -->
-
 			<a
 				v-for="(item, index) in Links"
 				:key="index"
 				:href="item.link"
 			>
 			
-				<i :class="item.icon" class="fab" />{{ item.title }}
+				<icon :name="item.icon" /> {{ item.title }}
 
 			</a>
 		</section>
@@ -82,116 +79,89 @@
 
 <style lang="scss" scoped>
 
-@mixin section_position($area: block) {
-	grid: {
-		row: $area;
-		column: $area;
-	}
-}
-
-.active {
-	color: rgb(var(--color-1)) !important;
-	background-color: rgb(var(--color-5)) !important;
-	animation: Mute 1s infinite alternate;
-	@keyframes Mute {
-		0% {
-			transform: scale(0.85);
-		}
-		100% {
-			transform: scale(1);
+	@mixin section_position($area: block) {
+		grid: {
+			row: $area;
+			column: $area;
 		}
 	}
-}
 
-.holl {
-	&-wall {
-
-		position: absolute; top: 0; left: 0; z-index: 9999;
-
-		width: 100vw;
-		height: 100vh;
-
-		background: {
-			color: rgba(var(--color-1), 1);
-		}
-
-		// line-height: 100vh;
-		// letter-spacing: 1ch;
-    // color: rgb(var(--color-4));
-
-		// text: {
-		// 	align: center;
-		// 	transform: uppercase;
-		// }
-
-		// font: {
-		// 	style: normal;
-		// 	weight: 700;
-		// 	size: 1rem;
-		// }
-
-	}
-	&-container {
-		display: grid;
-		grid-template: {
-			columns: 1fr 12fr 1fr;
-			rows: 1fr 4fr 2fr 2fr 1fr;
-			areas: ". build 	mute" ". logo 	." ". nav 		." ". quote 	." ". links 	.";
-		}
-
-		@media screen and ( max-width: $mobile-breakpoint ) {
-			grid-template: {
-				columns: 100vw;
-				rows: 1fr 1fr 4fr 1fr 1fr 60px;
-				areas: "build" "logo" "nav" "mute" "links";
+	.active {
+		color: rgb(var(--color-mono-200)) !important;
+		background-color: rgb(var(--color-mono-800)) !important;
+		animation: Mute 1s infinite alternate;
+		@keyframes Mute {
+			0% {
+				transform: scale(0.85);
+			}
+			100% {
+				transform: scale(1);
 			}
 		}
+	}
 
-		position: relative;
-		width: 100vw;
-		height: 100vh;
+	.holl {
+		&-wall {
 
-		@media screen and ( max-width: $mobile-breakpoint ) {
-			overflow: hidden;
+			position: absolute; top: 0; left: 0; z-index: 9999;
+
 			width: 100vw;
-			min-height: 90vh;
-		}
-
-		&:before {
-
-			content: "";
-
-			position: absolute;
-			top: 0; left: 0;
-			z-index: 0;
-
-			width: 100vw; 
 			height: 100vh;
-
-			opacity: .25;
 
 			background: {
-				image: url('~assets/images/Background.png?placeholder=true&size=600');
-				size: cover;
-				position: center;
-				repeat: no-repeat;
-				blend-mode: multiply;
+				color: rgba(var(--color-mono-200), 1);
 			}
 
 		}
+		&-container {
+			display: grid;
+			grid-template: {
+				columns: 1fr 12fr 1fr;
+				rows: 1fr 4fr 2fr 1fr 1fr;
+				areas: ". build 	mute" ". logo 	." ". nav 		." ". quote 	." ". links 	.";
+			}
 
-		&:after {
-			content: "";
-			position: absolute;
-			top: 0;
-			left: 0;
-			z-index: 2;
+			@media screen and ( max-width: $mobile-breakpoint ) {
+				grid-template: {
+					columns: 100vw;
+					rows: 1fr 1fr 4fr 1fr 1fr 60px;
+					areas: "build" "logo" "nav" "mute" "links";
+				}
+			}
+
+			position: relative;
 			width: 100vw;
 			height: 100vh;
-			background: radial-gradient(#00000000 0%, #000000ff 85%);
-		}
 
-		@media screen and ( max-width: $mobile-breakpoint ) {
+			@media screen and ( max-width: $mobile-breakpoint ) {
+				overflow: hidden;
+				width: 100vw;
+				min-height: 90vh;
+			}
+
+			&:before {
+
+				content: "";
+
+				position: absolute;
+				top: 0; left: 0;
+				z-index: 0;
+
+				width: 100vw; 
+				height: 100vh;
+
+				opacity: .25;
+
+				background: {
+					image: url('~assets/images/Background.png?placeholder=true&size=600');
+					size: cover;
+					position: center;
+					repeat: no-repeat;
+					blend-mode: multiply;
+				}
+
+			}
+
 			&:after {
 				content: "";
 				position: absolute;
@@ -200,171 +170,204 @@
 				z-index: 2;
 				width: 100vw;
 				height: 100vh;
-				background: radial-gradient(#00000000 0%, #000000ff 85%);
+				background: radial-gradient(rgba(#14141D, .66), rgb(var(--color-mono-200)) 75%);
 			}
-		}
-
-		section {
-			position: relative;
-			z-index: 1000;
-		}
-
-	}
-	&-mute {
-		@include section_position($area: mute);
-
-		align-self: center;
-		justify-self: center;
-
-		span {
-			$size: 50px;
-
-			cursor: pointer;
-			display: flex;
-			width: $size;
-			height: $size;
-			color: rgb(var(--color-4));
-			font-size: #{$size / 3};
-			background-color: rgb(var(--color-1));
-			border: 1px solid rgb(var(--color-3));
-			border-radius: 100%;
-			opacity: 1;
-
-			i {
-				margin: auto;
-			}
-		}
-	}
-	&-info {
-		@include section_position($area: build);
-
-		align-self: center;
-		justify-self: center;
-
-		span {
-			color: rgb(var(--color-4));
-			font-size: var(--font-size-6);
-			font-weight: 800;
-			letter-spacing: 1ch;
-			text-align: center;
 
 			@media screen and ( max-width: $mobile-breakpoint ) {
-				font-size: 0.45rem;
-				letter-spacing: 0.5ch;
+				&:after {
+					content: "";
+					position: absolute;
+					top: 0;
+					left: 0;
+					z-index: 2;
+					width: 100vw;
+					height: 100vh;
+					background: radial-gradient(#00000000 0%, #000000ff 85%);
+				}
+			}
+
+			section {
+				position: relative;
+				z-index: 1000;
 			}
 
 		}
-	}
-	&-logo {
-		@include section_position($area: logo);
+		&-mute {
+			@include section_position($area: mute);
 
-		align-self: end;
-
-		@media screen and (max-width: $mobile-breakpoint) {
 			align-self: center;
-		}
+			justify-self: center;
 
-		svg {
-			background: {
-				size: contain;
-				position: center;
-				repeat: no-repeat;
+			span {
+				$size: 50px;
+
+				cursor: pointer;
+				display: flex;
+				width: $size;
+				height: $size;
+				color: rgb(var(--color-mono-500));
+				font-size: #{$size / 3};
+				background-color: rgb(var(--color-mono-200));
+				border: 3px solid rgb(var(--color-mono-400));
+				border-radius: 100%;
+				opacity: 1;
+
+				i {
+					@include icon-size(24px);
+					margin: auto;
+				}
 			}
-
-			height: 1.5rem;
-			width: 100%;
-			margin: 3vh 0;
 		}
+		&-info {
+			@include section_position($area: build);
 
-		span {
-			opacity: 0;
+			align-self: center;
+			justify-self: center;
 
-			display: block;
-			text-align: center;
-			pointer-events: none;
+			span {
+				color: rgb(var(--color-mono-500));
+				font-size: var(--font-size-6);
+				font-weight: 800;
+				letter-spacing: 1ch;
+				text-align: center;
 
-			margin: {
-				top: 5px;
+				@media screen and ( max-width: $mobile-breakpoint ) {
+					font-size: 0.45rem;
+					letter-spacing: 0.5ch;
+				}
+
 			}
+		}
+		&-logo {
+			@include section_position($area: logo);
+
+			align-self: end;
 
 			@media screen and (max-width: $mobile-breakpoint) {
-				opacity: 1;
+				align-self: center;
 			}
 
-			&:nth-of-type(1) {
-				height: 1vw;
+			svg {
 				background: {
-					image: url('~assets/images/SVG/Eccheuma.svg');
 					size: contain;
 					position: center;
 					repeat: no-repeat;
 				}
 
+				height: 1.5rem;
+				width: 100%;
+				margin: 3vh 0;
+			}
+
+			span {
+				opacity: 0;
+
+				display: block;
+				text-align: center;
+				pointer-events: none;
+
+				margin: {
+					top: 5px;
+				}
+
 				@media screen and (max-width: $mobile-breakpoint) {
-					height: 3.6vh;
+					opacity: 1;
+				}
+
+				&:nth-of-type(1) {
+
+					color: rgb(var(--color-mono-700));
+					
+					font: {
+						size: var(--font-size-0);
+						family: var(--decor-font);
+					}
+
+					text-shadow: 0px 0px 2px rgb(var(--color-mono-500));
+
+					letter-spacing: 0.5ch;
+					line-height: var(--size-1);
+
+					text-rendering: optimizeSpeed;
+
+				}
+
+				&:nth-of-type(2) {
+					margin-top: 6px;
+					color: rgb(var(--color-mono-600));
+					line-height: 2vh;
+					letter-spacing: 0.5ch;
+					font: {
+						size: 0.45rem;
+						weight: 600;
+					}
 				}
 			}
+		}
+		&-navigation {
+			@include section_position($area: nav);
 
-			&:nth-of-type(2) {
-				margin-top: 6px;
-				color: rgb(var(--color-6));
-				line-height: 2vh;
-				letter-spacing: 0.5ch;
-				font: {
-					size: 0.45rem;
-					weight: 600;
+			align-self: center;
+			z-index: 1010 !important;
+
+		}
+		&-quote {
+			@include section_position($area: quote);
+
+			align-self: center;
+			justify-self: center;
+
+			width: 70ch;
+			text-align: center;
+
+			span {
+				font-weight: 600;
+				font-style: italic;
+				color: rgba(var(--color-mono-700));
+				font-size: var(--font-size-4);
+			}
+
+			z-index: 0;
+
+		}
+		&-links {
+			@include section_position($area: links);
+
+			align-self: center;
+			justify-self: center;
+
+			display: flex;
+
+			a {
+
+				margin: 0 15px;
+				font-weight: 700;
+				margin: 0px 10px;
+				font-size: var(--font-size-4);
+				color: rgb(var(--color-mono-400));
+				text-decoration: underline;
+				transition-duration: 500ms;
+				display: flex;
+
+				i {
+					margin: 0 4px;
+					background: rgb(var(--color-mono-400));
+					transition-duration: 500ms;
 				}
+
+				&:hover {
+					margin: 0px 25px;
+					color: rgb(var(--color-mono-900));
+					text-decoration: underline;
+					i {
+						margin: 0 4px;
+						background: rgb(var(--color-mono-900));
+					}
+				}
+
 			}
 		}
 	}
-	&-navigation {
-		@include section_position($area: nav);
-
-		align-self: center;
-
-	}
-	&-quote {
-		@include section_position($area: quote);
-
-		align-self: center;
-		justify-self: center;
-
-		width: 70ch;
-		text-align: center;
-
-		span {
-			font-weight: 700;
-			font-style: italic;
-			color: rgb(var(--color-4));
-			font-size: var(--font-size-4);
-		}
-	}
-	&-links {
-		@include section_position($area: links);
-
-		align-self: center;
-		justify-self: center;
-
-		display: inline-block;
-
-		a {
-			margin: 0 15px;
-			font-weight: 700;
-			margin: 0px 10px;
-			font-size: var(--font-size-5);
-			color: rgb(var(--color-3));
-			transition-duration: 0.5s;
-			&:hover {
-				margin: 0px 25px;
-				color: rgb(var(--color-6));
-				text-decoration: none;
-			}
-			i {
-				margin: 0 4px;
-			}
-		}
-	}
-}
 
 </style>
 
@@ -387,23 +390,30 @@
 	import EmitSound from '~/assets/mixins/EmitSound'
 
 // COMPONENTS
-	import HeaderNavigation from  '~/components/header/HeaderNavigation.vue'
+	import HeaderNavigation from '~/components/header/HeaderNavigation.vue'
+	import Icon 						from '~/components/Icon.vue'
 
 // VARIABLES
 	const PLACEHOLDER = require('~/assets/images/Background.png?placeholder=true&size=300').src
+
+// FUNCTIONS
+	const getVersion = async (): Promise<{ Version: string, BuildTime: string }> => {
+		return await firebase.database().ref('App')
+					.once('value')
+					.then( data => data.val() as { Version: string, BuildTime: string })
+	}
 
 // MODULE
 	export default Vue.extend({
 		components: {
 			HeaderNavigation,
+			Icon,
 			PixiCanvas: () => import('~/components/common/PixiCanvas.vue' /* webpackChunkName: "PixiCanvas" */)
 		},
 		mixins: [ EmitSound ],
 		async asyncData() {
 
-			const ApplicationBuild = await firebase.database().ref('App')
-					.once('value')
-					.then( data => data.val() as { Version: string, BuildTime: string })
+			const ApplicationBuild = await getVersion();
 
 			return { ApplicationBuild } 
 
@@ -413,7 +423,7 @@
 
 				CanvasReady: false,
 
-				ApplicationBuild: {} as { Version: string, BuildTime: string },
+				ApplicationBuild: new Object() as { Version: string, BuildTime: string },
 
 				CurentQuoteIndex: 0,
 
@@ -424,9 +434,9 @@
 				],
 
 				Links: [
-					{ link: 'https://vk.com/club158755478', icon: 'fa-vk', 					title: 'ВКонтакте' 	},
-					{ link: 'https://facebook.com', 				icon: 'fa-facebook-f', 	title: 'FaceBook' 	},
-					{ link: 'https://telegramm.com', 				icon: 'fa-telegram', 		title: 'Telegramm' 	},
+					{ link: 'https://vk.com/club158755478', icon: 'VK', 				title: 'ВКонтакте' 	},
+					{ link: 'https://facebook.com', 				icon: 'Facebook', 	title: 'FaceBook' 	},
+					{ link: 'https://telegramm.com', 				icon: 'Telegramm', 	title: 'Telegramm' 	},
 				],
 			
 				HollVolume: 0,
@@ -434,6 +444,11 @@
 				AnimeInstance: [] as AnimeInstance[],
 				
 			}
+		},
+		async fetch() {
+
+			this.ApplicationBuild = await getVersion();
+
 		},
 		head: {
 			link: [
@@ -453,8 +468,10 @@
 			CanvasReady: {
 				handler() {
 
-					const AMBIENT = this.Sounds.get('Ambient')!;
-								AMBIENT.volume(0)
+					const AMBIENT 				= this.Sounds.get('Ambient')!;
+					const INITIAL_VOLUME 	= AMBIENT.volume();
+
+					AMBIENT.volume(0)
 
 					const DUR = 3000;
 
@@ -467,9 +484,11 @@
 
 						begin: () => {
 
-							this.playSound(this.Sounds.get('Ambient'))
+							AMBIENT.volume(0)
 
-							AMBIENT.fade(0, .5, DUR)
+							this.playSound(AMBIENT)
+
+							AMBIENT.fade(0, INITIAL_VOLUME, DUR)
 
 						}
 
@@ -479,17 +498,25 @@
 			},
 		},
 		created() {
+
 			this.setSounds([
 				{
 					file: 'Holl',
 					name: 'Ambient',
-					settings: { rate: .75, volume: .5, loop: true },
+					settings: { rate: .45, volume: 1.25, loop: true },
 				}
 			])
+			
 		},
 		mounted() {
 
-			this.initQuoteChanger();
+			this.initQuoteChanger(); 
+			
+			setTimeout(() => { 
+				if ( !this.CanvasReady ) {
+					this.CanvasReady = true
+				}
+			}, 5000)
 
 		},
 		beforeDestroy() {

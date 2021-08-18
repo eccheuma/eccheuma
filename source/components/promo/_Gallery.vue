@@ -24,7 +24,7 @@
 
 .promo {
 	&_body {
-		@include gradient_border(both);
+		@include gradient_border(block);
 
 		display: grid;
 		max-width: 1200px;
@@ -40,7 +40,7 @@
 
 		align-items: center;
 		justify-content: center;
-		background-color: rgb(var(--color-2));
+		background-color: rgb(var(--color-mono-300));
 
 		@media screen and ( max-width: $mobile-breakpoint ) {
 			grid-template-columns: 1fr;
@@ -54,7 +54,7 @@
 		}
 
 		p {
-			font-size: var(--font-size-4)
+			font-size: var(--font-size-5)
 		}
 
 	}

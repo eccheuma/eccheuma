@@ -1,5 +1,5 @@
 <template>
-	<div v-if="Object.keys(RecivedData).length " :id="`HASH-${ commentID }`" class="post-comment-item">
+	<div v-if="Object.keys(RecivedData).length " :id="`HASH-${ commentID }`" class="post-comment-item pattern_bg">
 
 		<section class="post-comment-item-icon">
 			<i class="post_comment-icon" :style="`background-image: url(${ Author.UserImageID })`" />
@@ -10,12 +10,12 @@
 			<span>
 				{{ DateOfComment.Day }} в {{ DateOfComment.Time }}
 			</span>
-			<hr>
 		</section>
 
 		<section class="post-comment-item-content">
+			<hr>
 			<p>{{ RecivedData.Comment }}</p>
-			
+			<hr>
 			<template v-if="LoginStatus">
 				<common-button v-if="UserState.UserID === Author.UserID" @click.native="RemoveComment">
 					Удалить комментарий
@@ -29,6 +29,8 @@
 <style lang="scss">
 
 .post-comment-item {
+
+	@include component-shadow;
 
 	@media screen and ( max-width: $mobile-breakpoint ) {
 		
@@ -47,9 +49,11 @@
 
 	min-height: 20vh;
 
-	padding: 2vh 3vw;
+	padding: 5vh 2vw;
 	margin: { bottom: 2vh };
-	border-bottom: 1px solid rgb(var(--color-5));
+
+	border-radius: .7rem;
+	background-color: rgb(var(--color-mono-300));
 
 	grid-template: {
 		columns: auto 1fr;
@@ -68,11 +72,10 @@
 
 		i {
 
-			$s: 80px;
-
 			display: block;
 
-			width: $s; height: $s;
+			width: 100px; 
+			aspect-ratio: 1/1;			
 	
 			background: {
 				size: cover;
@@ -80,8 +83,8 @@
 				repeat: 	no-repeat;
 			}
 	
-			border: 4px solid rgb(var(--color-6));
-			box-shadow: 0px 1vh 0px 0px rgb(var(--color-5));
+			border: 4px solid rgb(var(--color-mono-200));
+			// box-shadow: 0px 1vh 0px 0px rgb(var(--color-mono-800));
 			border-radius: 100%;
 
 			@media screen and ( max-width: $mobile-breakpoint ) {
@@ -101,11 +104,9 @@
 
 		align-self: center;
 
-		padding-bottom: 1vh;
-
 		hr {
 
-			background-color: rgb(var(--color-5));
+			background-color: rgb(var(--color-mono-200));
 			width: 50%;
 			margin: 1vh 0;
 
@@ -116,16 +117,16 @@
 		}
 
 		span {
-			font-weight: 900;
 			display: block;
 			&:nth-of-type(1) {
-				font-size: var(--font-size-4);
-				color: rgb(var(--color-3));
-				text-transform: uppercase;
+				font-size: var(--font-size-3);
+				font-weight: 800;
+				color: rgb(var(--color-mono-800));
 			}
 			&:nth-of-type(2) {
-				font-size: var(--font-size-5);
-				color: rgb(var(--color-4));
+				font-size: var(--font-size-3);
+				font-weight: 600;
+				color: rgb(var(--color-mono-600));
 			}
 		}
 
@@ -141,31 +142,22 @@
 			column: content; 
 		}
 
+		hr {
+			background-color: rgb(var(--color-mono-400));
+		}
+
 		p {
 
 			line-height: 2.5vh;
-			color: rgb(var(--color-3));
+			color: rgb(var(--color-mono-800));
 			font: {
-				size: 	var(--font-size-4);
-				weight: 600;
+				size: 	var(--font-size-3);
+				family: var(--read-font);
+				weight: 500;
 			}
 
 			width: 65ch;
-			padding: 3vh 0;
 
-			@media screen and ( max-width: $mobile-breakpoint ) {
-				padding: 0 5vw;
-			}
-
-		}
-
-		button {
-			@include push-button {
-				background-color: transparent;
-				padding: 3px 20px;
-				float: left;
-				margin: 0;
-			};
 		}
 
 	}

@@ -198,7 +198,7 @@
 	&-wrap {
 		position: fixed; top: 0; left: 0; z-index: 10000;
 		width: 100vw; height: 100vh;
-		background-color: rgba(var(--color-1), .9);
+		background-color: rgba(var(--color-mono-200), .9);
 		&:before {
 			content: '';
 			position: absolute; top: 0; left: 0;  z-index: -1;
@@ -221,7 +221,7 @@
 		top: #{(100vh - $h) / 2}; 
 		left: #{(100vw - $w) / 2}; 
 		width: $w; height: $h;
-		background-color: rgb(var(--color-1));
+		background-color: rgb(var(--color-mono-200));
 
 		display: grid;
 		grid-template: {
@@ -230,7 +230,7 @@
 		}
 
 		border-radius: .7rem; overflow: hidden;
-		border: 1px solid rgb(var(--color-3))
+		border: 1px solid rgb(var(--color-mono-400))
 
 	}
 	&-header {
@@ -242,7 +242,7 @@
 		padding: 2vh 0;
 		width: 100%;
 
-		color: rgb(var(--color-6));
+		color: rgb(var(--color-mono-900));
 
 		span {
 
@@ -268,15 +268,15 @@
 		align-content: center;
 
 		padding: 0 25%;
-		color: rgb(var(--color-6));
-		background-color: rgb(var(--color-2));
+		color: rgb(var(--color-mono-900));
+		background-color: rgb(var(--color-mono-300));
 
 		.invalid {
-			border: 1px solid var(--color-Wrong)
+			border: 1px solid var(--color-accent-error)
 		}
 
 		.valid {
-			border: 1px solid var(--color-Success)
+			border: 1px solid var(--color-accent-pass)
 		}
 
 		section {
@@ -291,7 +291,7 @@
 					}
 				}
 				&:nth-of-type(2) {
-					color: rgb(var(--color-4));
+					color: rgb(var(--color-mono-500));
 				}
 			}
 			input {
@@ -299,11 +299,11 @@
 				outline: none;
 				width: 90%;
 				border-radius: .7rem;
-				background-color: rgb(var(--color-1));
-				border: 1px solid rgb(var(--color-3));
-				color: rgba(var(--color-6), .75);
+				background-color: rgb(var(--color-mono-200));
+				border: 1px solid rgb(var(--color-mono-400));
+				color: rgba(var(--color-mono-900), .75);
 				font-weight: 700;
-				font-size: var(--font-size-4);
+				font-size: var(--font-size-5);
 				padding: 1vh 15px;
 				margin: { bottom: 1vh; top: 1vh };
 			}

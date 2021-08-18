@@ -1,96 +1,137 @@
 <template>
-  <main>
+  <main class="portfolio-container">
+
     <promo-banner promo-type="Style" :order="0" />
 
-    <navigation :category="HeaderMenu" />
+		<section class="portfolio-content">
 
-    <nuxt-child :key="$route.path" />
+			<section-header>
+				<template #header>	
+					<span>Выполненные работы</span>
+				</template>
+				<template #default>
+					<span>Разбитые на категории работы, с указание цены, отзывов, и технологий</span>
+				</template>
+			</section-header>
+
+			<navigation :category="HeaderMenu" />
+
+			<nuxt-child :key="$route.path" />
+
+		</section>
+
   </main>
 </template>
 
 <style lang="scss" scoped>
-main {
-  display: grid;
-  grid-template-columns: 1fr;
-}
+	main {
+		display: grid;
+		grid-template-columns: 1fr;
+		row-gap: 2vh;
+	}
+
+	.portfolio {
+		&-content {
+
+			@include gradient_border(block);
+			@include component-shadow;
+
+			padding: 0 1vw;
+			display: flex;
+			flex-direction: column;
+			gap: 2vh;
+
+			border-radius: .7rem;
+
+		}
+	}
+
 </style>
 
 <script>
-import TransitionSound from '~/assets/mixins/TransitionSound';
-import EmitSound from '~/assets/mixins/EmitSound';
 
-export default {
-  components: {
-    PromoBanner: () => import('~/components/promo/PromoBanner.vue'),
-    Navigation: () => import('~/components/common/Navigation.vue'),
-  },
-  mixins: [TransitionSound, EmitSound],
-  layout: 'Application',
-  scrollToTop: false,
-  transition: 'opacity-transition',
-  data() {
-    return {
-      HeaderMenu: [
-        {
-          ID: 0,
-          disabled: false,
-          route: '/portfolio/landings',
-          name: 'Лэндинги',
-          icon: 'fab fa-js-square',
-          discription:
-            'Главная страница. Тут собраны статьи на завязанные на профильную тему.',
-        },
-        {
-          ID: 1,
-          disabled: false,
-          route: '/portfolio/logo',
-          name: 'Логотипы',
-          icon: 'fas fa-bezier-curve',
-          discription:
-            'Галлерея изображений. Начиная от логотипов и полноценных макетов, заканчивая всякими набросками и непринятыми вариантами работ.',
-        },
-        {
-          ID: 2,
-          disabled: false,
-          route: '/portfolio/banners',
-          name: 'Макеты',
-          icon: 'fas fa-sticky-note',
-          discription:
-            'Предложения по оказанию услуг. В зависимости от сезона и нагруженности тут появляются выгодные предложения на разные виды услуг.',
-        },
-      ],
-    };
-  },
-  head() {
-    return {
-      title: 'Eccheuma | Портфолио',
-      meta: [
-        {
-          hid: 'description',
-          name: 'description',
-          content:
-            'Принятые работы. С указанием сроков, цены, комментариев, и отзывов на выполненую работу.',
-        },
-      ],
-    };
-  },
-  computed: {
-    CurentRoute() {
-      return this.$route.path;
-    },
-  },
-  methods: {
-    GoRouterTo(prop) {
-      if (this.$route.path != prop) {
-        setTimeout(() => {
-          this.EmitSound('Out');
-        }, 750);
+// MIXINS
+	import TransitionSound 	from '~/assets/mixins/TransitionSound';
+	import EmitSound 				from '~/assets/mixins/EmitSound';
 
-        this.$router.push({ path: prop });
-      }
-    },
-  },
-};
+// COMPONENTS
+	import SectionHeader 		from '~/components/common/SectionHeader.vue'
+
+// MODULE
+	export default {
+		components: {
+			SectionHeader,
+			PromoBanner: () => import('~/components/promo/PromoBanner.vue'),
+			Navigation: () => import('~/components/common/Navigation.vue'),
+		},
+		mixins: [TransitionSound, EmitSound],
+		layout: 'Application',
+		scrollToTop: false,
+		transition: 'opacity-transition',
+		data() {
+			return {
+				HeaderMenu: [
+					{
+						ID: 0,
+						disabled: false,
+						route: '/portfolio/landings',
+						name: 'Лэндинги',
+						icon: 'JS',
+						discription:
+							'Главная страница. Тут собраны статьи на завязанные на профильную тему.',
+					},
+					{
+						ID: 1,
+						disabled: false,
+						route: '/portfolio/logo',
+						name: 'Логотипы',
+						icon: 'Vector',
+						discription:
+							'Галлерея изображений. Начиная от логотипов и полноценных макетов, заканчивая всякими набросками и непринятыми вариантами работ.',
+					},
+					{
+						ID: 2,
+						disabled: false,
+						route: '/portfolio/banners',
+						name: 'Макеты',
+						icon: 'Blank',
+						discription:
+							'Предложения по оказанию услуг. В зависимости от сезона и нагруженности тут появляются выгодные предложения на разные виды услуг.',
+					},
+				],
+			};
+		},
+		head() {
+			return {
+				title: 'Eccheuma | Портфолио',
+				meta: [
+					{
+						hid: 'description',
+						name: 'description',
+						content:
+							'Принятые работы. С указанием сроков, цены, комментариев, и отзывов на выполненую работу.',
+					},
+				],
+			};
+		},
+		computed: {
+			CurentRoute() {
+				return this.$route.path;
+			},
+		},
+		methods: {
+			GoRouterTo(prop) {
+				if (this.$route.path != prop) {
+					setTimeout(() => {
+						this.EmitSound('Out');
+					}, 750);
+
+					this.$router.push({ path: prop });
+				}
+			},
+		},
+	}
+
 </script>
 
 <style lang="sass">
@@ -102,7 +143,7 @@ export default {
 	font-size: 12px
 	font-weight: 700
 	border-radius: 12px
-	color: rgb(var(--color-6)) !important
+	color: rgb(var(--color-mono-900)) !important
 	transition-duration: .5s
 	&:after
 		transition-duration: .5s
@@ -111,7 +152,7 @@ export default {
 		width: 100%
 		height: 1px
 		transform: scaleX(1) translateY(-47px)
-		background-color: rgba(var(--color-6),1)
+		background-color: rgba(var(--color-mono-900),1)
 		@media screen and ( max-width: $mobile-breakpoint )
 			transform: scaleX(1) translateY(-36px)
 
@@ -137,10 +178,10 @@ $TransitionDuration: .25s
 			border-radius: .7rem
 			width: .25rem
 			height: 2vh
-			background-color: rgb(var(--color-3))
+			background-color: rgb(var(--color-mono-400))
 	nav
 		margin: 0px 15px
-		color: rgba(var(--color-5),.70)
+		color: rgba(var(--color-mono-800),.70)
 		a
 			cursor: pointer
 			padding: 15px 0px
@@ -151,9 +192,9 @@ $TransitionDuration: .25s
 			border-radius: 12px
 			i
 				display: block
-				font-size: var(--font-size-4)
+				font-size: var(--font-size-5)
 				margin-bottom: 12px
-				color: rgb(var(--color-3))
+				color: rgb(var(--color-mono-400))
 			&:before
 				transition-duration: $TransitionDuration
 				content: ''
@@ -164,11 +205,11 @@ $TransitionDuration: .25s
 				background-color: grey
 			&:hover
 				text-decoration: none
-				color: rgba(var(--color-6), 1)
+				color: rgba(var(--color-mono-900), 1)
 				transition-duration: $TransitionDuration
 				i
 					transition-duration: $TransitionDuration
-					color: rgb(var(--color-4))
+					color: rgb(var(--color-mono-500))
 				&:before
 					transition-duration: $TransitionDuration
 					content: ''
@@ -182,6 +223,6 @@ $TransitionDuration: .25s
 
 .Portfolio-Case
 	min-height: 400px
-	background-color: rgb(var(--color-1))
+	background-color: rgb(var(--color-mono-200))
 
 </style>

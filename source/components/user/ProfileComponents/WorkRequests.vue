@@ -40,20 +40,20 @@
 
 		.status {
 			&-pending {
-				border: 1px solid rgb(var(--color-4));
+				border: 1px solid rgb(var(--color-mono-500));
 			}
 			&-progress {
-				border: 1px solid var(--color-Warning);
+				border: 1px solid var(--color-accent-warning);
 			}
 			&-complete {
-				border: 1px solid rgba(var(--color-Success), .25);
+				border: 1px solid rgba(var(--color-accent-pass), .25);
 				animation: unread 1s infinite alternate;
 				@keyframes unread {
 					0% {
-						border: 1px solid rgba(var(--color-Success), .25)
+						border: 1px solid rgba(var(--color-accent-pass), .25)
 					}
 					100% {
-						border: 1px solid rgba(var(--color-Success), 1)
+						border: 1px solid rgba(var(--color-accent-pass), 1)
 					}
 				}
 			}	
@@ -67,7 +67,7 @@
 			columns: 8fr 2fr
 		}
 
-		background-color: rgb(var(--color-1));
+		background-color: rgb(var(--color-mono-200));
 		padding: 20px 40px;
 		border-radius: .7rem;
 		font-size: 12px;
@@ -75,12 +75,12 @@
 		p {
 			display: inline;
 			text-align: right;
-			color: rgb(var(--color-6));
+			color: rgb(var(--color-mono-900));
 		}
 		span {
 			display: block;
 			text-align: left;
-			color: rgb(var(--color-4));
+			color: rgb(var(--color-mono-500));
 		}
 
 	}

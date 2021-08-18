@@ -37,7 +37,7 @@
 
 aside {
 
-	padding: 5px;
+	padding: 2vh 10px;
 	display: grid;
 	row-gap: 2vh;
 	align-content: start;
@@ -48,7 +48,7 @@ main {
 	display: grid;
 	row-gap: 2vh;
 	align-content: start;
-	padding: 2vh 5px;
+	padding: 2vh 10px;
 }
 
 .home {

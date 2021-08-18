@@ -13,7 +13,7 @@
               style="height: 40vh"
               :content="{ path: item.content.path }"
               :sections="{ date: false, description: false, zoom: true }"
-              :property="{ fit: 'cover', type: 'promo', collumn: 7 }"
+              :property="{ fit: 'cover', type: 'default', collumn: 7 }"
             >
               {{ section.content.name }}
             </vue-image>
@@ -35,14 +35,15 @@
 <style lang="scss" scoped>
 
 .works_swiper {
-  display: block;
+  width: 720px;
+  margin: auto;
   &-item {
 
     padding: 0 5vw;
     display: inline-grid;
 
     hr {
-      background-color: rgb(var(--color-3));
+      background-color: rgb(var(--color-mono-400));
       width: 75%;
     }
 
@@ -54,12 +55,12 @@
       span {
         display: block;
         &:nth-child(1) {
-          color: rgb(var(--color-5));
-          font-size: var(--font-size-1);
+          color: rgb(var(--color-mono-800));
+          font-size: var(--font-size-2);
           font-weight: 800;
         }
         &:nth-child(2) {
-          color: rgb(var(--color-4));
+          color: rgb(var(--color-mono-500));
           font-size: var(--font-size-3);
           font-weight: 500;
         }
@@ -71,12 +72,12 @@
 
 .promo {
   &-body {
-    @include gradient_border(both);
+    @include gradient_border(block);
     position: relative;
     width: 100%;
     overflow: hidden;
     padding: 0 !important; 
-    background-color: rgb(var(--color-2));
+    background-color: rgb(var(--color-mono-300));
   }
 }
 </style>

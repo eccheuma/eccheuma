@@ -117,10 +117,10 @@
 			height: $s;
 			width: $s;
 			border-radius: 100%;
-			border: 3px solid rgb(var(--color-3));
+			border: 3px solid rgb(var(--color-mono-400));
 			background-position: center;
 			background-size: cover;
-			background-color: rgb(var(--color-5));
+			background-color: rgb(var(--color-mono-800));
 		}
 
 		&-prepared {
@@ -130,7 +130,7 @@
 			span {
 				display: block;
 				margin: 3vh 5vw;
-				color: rgb(var(--color-6));
+				color: rgb(var(--color-mono-900));
 				font: {
 					size: .75rem;
 				}
@@ -152,10 +152,10 @@
 				height: $s;
 				width: $s;
 				border-radius: 100%;
-				border: 2px solid rgb(var(--color-5));
+				border: 2px solid rgb(var(--color-mono-800));
 
 				background: {
-					color: rgb(var(--color-5));
+					color: rgb(var(--color-mono-800));
 					position: center;
 					size: cover;
 				}
@@ -174,7 +174,7 @@
 			padding: 0 5vw;
 
 			span {
-				color: rgb(var(--color-6));
+				color: rgb(var(--color-mono-900));
 				font: {
 					size: .75rem;
 				}
@@ -252,7 +252,7 @@
 
 			async GetImagesList() {
 
-				const REFS = await firebase.storage().ref(`UserIcons`).list().then( res => res.items )
+				const REFS = await firebase.storage().ref('UserIcons').list().then( res => res.items )
 
 				REFS.map( item => {
 
@@ -285,7 +285,7 @@
 				const N = EL.value.split( /\\/g ).pop()?.split( /\./g ) as EXTENSIONS
 
 				const PATH	= 'UserIcons/ID'
-				const NAME 	= N?.[0];
+				const NAME 	= this.UserState.UserID
 				const EXT 	= N?.[1]; 
 
 				if ( EL.files && NAME && EXT ) {

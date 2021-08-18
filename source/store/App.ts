@@ -3,10 +3,12 @@ import { MutationTree } from 'vuex'
 // TYPES
 	import type { APP_THEME } from '~/typescript/App'
 
+// SYSTEM THEME
+
 // STATE
 	export const state = () => ({
 
-		UI: 'light' as APP_THEME
+		UI: 'dark' as APP_THEME
 		
 	})
 

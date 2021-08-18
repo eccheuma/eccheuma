@@ -1,56 +1,112 @@
 <template>
-	<section ref="case" class="work_case-wrap">
-		<div class="work_case-container">
-			<div class="work_case-about" :class="`interface-${ UI }`">
-
-				<div class="work_case-about-header">
-					<h5>{{ content.name }}</h5>
-					<span>Срок выполнения: {{ content.time }}</span>
-				</div>
-
-				<div class="work_case-about-body">
-
-					<section>
-						<h6>Тематика:</h6>
-						<span>{{ content.theme }}</span>
-					</section> 
-
-					<section>
-						<h6>Техническое задание:</h6>
-						<span>{{ content.tech_request }}</span>
-					</section> 
-
-					<section>
-						<h6>Адрес на готовый продукт:</h6>
-						<a :href="`https://${ content.link }`">{{ content.link }}</a>
-					</section> 
-
-					<section>
-						<h6>Стоимость заказа:</h6>
-						<span>{{ content.cost }} ₽</span>
-					</section>
-
-				</div>
-
+	<section class="workcase-container pattern_bg">
+		<div class="workcase-description">
+			<div class="workcase-description-header">
+				<span>{{ content.name }}</span>
+				<span>Срок выполнения: {{ content.time }}</span>
 			</div>
-			<div class="work_case-content">
+			<div class="workcase-description-body">
+				<div class="workcase-description-body-item">
+					<h6>Тематика</h6>
+					<span>{{ content.theme }}</span>
+				</div>
+				<div class="workcase-description-body-item">
+					<h6>Тех. задание</h6>
+					<span>{{ content.tech_request }}</span>
+				</div>
+				<div class="workcase-description-body-item">
 
-				<vue-image 
-					v-for="(item, index) in content.images" 
-					:key="`IMAGE-${ index }`"
-					:class="$isMobile ? '' 
-						: !index ? 'main' : 'other'
-					"
-					:style="$isMobile ? '' 
-						: !index ? `grid-column: main / ${ content.images.length }` : ''
-					"
-					:content="item.content" 
-					:sections="{ date: false, description: false, zoom: true }" 
-					:property="{ fit: 'cover', type: 'case' }"
+					<h6>Ссылка на продукт</h6>
+
+					<template v-if="content.link.length">
+						<a :href="content.link">{{ content.link }}</a>
+					</template>
+
+					<template v-else>
+						<span>Не имеет</span>
+					</template>
+
+				</div>
+				<div class="workcase-description-body-item">
+					<h6>Стоимость</h6>
+					<span>{{ content.cost }} ₽</span>
+				</div>
+			</div>
+		</div>
+		<div class="workcase-content">
+			<eccheuma-swiper 
+				class="workcase-content-swiper" 
+				:options="{ buttons: true }" 
+				:forcedIndex="CarouselIndex"
+				@active-index="setCurentIndex"
 				>
-					{{ content.name }}
-				</vue-image>
 
+				<template #icon-prev="{ onEdge }">
+					<!-- @click="playSound(Sounds.get('CarouselButton'))"  -->
+					<button 
+						class="workcase-content-swiper-buttons" 
+						:class="[
+							{ onEdge }, { 'utils::glassy': CLIENT_RENDER_CHECK && !$isMobile && $PIXI.utils.isWebGLSupported() }
+						]"
+						@mouseenter="CarouselFocus = true" 
+						@mouseleave="CarouselFocus = false"
+						>
+						<icon name="Arrow" style="transform: rotate(0deg)" />
+					</button>
+				</template>
+
+				<template #icon-next="{ onEdge }">
+					<!-- @click="playSound(Sounds.get('CarouselButton'))"  -->
+					<button 
+						class="workcase-content-swiper-buttons" 
+						:class="[
+							{ onEdge }, { 'utils::glassy': CLIENT_RENDER_CHECK && !$isMobile && $PIXI.utils.isWebGLSupported() }
+						]"
+						@mouseenter="CarouselFocus = true" 
+						@mouseleave="CarouselFocus = false"
+						>
+						<icon name="Arrow" style="transform: rotate(180deg)" />
+					</button>
+				</template>
+
+				<template #default>
+					<section v-for="(item, index) in content.images" :key="index" class="workcase-content-swiper-item">
+						<vue-image
+							style="width: 75%; margin: auto"
+							:content="{ path: item.content.path }"
+							:sections="{ date: false, description: false, zoom: true }"
+							:property="{ fit: 'cover', type: 'default', collumn: 7 }"
+						>
+							{{ content.name }}
+						</vue-image>
+					</section>
+				</template>
+
+			</eccheuma-swiper>
+			<div class="workcase-content-preview">
+				<template v-for="(item, index) in content.images">
+					<vue-image
+						:key="index"
+						:class="{ faded: CarouselIndex !== index }"
+						:content="{ path: item.content.path }"
+						:sections="{ date: false, description: false, zoom: false }"
+						:property="{ fit: 'cover', type: 'default', collumn: 7 }"
+						@click.native="forceCarouselIndex(index)"
+					>
+						<!---->
+					</vue-image>
+				</template>
+			</div>
+		</div>
+		<div class="workcase-rate">
+			<div class="workcase-rate-voice pattern_bg">
+				<span>{{ rating }}</span>
+				<span>Оценка</span>
+			</div>
+			<div class="workcase-rate-thoughs">
+				<h6>Отзыв</h6>
+				<hr>
+				<p>{{ content.description }}</p>
 			</div>
 		</div>
 	</section>
@@ -58,146 +114,279 @@
 
 <style lang="scss">
 
-.work_case {
+.workcase {
 	&-container {
 
-		height: 60vh;
-
-		margin: 5vh 1vw;
-
-		column-gap: 15px;
-		row-gap: 15px;
+		@include component-shadow;
 
 		display: grid;
 		grid-template: {
-			columns: 1fr 3fr;
-			rows: 100%;
-		}
+			columns: 3fr 9fr;
+			areas:  "desc body"
+							"rate rate"
+		};
 
-		opacity: 0;
+		width: 100%;
 
-		@media screen and ( max-width: $mobile-breakpoint ) {
+		padding: 2vh 1vw;
+		gap: 2vh;
 
-			max-height: unset;
-
-			grid-template: {
-				columns: 1fr;
-				rows: min-content auto;
-			}
-		}
+		background-color: rgb(var(--color-mono-300));
+		border-radius: .7rem;
 
 	}
-	&-about {
+	&-description {
 
-		row-gap: 15px;
-
-		display: grid;
-		grid-template: {
-			rows: min-content auto;
-		}
+		display: flex;
+		flex-direction: column;
+		gap: 2vh;
 
 		&-header {
-			background-color: rgb(var(--color-6));
-			padding: 20px 0px ;
+
+			display: grid;
+			background-color: rgb(var(--color-mono-200));
 			border-radius: .7rem;
-			text-align: center;
-			h5 {
-				color: rgb(var(--color-2));
-				font-weight: 700;
-			}
+
+			padding-block: 2vh;
+
+			place-content: center;
+
 			span {
-				margin: 0;
-				font-size: 10px;
-				font-weight: 700;
-				color: rgb(var(--color-3));
-			}
-		}
-		&-body {
 
-			@media screen and ( max-width: $mobile-breakpoint ) {
-				padding-bottom: 100px;
-			}
-
-			position: relative;
-			background-color: rgb(var(--color-6));
-			padding: 10px 30px;
-			border-radius: .7rem;
-			section {
 				display: block;
-				h6 {
-					margin-top: 10px;
-					font-size: 14px;
-					font-weight: 700;
-					color: rgb(var(--color-3));
-				}
-				a {
-					display: block;
-					font-size: 12px; 
-					font-weight: 700;
-					color: rgb(var(--color-3));
-					padding: 6px 15px;
-					&:hover {
-						color: rgb(var(--color-4))
+				text-align: center;
+
+				&:first-child {
+
+					font: {
+						family: var(--decor-font);
+						size: var(--font-size-2);
+						weight: 500;
 					}
-					&:empty {
-						margin-top: 10px;
-						padding: 0;
-						height: 25px;
-						pointer-events: none;
-						&:before {
-							padding: 10px 15px;
-							content: "Не имеет.";
-							font-size: 12px;
-							font-weight: 700;
-							color: rgb(var(--color-4));
-						}
+
+					letter-spacing: .25ch;
+
+				}
+
+				&:last-child {
+					font: {
+						size: var(--font-size-4)
 					}
 				}
-				span {
-					font-size: 12px;
-					font-weight: 700;
-					color: rgb(var(--color-2));
-					padding: 2px 15px;
-				}
+
 			}
 		}
+
+		&-body {
+			display: flex;
+			flex-direction: column;
+			gap: 2vh;
+
+			height: 100%;
+			width: 100%;
+
+			min-height: 30vh;
+
+			border-radius: .7rem;
+
+			padding: 4vh 2vw;
+
+			background-color: rgb(var(--color-mono-200));
+
+			&-item {
+				
+				h6 {
+					font: {
+						size: var(--font-size-3);
+						weight: 900;
+					}
+				}
+
+				span {
+					padding-left: 1vw;
+					font: {
+						size: var(--font-size-4);
+						weight: 500;
+					}
+				}
+
+			}
+		}
+
 	}
 	&-content {
 
-		background-color: rgb(var(--color-2));
+		position: relative;
+		overflow: hidden;
 
-		border-radius: .7rem;
+		display: flex;
+		flex-direction: column;
 
-		padding: 2vh 10vw;
+		gap: 2vh;
 
-		row-gap: 1vh;
-		column-gap: 1vw;
+		&-swiper {
+
+			width: 100%;
+			height: 100%;
+			min-height: 30vh;
+			margin-inline: auto;
+			padding-inline: 0 15%;
+			border-radius: .7rem;
+			overflow: hidden;
+
+			&-item {
+				display: inline-grid;
+			}
+
+			&-buttons {
+		
+				cursor: pointer;
+				color: rgb(var(--color-mono-900));
+				background-color: rgba(var(--color-mono-200), .75);
+				border: 1px solid rgba(var(--color-mono-900), .0);
+				border-radius: .7rem;
+				padding: 0 3vh;
+				transition-duration: .5s;
+
+				height: 100% !important;
+				top: 0 !important;
+
+				&:nth-of-type(1) {
+					left: 0 !important;
+				}
+				&:nth-of-type(2) {
+					right: 0 !important;
+				}
+
+				&:hover {
+					background-color: rgba(var(--color-mono-200),.0);
+					&:nth-of-type(1) {
+						box-shadow: 1px 0px 0px 0px rgba(var(--color-mono-900),.25)
+					}
+					&:nth-of-type(2) {
+						box-shadow: -1px 0px 0px 0px rgba(var(--color-mono-900),.25)
+					}
+				}
+
+			}
+
+		}
+
+		&-preview {
+
+			height: 20vh;
+			width: 100%;
+			background-color: rgb(var(--color-mono-200));
+			border-radius: .7rem;
+			padding: 3vh 1vw 2vh;
+
+			display: grid;
+			gap: 10px;
+			place-content: center;
+
+			overflow-x: scroll;
+			grid-template-columns: repeat(auto-fit, 160px);
+			grid-template-rows: 10vh;
+
+			> * {
+				cursor: pointer;
+				transition-duration: 500ms;
+			}
+
+			.faded {
+				opacity: .1;
+				transform: translateY(1vh)
+			}
+
+		}
+
+	}
+	&-rate {
+
+		grid-area: rate;
 
 		display: grid;
 		grid-template: {
-			rows: 50% 50%;
-			areas: 	"main"
-							"other"
+			columns: auto 1fr;
+		};
+
+		padding: 2vh 1vw;
+		column-gap: 2vw;
+
+		background-color: rgb(var(--color-mono-200));
+		border-radius: .7rem;
+
+		&-voice {
+
+			aspect-ratio: 1/1;
+			height: 20vh;
+			background-color: rgb(var(--color-mono-300));
+			border-radius: .7rem;
+
+			display: flex;
+			flex-direction: column;
+			place-content: center;
+			place-self: center;
+
+			span {
+
+				display: block;
+				text-align: center;
+
+				&:first-child {
+
+					font: {
+						family: var(--decor-font);
+						size: 5vh;
+						weight: 500;
+					}
+					
+					letter-spacing: .25ch;
+					margin-left: .25ch;
+					line-height: 5vh;
+
+				}
+
+				&:last-child {
+					font: {
+						size: var(--font-size-3);
+						weight: 800;
+					}
+				}
+
+			}
+
 		}
 
-		@media screen and ( max-width: $mobile-breakpoint ) {
+		&-thoughs {
 
-			max-height: unset;
+			h6 {
 
-			grid-template: {
-				columns: 1fr;
-				rows: unset;
+				font: {
+					family: var(--decor-font);
+					size: var(--font-size-2);
+					weight: 500;
+				}
+
+				letter-spacing: .25ch;
+
+			}
+
+			hr {
+				margin: 1vh 0;
+				background: rgb(var(--color-mono-400));
+			}
+
+			p {
+				color: rgb(var(--color-mono-700));
+				width: 65ch;
+				font: {
+					family: var(--read-font);
+					size: var(--font-size-3);
+					weight: 500;
+				}
 			}
 		}
-
-		.main {
-			grid-row: main;
-		}
-
-		.other {
-			grid-row: other;
-		}
-
 	}
 }
 
@@ -211,37 +400,50 @@
 	import { mapState } from 'vuex';
 
 	// TYPES
-	import type { AnimeAnimParams } 	from 'animejs'
-	import type { WORKCASE, CONTENT } from '~/typescript/WorkCase.ts'
+	import type { AnimeAnimParams } 	from 'animejs';
+	import type { WORKCASE, CONTENT } from '~/typescript/WorkCase';
 
 	// VUEX MODULE TYPE MAP
-	import type { VuexModules } from '~/typescript/VuexModules'
+	import type { VuexModules } from '~/typescript/VuexModules';
+
+	// COMPONENTS
+	import EccheumaSwiper from '~/components/common/SwiperProto.vue';
+	import Icon 					from '~/components/Icon.vue';
 
 	// MIXINS
-	import IntersectionObserver from '~/assets/mixins/IntersectionObserver.ts'
+	import IntersectionObserver from '~/assets/mixins/IntersectionObserver';
 
 	// MODULE
 	export default Vue.extend({
 		components: {
+			EccheumaSwiper,
+			Icon,
 			VueImage: () => import('~/components/common/ImageComponent/Image.vue')
 		},
 		mixins: [ IntersectionObserver ],
 		props: {
 			content: 		{ type: Object, required: true  } as PropOptions< CONTENT >,
 			properties: { type: Object, required: true  } as PropOptions< WORKCASE['properties'] >,
+			rating: 		{ type: Number, default: 8.5    } as PropOptions< WORKCASE['rating'] >
+		},
+		data() {
+			return {
+				CarouselIndex: 0,
+			}
 		},
 		computed: {
 			...mapState({
 				UI: state => (state as VuexModules).App.UI,
-			})
+			}),
+
 		},
 		mounted() {
 			
-			if ( !this.$isMobile || this.$PIXI.utils.isWebGLSupported() ) {
+			// if ( !this.$isMobile || this.$PIXI.utils.isWebGLSupported() ) {
 
-				this.setObserver(this.$refs.case as Element) 
+			// 	this.setObserver(this.$refs.case as Element) 
 
-			}
+			// }
 
 		},
 		methods: {
@@ -267,6 +469,14 @@
 					: SET((elements as Vue).$el || elements )
 
 			},
+
+			setCurentIndex(index: number) {
+				this.CarouselIndex = index;
+			},
+
+			forceCarouselIndex(index: number) {
+				this.CarouselIndex = index; console.log(index)
+			}
 
 		}
 	})

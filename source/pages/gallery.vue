@@ -3,43 +3,51 @@
 
 		<promo-banner promo-type="Gallery" />
 
-		<section class="gallery-title">
-
-			<span>Закреплённые изображения</span>
-			<hr>
-			<span>Работы которые пришлись самому больше по душе</span>
-
-		</section>
-
 		<section class="gallery-pinned">
-			<vue-image
-				:content="{ path: 'Promo/1.png', title: 'TEST' }" 
-				:sections="{ date: false, description: true, zoom: true }" 
-				:property="{ fit: 'cover', type: 'promo', collumn: 6 }">
 
-				А теперь с помощь Slot'a я могу вполне комфорто вливать описание изображения. Ну или получать его из json.
+			<section-header>
+				<template #header>	
+					<span>Закреплённые изображения</span>
+				</template>
+				<template #default>
+					<span>Работы которые пришлись самому больше по душе</span>
+				</template>
+			</section-header>
 
-			</vue-image>
+			<div class="gallery-pinned-body">
+				<vue-image
+					:content="{ path: 'Promo/1.png', title: 'TEST' }" 
+					:sections="{ date: false, description: true, zoom: true }" 
+					:property="{ fit: 'cover', type: 'promo', collumn: 6 }"
+				>
 
-			<vue-image 
-				:content="{ path: 'Promo/4.png', title: 'TEST' }" 
-				:sections="{ date: false, description: true, zoom: true }" 
-				:property="{ fit: 'cover', type: 'promo', collumn: 6 }">
+					А теперь с помощь Slot'a я могу вполне комфорто вливать описание изображения. Ну или получать его из json.
 
-				А теперь с помощь Slot'a я могу вполне комфорто вливать описание изображения. Ну или получать его из json.
+				</vue-image>
 
-			</vue-image>
-		</section>
+				<vue-image 
+					:content="{ path: 'Promo/4.png', title: 'TEST' }" 
+					:sections="{ date: false, description: true, zoom: true }" 
+					:property="{ fit: 'cover', type: 'promo', collumn: 6 }"
+				>
 
-		<section class="gallery-title">
+					А теперь с помощь Slot'a я могу вполне комфорто вливать описание изображения. Ну или получать его из json.
 
-			<span>Галлерея изображений</span>
-			<hr>
-			<span>Наброски логотипов, UI интерфейсов, и прочего.</span>
+				</vue-image>
+			</div>
 
 		</section>
 
 		<section class="gallery-content">
+
+			<section-header>
+				<template #header>	
+					<span>Галлерея изображений</span>
+				</template>
+				<template #default>
+					<span>Наброски логотипов, UI интерфейсов, и прочего.</span>
+				</template>
+			</section-header>
 
 			<pagination :payload="PaginationParams" />
 
@@ -55,65 +63,74 @@
 <style lang="scss">
 
 .gallery {
+
 	&-page {
 
 		display: grid;
-		padding: 10px 15px;
 		gap: 15px;
 		grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
 		
 	}
+
 	&-container {
 
+		display: flex;
+		flex-direction: column;
+
+		padding: 2vh 1vw;
+		row-gap: 2vh;
+
 	}
+
 	&-content {
 
-		padding: 0px 10px;
+		@include component-shadow;
+
+		border-radius: .7rem;
+
+		background-color: rgb(var(--color-mono-200));
+		padding-inline: 2vw;
+
+		display: grid;
+		row-gap: 2vh;
+
+		padding: 2vw 2vw;
 
 	}
+
 	&-pinned {
 
-		display: grid; padding: 10px 15px; margin: 0 auto; 
-		
-		max-width: 1040px;
+		@include component-shadow;
 
-		gap: 15px;
+		display: flex; 
+		flex-direction: column;
 
-		grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+		padding-block: 5vh; 
+		padding-inline: 2vw;
 
-		@media screen and ( max-width: $mobile-breakpoint ) {
-			grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+		gap: 2vh;
+
+		border-radius: .7rem;
+
+		&-body {
+
+			display: grid;
+			grid-template: {
+				columns: 1fr 1fr
+			};
+
+			column-gap: 1vw;
+
+			width: 100%;
+			max-width: 1210px;
+			
+			margin-inline: auto;
+
 		}
 
 	}
-	&-title {
 
-		border: { 
-			top: 1px solid rgb(var(--color-2));
-		};
-
-		padding: 3vh 0;
-
-		span {
-			
-			display: block; text-align: center; font-weight: 600;
-
-			&:nth-of-type(1) {
-				font-size: var(--font-size-1); color: rgb(var(--color-6)); 
-			}
-			&:nth-of-type(2) {
-				font-size: var(--font-size-3); color: rgb(var(--color-4));
-			}
-			
-		}
-
-		hr {
-			background-color: rgb(var(--color-3)); width: 50%;
-		}	
-
-	}
 }
-
 
 </style>
 
@@ -121,22 +138,28 @@
 
 	import Vue from 'vue'
 
-	import firebase from 'firebase/app'; import 'firebase/database';
-
+// FIREBASE
+	import firebase from 'firebase/app'; 
+	import 'firebase/database';
+	
+// VUEX
 	import { mapMutations } from 'vuex'
 
+// MIXINS
 	import TransitionSound from '~/assets/mixins/TransitionSound'
 
-// COMPONENTS
-	import PromoBanner from '~/components/promo/PromoBanner.vue'
-
 // LOAD POLITIC
-	import { load_ranges } from '~/config/LoadPolitic.ts'
+	import { load_ranges } from '~/config/LoadPolitic'
+
+// COMPONENTS
+	import PromoBanner 		from '~/components/promo/PromoBanner.vue'
+	import SectionHeader 	from '~/components/common/SectionHeader.vue'
 
 // MODULE
 	export default Vue.extend({ 
 		components: {
 			PromoBanner,
+			SectionHeader,
 			Pagination: 	() => import('~/components/common/Pagination.vue'),
 			VueImage: 		() => import('~/components/common/ImageComponent/Image.vue'),
 		},

@@ -1,48 +1,36 @@
+$mockup-viewport-vh: (1080 / 100);
+$mockup-viewport-vw: (1980 / 100);
+
 :root {
 	// DEFAULT COLOR VARIABLES
-	--color-def-0: 0,0,0;
-	--color-def-1: 14,14,14;
-	--color-def-2: 21,21,21;
-	--color-def-3: 65,65,65;
-	--color-def-4: 115,115,115;
-	--color-def-5: 240,240,240;
-	--color-def-6: 255,255,255;
+	--mono-000: 0,0,0;
+	--mono-100: 13,13,15;
+	--mono-200: 20,20,24;
+	--mono-300: 25,25,30;
+	--mono-400: 52,52,60;
+	--mono-500: 68,68,76;
+	--mono-600: 124,124,139;
+	--mono-700: 221,221,255;
+	--mono-800: 240,240,255;
+	--mono-900: 255,255,255;
 	// RGB COLOR VARIABLES
-	@for $i from 0 through 6 {
-		--color-#{$i}: var(--color-def-#{$i});
+	@for $i from 0 through 9 {
+		--color-mono-#{$i + '00'}: var(--mono-#{$i + '00'});
 	}
 	// ------
-	--color-Warning: #eecf22;
-	--color-Success: #95d829;
-	--color-Wrong: #c93131;
+	--color-accent-notice: 	#855EF3;
+	--color-accent-pass: 		#67EE9D;
+	--color-accent-warning: #EFB155;
+	--color-accent-error: 	#AA1C1C;
 	// ------
 
-	// $initial-size: 5.5vh;
-
-	// @for $s from 1 through 6 {
-	// 	--size-#{$s}: #{ $initial-size / $s };
-	// };
-
-	--size-0: 4.25vh;
-	--size-1: 3.5vh;
-	--size-2: 2.75vh;
-	--size-3: 2vh;
-	--size-4: 1.66vh;
-	--size-5: 1.35vh;
-	--size-6: 1vh;
-
-	@supports (font-size: clamp(0px, 0px, 0px)) {
-
-		// calc(var(--size-#{$i}) * .75),
-
-		@for $i from 0 through 6 {
-			--font-size-#{$i}: clamp(
-				calc(var(--size-#{$i}) * 0.75),
-				var(--size-#{$i}),
-				calc(var(--size-#{$i}) * 1.25)
-			);
-		}
-	}
+	--size-0: #{ 45 / $mockup-viewport-vh }vh;
+	--size-1: #{ 36 / $mockup-viewport-vh }vh;
+	--size-2: #{ 24 / $mockup-viewport-vh }vh;
+	--size-3: #{ 18 / $mockup-viewport-vh }vh;
+	--size-4: #{ 16 / $mockup-viewport-vh }vh;
+	--size-5: #{ 14 / $mockup-viewport-vh }vh;
+	--size-6: #{ 12 / $mockup-viewport-vh }vh;
 
 	@for $i from 0 through 6 {
 		--font-size-#{$i}: var(--size-#{$i});
@@ -50,8 +38,8 @@
 
 	// ----
 	--default-font: "Montserrat";
-	--second-font: "PTSerif";
+	--read-font: "Bitter";
+	--decor-font: "Dobrozrachniy";
 	// ----
-	--accent: 228, 170, 47;
-	--text: #333;
+	--accent: var(--color-accent-notice);
 }

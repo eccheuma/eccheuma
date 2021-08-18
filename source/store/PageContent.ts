@@ -7,8 +7,8 @@ import { ActionTree, MutationTree } from 'vuex'
 
 // INTERFACES & TYPES
 
-	import type { POST } from '~/typescript/Post.ts'
-	import type { IMAGE_PROPERTY } 	from '~/typescript/Image.ts'
+	import type { POST } 						from '~/typescript/Post'
+	import type { IMAGE_PROPERTY } 	from '~/typescript/Image'
 
 	type REFS = 'Posts' | 'Gallery';
 
@@ -51,7 +51,7 @@ import { ActionTree, MutationTree } from 'vuex'
 
 			state.Content[to] = data; 
 			
-			// console.log(`recive ${ from } data:`, data);
+			console.log(`recive ${ from } data:`, data);
 
 		},
 
@@ -67,16 +67,16 @@ import { ActionTree, MutationTree } from 'vuex'
 			const HASH_KEY 					= `${ _payload.REF.toUpperCase() }_DATA_HASH`
 			const LOAD_PROPERTY_KEY = `${ _payload.LOAD_PROPERTY.LoadPoint }_${ _payload.LOAD_PROPERTY.LoadRange }`
 
-			const SERVER_HASH: number = await firebase.database().ref(`App/Cache/${ _payload.REF }`).once('value').then(data => data.val() as number)
-			const LOCAL_HASH: number	= Number(window.localStorage.getItem(HASH_KEY)) 
+			const SERVER_HASH = await firebase.database().ref(`App/Cache/${ _payload.REF }`).once('value').then(data => data.val())
+			const LOCAL_HASH 	= window.localStorage.getItem(HASH_KEY) 
 
 			const CACHE_KEY = `${ SERVER_HASH }_${ _payload.REF.toUpperCase() }_${ LOAD_PROPERTY_KEY }`
 
 			// --------------------------------
 
-			const CACHED_DATA = STORAGE.getItem(CACHE_KEY) || '';
+			const CACHED_DATA = STORAGE.getItem(CACHE_KEY);
 
-			if ( CACHED_DATA && LOCAL_HASH === SERVER_HASH ) {
+			if ( CACHED_DATA && LOCAL_HASH && LOCAL_HASH === SERVER_HASH  ) {
 
 				commit('setContent', { data: JSON.parse(CACHED_DATA), from: 'cache', to: _payload.REF  })
 
@@ -101,7 +101,7 @@ import { ActionTree, MutationTree } from 'vuex'
 
 		async GetContent({ commit, dispatch }, _payload: PAYLOAD) {
 
-			if ( process.client ) {
+			if ( process.browser )  {
 
 				await dispatch('checkCachedData', _payload);	
 				
@@ -113,9 +113,8 @@ import { ActionTree, MutationTree } from 'vuex'
 					.limitToFirst(_payload.LOAD_PROPERTY.LoadRange || 1)
 					.startAt(_payload.LOAD_PROPERTY.LoadPoint || 0)
 					.once('value')
-					.then( data => Object.values(data.val()) )
 
-				commit('setContent', { data: DATA, from: 'server', to: _payload.REF });			
+				commit('setContent', { data: Object.values(DATA.val()), from: 'server', to: _payload.REF });			
 
 			} 
 

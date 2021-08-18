@@ -91,7 +91,7 @@
 
 			span {
 
-				color: rgb(var(--color-5));
+				color: rgb(var(--color-mono-800));
 
 				font: {
 					size: 1rem;
@@ -131,7 +131,7 @@
 		padding: 2vh 3vw;
 
 		background: {
-			color: rgb(var(--color-6));
+			color: rgb(var(--color-mono-900));
 		}
 	}
 }
@@ -216,7 +216,7 @@
 					title: 'Faust',
 					description: 'Neu wie kommt an ist ertönt.',
 					image: 'Other/1',
-					tags: '#TEST',
+					tags: [ '#TEST' ],
 					date: Date.now(),
 				} as POST,
 
