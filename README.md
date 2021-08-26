@@ -1,6 +1,6 @@
 # Eccheuma
 
-![something](https://firebasestorage.googleapis.com/v0/b/escapefrommordorland.appspot.com/o/GitHub%20Badge.png?alt=media&token=81247cc7-6f72-4f6c-9243-af32cdbdd52a)
+![something](https://firebasestorage.googleapis.com/v0/b/escapefrommordorland.appspot.com/o/GitHubBadge.png?alt=media&token=c9422647-a7f1-4d49-bf2a-88bf185b37a9)
 
 [pixi-logo]: https://avatars.githubusercontent.com/u/5406849?s=100&v=4
 [vue-logo]: https://avatars.githubusercontent.com/u/6128107?s=100&v=4
