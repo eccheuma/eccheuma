@@ -3,7 +3,9 @@
 
 		<section class="fixed-node">
 
-			<page-loader />
+			<hardware-acceleration-decorator>
+				<page-loader />
+			</hardware-acceleration-decorator>
 
 			<notification />
 
@@ -13,7 +15,7 @@
 
 				<registration />
 
-				<vk-messages />
+				<!-- <vk-messages /> -->
 
 			</client-only>
 
@@ -47,7 +49,7 @@ eccheuma-layout {
 	display: grid;
 	grid-template: {
 		columns: 100%;
-		rows: 10vh 70vh 15vh;
+		rows: 10vh 75vh 15vh;
 	};
 
 	.fixed-node {
@@ -147,6 +149,9 @@ eccheuma-layout {
 	import HeaderTop 			from '~/components/header/HeaderTop.vue'
 	import PageLoader 		from '~/components/common/PageLoader.vue'
 
+	// FUNCTIONAL COMPONENTS
+	import HardwareAccelerationDecorator from '~/components/functional/HardwareAcceleration.vue';
+
 	// TYPES
 	import type { NOTIFICATION_CONTENT } from '~/typescript/Notification'
 
@@ -155,6 +160,7 @@ eccheuma-layout {
 	// MODULE
 	export default Vue.extend({ 
 		components: {
+			HardwareAccelerationDecorator,
 			PageLoader,
 			HeaderCarousel,
 			HeaderTop,
@@ -169,7 +175,10 @@ eccheuma-layout {
 			// MobileNavigation: () => import('~/components/_mobile/HeaderNavigation.vue'),
 		},
 		mixins: [ Transition ],
-		transition: 'layout-transition',
+		transition: {
+			name: 'layout-transition',
+			mode: 'out-in',
+		},
 		data() {
 			return {
 				someAction: false,

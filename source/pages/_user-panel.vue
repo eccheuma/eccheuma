@@ -1,6 +1,6 @@
 <template>
 	<div class="user-container">
-		<user-profile :status="true"></user-profile>
+		<user-profile :status="true" />
 	</div>
 </template>
 

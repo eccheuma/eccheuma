@@ -74,7 +74,7 @@
 
 	// COMPONENTS
 		import VueImage 						from '~/components/common/ImageComponent/Image.vue'
-		import IntesectionComponent from '~/components/intersectionComponent.vue'
+		import IntesectionComponent from '~/components/functional/intersectionComponent.vue'
 
 	// INTERSECTION_ANIMATION
 	const Animation: ANIMATION_PAYLOAD = {

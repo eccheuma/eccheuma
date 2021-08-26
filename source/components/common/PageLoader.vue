@@ -175,7 +175,7 @@
 			// opacity: 0;
 			&:nth-of-type(1) {
 				line-height: 10vh;
-				font-size: var(--font-size-5);
+				font-size: var(--font-size-14);
 			}
 		}
 

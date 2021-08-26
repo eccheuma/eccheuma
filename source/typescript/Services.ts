@@ -19,19 +19,19 @@ export type SERVICE = {
 	Descriprion?: string
 }
 
-export type SELECTED_SERVICE = {
-	Quantity: number
-	Category: CATEGOTIES
-	Service: SERVICE
-	Addiction: ADDICTION
-}
-
 export type ADDICTION = {
 	Cost: number
 	Type: string
 	Title: string
 	Single: boolean
 	Descriprion?: string
+}
+
+export type SELECTED_SERVICE = {
+	Quantity: number
+	Category: CATEGOTIES
+	Service: SERVICE
+	Addiction: ADDICTION
 }
 
 export type SERVICES_CARD = {

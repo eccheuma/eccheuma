@@ -12,12 +12,8 @@
 
 		<section class="promo_footer" :class="{ cooled: Cooled }">
 
-			<p>
-				{{ moduleContent.footer }}
-			</p>
-
+			<p>{{ moduleContent.footer }}</p>
 			<hr>
-
 			<common-button @click.native="routeTo(moduleContent.link.path)">
 				{{ moduleContent.link.name }}
 			</common-button>
@@ -36,8 +32,7 @@
 .promo {
 	&_container {
 
-		@include gradient_border(block);
-		@include component-shadow;
+		@extend %component;
 
 		display: grid; 
 		justify-items: center;
@@ -48,9 +43,6 @@
 		}
 
 		overflow: hidden;
-		border-radius: .7rem;
-
-		background-color: rgb(var(--color-mono-300));
 		color: rgb(var(--color-mono-800));
 
 		@media screen and ( max-width: $mobile-breakpoint ) {
@@ -80,11 +72,16 @@
 		h4 {
 			font-weight: 800;
 			width: 100%;
-			font-size: var(--font-size-1);
+			font-size: var(--font-size-48);
+			font-family: var(--decor-font);
+
+			letter-spacing: .25ch;
+			line-height: var(--size-48);
+
 		}
 		p {
 			font-weight: 600;
-			font-size: var(--font-size-3);
+			font-size: var(--font-size-18);
 			width: calc(min(100%, 70ch));
 			color: rgb(var(--color-mono-700));
 		}

@@ -9,6 +9,8 @@
 		@mouseleave="changeGlobalVolume(0)"
 	>
 
+		<!-- <test-component /> -->
+
 		<!-- <transition name="opacity-transition">
 			<i v-if="!CanvasReady" class="holl-wall" />
 		</transition> -->
@@ -29,7 +31,7 @@
 		<section class="holl-info">
 
 			<span class="index_app_version">
-				СБОРКА: {{ ApplicationBuild.Version.toUpperCase() }} | {{ ApplicationBuild.BuildTime.toUpperCase() }}
+				СБОРКА: {{ BUILD_HASH || '000000' }}
 			</span>
 
 		</section>
@@ -40,7 +42,7 @@
 				<path
 					ref="LOGO_PATH"
 					d="m156 7h-155c1-2 1-3 3-4 1-1 3-2 6-2h138c2 0 4 1 5 2 2 1 3 2 3 4zm-135 2h20c0 1 0 3-1 4s-3 2-7 2h-20c0-2 1-3 2-4 2-1 4-2 6-2zm135 8c0 2-1 3-3 4-1 1-3 2-5 2h-138c-3 0-5-1-6-2-2-1-2-2-3-4h155z"
-					stroke="#fff"
+					stroke="rgb(var(--color-mono-700))"
 				/>
 			</svg>
 
@@ -117,7 +119,7 @@
 			display: grid;
 			grid-template: {
 				columns: 1fr 12fr 1fr;
-				rows: 1fr 4fr 2fr 1fr 1fr;
+				rows: 10vh 40vh 1fr 15vh 10vh;
 				areas: ". build 	mute" ". logo 	." ". nav 		." ". quote 	." ". links 	.";
 			}
 
@@ -225,11 +227,13 @@
 			justify-self: center;
 
 			span {
-				color: rgb(var(--color-mono-500));
-				font-size: var(--font-size-6);
-				font-weight: 800;
+				color: rgba(var(--color-mono-400));
+				font-size: var(--font-size-12);
+				font-weight: 900;
 				letter-spacing: 1ch;
 				text-align: center;
+
+				text-transform: uppercase;
 
 				@media screen and ( max-width: $mobile-breakpoint ) {
 					font-size: 0.45rem;
@@ -279,14 +283,14 @@
 					color: rgb(var(--color-mono-700));
 					
 					font: {
-						size: var(--font-size-0);
+						size: var(--font-size-48);
 						family: var(--decor-font);
 					}
 
 					text-shadow: 0px 0px 2px rgb(var(--color-mono-500));
 
 					letter-spacing: 0.5ch;
-					line-height: var(--size-1);
+					line-height: var(--size-36);
 
 					text-rendering: optimizeSpeed;
 
@@ -323,8 +327,8 @@
 			span {
 				font-weight: 600;
 				font-style: italic;
-				color: rgba(var(--color-mono-700));
-				font-size: var(--font-size-4);
+				color: rgba(var(--color-mono-600));
+				font-size: var(--font-size-16);
 			}
 
 			z-index: 0;
@@ -343,7 +347,7 @@
 				margin: 0 15px;
 				font-weight: 700;
 				margin: 0px 10px;
-				font-size: var(--font-size-4);
+				font-size: var(--font-size-16);
 				color: rgb(var(--color-mono-400));
 				text-decoration: underline;
 				transition-duration: 500ms;
@@ -378,10 +382,6 @@
 // VUEX
 	import { mapState, mapMutations, mapActions } from 'vuex'
 
-// FIREBASE
-	import firebase from 'firebase/app'; 
-	import 'firebase/database'
-
 // TYPES
 	import type { AnimeInstance, AnimeAnimParams } 	from 'animejs'
 	import type { VuexModules } 										from '~/typescript/VuexModules'
@@ -393,37 +393,23 @@
 	import HeaderNavigation from '~/components/header/HeaderNavigation.vue'
 	import Icon 						from '~/components/Icon.vue'
 
+	import PixiCanvas				from '~/components/common/PixiCanvas.vue';
+
 // VARIABLES
 	const PLACEHOLDER = require('~/assets/images/Background.png?placeholder=true&size=300').src
-
-// FUNCTIONS
-	const getVersion = async (): Promise<{ Version: string, BuildTime: string }> => {
-		return await firebase.database().ref('App')
-					.once('value')
-					.then( data => data.val() as { Version: string, BuildTime: string })
-	}
 
 // MODULE
 	export default Vue.extend({
 		components: {
 			HeaderNavigation,
 			Icon,
-			PixiCanvas: () => import('~/components/common/PixiCanvas.vue' /* webpackChunkName: "PixiCanvas" */)
+			PixiCanvas
 		},
 		mixins: [ EmitSound ],
-		async asyncData() {
-
-			const ApplicationBuild = await getVersion();
-
-			return { ApplicationBuild } 
-
-		},
 		data() {
 			return {
 
 				CanvasReady: false,
-
-				ApplicationBuild: new Object() as { Version: string, BuildTime: string },
 
 				CurentQuoteIndex: 0,
 
@@ -445,16 +431,13 @@
 				
 			}
 		},
-		async fetch() {
-
-			this.ApplicationBuild = await getVersion();
-
-		},
 		head: {
 			link: [
+
 				{ rel: 'icon', 			href: 'Icon.svg' },
-				{ rel: 'preload', 	href: '/static/sounds/Holl.ogg', as:'xhr', crossorigin: true },
+				{ rel: 'prefetch', 	href: require('@/static/audio/Holl.ogg').default, as:'fetch', crossorigin: true },
 				{ rel: 'prefetch', 	href: PLACEHOLDER },
+
 			]
 		},
 		computed: {
@@ -497,7 +480,9 @@
 				}
 			},
 		},
-		created() {
+		mounted() {
+
+			this.initQuoteChanger(); 
 
 			this.setSounds([
 				{
@@ -506,11 +491,6 @@
 					settings: { rate: .45, volume: 1.25, loop: true },
 				}
 			])
-			
-		},
-		mounted() {
-
-			this.initQuoteChanger(); 
 			
 			setTimeout(() => { 
 				if ( !this.CanvasReady ) {
@@ -547,6 +527,8 @@
 
 				const LOOP: boolean = true;
 
+				const COLOR = `rgb(${ getComputedStyle(document.body).getPropertyValue('--mono-700').trim() })`;
+
 				const ANIMATIONS: AnimeAnimParams[] = [
 					{	
 						targets: this.$refs.LOGO_SVG,
@@ -564,7 +546,7 @@
 						targets: this.$refs.LOGO_PATH,
 						strokeDashoffset: [ this.$AnimeJS.setDashoffset, 0 ],
 						fill: [
-							{ value: '#FFF', duration: 2500, delay: 1500, endDelay: 5000, }
+							{ value: COLOR, duration: 2500, delay: 1500, endDelay: 5000, }
 						],
 						delay: 1000,
 						duration: 3000,

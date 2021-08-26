@@ -50,8 +50,16 @@
 			path: require('~/assets/images/Stripes.png?format=webp').src
 		}
 	]
+
 	const HEAD_LINKS = ASSETS.map((asset) => { 
-		return { rel: 'prefetch', href: asset.path, as: 'fetch', crossorigin: true, targetload: 'canvas-test' }
+
+		// PRELOAD IMAGE FOR CANVAS
+		if ( process.client ) {
+			const i 		= new Image();
+						i.src = asset.path;
+		}
+
+		return { rel: 'prefetch', href: asset.path, as: 'fetch', crossorigin: true, }
 	})
 
 // MODULE
@@ -59,6 +67,7 @@
 		data() {
 			return {
 
+				resources: null as any,
 				GlobalAnimationDuration: 4e4,
 
 				app: 				new Object() as Application,
@@ -85,19 +94,26 @@
 			}
 
 		},
+		watch: {
+			app: {
+				handler() {
+					this.$el.appendChild(this.app.view)
+				}
+			},
+			resources: {
+				handler() { this.Composite(this.resources) }
+			},
+		},
 		created() {
 
-			console.log('canvas start')
+			console.time('Canvas execution')
 
-			this.ApplicationInit();
+			setTimeout(this.Loader, 0);
+			setTimeout(this.ApplicationInit, 0);
 
 		},
 		mounted() {
-
-			( this.$refs.canvas as HTMLCanvasElement ).appendChild(this.app.view)
-
 			window.addEventListener('mousemove', this.ChangeMouseCoordinate, { capture: true })
-
 		},
 		destroyed() {
 
@@ -105,7 +121,7 @@
 				instance.pause(); this.$AnimeJS.remove(instance)	
 			})
 
-			setTimeout(() => this.app.destroy(true), 3000)
+			this.$nextTick(() => { this.app.destroy(true) })
 
 			window.removeEventListener('mousemove', this.ChangeMouseCoordinate, { capture: true })
 
@@ -114,18 +130,19 @@
 
 			ApplicationInit() {
 
-				this.app = new this.$PIXI.Application({
+				console.time('Initialise')
+
+				this.container 	= new this.$PIXI.Container();
+				this.app 				= new this.$PIXI.Application({
 					height: window.innerHeight,
 					width: window.innerWidth,
 					resolution: 1,
 					backgroundColor: 0x000000,
 				})
 
-				this.container = new this.$PIXI.Container()
-
 				this.app.stage.addChild(this.container)
 
-				this.Loader()
+				console.timeEnd('Initialise')
 
 			},
 
@@ -137,7 +154,7 @@
 
 				ASSETS.forEach(asset => Loader.add(asset.name, asset.path))
 
-				Loader.load(({ resources }) => this.Composite(resources))
+				Loader.load(({ resources }) => { this.resources = resources })
 
 				console.timeEnd('Loader')
 
@@ -162,6 +179,7 @@
 				}).then(() => {
 
 					console.timeEnd('Composite')
+					console.timeEnd('Canvas execution')
 
 					this.$AnimeJS({
 						targets: this.$refs.canvas,
@@ -181,14 +199,14 @@
 
 			ChangeMouseCoordinate(event: MouseEvent) {
 
-				requestAnimationFrame(() => {
+				// requestAnimationFrame(() => {
 
 					this.MousePosition.Y = event.clientY
 					this.MousePosition.X = event.clientX
 
 					this.ShiftBackground()
 
-				})
+				// })
 
 			},
 
@@ -220,12 +238,10 @@
 				}
 
 				if (Background) {
-					requestAnimationFrame(() => {
 
-						Background.y = CenterScene.Y + R.y
-						Background.x = CenterScene.X + R.x
+					Background.y = CenterScene.Y + R.y
+					Background.x = CenterScene.X + R.x
 
-					})
 				}
 
 			},
@@ -255,12 +271,10 @@
 						duration: this.GlobalAnimationDuration,
 						loop: true,
 						update() {
-							requestAnimationFrame(() => {
-								s.angle 		= BackgroundAnimationState.angle;
-								s.alpha 		= BackgroundAnimationState.alpha;
-								s.scale.y 	= BackgroundScale.y * BackgroundAnimationState.scale;
-								s.scale.x 	= BackgroundScale.x * BackgroundAnimationState.scale
-							})
+							s.angle 		= BackgroundAnimationState.angle;
+							s.alpha 		= BackgroundAnimationState.alpha;
+							s.scale.y 	= BackgroundScale.y * BackgroundAnimationState.scale;
+							s.scale.x 	= BackgroundScale.x * BackgroundAnimationState.scale;
 						}
 					})
 

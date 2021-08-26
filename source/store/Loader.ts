@@ -56,15 +56,15 @@
 
 // ACTIONS
 	export const actions: ActionTree<CurentState, CurentState> = {
-		Loader_Load({commit, state}, prop) {
+		Loader_Load({ commit }) {
 			
 			commit('Loader_ChangeLoadStatus_Loaded') 
 			commit('Loader_ChangeLoadStatus_Load')
 
 		},
-		Loader_Reload({commit}) {
+		Loader_Reload({ commit }) {
 
-			let Status = {
+			const Status = {
 				Load: false,
 				Loaded: true,
 				Counter: 0
@@ -74,4 +74,3 @@
 
 		}
 	}
-

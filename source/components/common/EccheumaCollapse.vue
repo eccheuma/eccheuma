@@ -1,25 +1,18 @@
 <template>
-	<div class="eccheuma_collapse-container" :style="styleObject">
-		<div ref="wrap" class="eccheuma_collapse-wrap">
-			<slot />
-		</div>
+	<div class="eccheuma-collapse" :style="styleObject" :class="{ 'utils::dead-GPU': CLIENT_RENDER_CHECK && !$PIXI.utils.isWebGLSupported() }">
+		<slot />
 	</div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 
-.eccheuma_collapse {
-	&-container {
-		overflow-y: hidden;
-		will-change: height;
-		transition: {
-			property: height;
-			timing-function: ease-in-out;
-		};
-	}
-	&-wrap {
-		position: relative;
-	}
+.eccheuma-collapse {
+	overflow-y: hidden;
+	will-change: height;
+	transition: {
+		property: height;
+		timing-function: ease-in-out;
+	};
 }
 
 </style>
@@ -102,7 +95,7 @@ export default Vue.extend({
 		},
 		GetInnerHeight(): Promise<number> {
 
-			const CONTAINER_NODE = this.$refs.wrap as HTMLElement;
+			const CONTAINER_NODE = this.$slots.default![0].elm! as Element;
 
 			return new Promise((resolve) => {
 				resolve(CONTAINER_NODE.getBoundingClientRect().height)

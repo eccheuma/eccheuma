@@ -1,10 +1,16 @@
 <template>
 	<div class="auth_profile-container">
+
 		<section class="auth_profile-header" :style="`background-image: url(${ UserState.UserImageID })`">
 			<i :style="`background-image: url(${ UserState.UserImageID })`" />
-			<strong>{{ UserState.UserName }}</strong>
-			<span>{{ DefineUserStatus(UserState.UserStatus) }}</span>
+			<div class="auth_profile-header-info">
+				<tag :light="true">
+					{{ UserState.UserName }}
+				</tag>
+				<span>{{ DefineUserStatus(UserState.UserStatus) }}</span>
+			</div>
 		</section>
+
 		<section class="auth_profile-body">
 
 			<template v-for="(area, index) in profileAreas">
@@ -20,9 +26,10 @@
 			</template>
 
 		</section>
+
 		<section class="auth_profile-footer">
 
-			<template v-if="$isMobile">
+			<!-- <template v-if="$isMobile">
 				<nuxt-link tag="button" :to="`/user-panel?uid=${ UserState.UserID }`">
 					Личный Кабинет
 				</nuxt-link>
@@ -30,11 +37,12 @@
 
 			<nuxt-link v-if="UserState.UserID === __SELF_KEY__" tag="button" to="/admin">
 				Админ Панель
-			</nuxt-link>
-			<button @click="logout()">
+			</nuxt-link> -->
+			<eccheuma-button @click.native="logout()">
 				Выйти
-			</button>
+			</eccheuma-button>
 		</section>
+
 	</div>
 </template>
 
@@ -62,25 +70,18 @@
 
 	&-header {
 
+		display: grid;
 		position: relative;
-
-		min-height: 20vh;
-		min-width: 100%;
-
-		padding: 2vh 0;
-
-		display: inline-grid;
-
 		justify-content: center;
 		align-content: center;
 
+		// height: 30vh;
+		padding: 2vh 0;
+
 		color: rgb(var(--color-mono-800));
-
-		overflow: hidden;
-
 		background: {
 			repeat: no-repeat;
-			size: cover;
+			size: calc(100% - 1.4rem) auto;
 			position: center;
 		}
 
@@ -110,64 +111,37 @@
 			background: radial-gradient(
 				closest-side, 
 				rgba(var(--color-mono-200), .75) 0%, 
-				rgba(var(--color-mono-200), 1) 100%
+				rgba(var(--color-mono-200), 1) 95%
 			);
 
 			z-index: 1;
 		}
 
 		i {
-
-			$s: 80px;
-
+			height: clamp(100px, 15vh, 100%);
+			aspect-ratio: 1/1;
 			z-index: 2;
 
-			width: $s; height: $s;
-
-			justify: {
-				self: center;
-			}
-
-			margin: {
-				bottom: 1vh;
-			}
-
 			background: {
-				repeat: no-repeat;
 				size: cover;
+				repeat: no-repeat;
 				position: center;
 			}
 
-			border: 3px solid rgb(var(--color-mono-800));
 			border: {
 				radius: 100%;
+				width: 4px;
+				style: outset;
+				color: rgb(var(--color-mono-600));
 			}
 
 		}
 
-		span {
-
+		&-info {
 			z-index: 2;
-
+			display: grid;
+			row-gap: 1vh;
 			text-align: center;
-			display: block;
-
-			font: {
-				weight: 600;
-				size: .65rem;
-			}
-		}
-
-		strong {
-
-			z-index: 2;
-
-			text-align: center;
-			display: block;
-
-			font: {
-				size: var(--font-size-3);
-			}
 		}
 
 	}
@@ -202,7 +176,7 @@
 				}
 
 				font: {
-					size: var(--font-size-6);
+					size: var(--font-size-12);
 					weight: 700;
 				}
 
@@ -227,7 +201,7 @@
 				}
 
 				font: {
-					size: var(--font-size-5);
+					size: var(--font-size-14);
 					weight: 600;
 				}
 
@@ -273,17 +247,10 @@
 		border-top: 1px solid rgb(var(--color-mono-400));
 
 		button {
-			@include push-button {
-
-				margin: .5vh auto;
-
-				width: 75%;
-				background: {
-					color: transparent;
-				}
-
-			}
+			width: 75%;
+			margin: auto;
 		}
+
 	}
 
 }
@@ -298,15 +265,17 @@
 	import { mapState, mapActions } from 'vuex'
 
 // COMPONENTS
-	import Popover from '~/components/common/Popover.vue'
+	import EccheumaButton from '~/components/buttons/CommonButton.vue';
+	// import Popover 				from '~/components/common/Popover.vue';
+	import Tag 						from '~/components/common/Tag.vue';
 
 // MIXINS 
-	import F_UserStatus from '~/assets/mixins/filters/UserStatus.ts'
+	import F_UserStatus from '~/assets/mixins/filters/UserStatus'
 	import F_WorkStatus from '~/assets/mixins/filters/WorkStatus'
 
 // TYPES
 	import type { VuexModules } from '~/typescript/VuexModules'
-	import type { USER_STATE 	} from '~/typescript/User.ts' 
+	import type { USER_STATE 	} from '~/typescript/User' 
 
 	type PROFILE_AREA = {
 		title: string
@@ -317,7 +286,9 @@
 // MODULE
 	export default Vue.extend({
 		components: {
-			Popover,
+			// Popover,
+			Tag,
+			EccheumaButton,
 		},
 		mixins: [ F_UserStatus, F_WorkStatus ],
 		computed: {

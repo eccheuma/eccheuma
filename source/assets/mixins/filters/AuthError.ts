@@ -1,7 +1,7 @@
 
 import Vue from 'vue';
 
-import type { AUTH_ERRORS } 	from '~/store/Auth/Auth.ts';
+import type { AUTH_ERRORS } 	from '~/store/Auth/Auth';
 
 const METHODS = {
 	DefineAuthError(e: AUTH_ERRORS): string {
@@ -30,4 +30,3 @@ export default Vue.extend({
 		...METHODS
 	}
 })
-

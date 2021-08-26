@@ -2,14 +2,14 @@
   <svg xmlns="http://www.w3.org/2000/svg">
     <filter 
       :id="`filter::${ name }`" 
-      :width="`${ 100 + (updatedScale / 3) }%`" 
-      :height="`${ 100 + (updatedScale / 3) }%`" 
+      :width="`${ 110 + (updatedScale / 3) }%`" 
+      :height="`${ 110 + (updatedScale / 3) }%`" 
       >
       <feTurbulence 
         type="turbulence" 
 
-        baseFrequency="0.9 0.9" 
-        numOctaves="8" 
+        baseFrequency=".95 0" 
+        numOctaves="2" 
         seed="1" 
         stitchTiles="stitch" 
 
@@ -90,9 +90,7 @@
     watch: {
       status: {
         handler() {
-
-          this.animate(300)
-
+          this.animate(100 + Math.trunc(50 * Math.random()))
         }
       }
     },

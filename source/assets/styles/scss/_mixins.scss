@@ -1,27 +1,5 @@
 $mobile-breakpoint: 768px;
 
-%button_switch {
-	border: 1px solid rgba(var(--color-mono-500),.5);
-	&:hover {
-		transform: translateY(-4px);
-		border: 1px solid transparent;
-		box-shadow: 0px 4px 0px 0px rgba(var(--color-mono-200),.25);
-	}
-}
-
-%border_black {
-	border-top: 4px solid rgb(var(--color-mono-200));
-	border-bottom: 4px solid rgb(var(--color-mono-200));
-}
-
-%button_light_active {
-	transition-duration: .5s;
-	text-decoration: none;
-	color: rgb(var(--color-mono-300));
-	background-color: rgb(var(--color-mono-900));
-	border: 1px solid rgb(var(--color-mono-900));  
-}
-
 @mixin icon-size($size: 21px) {
 	width: $size;
 	height: $size;
@@ -90,75 +68,38 @@ $mobile-breakpoint: 768px;
 
 @mixin gradient_border($side: block) {
 
-	$GRAD: transparent 10px, rgb(var(--color-mono-400)) 50%, transparent calc(100% - 10px);
+	$GRAD: transparent 10px, var(--color-accent-edges) 50%, transparent calc(100% - 10px);
+	$BORDER: 1px solid transparent;
 
 	@if $side == block {
 		border-image: linear-gradient(90deg, $GRAD);
-		border: {
-			top: 1px solid transparent;	
-			bottom: 1px solid transparent;	
-		}
+		border-block: $BORDER;
 	}
 	@if $side == inline {
+		border-image-width: 1;
 		border-image: linear-gradient(180deg, $GRAD);
-		border: {
-			right: 1px solid transparent;	
-			left: 1px solid transparent;	
-		}
+		border-inline: $BORDER;
 	}
 	@else if $side == top or bottom {
 		border-image: linear-gradient(90deg, $GRAD);
-		border-#{$side}: 1px solid transparent;
+		border-#{$side}: $BORDER;
 	}
 	@else if $side == left or right {
-		border-#{$side}: 1px solid transparent;
+		border-image-width: 1;
+		border-#{$side}: $BORDER;
 		border-image: linear-gradient(180deg, $GRAD);
 	}  
-	
-	border-image-width: 1;
+
 	border-image-slice: 1;
 	
 }
 
-%button_light {
-	cursor: pointer;
-	padding: 6px 2vw;
-	border-radius: .8rem;
-	color: rgb(var(--color-mono-200));
-	background-color: rgb(var(--color-mono-800));
-	border: 1px solid rgb(var(--color-mono-400));
-	box-shadow: 0px 0px 0px 2px rgb(var(--color-mono-800));
-	font-size: 14px;
-	font-weight: 600;
-	transition-duration: .25s;
-	&:hover {
-		text-decoration: none;
-		color: rgb(var(--color-mono-800));
-		background-color: rgb(var(--color-mono-300));
-	}
-}
+%component {
 
-%button_black {
-	cursor: pointer;
-	margin: 0 auto;
-	padding: 6px 3vw;
-	border-radius: .8rem;
-	color: rgb(var(--color-mono-500));
-	background-color: rgb(var(--color-mono-200));
-	border: 1px solid rgb(var(--color-mono-400));
-	font-size: 12px;
-	font-weight: 600;
-	transition-duration: .25s;
-	&:hover {
-		text-decoration: none;
-		color: rgb(var(--color-mono-800));
-		background-color: rgb(var(--color-mono-300));
-	}
-}
+  @include gradient_border;
+  @include component-shadow;
 
-%gradient_border {
-	border-top: 1px solid transparent;
-	border-bottom: 1px solid transparent;
-	border-image: linear-gradient(to left, rgb(var(--color-mono-300)), rgb(var(--color-mono-400)), rgb(var(--color-mono-300)));
-	border-image-slice: 1;
+  background-color: rgb(var(--color-mono-200));
+  border-radius: .7rem;
+
 }

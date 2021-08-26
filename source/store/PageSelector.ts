@@ -1,4 +1,12 @@
-import { ActionTree, MutationTree } from 'vuex'
+import { MutationTree } from 'vuex'
+
+// STATE
+	export const state = () => ({
+
+		Page: 1,
+		PageQuantity: 1,
+
+	})
 
 // CURENT STATE
 	export type CurentState = ReturnType<typeof state>
@@ -9,14 +17,6 @@ import { ActionTree, MutationTree } from 'vuex'
 			PageSelector: CurentState
 		}
 	}
-
-// STATE
-	export const state = () => ({
-
-		Page: 1,
-		PageQuantity: 1,
-
-	})
 
 // MUTATIONS
 	export const mutations: MutationTree<CurentState> = {

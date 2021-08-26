@@ -1,8 +1,8 @@
 <template>
-	<div class="Parallax-Wrapper" ref="Wrapper" :data-test="inViewport">
+	<div ref="Wrapper" class="Parallax-Wrapper" :data-test="inViewport">
 
-		<div class="Parallax-Container" ref="Container">
-			<slot></slot>
+		<div ref="Container" class="Parallax-Container">
+			<slot />
 		</div>
 
 	</div>
@@ -25,14 +25,14 @@
 
 	import Vue, { PropOptions } from 'vue'
 
-	import type { CCSTypedObjectModel } from '~/typescript/CSSTypedOM.ts'
-
 	interface Options {
 		Multiplier: number
 		Direction: 'down' | 'up'
 		OpacityFade: boolean
 		OpacityFadeOffset: number
 	}
+
+	type POSITION = { Top: number, Bottom: number }
 
 	export default Vue.extend({
 		props: {
@@ -48,6 +48,10 @@
 					}
 				}
 			} as PropOptions<Options>,
+			forcedScrollPosition: {
+				type: Number,
+				default: 0,
+			}
 		},
 		data() {
 			return {
@@ -56,7 +60,7 @@
 
 				Init: false,
 
-				ElementPosition: {} as { Top: number, Bottom: number },
+				ElementPosition: { Top: 0, Bottom: 0 } as POSITION,
 				ScrollPosition: 0,
 
 				DefaultOptions: {
@@ -75,76 +79,79 @@
 				const DIR 				= this.options.Direction 	|| this.DefaultOptions.Direction
 
 				switch ( DIR.toLowerCase() ) {
-					case 'down': return 0 + Math.trunc( this.ScrollPosition * MULTIPLIER ); break;
-					case 'up': return 0 - Math.trunc( this.ScrollPosition * MULTIPLIER ); break;
-					default: return 0
+					case 'down': 	
+						return 0 + Math.trunc( this.ScrollPosition * MULTIPLIER );
+					case 'up': 		
+						return 0 - Math.trunc( this.ScrollPosition * MULTIPLIER ); 
+					default: 			
+						return 0
 				}
 
 			},
 			OpacityValue(): number {
 
-				const FADE = this.options.OpacityFade || this.DefaultOptions.OpacityFade
+				const H = this.ElementPosition.Top + this.ElementPosition.Bottom;
 
-				if ( FADE && this.Init ) {
+				return ( H - this.ScrollPosition ) / ( H / 100 );
 
-					const ELEMENT = this.ElementPosition
-					const OFFSET 	= this.options.OpacityFadeOffset || this.DefaultOptions.OpacityFadeOffset
-					const RANGE 	= Math.abs( ( this.ScrollPosition + OFFSET ) - ELEMENT.Bottom )
-
-					// Нижняя граница для конечного затухания. ENG: Endpoint of scrollPosition where opacity should gonna reach 0 
-
-					if ( this.ScrollPosition <= ELEMENT.Bottom - OFFSET ) {
-
-						const RES = RANGE / ( ELEMENT.Bottom - OFFSET); return +RES.toFixed(2)
-
-					} return 0	
-
-				} return 0
 			}
 		},
 		watch: {
 			inViewport: {
 				handler() {
 					if ( this.inViewport ) {
+
 						window.addEventListener('scroll', this.ScrollHandler);
+
 					} else {
+
 						window.removeEventListener('scroll', this.ScrollHandler);
+
 					}
 				},
 			},
 			TranslateValue: {
 				handler() { 
-					this.StyleElement(
-						'Container', 
-						`transform: translateY(${ this.TranslateValue as number }px)`, 
-						'px'
-					) 
+
+					const css = `transform: translateY(${ this.TranslateValue as number }px)`;
+
+					this.StyleElement('Container', css); 
+
 				}
 			},
 			OpacityValue: {
 				handler() { 
 					this.StyleElement(
 						'Wrapper', 
-						`opacity: ${ this.OpacityValue }`, 
-						'number' 
+						`opacity: ${ this.OpacityValue }%`, 
 					)
+				}
+			},
+			ScrollPosition: {
+				handler() {
+					if (this.inViewport) {
+						this.$emit('scroll-position', this.ScrollPosition);
+					}
+				}
+			},
+			forcedScrollPosition: {
+				handler() {
+					if (!this.inViewport) {
+						this.ScrollPosition = this.forcedScrollPosition;
+					}
 				}
 			}
 		},
 		mounted() {
-			this.InitElement()
+
+			this.InitElement();
+
 		},
 		methods: {
-			InitElement(): void {
 
-				const ELEMENT = this.$refs.Wrapper as Element
+			async InitElement() {
 
-				this.$nextTick(() => {
-					this.ElementPosition = {
-						Top: ELEMENT.getBoundingClientRect().top + pageYOffset, 
-						Bottom: ELEMENT.getBoundingClientRect().bottom + pageYOffset,
-					}
-				})
+				this.ElementPosition = await this.getElementPosition(this.$el);
 
 				new IntersectionObserver((entry) => {
 					this.inViewport = entry.pop()?.isIntersecting || false 
@@ -155,6 +162,7 @@
 				this.Init = true
 
 			},
+
 			ElementInView(): boolean {
 
 				const ELEMENT = this.ElementPosition
@@ -167,6 +175,7 @@
 				return VIEW.Top <= ELEMENT.Bottom || ELEMENT.Bottom >= VIEW.Top
 				
 			},
+
 			ScrollHandler(): void {
 
 				if ( this.inViewport && this.ScrollPosition !== Math.trunc( window.scrollY )) {
@@ -176,7 +185,8 @@
 				}
 
 			},
-			StyleElement(_REF: string, _CSS: string, _TYPE: 'px' | 'number' ) {
+
+			StyleElement(_REF: string, _CSS: string ) {
 
 				if ( this.ElementInView() ) { 
 					
@@ -188,7 +198,21 @@
 
 				}
 				
+			},
+
+			getElementPosition(el: Element): Promise<POSITION> {
+				return new Promise((resolve) => {
+
+					const VALUES: POSITION = {
+						Top: 		el.getBoundingClientRect().top 		+ pageYOffset, 
+						Bottom: el.getBoundingClientRect().bottom + pageYOffset,
+					}
+
+					resolve(VALUES)
+
+				})
 			}
+
 		},
 	})
 	

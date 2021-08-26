@@ -84,7 +84,7 @@
 
 		span {
 			font: {
-				size: var(--font-size-6);
+				size: var(--font-size-12);
 				weight: 700;
 			}
 		}

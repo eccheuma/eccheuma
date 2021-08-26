@@ -8,10 +8,16 @@
 
     <template v-if="Posts.length">
       <article v-for="(post, i) in Posts" :key="i" class="vk-post pattern_bg">
+        <header class="vk-post-header">
+          <a href="https://vk.com/eccheuma" :style="`background-image: url(${ EccheumaAvatar })`" />
+          <section>
+            <span>Eccheuma</span>
+            <span>{{ post.date.Day }} в {{ post.date.Time }}</span>
+          </section>
+        </header>
         <img :src="post.thumb" alt="">
         <hr>
         <section class="vk-post-body">
-          <span>{{ post.date.Day }} в {{ post.date.Time }}</span>
           <p>
             {{ post.body }}
           </p>
@@ -74,7 +80,7 @@
     color: rgb(var(--color-mono-800));
 
     font: {
-      size: var(--font-size-4);
+      size: var(--font-size-16);
       weight: 700;
     }
 
@@ -111,7 +117,7 @@
     border-radius: .7rem;
 
     font: {
-      size: var(--font-size-3);
+      size: var(--font-size-18);
     }
 
     background-color: rgb(var(--color-mono-300));
@@ -127,7 +133,7 @@
       color: rgb(var(--color-mono-700));
 
       font: {
-        size: var(--font-size-3);
+        size: var(--font-size-18);
         family: var(--read-font);
       }
     }
@@ -142,6 +148,60 @@
       opacity: .5;
     }
 
+    &-header {
+
+      display: flex;
+      align-items: center;
+      height: 100%;
+
+      gap: 1vw;
+
+      a {
+
+        height: 8vh;
+        aspect-ratio: 1/1;
+
+        background: {
+          size: 150%;
+          position: center;
+          repeat: no-repeat;
+        }
+
+        border: {
+          radius: 100%;
+          width: 2px;
+          style: solid;
+          color: rgb(var(--color-mono-500));
+        }
+
+      }
+
+      section {
+        span {
+
+          display: block;
+
+          &:nth-child(1) {
+            font: {
+              family: var(--decor-font);
+              size: var(--font-size-24);
+            }
+    
+            letter-spacing: .25ch;
+            line-height: var(--size-36);
+          }
+
+          &:nth-child(2) {
+            font: {
+              size: var(--font-size-16);
+            }
+          }
+  
+        }
+      }
+
+    }
+
     &-body {
 
       span {
@@ -150,7 +210,7 @@
         margin-bottom: 2vh;
   
         font: {
-          size: var(--font-size-5);
+          size: var(--font-size-14);
           weight: 800;
         }
   
@@ -235,6 +295,9 @@
     },  
     data() {
       return {
+
+        EccheumaAvatar: require('~/assets/images/GroupAvatar.jpg').src as string,
+
         Posts: [] as POST[],
       }
     },

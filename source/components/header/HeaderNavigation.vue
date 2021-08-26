@@ -108,7 +108,8 @@ $TransitionDuration: 250ms;
 	&-background {
 
 		--navigation-background: rgb(var(--color-mono-200));
-		@extend %gradient_border;
+		
+		@include gradient_border;
 
 	}
 }
@@ -182,11 +183,16 @@ $TransitionDuration: 250ms;
 		}
 
 		span {
-			display: block; position: absolute; top: -1px;
-			width: 100%; height: .6px;
-			opacity: 1;
-			background: linear-gradient(90deg, rgba(var(--color-mono-900),.0) 0%, rgba(var(--color-mono-900),1) 50%, rgba(var(--color-mono-900),.0) 100%) !important ;
-			transition-duration: .5s;
+
+			display: block; 
+			position: absolute; 
+			top: -1px;
+
+			width: 100%; 
+			height: 1px;
+			
+			background: linear-gradient(90deg, transparent, var(--color-accent-lighting), transparent) !important ;
+
 		}
 
 		a {
@@ -198,7 +204,7 @@ $TransitionDuration: 250ms;
 
 			;
 			font: {
-				size: var(--font-size-2);
+				size: var(--font-size-24);
 				family: var(--decor-font);
 			}
 
@@ -212,7 +218,7 @@ $TransitionDuration: 250ms;
 
 			@media screen and ( max-width: $mobile-breakpoint ) {
 				display: inline-flex;
-				font-size: var(--font-size-3);
+				font-size: var(--font-size-18);
 			}
 
 			i {
@@ -247,7 +253,7 @@ $TransitionDuration: 250ms;
 
 				i {
 					color: rgb(var(--color-mono-900));
-					transform: scale(2) translateY(-5vh);
+					transform: scale(2) translateY(-5vh) rotate(-15deg);
 					background-color: rgb(var(--mono-800));
 				}
 
@@ -289,7 +295,7 @@ $TransitionDuration: 250ms;
 
 				transition-duration: $TransitionDuration;
 				display: block;
-				font-size: var(--font-size-3);
+				font-size: var(--font-size-18);
 				color: rgb(var(--color-mono-800)) !important;
 
 				background-color: rgb(var(--color-mono-800));

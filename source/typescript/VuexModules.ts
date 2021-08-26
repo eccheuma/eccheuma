@@ -17,12 +17,3 @@ import type { RootState } from '~/store'
 export interface VuexModules extends RootState, Folders {
 
 }
-
-
-
-
-
-
-
-
-

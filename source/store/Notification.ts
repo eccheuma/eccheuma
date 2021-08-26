@@ -1,7 +1,7 @@
 import { ActionTree, MutationTree } from 'vuex'
 
 // TYPES AND INTERFACES
-	import type { NOTIFICATION_CONTENT } from '~/typescript/Notification.ts'
+	import type { NOTIFICATION_CONTENT } from '~/typescript/Notification'
 
 // STATE
 	export const state = () => ({

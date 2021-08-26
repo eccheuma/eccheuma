@@ -119,12 +119,12 @@
 		span {
 			display: block;
 			&:nth-of-type(1) {
-				font-size: var(--font-size-3);
+				font-size: var(--font-size-18);
 				font-weight: 800;
 				color: rgb(var(--color-mono-800));
 			}
 			&:nth-of-type(2) {
-				font-size: var(--font-size-3);
+				font-size: var(--font-size-18);
 				font-weight: 600;
 				color: rgb(var(--color-mono-600));
 			}
@@ -151,7 +151,7 @@
 			line-height: 2.5vh;
 			color: rgb(var(--color-mono-800));
 			font: {
-				size: 	var(--font-size-3);
+				size: 	var(--font-size-18);
 				family: var(--read-font);
 				weight: 500;
 			}

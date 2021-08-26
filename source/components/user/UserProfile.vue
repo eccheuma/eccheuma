@@ -16,45 +16,56 @@
 					<span>Информация о балансе и заказе</span>
 				</section>
 
+				<hr>
+
 				<section class="user_profile-info-body">
 					<i ref="UserIcon" :style="`background-image: url(${ UserState.UserImageID }); transform: scale(0)`" />
-					<span>{{ UserState.UserName }}</span>
+					<div class="user_profile-info-body-name">
+						<tag :light="true">
+							{{ UserState.UserName }}
+						</tag>
+						<span>{{ DefineUserStatus(UserState.UserStatus) }}</span>
+					</div>
 				</section>
+
+				<hr>
 
 				<section class="user_profile-info-footer">
 
 					<h6>Информация</h6>
-
 					<hr>
+					<div class="user_profile-info-footer-list">
 
-					<span>
-						<div>Баланс: </div>
-						<strong>{{ UserState.UserBalance }} ₽</strong>
-					</span>
-					<span>
-						<div>Сообщений: </div>
-						<strong>{{ MessagesCount }} ( Новых: {{ NewMessages }} )</strong>
-					</span>
-
-					<template v-if="ActiveRequest.length">
 						<span>
-							<div>Тип заказа:  </div>
-							<strong>{{ ActiveRequest[0].Service.Name || 'Не указан' }}</strong>
+							<div>Баланс: </div>
+							<strong>{{ UserState.UserBalance }} ₽</strong>
 						</span>
 						<span>
-							<div>Статус заказа: </div>
-							<strong>{{ DefineWorkStatus(ActiveRequest[0].Status) }}</strong>
+							<div>Сообщений: </div>
+							<strong>{{ MessagesCount }} ( Новых: {{ NewMessages }} )</strong>
 						</span>
-						<span>
-							<div>Цена заказа: </div>
-							<strong>{{ ActiveRequest[0].Service.Cost || 0 }} ₽</strong>
-						</span>
-					</template>
 
-					<span>
-						<div>Заказов в прогрессе: </div>
-						<strong>{{ RequestsQuantity }}</strong>
-					</span>
+						<!-- <template v-if="ActiveRequest.length">
+							<span>
+								<div>Тип заказа:  </div>
+								<strong>{{ ActiveRequest[0].Service.Name || 'Не указан' }}</strong>
+							</span>
+							<span>
+								<div>Статус заказа: </div>
+								<strong>{{ DefineWorkStatus(ActiveRequest[0].Status) }}</strong>
+							</span>
+							<span>
+								<div>Цена заказа: </div>
+								<strong>{{ ActiveRequest[0].Service.Cost || 0 }} ₽</strong>
+							</span>
+						</template> -->
+
+						<span>
+							<div>Заказов в прогрессе: </div>
+							<strong>{{ RequestsQuantity }}</strong>
+						</span>
+
+					</div>
 
 				</section>
 
@@ -66,6 +77,8 @@
 					<h6>{{ ComponentInfo.Title }}</h6>
 					<span><i class="fas fa-info-circle" /> Информация о балансе и заказе</span>
 				</section>
+
+				<hr>
 				
 				<transition name="UserProfileComponentTransition" mode="out-in">
 
@@ -82,23 +95,30 @@
 					<span>Выберите нужный пункт меню</span>
 				</section>
 
+				<hr>
+
 				<section class="user_profile-navigation-body">
 
-					<common-button 
+					<eccheuma-button 
 						v-for="(item, index) in PreferencesArea" 
 						:key="`navigation-button-${ index }`"
-						:class="{ active: CurentPreferencesComponent === item.Component }"
+						:indicator="item.Component === 'Messages' && NewMessages"
+						:class="[
+							{ active: CurentPreferencesComponent === item.Component }
+						]"
 						@click.native="AreaToggle( item.Component )"
 						>
 						{{ item.Name }}
-					</common-button>
+					</eccheuma-button>
 
 				</section>
 
+				<hr>
+
 				<section class="user_profile-navigation-footer">
-					<common-button @click.native="Logout">
+					<eccheuma-button @click.native="Logout">
 						Выход из аккаунта
-					</common-button>
+					</eccheuma-button>
 				</section>
 
 			</div>
@@ -110,6 +130,40 @@
 </template>
 
 <style lang="scss">
+
+@mixin section-header {
+
+	text-align: center;
+
+	place-content: center;
+	display: flex;
+	flex-direction: column;
+
+	height: 10vh;
+
+	h6 {
+
+		display: block;
+		color: rgb(var(--color-mono-900));
+		font: {
+			size: var(--font-size-36);
+			family: var(--decor-font);
+			// weight: 700;
+		}
+
+		letter-spacing: .25ch;
+		line-height: var(--size-36);
+
+	}
+
+	span {
+		display: block;
+		color: rgb(var(--color-mono-500));
+		font-size: var(--font-size-16);
+		font-weight: 800;
+	}
+
+}
 
 .user_profile-collapse {
 	position: absolute; z-index: 1000;
@@ -171,6 +225,7 @@
 
 		// position: absolute; z-index: 1000;
 		width: calc(100vw - 10px);
+		height: 75vh;
 
 		overflow: hidden;
 
@@ -181,7 +236,8 @@
 
 		display: grid; 
 		grid-template: {
-			columns: 2fr 5fr 2fr;
+			columns: 3fr 7fr 3fr;
+			areas: 'info content nav'
 		}
 
 		@media screen and ( max-width: $mobile-breakpoint ) {
@@ -191,25 +247,29 @@
 			}
 		}
 
-		>div {
+		* > {
 			opacity: 0;
+		}
+
+		hr {
+			width: 100%;
+			background-color: rgb(var(--color-mono-400));
+			margin: 0;
 		}
 
 	}
 
 	&-info {
 
+		grid-area: info;
+
 		display: grid;
 		grid-template: {
-			rows: 10% auto 50%;
+			rows: auto 1px 1fr 1px min-content;
 		}
 
-		hr {
-			width: 100%;
-			background-color: rgb(var(--color-mono-400));
-		}
-
-		padding: 2vh 0;
+		row-gap: 10px;
+		padding: 2vh 1vw;
 
 		border: {
 			right: 1px solid rgb(var(--color-mono-400));
@@ -217,65 +277,67 @@
 
 		&-header {
 
-			padding: 0 1vw;
-			text-align: center;
-
-			h6 {
-				display: block;
-				color: rgb(var(--color-mono-900));
-				font-size: var(--font-size-3);
-				font-weight: 700;
-			}
-
-			span {
-				display: block;
-				color: rgb(var(--color-mono-800));
-				font-size: var(--font-size-5);
-				font-weight: 500;
-			}
+			@include section-header;
 
 		}
 
 		&-body {
 
-			margin: 5vh 0;
+			display: flex;
+			place-items: center;
+			place-content: center;
+			flex-direction: column;
 
-			align-self: center;
-
-			span {
-				display: block;
-				width: 100%;
-				color: rgb(var(--color-mono-800));
-				font: {
-					size: var(--font-size-5);
-					weight: 700;
-				}
-			}
+			row-gap: 2vh;
 
 			i {
-				$s: 80px;
 				display: block;
-				height: $s; width: $s;
-				margin: 0 auto 2vh;
+				height: clamp(100px,15vh,100%); 
+				aspect-ratio: 1/1;
 				border-radius: 100%;
 				border: 3px solid rgb(var(--color-mono-800));
 				background-position: center center;
 				background-size: cover;
 				background-color: rgb(var(--color-mono-800));
-				// transform: scale(0);
+			}
+
+			&-name {
+				span {
+					&:last-child {
+						display: block;
+						margin-top: 1vh;
+						color: rgb(var(--color-mono-600));
+						font-size: var(--font-size-16);
+						font-weight: 800;
+					}
+				}
 			}
 
 		}
 
 		&-footer {
 
-			padding: 0 2vw;
+			background-color: rgb(var(--color-mono-300));
+			border-radius: .7rem;
+			padding: 3vh 1.5vw;
+
+			height: min-content;
+			display: grid;
+			row-gap: 1vh;
+
+			place-content: center;
 
 			h6 {
 				display: block;
 				color: rgb(var(--color-mono-900));
-				font-size: var(--font-size-3);
-				font-weight: 700;
+				font-size: var(--font-size-36);
+				font-family: var(--decor-font);
+				letter-spacing: .25ch;
+				margin-bottom: 1vh;
+			}
+
+			hr {
+				margin-block: .5vh;
 			}
 
 			span {
@@ -303,23 +365,21 @@
 
 	&-content {
 
-		padding: 2vh 2vw;
+		grid-area: content;
+		display: grid;
+		grid-template: {
+			rows: auto 1px 1fr;
+		}
+
+		row-gap: 10px;
+		padding: 2vh 1vw;
+
+		// height: 70vh;
+		overflow: hidden;
 
 		&-header {
 
-			h6 {
-				display: block;
-				color: rgb(var(--color-mono-900));
-				font-size: var(--font-size-3);
-				font-weight: 700;
-			}
-
-			span {
-				display: block;
-				color: rgb(var(--color-mono-800));
-				font-size: var(--font-size-5);
-				font-weight: 500;
-			}
+			@include section-header;
 
 		}
 
@@ -327,60 +387,58 @@
 
 	&-navigation {
 
-		$padY: 2vh;
-
-		padding: $padY 0;
+		grid-area: nav;
 
 		display: grid;
-		grid-template-rows: 10vh auto 10vh;
-		justify-content: center;
+		row-gap: 10px;
+
+		grid-template: {
+			rows: auto 1px 1fr 1px min-content;
+		}
+
+		padding: 2vh 1vw;
 
 		border: {
 			left: 1px solid rgb(var(--color-mono-400));
 		} 
 
+		hr {
+			width: 100%;
+			background-color: rgb(var(--color-mono-400));
+			margin: 0;
+		}
+
 		&-header {
 			
-			h6 {
-				display: block;
-				color: rgb(var(--color-mono-900));
-				font-size: var(--font-size-3);
-				font-weight: 700;
-			}
-
-			span {
-				display: block;
-				color: rgb(var(--color-mono-800));
-				font-size: var(--font-size-5);
-				font-weight: 500;
-			}
+			@include section-header;
 
 		}
 
 		&-body {
 
-			padding: 3vh 2vw;
 			display: flex;
 			flex-direction: column;
+			place-content: center;
 			row-gap: 1vh;
 
+			align-items: center;
+
 			button {
-				
-				margin: 0 auto;
-				height: fit-content;
+				width: 100%;
+			}
 
-				&:last-of-type {
-					grid-row: -1;
-				}
-
-				transition-duration: 500ms;
-
+			.active {
+				width: 75%;
 			}
 
 		}
 
 		&-footer {
+
+			display: flex;
+			flex-direction: column;
 			width: 100%;
+
 		}
 
 	}
@@ -402,9 +460,12 @@
 
 	// MIXINS
 		import D_WorkStatus 	from '~/assets/mixins/filters/WorkStatus'
+		import F_UserStatus 	from '~/assets/mixins/filters/UserStatus'
 
 	// COMPONENTS
 		import EccheumaCollapse from '~/components/common/EccheumaCollapse.vue'
+		import EccheumaButton		from '~/components/buttons/CommonButton.vue'
+		import Tag 							from '~/components/common/Tag.vue'
 
 		type MODULES = 'Messages' | 'NameChange' | 'IconChange' | 'WorkRequests'
 
@@ -436,14 +497,14 @@
 	export default Vue.extend({
 		components: {
 			EccheumaCollapse,
+			Tag,
+			EccheumaButton,
 			Messages: 		() => import('~/components/user/ProfileComponents/Messages.vue'),
 			NameChange: 	() => import('~/components/user/ProfileComponents/NameChange.vue'),
 			IconChange: 	() => import('~/components/user/ProfileComponents/IconChange.vue'),
 			WorkRequests: () => import('~/components/user/ProfileComponents/WorkRequests.vue'),
-			// Button 
-			CommonButton: () => import('~/components/buttons/CommonButton.vue')
 		},
-		mixins: [ D_WorkStatus ],
+		mixins: [ D_WorkStatus, F_UserStatus ],
 		data() {
 			return {
 
@@ -488,7 +549,7 @@
 						Sub: 'Подсказка: Нажмите "Shift + Enter" для подтверждения.',
 					},
 					IconChange: {
-						Title: 'Иконка профиля',
+						Title: 'Смена иконки профиля',
 						Sub: 'Подсказка: Нажмите "Shift + Enter" для подтверждения.',
 					},
 					WorkRequests: {

@@ -16,6 +16,15 @@ import 'firebase/database'
 		Read: boolean
 	}
 
+// STATE
+	export const state = () => ({
+
+		Messages: [] as Message[],     
+
+		NewMessagesCount: 0
+		
+	})
+
 // CURENT STATE
 	export type CurentState = ReturnType<typeof state>
 
@@ -26,15 +35,7 @@ import 'firebase/database'
 		}
 	}
 
-// STATE
-	export const state = () => ({
-
-		Messages: [] as Message[],     
-
-		NewMessagesCount: 0
-		
-	})
-
+// MUTATIONS
 	export const mutations: MutationTree<CurentState> = {
 		Change_NewMessagesCount(state, n: number) {
 
@@ -48,8 +49,9 @@ import 'firebase/database'
 		},
 	}
 
+// ACTIONS
 	export const actions: ActionTree<CurentState, VuexModules>  = {
-		FireBaseGetMessages({dispatch, commit, rootState}) {
+		FireBaseGetMessages({ dispatch, commit, rootState }) {
 			try {
 
 				// Получение ID пользователя
@@ -58,7 +60,7 @@ import 'firebase/database'
 				// Загрузка стейта пользователя из Firebase
 				firebase.database()
 					.ref(`Users/${uid}/messages`)
-					.on('value', data => {
+					.on('value', (data) => {
 
 						commit('Change_Messages', data.val()); 
 						
@@ -81,7 +83,7 @@ import 'firebase/database'
 		},
 		MarkAsReaded({ rootState }, ID: Message['ID']) {
 
-			console.log("MarkAsReaded", ID)
+			console.log('MarkAsReaded', ID)
 
 			const uid = rootState.Auth.Auth.CurentUser.uid 
 
@@ -93,11 +95,10 @@ import 'firebase/database'
 		CheckMessages({ rootState, commit, state }) {
 
 			const Unreaded = state.Messages.filter(( item: Message ) => {
-				return !item.Read && item.UserID != rootState.User.State.UserState.UserID
+				return !item.Read && item.UserID !== rootState.User.State.UserState.UserID
 			})
 			
 			commit('Change_NewMessagesCount', Unreaded.length )
 
 		},
 	}
-

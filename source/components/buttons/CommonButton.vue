@@ -1,25 +1,49 @@
 <template>
-  <component :is="link ? 'a' : 'button'" ref="button" :class="{ 'scheme::dark': scheme === 'dark' }">
+  <component 
+    :is="link ? 'a' : 'button'" 
+    ref="button" 
+    :class="[
+      { 'action': indicator },
+      { 'scheme::dark': scheme === 'dark' },
+    ]"
+  >
 
     <cursor-visual />
 
     <span class="pattern_bg">
       <slot />
     </span>
+
   </component>
 </template>
 
 <style lang="scss" scoped>
 
 .scheme\:\:dark {
-  --text: var(--color-mono-800);
-  --color: var(--color-mono-300);
+  --eccheuma-button-text: rgb(var(--color-mono-800));
+  --eccheuma-button-color: rgb(var(--color-mono-300));
+}
+
+.action {
+
+  animation: eccheuma-button-action 1s alternate infinite;
+  @keyframes eccheuma-button-action {
+    from {
+      border-color: var(--eccheuma-button-text);
+      // filter: drop-shadow(0 0 4px var(--eccheuma-button-color));
+    }
+    to {
+      border-color: var(--eccheuma-button-color);
+      // filter: drop-shadow(0 0 0 var(--eccheuma-button-color));
+    }
+  }
+
 }
 
 button, a {
 
-  --text: var(--color-mono-300);
-  --color: var(--color-mono-800);
+  --eccheuma-button-text: rgb(var(--color-mono-300));
+  --eccheuma-button-color: rgb(var(--color-mono-800));
 
   cursor: pointer;
 
@@ -28,13 +52,13 @@ button, a {
 
   background: transparent;
 
-	border: 2px solid rgb(var(--color)); 
+	border: 2px solid var(--eccheuma-button-color); 
   border-radius: .7rem;
 
   padding: 2px;
   min-width: 180px;
 
-  font-size: var(--font-size-5);
+  font-size: var(--font-size-14);
   font-weight: 800; 
 
   span {    
@@ -45,8 +69,12 @@ button, a {
     text-align: center;
     line-height: 4vh;
 
-    color: rgb(var(--text));
-    background-color: rgb(var(--color));
+    display: flex;
+    justify-content: space-evenly;
+    gap: 1vw;
+
+    color: var(--eccheuma-button-text);
+    background-color: var(--eccheuma-button-color);
     border-radius: calc(.7rem - 4px);
 
     padding: 0 2vw;
@@ -58,14 +86,8 @@ button, a {
   transition-duration: .25s;
 
 	&:hover {
-
 		text-decoration: none; 
-
-    span {
-      color: rgb(var(--color));
-      background-color: transparent;
-    }
-
+    background-color: var(--eccheuma-button-color);
 	}
 
 }
@@ -94,7 +116,11 @@ button, a {
       scheme: {
         type: String,
         default: 'light'
-      } as PropOptions<'light' | 'dark'>
+      } as PropOptions<'light' | 'dark'>,
+      indicator: {
+        type: Boolean,
+        default: false,
+      },
     },
     data() {
       return {
@@ -106,8 +132,8 @@ button, a {
     created() {
 
       this.setSounds([
-        { file: 'Off', name: 'ButtonHover', settings: { rate: 1.25, volume: .5 } },
-        { file: 'Off', name: 'ButtonClick', settings: { rate: 1, volume: .5 } }
+        { file: 'Off',  name: 'ButtonHover', settings: { rate: 1.00, volume: .5 } },
+        { file: 'Off',  name: 'ButtonClick', settings: { rate: 1.25, volume: .5 } },
       ])
 
     },

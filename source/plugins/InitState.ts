@@ -1,26 +1,32 @@
 import Vue from 'vue'
 
-import firebase from 'firebase/app'; import 'firebase/database'
+import firebase from 'firebase/app'; 
+import 'firebase/database'
 
-export default async () => {
+import type { Context } from '@nuxt/types';
 
-	Vue.config.ignoredElements = ['eccheuma-wrapper', 'eccheuma-layout']
+export default ({ env, isDev }: Context) => {
 
-	const APP = await firebase.database()
-		.ref('/App')
-		.once('value')
-		.then( data => data.val())
+	Vue.config.ignoredElements = ['eccheuma-wrapper', 'eccheuma-layout', 'eccheuma-intersection', 'eccheuma-collapse']
 
-	Vue.prototype.APP_VERSION					= APP.Version;
+	Vue.prototype.BUILD_HASH					= env.buildHash
 	Vue.prototype.CLIENT_RENDER_CHECK = process.browser;
-	Vue.prototype.DEVELOPMENT 				= process.env.NODE_ENV === 'development';
-	Vue.prototype.__SELF_KEY__ 				= APP.__SELF_KEY__
+	Vue.prototype.DEVELOPMENT 				= isDev;
+
+	firebase.database().ref('/App').once('value').then((data) => {
+		Vue.prototype.__SELF_KEY__  = data.val().__SELF_KEY__
+	})
+
+	if ( isDev ) {
+		console.log(`%cEccheuma | Build: ${ env.buildHash }`,
+		'background-color: #141418; padding: 4px 20px; border-radius: 4px;')
+	}
 
 }
 
 declare module 'vue/types/vue' {
 	interface Vue {
-		APP_VERSION: string
+		BUILD_HASH: string
 		CLIENT_RENDER_CHECK: boolean
 		DEVELOPMENT: boolean
 		__SELF_KEY__: string

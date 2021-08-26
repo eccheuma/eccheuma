@@ -1,13 +1,3 @@
 <template>
-    <div class="Wrapper">
-    </div>
+    <h1>ЛОВИ ПИЛЮЛЮ, ФРАЕР!</h1>
 </template>
-
-<style lang="sass">
-
-</style>
-
-<script>
-
-
-</script>

@@ -1,32 +1,85 @@
 <template>
 	<main class="service-container">
 
-		<promo-banner promo-type="Works" />
+		<promo-banner promo-type="Adaptation" />
 
-		<section class="service-section_title">
-			<span>1</span>
-			<h5>Типы услуг</h5>
-			<p>Хороший способ заранее уточнить цену на разные виды услуг, получить ориенировачное время на выполнения, и узнать об оптимизации цены.</p>
+		<section class="service-main">
+
+			<section-header>
+				<template #header>	
+					<span>Нужен сайт? Я его вам дать.</span>
+				</template>
+				<template #default>
+					<span>УГА БУГА</span>
+				</template>
+			</section-header>
+
+			<service-card :payload="Products[0]" :wide="true" />
+
 		</section>
 
 		<section class="service-products">
 
-			<service-item v-for="(item, i) in Products" :key="`card-${ i }`" :payload="item" />
+			<section-header>
+				<template #header>	
+					<span>Прочие предоставляемые услуги</span>
+				</template>
+				<template #default>
+					<span>Разбитые на категории работы, с указание цены, отзывов, и технологий</span>
+				</template>
+			</section-header>
+
+			<div class="service-products-items">
+				<service-card v-for="(item, i) in Products" :key="i" :payload="item" />
+			</div>	
 
 		</section>
 
-		<section class="service-section_title">
-			<span>2</span>
-			<h5>Калькулятор цены для разного вида услуг.</h5>
-			<p>Хороший способ заранее уточнить цену на разные виды услуг, получить ориенировачное время на выполнения, и узнать об оптимизации цены.</p>
-		</section>
-
-		<section class="service-calc_wrapper">
-			<cost-calc default-category="" :category-defined="false"/>
-		</section>
+		<!-- <section class="service-calc">
+			<cost-calc default-category="" :category-defined="false" />
+		</section> -->
 
 	</main>
 </template>
+
+<style lang="scss">
+
+.service {
+	&-container {
+
+		display: grid;
+		row-gap: 2vh;
+		padding: 3vh 1vw;
+
+		> section {
+			@include component-shadow;
+			@include gradient_border;
+
+			border-radius: .7rem;
+			padding: 2vh 2vw 4vh;
+		}
+
+	}
+	&-main {
+		display: grid;
+		justify-content: center;
+	}
+	&-products {
+
+		&-items {
+			display: grid;
+			grid-template: {
+				columns: 1fr 1fr 1fr;
+			}
+
+			column-gap: 1vw;
+
+		}
+
+	}
+}
+
+</style>
 
 <script lang="ts">
 
@@ -36,28 +89,26 @@
 	import TransitionSound from '~/assets/mixins/TransitionSound';
 
 	// COMPONENTS
-	import ServiceItem from '~/components/service/ServiceItem.vue'
+	import SectionHeader 		from '~/components/common/SectionHeader.vue'
+	import ServiceCard 			from '~/components/service/ServiceCard.vue'
+	import PromoBanner      from '~/components/promo/PromoBanner.vue'
 
 	// TYPES 
-	import type { CATEGOTIES, SERVICES_CARD } from '~/typescript/Services.ts'
+	import type { CATEGOTIES, SERVICES_CARD } from '~/typescript/Services'
 
 	// MODULE
 	export default Vue.extend({
+		components: {
+			ServiceCard,
+			SectionHeader,
+			PromoBanner,
+			// Async components ========================================= //
+			// CostCalc: () => import( '~/components/service/CostCalc.vue' ),
+		}, 
+		mixins: [ TransitionSound ],
 		layout: 'Application',
 		scrollToTop: false,  
-		transition: 'opacity-transition', 
-		mixins: [ TransitionSound ],
-		head () {
-			return {
-				title: `Eccheuma | Портфолио`,
-				meta: [
-					{ 
-						name: 'description', 
-						content: `Услуги. Перечень оказываемых услуг, калькулятор стоимости, и форма обратной связи.`
-					}
-				]
-			}
-		},
+		transition: 'opacity-transition',
 		data() {
 			return {
 
@@ -85,86 +136,17 @@
 				Categories: ['WebApplications', 'GraphicalDesign', 'HTMLcode'] as CATEGOTIES[]
 			}
 		},
-		components: {
-			ServiceItem,
-			// Async components ========================================= //
-			PromoBanner: () => import  ( '~/components/promo/PromoBanner.vue' ),
-			CostCalc: () => import  ( '~/components/service/CostCalc.vue' ),
+		head () {
+			return {
+				title: 'Eccheuma | Портфолио',
+				meta: [
+					{ 
+						name: 'description', 
+						content: 'Услуги. Перечень оказываемых услуг, калькулятор стоимости, и форма обратной связи.'
+					}
+				]
+			}
 		},
 	})
 
 </script>
-
-
-<style lang="scss">
-
-.service {
-	&-container {
-
-	}
-	&-products {
-		
-		display: grid;
-		grid-template: {
-			columns: repeat(3, 1fr)
-		}
-
-		gap: 15px;
-
-		padding: 0 3vw;
-
-	}
-
-	&-calc_wrapper {
-		width: 75%;
-		margin: auto;
-	}
-
-	&-section_title {
-		@include gradient_border(block);
-		position: relative;
-		padding: 3vh 5vw;
-		margin: 3vh 0;
-		span {
-			position: absolute; top: 0; left: 0;
-			font-size: 5vh;
-			font-weight: 700;
-			color: rgb(var(--color-mono-400));
-			text-align: center;
-			display: block;
-			height: 100%;
-			width: 5vw;
-			line-height: 100px;
-		}
-		p {
-			margin: 0px;
-			font-size: 12px;
-			color: rgb(var(--color-mono-500));
-		}
-	}
-}
-
-// .service
-// 	&_annota // Шапка
-// 		padding: 0px 0px
-// 		&_wrap
-// 			padding: 20px 0
-// 			display: inline-block
-// 		hr
-// 			width: 100%
-// 			background-color: rgb(var(--color-mono-300))
-// 		span
-// 			// background-color: red
-// 			font-size: 36px
-// 			font-weight: 700
-// 			color: rgb(var(--color-mono-400))
-// 			text-align: center
-// 			display: inline-block
-// 			height: 100%
-// 			width: 100px
-// 		p
-// 			margin: 0px
-// 			font-size: 12px
-// 			color: rgb(var(--color-mono-500))
-
-</style>

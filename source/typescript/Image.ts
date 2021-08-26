@@ -23,5 +23,4 @@ export type IMAGE_URL = {
 	webp: string
 }
 
-export type FORMATS = 'webp' | 'avif'
-
+export type FORMATS = 'webp' | 'avif';

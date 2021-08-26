@@ -1,7 +1,12 @@
+@use "sass:math";
+
 $mockup-viewport-vh: (1080 / 100);
 $mockup-viewport-vw: (1980 / 100);
 
 :root {
+
+	--test: #{ math.round(1.245 * 100) / 10 };
+
 	// DEFAULT COLOR VARIABLES
 	--mono-000: 0,0,0;
 	--mono-100: 13,13,15;
@@ -12,28 +17,30 @@ $mockup-viewport-vw: (1980 / 100);
 	--mono-600: 124,124,139;
 	--mono-700: 221,221,255;
 	--mono-800: 240,240,255;
-	--mono-900: 255,255,255;
+	--mono-900: 250,250,255;
 	// RGB COLOR VARIABLES
 	@for $i from 0 through 9 {
 		--color-mono-#{$i + '00'}: var(--mono-#{$i + '00'});
 	}
 	// ------
+
+	--color-accent-lighting:#FFF0DC;
+	--color-accent-edges: 	#2F2C28;
+
 	--color-accent-notice: 	#855EF3;
-	--color-accent-pass: 		#67EE9D;
+	
 	--color-accent-warning: #EFB155;
 	--color-accent-error: 	#AA1C1C;
+	--color-accent-pass: 		#67EE9D;
+
 	// ------
 
-	--size-0: #{ 45 / $mockup-viewport-vh }vh;
-	--size-1: #{ 36 / $mockup-viewport-vh }vh;
-	--size-2: #{ 24 / $mockup-viewport-vh }vh;
-	--size-3: #{ 18 / $mockup-viewport-vh }vh;
-	--size-4: #{ 16 / $mockup-viewport-vh }vh;
-	--size-5: #{ 14 / $mockup-viewport-vh }vh;
-	--size-6: #{ 12 / $mockup-viewport-vh }vh;
+	@each $norm-size in 48,36,32,24,18,16,14,12,11 {
 
-	@for $i from 0 through 6 {
-		--font-size-#{$i}: var(--size-#{$i});
+		--size-#{ $norm-size }: #{ math.round(($norm-size / $mockup-viewport-vh) * 100) / 100 }vh;
+
+		--font-size-#{ $norm-size }: var(--size-#{ $norm-size });
+
 	}
 
 	// ----

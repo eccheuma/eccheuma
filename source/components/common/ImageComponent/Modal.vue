@@ -93,14 +93,14 @@
 		background-color: rgb(var(--color-mono-200));
 		h6 {
 			font: {
-				size: var(--font-size-3);
+				size: var(--font-size-18);
 				weight: 700;
 			}
 		}
 		span {
 			width: 100ch;
 			margin: 0 auto;
-			font-size: var(--font-size-5);
+			font-size: var(--font-size-14);
 		}
 	}
 	&-body {

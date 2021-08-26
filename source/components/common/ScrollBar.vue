@@ -88,7 +88,6 @@
 			@include component-shadow;
 
 			background-color: rgb(var(--color-mono-200));
-			// border: 1px solid rgb(var(--color-mono-300));
 			border-radius: .7rem;
 
 			overflow: hidden;
@@ -107,14 +106,14 @@
 
 		padding: 1vh 0;
 
-		i { @include icon-size(var(--size-1));
+		i { @include icon-size(var(--size-36));
 			background-color: rgb(var(--color-mono-500));
 		}
 
 		span {
 			color: rgb(var(--color-mono-500)); 
 			font-weight: 700; 
-			font-size: var(--font-size-5);
+			font-size: var(--font-size-14);
 		}
 
 	}
@@ -172,7 +171,7 @@
 		background-color: rgb(var(--color-mono-200));
 		padding: 10px 0;
 
-		i { @include icon-size(var(--size-1));
+		i { @include icon-size(var(--size-36));
 			background-color: rgb(var(--color-mono-500));
 		}
 
@@ -204,7 +203,7 @@
 
 				width: calc(100% - #{ $pad * 2});
 				aspect-ratio: 1/1;
-				background-color: rgb(var(--color-mono-500));
+				background-color: rgb(var(--color-mono-700));
 				border: {
 					radius: 100%
 				}
@@ -234,14 +233,15 @@
 
 		row-gap: 1vh;
 
-		i { @include icon-size(var(--size-0));
+		i { @include icon-size(var(--size-48));
 
-			text-align: center; font-size: 1.5vw;
-			transition: color 250ms ease; will-change: color;
+			text-align: center; 
+			font-size: 1.5vw;
 
-			background-color: rgb(var(--color-mono-500));
+			background-color: rgb(var(--color-mono-400));
 
 			cursor: pointer;
+			transition-duration: 250ms;
 
 			&:hover {
 				background-color: rgb(var(--color-mono-800));

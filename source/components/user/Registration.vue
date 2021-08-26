@@ -1,14 +1,18 @@
 <template>
 
 	<transition name="opacity-transition">
-		<div class="registration-wrap" v-if="RegistrationModal"  
+		<div
+			v-if="RegistrationModal"
+			class="registration-wrap"  
+			:class="{ 'utils::glassy': CLIENT_RENDER_CHECK && $PIXI.utils.isWebGLSupported() }"
 			@click.self="ChangeModalStatus(false)"
 			@keydown.shift.enter="Auth"
-			:class="{ 'utils::glassy': CLIENT_RENDER_CHECK && $PIXI.utils.isWebGLSupported() }">
+			>
 
 			<loader
 				:ElementLoad="LoaderStatus.Load"
-				:ElementLoadComplete="LoaderStatus.Loaded">
+				:ElementLoadComplete="LoaderStatus.Loaded"
+				>
 				{{ LoaderMessage }}
 			</loader>
 
@@ -31,28 +35,31 @@
 						<span>Имя пользователя</span>
 						<span>( Не меньше 3 символов )</span>
 						<input 
-							@input.once="$v.Name.$touch()"
+							v-model="Name"
 							:class="[
-								{ valid: 	!$v.Name.$invalid && $v.Name.$dirty },
+								{ valid: !$v.Name.$invalid && $v.Name.$dirty },
 								{ invalid: $v.Name.$invalid && $v.Name.$dirty },
 							]"
-							v-model="Name" 
-							type="name" placeholder="LoliBomberAF">
+							type="name" 
+							placeholder="LoliBomberAF"
+							@input.once="$v.Name.$touch()"
+							>
 					</section>
 
 					<section>
 						<span>Электронная почта</span>
 						<span>( Должно соответствовать шаблону ' ***** @ **** . ** ' )</span>
 						<input
-							@input.once="$v.Email.$touch()"
+							v-model="Email"
 							:class="[
-								{ valid: 	!$v.Email.$invalid && $v.Email.$dirty },
+								{ valid: !$v.Email.$invalid && $v.Email.$dirty },
 								{ invalid: $v.Email.$invalid && $v.Email.$dirty },
 							]"
-							v-model="Email" 
-							type="email" placeholder="LoliBomberAF@gmail.com">
+							type="email" 
+							placeholder="LoliBomberAF@gmail.com"
+							@input.once="$v.Email.$touch()"
+							>
 					</section>
-
 
 					<!-- $v.Password.$invalid ? 'invalid' : 'valid' -->
 
@@ -60,20 +67,22 @@
 						<span>Придумайте пароль</span>
 						<span>( Не меньше 6 символов латиницой )</span>
 						<input
-							@input.once="$v.Password.$touch()"
+							v-model="Password"
 							:class="[
-								{ valid: 	!$v.Password.$invalid && $v.Password.$dirty },
+								{ valid: !$v.Password.$invalid && $v.Password.$dirty },
 								{ invalid: $v.Password.$invalid && $v.Password.$dirty },
 							]"
-							v-model="Password" 
-							type="password">
+							type="password" 
+							@input.once="$v.Password.$touch()"
+							>
 					</section>
 
 				</div>
 				<div class="registration-footer">
 					<button 
-						@click="Auth" 
-						:class="{ disabled: $v.$dirty && $v.$anyError }">
+						:class="{ disabled: $v.$dirty && $v.$anyError }" 
+						@click="Auth"
+						>
 						
 						Отправить форму
 
@@ -92,19 +101,22 @@
 
 	// VUEX
 		import { mapState, mapMutations, mapActions } from 'vuex'
+		import { email, required, minLength, alphaNum } from 'vuelidate/lib/validators'
 		import type { VuexModules } from '~/typescript/VuexModules'
 
 	// TYPES & INTERFACES & ENUMS
 		import type { REGISTER_FORM, AUTH_ERRORS } from '~/store/Auth/Auth'
 
 	// VUELIDATE
-		import { email, required, minLength, alphaNum } from 'vuelidate/lib/validators'
 
 	// COMPONENTS
 		import Loader from '~/components/common/Loader.vue'
 
 	// MODULE
 		export default Vue.extend({
+			components: {
+				Loader
+			},
 			data() {
 				return {
 
@@ -116,9 +128,6 @@
 					Name: '',
 
 				}
-			},
-			components: {
-				Loader
 			},
 			validations: {
 
@@ -303,7 +312,7 @@
 				border: 1px solid rgb(var(--color-mono-400));
 				color: rgba(var(--color-mono-900), .75);
 				font-weight: 700;
-				font-size: var(--font-size-5);
+				font-size: var(--font-size-14);
 				padding: 1vh 15px;
 				margin: { bottom: 1vh; top: 1vh };
 			}

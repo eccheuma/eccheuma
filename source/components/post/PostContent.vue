@@ -75,7 +75,7 @@
 		// }
 
 		p {
-			font-size: var(--font-size-3);
+			font-size: var(--font-size-18);
 			font-weight: 500;
 			line-height: 1.4rem;
 			width: 75ch;
@@ -89,7 +89,7 @@
 			padding: { bottom: 20px }
 
 			font: {
-				size: var(--font-size-1);
+				size: var(--font-size-36);
 				weight: 700;
 			}
 

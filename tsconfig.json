@@ -39,6 +39,6 @@
     ".firebase",
     "funtions",
     "node_modules",
-    "application",
+    "app",
   ]
 }

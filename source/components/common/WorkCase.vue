@@ -72,7 +72,7 @@
 				<template #default>
 					<section v-for="(item, index) in content.images" :key="index" class="workcase-content-swiper-item">
 						<vue-image
-							style="width: 75%; margin: auto"
+							style="height: 100%; width: 75%; margin: auto"
 							:content="{ path: item.content.path }"
 							:sections="{ date: false, description: false, zoom: true }"
 							:property="{ fit: 'cover', type: 'default', collumn: 7 }"
@@ -84,6 +84,10 @@
 
 			</eccheuma-swiper>
 			<div class="workcase-content-preview">
+
+				<!-- <noise-filter :key="`filter-${index}`" :name="`WPF-${ index }`" :status="CarouselIndex !== index" /> -->
+				<!-- :style="`filter: url(#filter::WPF-${ index })`" -->
+
 				<template v-for="(item, index) in content.images">
 					<vue-image
 						:key="index"
@@ -96,6 +100,7 @@
 						<!---->
 					</vue-image>
 				</template>
+
 			</div>
 		</div>
 		<div class="workcase-rate">
@@ -160,7 +165,7 @@
 
 					font: {
 						family: var(--decor-font);
-						size: var(--font-size-2);
+						size: var(--font-size-24);
 						weight: 500;
 					}
 
@@ -170,7 +175,7 @@
 
 				&:last-child {
 					font: {
-						size: var(--font-size-4)
+						size: var(--font-size-16)
 					}
 				}
 
@@ -197,7 +202,7 @@
 				
 				h6 {
 					font: {
-						size: var(--font-size-3);
+						size: var(--font-size-18);
 						weight: 900;
 					}
 				}
@@ -205,7 +210,7 @@
 				span {
 					padding-left: 1vw;
 					font: {
-						size: var(--font-size-4);
+						size: var(--font-size-16);
 						weight: 500;
 					}
 				}
@@ -274,17 +279,17 @@
 
 		&-preview {
 
-			height: 20vh;
+			height: 25vh;
 			width: 100%;
 			background-color: rgb(var(--color-mono-200));
 			border-radius: .7rem;
-			padding: 3vh 1vw 2vh;
+			padding: 2vh 1vw;
 
 			display: grid;
 			gap: 10px;
 			place-content: center;
 
-			overflow-x: scroll;
+			// overflow-x: scroll;
 			grid-template-columns: repeat(auto-fit, 160px);
 			grid-template-rows: 10vh;
 
@@ -349,7 +354,7 @@
 
 				&:last-child {
 					font: {
-						size: var(--font-size-3);
+						size: var(--font-size-18);
 						weight: 800;
 					}
 				}
@@ -364,7 +369,7 @@
 
 				font: {
 					family: var(--decor-font);
-					size: var(--font-size-2);
+					size: var(--font-size-24);
 					weight: 500;
 				}
 
@@ -382,7 +387,7 @@
 				width: 65ch;
 				font: {
 					family: var(--read-font);
-					size: var(--font-size-3);
+					size: var(--font-size-18);
 					weight: 500;
 				}
 			}
@@ -406,8 +411,12 @@
 	// VUEX MODULE TYPE MAP
 	import type { VuexModules } from '~/typescript/VuexModules';
 
+	// FILTERS
+	// import DisplacementFilter		from '~/components/filters/displacement.vue'
+	// import NoiseFilter					from '~/components/filters/noise.vue'
+
 	// COMPONENTS
-	import EccheumaSwiper from '~/components/common/SwiperProto.vue';
+	import EccheumaSwiper from '~/components/common/EccheumaSwiper.vue';
 	import Icon 					from '~/components/Icon.vue';
 
 	// MIXINS

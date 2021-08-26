@@ -2,6 +2,7 @@
 	<section class="promo_body">
 
 		<vue-image
+			style="height: 100%"
 			:content="{ path: 'Promo/3.png' }" 
 			:sections="{ date: false, description: false, zoom: false }" 
 			:property="{ fit: 'cover', type: 'promo', collumn: 12 }"
@@ -25,9 +26,10 @@
 .promo_body {
 
 	display: grid;
+	justify-content: center;
 
 	grid-template: {
-		columns: 1fr 45ch;
+		columns: minmax(0, 40vw) 45ch;
 		rows: 100%;
 	}
 
@@ -48,11 +50,11 @@
 
 	h4 {
 		font-weight: 700;
-		font-size: var(--font-size-1);
+		font-size: var(--font-size-36);
 	}
 
 	p {
-		font-size: var(--font-size-3);
+		font-size: var(--font-size-18);
     font-family: var(--read-font);
     font-weight: 500;
     color: rgb(var(--color-mono-700));

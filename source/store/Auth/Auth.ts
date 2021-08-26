@@ -1,6 +1,3 @@
-import firebase from 'firebase/app'
-import 'firebase/auth'
-
 // VUEX
 	import type { MutationTree } from 'vuex'
 
@@ -17,20 +14,10 @@ import 'firebase/auth'
 			| 'auth/wrong-password'
 			| 'auth/email-already-in-use'
 
-// CURENT STATE
-	export type CurentState = ReturnType<typeof state>
-
-// DECALARE MODULE
-	declare module '~/typescript/VuexModules' {
-		interface Auth {
-			Auth: CurentState
-		}
-	}
-
 // STATE
 	export const state = () => ({
 
-		AuthError: '' as AUTH_ERRORS,
+		AuthError: null as AUTH_ERRORS | null,
 
 		LoginStatus: false,
 
@@ -40,6 +27,16 @@ import 'firebase/auth'
 		},
 		
 	})
+
+// CURENT STATE
+	export type CurentState = ReturnType<typeof state>
+
+// DECALARE MODULE
+	declare module '~/typescript/VuexModules' {
+		interface Auth {
+			Auth: CurentState
+		}
+	}
 
 // MUTATIONS	
 	export const mutations: MutationTree<CurentState> = {

@@ -135,13 +135,13 @@
 			margin-bottom: .25vh;
 			&:nth-child(1) {
 				font: {
-					size: var(--font-size-2);
+					size: var(--font-size-24);
 					weight: 700;
 				}
 			};
 			&:nth-child(2) {
 				font: {
-					size: var(--font-size-4);
+					size: var(--font-size-16);
 					weight: 500;
 					width: 65ch;
 				}

@@ -62,7 +62,7 @@
 				</svg>
 			</div>
 			<div class="footer-pit-version">
-				<span>ВЕРСИЯ СБОРКИ: {{ APP_VERSION }}</span>
+				<span>ВЕРСИЯ СБОРКИ: {{ BUILD_HASH || '000000' }}</span>
 			</div>
 		</section>
 
@@ -116,7 +116,7 @@
 			text-align: left; 
 			color: rgb(var(--color-mono-800));
 			font: {
-				size: var(--font-size-1);
+				size: var(--font-size-36);
 				family: var(--decor-font);
 			}
 
@@ -136,7 +136,7 @@
 
 			color: rgb(var(--color-mono-800));
 			font-weight: 600;
-			font-size: var(--font-size-5);
+			font-size: var(--font-size-14);
 			line-height: 3vh;
 
 			transition-duration: 0.25s;
@@ -210,14 +210,14 @@
 				&:nth-of-type(1) {
 					color: rgb(var(--color-mono-700));
 					font: {
-						size: var(--font-size-3);
+						size: var(--font-size-18);
 						weight: 500;
 					}
 				}
 				&:nth-of-type(2) {
 					color: rgb(var(--color-mono-600));
 					font: {
-						size: var(--font-size-4);
+						size: var(--font-size-16);
 						weight: 700;
 					}
 				}
@@ -231,7 +231,7 @@
 			span {
 				margin: auto 1vw;
 				font: {
-					size: var(--font-size-6);
+					size: var(--font-size-12);
 					weight: 700;
 				}
 			}
@@ -259,9 +259,9 @@
 					color: rgb(var(--color-mono-400));
 					font-weight: 500;
 					letter-spacing: .25ch;
-					font-size: var(--font-size-1);
+					font-size: var(--font-size-36);
 					font-family: var(--decor-font);
-					line-height: var(--size-1);
+					line-height: var(--size-36);
 				}
 
 				&:nth-child(2) {
@@ -284,7 +284,7 @@
 				align-self: center;
 				color: rgb(var(--color-mono-400));
 				letter-spacing: .25ch;
-				font-size: var(--font-size-6);
+				font-size: var(--font-size-12);
 				font-weight: 900;
 			}
 		}

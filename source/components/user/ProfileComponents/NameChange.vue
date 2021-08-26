@@ -4,9 +4,12 @@
 
 			<!-- :class="{ NonActive: $v.NewName.$invalid }" -->
 			<!-- <span>Любое имя длинее одного символа</span> -->
-			<input v-model="NewName" type="text" 
+			<input 
+				v-model="NewName" 
+				type="text" 
+				:placeholder="`Текущее имя: ${ UserState.UserName }`"
 				@keypress.shift.enter="SetNewUserName"
-				:placeholder="`Текущее имя: ${ UserState.UserName }`">
+			>
 
 		</div>
 	</section>
@@ -44,7 +47,6 @@
 	}	
 }
 
-
 </style>
 
 <script lang="ts">
@@ -55,14 +57,13 @@
 		import { mapState, mapActions } from 'vuex'
 
 	// VUEX MODULE TYPE MAP
-		import type { VuexModules } from '~/typescript/VuexModules'
+		import 			{ required, minLength } from 'vuelidate/lib/validators'
+		import type { VuexModules } 				from '~/typescript/VuexModules'
 
 	// TYPES
 		import { USER_STATE } from '~/typescript/User'
 
 	// VUELIDATE
-		import type { validationMixin } 						from "vuelidate"
-		import 			{ email, required, minLength } 	from 'vuelidate/lib/validators'
 
 	// MODULE
 	export default Vue.extend({
@@ -90,7 +91,7 @@
 					entity: 'UserName' 
 				}
 
-				if( !this.$v.NewName.$invalid ) {
+				if ( !this.$v.NewName.$invalid ) {
 					this.FirebaseChange(Property)
 				}
 

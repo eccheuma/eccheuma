@@ -1,13 +1,15 @@
 <template>
-  <span 
-  :class="[
-    { 'utils::glassy': transparent && !$isMobile }, 
-    { 'transparent::false': !transparent },
-    { 'scheme::light': light }
-  ]"
-  >
-    <slot />
-  </span>
+  <hardware-acceleration-decorator>
+    <span 
+    :class="[
+      { 'transparent::false': !transparent },
+      { 'scheme::light': light },
+      { 'utils::glassy': transparent }, 
+    ]"
+    >
+      <slot />
+    </span>
+  </hardware-acceleration-decorator>
 </template>
 
 <style lang="scss" scoped>
@@ -32,7 +34,7 @@
     cursor: pointer;
 
     font: {
-      size: var(--font-size-2);
+      size: var(--font-size-24);
       weight: 500;
 			family: var(--decor-font);
     }
@@ -48,10 +50,16 @@
 
 <script lang="ts">
 
-  import Vue from 'vue'
+  import Vue from 'vue';
+
+  // COMPONENTS
+  import HardwareAccelerationDecorator from '~/components/functional/HardwareAcceleration.vue'
 
   // MODULE
   export default Vue.extend({
+    components: {
+      HardwareAccelerationDecorator
+    },
     props: {
       transparent: {
         type: Boolean,

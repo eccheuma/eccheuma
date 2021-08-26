@@ -1,38 +1,33 @@
 <template>
 	<section class="user_profile-component">
 
-		<div class="user_profile-component-messages">
+		<div class="user_profile-component-body">
 
-			<div 
-				v-for="item in Messages" 
-				:key="item.ID"
-				:style="`order: ${ Messages.length - item.ID}`"
-				:class="[
-					{ 'message-support': item.UserID == 'SUPPORT' },
-					{ 'message-owner': item.UserID == 'ADMIN' },
-					{ 'message-unread': !item.Read && UserState.UserName != item.From }
-				]"
-				class="user_profile-component-messages_item"
-				@mouseenter="CheckMessage(item)"
-				>
-
-				<message :payload="{ From: item.From, Date: item.Date, Message: item.Message }" />
-
-			</div>
+			<template v-for="(message, index) in Messages">
+				<intesection-component 
+					:key="index" 
+					:style="`order: ${ Messages.length - index }`" 
+					:ready="ReadyToRead"
+					:ignite="false"
+					@isIntersecting.once="observeIntesection(message)"
+					>
+					<message :payload="message" />
+				</intesection-component>
+			</template>
 
 		</div>
 
 		<div class="user_profile-component-textarea">
 
 			<textarea 
-				v-model="Message" 
+				v-model="UserMessage" 
 				placeholder="Напишите что нибудь!" 
-				@keydown.ctrl.enter="SendMessage"
+				@keydown.ctrl.enter="sendMessage"
 			/>
 
-			<button @click="SendMessage">
+			<eccheuma-button @click.native="sendMessage">
 				Отправить
-			</button>
+			</eccheuma-button>
 
 		</div>
 
@@ -44,32 +39,32 @@
 .user_profile-component {
 
 	display: grid;
+
 	grid-template: {
 		columns: 1fr;
-		rows: 7fr 3fr;
+		rows: 1fr min-content;
 	}
 
 	row-gap: 3vh;
 
-	height: 60vh;
+	height: auto;
+	overflow: hidden;
 
-	&-messages {
+	&-body {
+
+		display: flex;
+		flex-direction: column;
+		row-gap: 1vh;
 
 		overflow-y: scroll;
 		padding: 0 2vw;
+
+		border-bottom: 1px solid rgb(var(--color-mono-300));
 
 		&::-webkit-scrollbar {
 			&-track {
 				border-radius: .7rem;
 			}
-		}
-
-		&_item {
-			border-radius: .7rem;
-			border: 1px solid rgb(var(--color-mono-400));
-			padding: 2vh 1vw;
-			margin: 3vh 0;
-			color: rgb(var(--color-mono-900));
 		}
 
 		.message {
@@ -96,30 +91,34 @@
 	}
 
 	&-textarea {
-		button {
-			
-			@include light-button { 
-				display: block;
-				width: 50%;
-				font-size: 12px;
-				padding: 6px 20px;
-				margin: 2vh auto 0;
-			}
-		}
+
+		display: flex;
+		flex-direction: column;
+		row-gap: 2vh;
+
+		align-items: center;
+		padding: 0vh 2vw;
+
 		textarea {
 			resize: none;
 			display: block;
 			width: 100%;
 			height: 10vh;
 			border-radius: .7rem; 
-			padding: 15px 15px;
+			padding: .7rem;
 			font-size: .8rem;
 			font-weight: 700;
-			background-color: rgb(var(--color-mono-800));
+			background-color: rgb(var(--color-mono-200));
+			border: 1px solid rgb(var(--color-mono-400));
 			@media screen and ( max-width: $mobile-breakpoint ) {
 				height: 20vh;
 			}
 		}
+
+		button {
+			width: 10vw;
+		}
+
 	}
 
 }
@@ -141,102 +140,124 @@
 	import { mapState, mapActions } from 'vuex';
 	import type { VuexModules } from '~/typescript/VuexModules';
 
-	// TYPES
-	import type { Message as T_Message } from '~/store/User/Messages';
-	
 	// MIXINS
 	import EmitSound from '~/assets/mixins/EmitSound';
 
 	// COMPONENTS
-	import Message from '~/components/user/ProfileComponents/_message.vue';
+	import EccheumaButton		from '~/components/buttons/CommonButton.vue'
+	import Message 					from '~/components/user/ProfileComponents/Message.vue'
+
+	import IntesectionComponent from '~/components/functional/intersectionComponent.vue'
+
+	// TYPES
+	import type { Message as MessageType } from '~/store/User/Messages';
 
 	// MODULE
 	export default Vue.extend({
 		components: {
-			Message
+			EccheumaButton, 
+			Message,
+			IntesectionComponent
 		},
 		mixins: [ EmitSound ],
 		data() {
 			return {
-				PrevMessage: '',
-				Message: '',
+
+				UserPrevMessage: '',
+				UserMessage: '',
 
 				MessageNotification: true,
+				ReadyToRead: false,
 
 			}
 		},
 		validations: {
 
-			Message: { required },
+			UserMessage: { required },
 
 		},
 		computed: {
+
 			...mapState({
 				UserState: 							state	=> ( state as VuexModules ).User.State.UserState,
 				Messages:								state => ( state as VuexModules ).User.Messages.Messages,
 				GetRequestsQuantity:		state => ( state as VuexModules ).User.WorkRequest.RequestQuantity
 			}),
+
 		},
 		watch: {
-			StoreMessages: {
+			Messages: {
 				handler() {
-
-					const LAST_MESSAGE = this.Messages.pop()!;
-
-					this.$store.dispatch('User/Messages/CheckNewMessage');
-
-					if ( this.MessageNotification && LAST_MESSAGE.UserID !== this.UserState.UserID ) {
-						this.Notificate(LAST_MESSAGE)
-					}
-
+					this.sendNotification(this.Messages[this.Messages.length - 1])
 				}
 			}
+		},
+		mounted() {
+
+			this.$nextTick(() => { this.ReadyToRead = true });
+
 		},
 		methods: {
 
 			...mapActions({
+				GetLocalTime: 				'GetLocalTime',
 				MarkAsReaded:					'User/Messages/MarkAsReaded',
 				FirebaseSendMessage:	'User/Messages/FireBaseSendMessage',
 			}),
 
-			CheckMessage({ ID, Read }: T_Message) {
-				if ( !Read ) { 
-					this.MarkAsReaded(ID);
-				}
+			observeIntesection(message: MessageType) {
+
+				this.checkMessage(message);
+
 			},
 
-			SendMessage() {
-				if ( this.PrevMessage !== this.Message ) {
+			checkMessage({ ID, Read, UserID }: MessageType) {
 
-					const M: T_Message = {
+				console.log('check message initiate')
+
+				if ( UserID !== this.UserState.UserID && !Read ) { 
+					this.MarkAsReaded(ID);
+				}
+
+			},
+
+			sendMessage() {
+				if ( this.UserPrevMessage !== this.UserMessage ) {
+
+					const M: MessageType = {
 						ID: this.Messages.length + 1,
 						UserID: this.UserState.UserID,
 						Date: Date.now(),
 						From: this.UserState.UserName,
-						Message: this.Message,
+						Message: this.UserMessage,
 						Read: false
 					}
 	
 					this.FirebaseSendMessage(M)
 
-					this.PrevMessage 	= this.Message; 
-					this.Message 			= '';
+					this.UserPrevMessage 	= this.UserMessage; 
+					this.UserMessage 			= '';
 
 				}
 			},
 
-			async Notificate({ Message, UserID }: T_Message) {
+			async sendNotification({ Message, UserID, From, Read }: MessageType ) {
+				
+				if ( UserID !== this.UserState.UserID && !Read ) {
 
-				const ICON = await firebase.database().ref(`Users/${ UserID }/state/UserImageID`).once('value');
+					const ICON = await firebase.database().ref(`Users/${ UserID }/state/UserImageID`).once('value');
 
-				// eslint-disable-next-line no-undef
-				const CONTENT: NotificationOptions = {
-					body: Message,
-					image: ICON.val(),
-					silent: true,
+					// eslint-disable-next-line no-undef
+					const CONTENT: NotificationOptions = {
+						body: `${ From }: ${ Message }`,
+						image: require('~/assets/images/NotificationBadge.png'),
+						icon: ICON.val(),
+						silent: true,
+					}
+
+					new Notification('Eccheuma | Новое сообщение', CONTENT)
+
 				}
-
-				new Notification('Eccheuma | Новое сообщение', CONTENT)
 
 			}
 

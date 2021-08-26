@@ -6,7 +6,7 @@
 			:class="{ disabled: PageSelector.Page == 1 }"  
 			:to="getPath(PageSelector.Page - 1)"  
 		>
-			{{ PageSelector.Page <= 2 ? 'Начальная' : 'Предыдущая' }}
+			{{ 2 >= PageSelector.Page ? 'Начальная' : 'Предыдущая' }}
 		</nuxt-link>
 
 		<span style="pointer-events: none">
@@ -57,7 +57,7 @@ $h: 10vh;
 
 		;
 		font: {
-			size: var(--font-size-2);
+			size: var(--font-size-24);
 			weight: 500;
 			family: var(--decor-font);
 		}

@@ -25,7 +25,7 @@
 
     &:nth-child(1) {
       font: {
-        size: var(--font-size-0);
+        size: var(--font-size-48);
         family: var(--decor-font);
         weight: 900;
       }
@@ -34,7 +34,7 @@
     }
     &:nth-child(2) {
       font: {
-        size: var(--font-size-3);
+        size: var(--font-size-18);
         weight: 600;
       }
     }

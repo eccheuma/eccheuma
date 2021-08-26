@@ -5,7 +5,8 @@
 
 			<section class="cost_calc-main-header">
 				<h6>Выберите тип услуги</h6>
-				<span><i class="fas fa-info-circle mr-2"></i>
+				<span>
+					<i class="fas fa-info-circle mr-2" />
 					Потяните для прокрутки
 				</span>
 			</section>
@@ -13,10 +14,18 @@
 			<section v-if="!CategoryDefined">
 				<span class="cost_calc-main-title">Тип услуги</span>
 				<select v-model="Selected.Category" @change="GetServicesOfCategory( Selected.Category )">
-					<option value="" selected>Ничего не выбрано</option>
-					<option value="WebApplications">Сайты и Приложения</option>
-					<option value="GraphicalDesign">Графический Дизайн</option>
-					<option value="HTMLcode">Вёрстка</option>
+					<option value="" selected>
+						Ничего не выбрано
+					</option>
+					<option value="WebApplications">
+						Сайты и Приложения
+					</option>
+					<option value="GraphicalDesign">
+						Графический Дизайн
+					</option>
+					<option value="HTMLcode">
+						Вёрстка
+					</option>
 				</select>
 			</section>
 
@@ -27,7 +36,9 @@
 						<span class="cost_calc-main-title">Услуга</span>
 
 						<select v-model="Selected.Service" @change="GetAddictionsOfService( Selected.Service.Type )">
-							<option selected value="">Ничего не выбрано</option>
+							<option selected value="">
+								Ничего не выбрано
+							</option>
 							<option v-for="( item, index ) in Products" :key="`SO-${ index }`" :value="item">
 								{{ item.Name }}
 							</option>
@@ -44,7 +55,7 @@
 			<transition-group name="Fading">
 				<template v-if="Object.keys(Selected.Service).length">
 
-					<span class="cost_calc-main-title" key="main-title">
+					<span key="main-title" class="cost_calc-main-title">
 						Дополнения
 					</span>
 
@@ -52,17 +63,21 @@
 
 						<select v-model="Selected.Addiction[i]"> 
 
-							<option selected value="''">Без дополнительных услуг</option>
-							<option v-show="!AlreadySelectedAddiction(item.Type)"
-								v-for="( item, index ) in Addictions" 
+							<option selected value="''">
+Без дополнительных услуг
+</option>
+							<option
+v-for="( item, index ) in Addictions"
+								v-show="!AlreadySelectedAddiction(item.Type)" 
 								:key="`AOP-${ index }`" 
-								:value="item">{{ item.Title }}
+								:value="item"
+>{{ item.Title }}
 							</option>
 
 						</select>
 
 						<span v-if="i != AddictionSections - 1" @click="RemoveAddiction(i)">
-							<i class="fas fa-times"></i>
+							<i class="fas fa-times" />
 						</span>
 
 					</section>
@@ -95,7 +110,7 @@
 					<strong> - Цена за услугу: </strong>{{ ServiceCost }} ₽
 				</span>
 				<span>
-					<strong> - Цена дополнительных опций: </strong> {{ AddictionCost ? AddictionCost : 0  }} ₽
+					<strong> - Цена дополнительных опций: </strong> {{ AddictionCost ? AddictionCost : 0 }} ₽
 				</span>
 			</section>
 
@@ -107,24 +122,24 @@
 				</span>
 				<hr>
 				<div class="cost_calc-aside-info">
-					<i class="fas fa-info-circle"></i>
+					<i class="fas fa-info-circle" />
 					
 					Без учёта правок и особых случаев 
 
 				</div>
 			</section>
 
-			<section class="cost_calc-aside-total" v-if="LoginStatus" >
+			<section v-if="LoginStatus" class="cost_calc-aside-total">
 				<h6> Итоговая цена: </h6>
 				<span class="cost_calc-aside-total">{{ Cost }} ₽</span>
 			</section>
 
-			<section class="cost_calc-aside-total" v-else>
+			<section v-else class="cost_calc-aside-total">
 				<h6>Итоговая цена c учётом комиссии фриланс биржи:</h6>
 				<span>{{ Cost }} ₽</span>
 
 				<div class="cost_calc-aside-info">
-					<i class="fas fa-info-circle"></i>
+					<i class="fas fa-info-circle" />
 
 					В зависимости от площадки, её допонительная комиссия как посредника 
 					может составлять от <strong>{{ (Tax - 1) * 100 }} %</strong> и выше. 
@@ -133,7 +148,6 @@
 				</div>
 
 			</section>
-
 
 		</div>
 
@@ -200,7 +214,7 @@
 			display: block;
 			padding: 2vh 0 0;
 			font: {
-				size: var(--font-size-5);
+				size: var(--font-size-14);
 				weight: 700;
 			}
 		}
@@ -234,14 +248,14 @@
 			border: 1px solid rgb(var(--color-mono-400));
 			color: rgba(var(--color-mono-900), .75);
 			font-weight: 700;
-			font-size: var(--font-size-5);
+			font-size: var(--font-size-14);
 			padding: 1vh 15px;
 			margin: { bottom: 1vh; top: 1vh };
 		}
 
 		option {
 			border: 0px solid rgb(var(--color-mono-900));
-			font-size: var(--font-size-3);
+			font-size: var(--font-size-18);
 			color: rgba(var(--color-mono-900), .75);
 			font-weight: 700;
 		}
@@ -269,7 +283,7 @@
 			width: 60ch;
 			margin: { left: 1vw };
 			font: {
-				size: var(--font-size-5)
+				size: var(--font-size-14)
 			}
 			i {
 				margin-right: .5ch;
@@ -320,7 +334,7 @@
 				margin: { left: 1vw };
 				padding: 2vh 0;
 				font: {
-					size: var(--font-size-2);
+					size: var(--font-size-24);
 					weight: 700;
 				}
 				strong {
@@ -341,14 +355,21 @@
 // VUEX
 	import { mapState } from 'vuex'
 
-	import type { VuexModules } from '~/typescript/VuexModules.ts'
+	import firebase from 'firebase/app'; 
+	import type { VuexModules } from '~/typescript/VuexModules'
 
 // FIREBASE 
-	import firebase from 'firebase/app'; import 'firebase/database'
+import 'firebase/database'
 
 // TYPES 
-	import type { CATEGOTIES, PRODUCTS, ADDICTION, SERVICE } 		from '~/typescript/Services.ts'
-	import type { WebApplications, GraphicalDesign, HTMLcode } 	from '~/typescript/Services.ts'
+	import type { 
+		CATEGOTIES, 
+		ADDICTION, 
+		SERVICE, 
+		WebApplications, 
+		GraphicalDesign, 
+		HTMLcode 
+	} from '~/typescript/Services'
 
 	export default Vue.extend({
 		props: {
@@ -399,7 +420,7 @@
 
 					return this.Selected.Addiction.map( x => x.Cost ).reduce((acc, cur) => { return acc + cur }, 0)
 
-				} else { return 0 }
+				}  return 0 
 
 			},
 			COMP_ServiceCost(): number {
@@ -407,13 +428,11 @@
 			},
 			COMP_Cost(): number {
 
-
-
 				if ( Object.keys( this.Selected.Service ).length ) {
 
 					return  (( this.Selected.Service.Cost * this.Selected.Quantity ) + this.AddictionCost )
 
-				} else { return 0 }
+				}  return 0 
 
 			},
 			COMP_SpendedTime(): number {
@@ -447,6 +466,13 @@
 			}
 
 		},
+		mounted() {
+
+			if ( this.CategoryDefined ) {
+				this.GetServicesOfCategory(this.DefaultCategory)
+			}
+
+		},
 		methods: {
 
 			AnimateState(key: string, value: [any, any]) {
@@ -465,7 +491,7 @@
 
 				this.Products = []
 
-				_array.map((item: SERVICE) => {
+				_array.forEach((item: SERVICE) => {
 					this.Products.push(item)
 				})
 
@@ -482,7 +508,7 @@
 
 			AlreadySelectedAddiction(_type: ADDICTION['Type']): boolean {
 
-				const T = this.Selected.Addiction.filter(( item, i ) => item?.Type === _type)
+				const T = this.Selected.Addiction.filter( item => item?.Type === _type)
 
 				return Boolean(T.length)
 
@@ -495,13 +521,13 @@
 				firebase.database()
 					.ref(`Service/${ category }`)
 					.once('value')
-					.then( data => {
+					.then( (data) => {
 
 						const S = Object.values( data.val() ) as SERVICE[]
 
 						this.SetProducts(S)
 
-						S.map(( item: SERVICE ) => {
+						S.forEach(( item: SERVICE ) => {
 							
 							this.Services.push( item.Type )
 
@@ -516,7 +542,7 @@
 				firebase.database()
 					.ref(`Service/Addictions/${ service }`)
 					.once('value')
-					.then( data => {
+					.then( (data) => {
 
 						this.Addictions = Object.values(data.val()) as ADDICTION[];
 
@@ -535,27 +561,20 @@
 			DataFilter(value: number = 0) {
 
 				const HOURS: {[index: number]: string} = {
-					0: "",
-					1: "Час",
-					4: "Часа",
-					12: "Часов",
-					18: "День",
-					54: "Дня",
-					[ Number.MAX_SAFE_INTEGER ]: "Дней"
+					0: '',
+					1: 'Час',
+					4: 'Часа',
+					12: 'Часов',
+					18: 'День',
+					54: 'Дня',
+					[Number.MAX_SAFE_INTEGER]: 'Дней'
 				}
 
-				const I = Object.keys( HOURS ).filter(( item ) => value <= Number(item) )[0]
+				const I = Object.keys( HOURS ).filter(item => value <= Number(item) )[0]
 
 				return HOURS[Number(I)]
 				
       }
-
-		},
-		mounted() {
-
-			if( this.CategoryDefined ) {
-				this.GetServicesOfCategory(this.DefaultCategory)
-			}
 
 		}
 	})

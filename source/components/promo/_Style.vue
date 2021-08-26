@@ -54,7 +54,7 @@
 	}
 
 	p {
-		font-size: var(--font-size-5)
+		font-size: var(--font-size-14)
 	}
 
 }
@@ -65,8 +65,7 @@
 
 	export default {
 		components: {
-			VueImage: () => import  ( '~/components/common/ImageComponent/Image.vue' ),
+			VueImage: () => import('~/components/common/ImageComponent/Image.vue'),
 		},
 	}
 </script>
-

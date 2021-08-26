@@ -56,7 +56,7 @@
 	// COMPONENTS
 	import PromoBanner 					from '~/components/promo/PromoBanner.vue';
 	import Post 								from '~/components/post/Post.vue';
-	import IntesectionComponent from '~/components/intersectionComponent.vue'
+	import IntesectionComponent from '~/components/functional/intersectionComponent.vue'
 
 	// LOAD POLITIC
 	import { load_ranges } from '~/config/LoadPolitic'
@@ -157,13 +157,15 @@
 
 			animateIntersection(intersection: boolean, slotNode: Node) {
 
-				this.$AnimeJS({
-					targets: slotNode,
-					easing: 'linear',
-
-					...OBSERVER_ANIMATION[intersection ? 'in' : 'out']
-
-				})
+				if ( this.CLIENT_RENDER_CHECK && this.$PIXI.utils.isWebGLSupported() ) {
+					this.$AnimeJS({
+						targets: slotNode,
+						easing: 'linear',
+	
+						...OBSERVER_ANIMATION[intersection ? 'in' : 'out']
+	
+					})
+				}
 
 			},
 

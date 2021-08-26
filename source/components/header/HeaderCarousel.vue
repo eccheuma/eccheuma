@@ -48,8 +48,12 @@
 
 							<client-only>
 
-								<template v-if="CLIENT_RENDER_CHECK && !$isMobile && $PIXI.utils.isWebGLSupported()">
-									<eccheuma-parallax :options="{ OpacityFade: true, OpacityFadeOffset: 100 }">
+								<template v-if="CLIENT_RENDER_CHECK && $PIXI.utils.isWebGLSupported()">
+									<eccheuma-parallax 
+										:options="{ OpacityFade: true, OpacityFadeOffset: 100 }" 
+										:forcedScrollPosition="CommonCarouselScrollPosition"
+										@scroll-position="setScrollPosition"
+										>
 
 										<picture ref="ImageHolder" class="eccheuma_swiper-image" :class="!CarouselFocus ? `focused` : `unfocused`">
 											<template v-if="PostImages[item.ID]">
@@ -65,11 +69,15 @@
 								</template>
 
 								<template v-else>
-									<div 
-										ref="ImageHolder" 
-										class="eccheuma_swiper-image" 
-										:style="`background-image: url(${ item.image })`" 
-									/>
+									<picture ref="ImageHolder" class="eccheuma_swiper-image" :class="!CarouselFocus ? `focused` : `unfocused`">
+										<template v-if="PostImages[item.ID]">
+											<source :srcset="PostImages[item.ID].avif" type="image/avif">
+											<img :src="PostImages[item.ID].webp">
+										</template>
+										<template v-else>
+											<img :src="ImagePlaceholder">
+										</template>
+									</picture>
 								</template>
 
 								<section slot="placeholder">
@@ -308,14 +316,14 @@
 			#{  0px  }  #{ 2px  } 0px  rgba(var(--mono-200), $TBLO );
 
 		h2 {
-			font-size: var(--font-size-0);
+			font-size: var(--font-size-48);
 			font-weight: 900;
 		}
 
 		h6 {
 			white-space: pre-wrap;
 			font: {
-				size: var(--font-size-2);
+				size: var(--font-size-24);
 				weight: 500;
 			}
 			margin: 0 0 1vh;
@@ -330,7 +338,7 @@
 			align-items: center;
 
 			font: {
-				size: var(--font-size-5);
+				size: var(--font-size-14);
 			}
 
 		}
@@ -354,7 +362,7 @@
 
 	// COMPONENTS
 		import EccheumaParallax 			from '~/components/common/Parallax.vue';
-		import EccheumaSwiper 				from '~/components/common/SwiperProto.vue';
+		import EccheumaSwiper 				from '~/components/common/EccheumaSwiper.vue';
 		import Icon 									from '~/components/Icon.vue';
 		import Tag 										from '~/components/common/Tag.vue';
 	
@@ -390,6 +398,8 @@
 				CarouselFocus: null,
 
 				PostForRequest: 4,
+
+				CommonCarouselScrollPosition: 0,
 
 				PostContent: 		[] as POST[],
 				PostReliseTime: [] as FORMATED_DATE[],
@@ -455,6 +465,12 @@
 
 			}, 
 
+			setScrollPosition(scroll: number) {
+
+				this.CommonCarouselScrollPosition = scroll;
+				
+			},
+
 			async GetPosts() {
 
 				const REF = firebase.database().ref('Posts');
@@ -472,6 +488,7 @@
 				this.PostContent = DATA;
 				
 			},
+
 			GoToPost(ID: number) {
 
 				const SCROLL_TO_OBJECT = () => {

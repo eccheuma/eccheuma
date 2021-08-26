@@ -8,8 +8,8 @@ import { MutationTree } from 'vuex'
 // STATE
 	export const state = () => ({
 
-		UI: 'dark' as APP_THEME
-		
+		UI: 'dark' as APP_THEME,
+
 	})
 
 // CURENT STATE

@@ -4,7 +4,9 @@
 			<div class="col-auto text-center">
 				<h2>Ой-ой! Что-то пошло не так!</h2>
 				<p>Возможно ссылка на материал была удалена, или такого раздела и вовсе нет</p>
-				<nuxt-link to="/">• На главную •</nuxt-link>
+				<nuxt-link to="/">
+					• На главную •
+				</nuxt-link>
 			</div>
 		</div>
 	</div>
@@ -44,10 +46,10 @@
 		font-weight: 700
 	p
 		font-weight: 500
-		font-size: var(--font-size-3)
+		font-size: var(--font-size-18)
 	a
 		font-weight: 500
-		font-size: var(--font-size-3)
+		font-size: var(--font-size-18)
 		text-decoration: line
 
 </style>

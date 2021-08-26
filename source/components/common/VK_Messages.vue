@@ -1,29 +1,38 @@
 <template>
-	<div id="vk_community_messages"></div>
+	<div id="vk-messages" />
 </template>
 
 <script>
 
 	export default {
-		async mounted() {
-
-			if ( process.client ) {
+		head: {
+			script: [
+				{ src: 'https://vk.com/js/api/openapi.js?169', type: 'text/javascript' }
+			]
+		},
+		mounted() {
 				
-				const INIT = () => import('~/assets/js/openapi.min.js'); 
-				
-				await INIT();
+			setTimeout(() => {
 
-				setTimeout(() => {
-					VK.Widgets.CommunityMessages("vk_community_messages", 158755478, {
-						expanded: "0",
-						disableExpandChatSound: "1",
-						disableButtonTooltip: "1",
-						tooltipButtonText: "Если есть вопросы - Напишите."
-					});
-				}, 5000)
+				this.$AnimeJS({
+					targets: this.$el,
+					opacity: [0, 1],
+					delay: 5000,
+					duration: 3000,
+					easing: 'easeInOutQuad',
+					begin() {
+						/* global VK */
+						VK.Widgets.CommunityMessages('vk-messages', 158755478, {
+							expanded: '0',
+							disableExpandChatSound: '1',
+							disableButtonTooltip: '1',
+							tooltipButtonText: 'Если есть вопросы - Напишите.'
+						});
+					}
+				})
 
-			}
-
+			}, 5000)
+	
 		}
 	}
 

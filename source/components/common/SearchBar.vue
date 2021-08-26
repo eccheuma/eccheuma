@@ -55,7 +55,7 @@
 			padding: 0 1vw;
 
 			font: {
-				size: var(--font-size-5);
+				size: var(--font-size-14);
 				weight: 800;
 			}
 

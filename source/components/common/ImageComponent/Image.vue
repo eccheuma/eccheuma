@@ -57,20 +57,17 @@
 .eccheuma-image {
 
 	&-wrapper {
-		display: grid;
-		width: 100%;
-		height: 100%;
-		justify-items: center;
-		grid-template-columns: 1fr;
-
-		row-gap: 1vh;
+	
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 
 		.type\:\:gallery {
 			height: 50vh !important;
 		}
 
 		.type\:\:promo {
-			width: 100% !important;
+			width: clamp(340px, 100%, 40vw) !important;
 			margin: auto !important;
 			aspect-ratio: 16/9;
 		}
@@ -235,11 +232,11 @@
 		span {
 			display: block;
 			&:nth-of-type(1) {
-				font-size: var(--font-size-3);
+				font-size: var(--font-size-18);
 				font-weight: 800;
 			}
 			&:nth-of-type(2) {
-				font-size: var(--font-size-5)
+				font-size: var(--font-size-14)
 			}
 		}
 
@@ -376,10 +373,20 @@
 					_size: IMAGE_CONTAINER?.getBoundingClientRect().width * window.devicePixelRatio || 720
 				})
 
+				if ( this.CLIENT_RENDER_CHECK && this.$PIXI.utils.isWebGLSupported() ) {
+					this.prepareAnimations(IMAGE_CONTAINER, URL)
+				} else {
+					this.Source = URL;
+				}
+
+			},
+
+			prepareAnimations(el: Element, url: IMAGE_URL) {
+
 				const ANIMATION = (u_direction: DirectionOptions, cb?: AnimeCallBack ) => {
 					this.$AnimeJS({
 
-						targets: IMAGE_CONTAINER,
+						targets: el,
 						opacity: [1, 0],
 						duration: 250,
 						direction: u_direction,
@@ -393,9 +400,9 @@
 				ANIMATION('normal', {
 					complete: () => { 
 
-						this.Source = URL;
+						this.Source = url;
 
-						this.decodeImage(URL).then(() => ANIMATION('reverse'))
+						this.decodeImage(url).then(() => ANIMATION('reverse'))
 
 					}
 				})

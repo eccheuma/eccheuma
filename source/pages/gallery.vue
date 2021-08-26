@@ -82,22 +82,6 @@
 
 	}
 
-	&-content {
-
-		@include component-shadow;
-
-		border-radius: .7rem;
-
-		background-color: rgb(var(--color-mono-200));
-		padding-inline: 2vw;
-
-		display: grid;
-		row-gap: 2vh;
-
-		padding: 2vw 2vw;
-
-	}
-
 	&-pinned {
 
 		@include component-shadow;
@@ -127,6 +111,19 @@
 			margin-inline: auto;
 
 		}
+
+	}
+
+	&-content {
+
+		@extend %component;
+
+		padding-inline: 2vw;
+
+		display: grid;
+		row-gap: 2vh;
+
+		padding: 2vw 2vw;
 
 	}
 

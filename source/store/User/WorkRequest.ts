@@ -7,10 +7,10 @@
 
 	import { VuexModules } from '~/typescript/VuexModules'
 
-	import type { SELECTED_SERVICE, REQUEST_STATUS } from '~/typescript/Services.ts'
-	import type { Message as MESSAGE } from '~/store/User/Messages'
+	import type { SELECTED_SERVICE, REQUEST_STATUS } 	from '~/typescript/Services'
+	import type { Message as MessageType } 						from '~/store/User/Messages'
 
-	import type { NOTIFICATION_CONTENT } from '~/typescript/Notification.ts'
+	import type { NOTIFICATION_CONTENT } from '~/typescript/Notification'
 
 	interface WORK_REQUEST extends SELECTED_SERVICE {
 		ID: number
@@ -63,7 +63,7 @@
 				..._service
 			}
 
-			const MESSAGE: MESSAGE = {
+			const MESSAGE: MessageType = {
 				ID: MessageCount + 1,
 				UserID: 'SUPPORT',
 				From: 'Eccheuma Informer',

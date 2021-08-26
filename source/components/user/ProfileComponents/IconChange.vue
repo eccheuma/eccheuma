@@ -15,7 +15,7 @@
 			<transition-group name="page_transition">
 
 				<template v-if="!CustomIconArea">
-					<section key="icon-area-0" class="user_profile-component-icon-prepared" >
+					<section key="icon-area-0" class="user_profile-component-icon-prepared">
 
 						<span>
 							Zu nun und euch zug ernsten. Nebel früh und gleich walten, macht seelen wie träne geneigt kommt, versuch träne.
@@ -26,10 +26,13 @@
 								v-for="(item, index) in SelectableIcon" 
 								:key="index"
 								:style="`background-image: url(${ item })`" 
-								@click="NewIcon = item" />
+								@click="NewIcon = item" 
+							/>
 						</template>
 
-						<button @click="UploadProfileImage" :class="{ NonActive: !NewIcon }">Подтвердить</button>
+						<button :class="{ NonActive: !NewIcon }" @click="UploadProfileImage">
+							Подтвердить
+						</button>
 
 					</section>
 				</template>
@@ -37,30 +40,34 @@
 				<template v-else>
 					<section key="icon-area-1" class="user_profile-component-icon-input">
 
-						<span>
+						<!-- <span>
 							Zu nun und euch zug ernsten. Nebel früh und gleich walten, macht seelen wie träne geneigt kommt, versuch träne gestalten die ist das. Einst ertönt dem vom und in mich. Entwöhntes aus irrt der der was die geisterreich die gleich..
-						</span>
+						</span> -->
 
 						<section>
 
-							<input type="file" id="CustomIcon" 
-								accept=".png, .jpg, .jpeg, .webp"
-								ref="CustomIcon" 
+							<input 
 								v-show="false" 
-								@change="UpdatePreviewImage($refs.CustomIcon)">
+								id="CustomIcon" 
+								ref="CustomIcon" 
+								type="file" 
+								accept=".png, .jpg, .jpeg, .webp"
+								@change="UpdatePreviewImage($refs.CustomIcon)"
+							>
 
-							<label for="CustomIcon" class=TEST>
+							<label for="CustomIcon">
 								{{ CustomIconName.length ? CustomIconName : 'Файл не выбран' }}
 							</label>
 
 						</section>
 
 						<button 
-							@click="UploadProfileImage" 
 							:class="[
 								{ PENDING },
 								{ NonActive: !CustomIconName.length },
-							]">
+							]"
+							@click="UploadProfileImage"
+							>
 							Отправить
 						</button>
 
@@ -100,8 +107,6 @@
 			columns: 1fr;
 			rows: 2fr 3fr 5fr;
 		}
-
-		height: 60vh; overflow-y: hidden;
 
 		> button {
 			@include light-button { 
@@ -210,7 +215,7 @@
 	import Vue from 'vue'
 
 	// FIREBASE
-	import firebase from "firebase/app"
+	import firebase from 'firebase/app'
 	import 'firebase/database'
 
 	// VUEX
@@ -244,6 +249,9 @@
 
 			}),
 		},
+		created() {
+			this.GetImagesList()
+		},
 		methods: {
 
 			...mapActions({
@@ -254,7 +262,7 @@
 
 				const REFS = await firebase.storage().ref('UserIcons').list().then( res => res.items )
 
-				REFS.map( item => {
+				REFS.forEach((item) => {
 
 					firebase.storage()
 						.ref(`UserIcons/${ item.name }`)
@@ -332,9 +340,6 @@
 			},
 			
 		},
-		created() {
-			this.GetImagesList()
-		}
 	})
 
 </script>

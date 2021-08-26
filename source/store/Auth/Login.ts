@@ -3,12 +3,16 @@ import 'firebase/database'
 import 'firebase/auth'
 
 // VUEX
-	import type { ActionTree, MutationTree } from 'vuex'
-
-	import type { VuexModules } from '~/typescript/VuexModules'
+	import type { ActionTree } from 'vuex'
 
 // TYPES
 	import type { REGISTER_FORM } from './Auth'
+	import type { VuexModules } 	from '~/typescript/VuexModules'
+
+// STATE
+	export const state = () => ({
+
+	})
 
 // CURENT STATE
 	export type CurentState = ReturnType<typeof state>
@@ -19,10 +23,6 @@ import 'firebase/auth'
 			Login: CurentState
 		}
 	}
-// STATE
-	export const state = () => ({
-
-	})
 
 // ACTIONS
 	export const actions: ActionTree<CurentState, VuexModules> = {
@@ -46,7 +46,7 @@ import 'firebase/auth'
 
 				// Загрузка стейта пользователя из Firebase
 				firebase.database().ref(`Users/${ uid }/state`)
-					.on('value', data => {
+					.on('value', (data) => {
 
 						commit('User/State/Change_UserState', data.val(), { root: true })
 
@@ -70,7 +70,7 @@ import 'firebase/auth'
 				
 			} finally {
 				
-				await commit('Loader/Loader_ChangeLoadStatus_Counter', 100, { root: true })
+				commit('Loader/Loader_ChangeLoadStatus_Counter', 100, { root: true })
 
 				if ( !rootState.Loader.Status.Loaded ) {
 					setTimeout(() => {
@@ -81,4 +81,3 @@ import 'firebase/auth'
 			}
 		}
 	}
-

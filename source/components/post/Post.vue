@@ -136,109 +136,113 @@
 		<!-- Comments and Content -->
 		<client-only>
 
-			<eccheuma-collapse :active="ContentSection">
+			<hardware-acceleration-decorator>
+				<eccheuma-collapse :active="ContentSection">
 
-				<article 
-					class="post-content" 
-					:class="[
-						{ 'rounded': !ContentSection && !CommentSection },
-						{ 'rounded-bottom': ContentSection && !CommentSection }
-					]"
-				>
+					<article 
+						class="post-content" 
+						:class="[
+							{ 'rounded': !ContentSection && !CommentSection },
+							{ 'rounded-bottom': ContentSection && !CommentSection }
+						]"
+					>
 
-					<header class="post-content-header">
-						<h4>{{ payload.title }}</h4>
-						<h6>{{ payload.description }}</h6>
-						<span>{{ AuthorInfo ? AuthorInfo.UserName : '' }} | {{ PostDate.Day }} в {{ PostDate.Time }}</span>
-					</header>
+						<header class="post-content-header">
+							<h4>{{ payload.title }}</h4>
+							<h6>{{ payload.description }}</h6>
+							<span>{{ AuthorInfo ? AuthorInfo.UserName : '' }} | {{ PostDate.Day }} в {{ PostDate.Time }}</span>
+						</header>
 
-					<template v-if="editContent">
-						<slot />
-					</template>
-
-					<template v-else>
-						<post-content :source="Content" />
-					</template>
-
-					<section class="post-content-tags">
-						<h6>Теги: </h6>
-						<tag v-for="(item, i) in payload.tags" :key="i" :transparent="false" :light="UI !== 'light'">
-							#{{ item }}
-						</tag>
-					</section>
-
-					<hr>
-
-					<section class="post-content-comments">
-						<common-button class="interface-dark" scheme="dark" @click.native="toggleSection(!CommentSection, 'CommentSection')">
-							Открыть комментарии
-						</common-button>
-					</section>
-
-				</article>
-				
-			</eccheuma-collapse>
-
-			<eccheuma-collapse :active="CommentSection">	
-
-				<div 
-					class="post-comments" 
-					:class="[
-						{ 'rounded': !CommentSection },
-						{ 'rounded-bottom': CommentSection }
-					]"
-				>
-
-					<template v-if="!sortedComments.length">
-						<section class="post-comments-first">
-							<span>
-								" Тут ещё нет комментариев, но это пока... "
-							</span>
-						</section>
-					</template>
-
-					<section class="post-comments-content">
-						<post-comment 
-							v-for="item in sortedComments" 
-							:key="item.Date" 
-							:userID="item.UserID"
-							:postID="payload.ID" 
-							:commentID="item.ID" 
-						/>
-					</section>
-
-					<section class="post-comments-answer">
-
-						<template v-if="LoginStatus">
-
-							<h5>Оставьте свой комментарий</h5>
-							<p>Не длинее 600 символов и не менее 6. <strong>Лимит: {{ charLimit }}</strong></p>
-
-							<textarea 
-								v-model="Message" 
-								name="comment_section" 
-								maxlength="400" 
-								placeholder="Напишите тут что-то в ответ." 
-								@input="playSound(Sounds.get('PostInput'))"
-							/>
-	
-							<button :class="$v.Message.$invalid ? 'disabled' : '' " type="button" @click="sendComment">
-								Ответить <span>( Ctrl + Enter )</span>
-							</button>
-
+						<template v-if="editContent">
+							<slot />
 						</template>
 
 						<template v-else>
-							<icon name="Info" />
-							<h5>Для комментирования необходима авторизация</h5>
-							<p>Это не так уж и сложно, да и получите сверху ещё больше функионала.</p>
+							<post-content :source="Content" />
 						</template>
 
-					</section>
+						<section class="post-content-tags">
+							<h6>Теги: </h6>
+							<tag v-for="(item, i) in payload.tags" :key="i" :transparent="false" :light="UI !== 'light'">
+								#{{ item }}
+							</tag>
+						</section>
 
-				</div>
+						<hr>
 
-			</eccheuma-collapse>
+						<section class="post-content-comments">
+							<common-button class="interface-dark" scheme="dark" @click.native="toggleSection(!CommentSection, 'CommentSection')">
+								Открыть комментарии
+							</common-button>
+						</section>
+
+					</article>
+					
+				</eccheuma-collapse>
+			</hardware-acceleration-decorator>
+
+			<hardware-acceleration-decorator>
+				<eccheuma-collapse :active="CommentSection">	
+
+					<div 
+						class="post-comments" 
+						:class="[
+							{ 'rounded': !CommentSection },
+							{ 'rounded-bottom': CommentSection }
+						]"
+					>
+
+						<template v-if="!sortedComments.length">
+							<section class="post-comments-first">
+								<span>
+									" Тут ещё нет комментариев, но это пока... "
+								</span>
+							</section>
+						</template>
+
+						<section class="post-comments-content">
+							<post-comment 
+								v-for="item in sortedComments" 
+								:key="item.Date" 
+								:userID="item.UserID"
+								:postID="payload.ID" 
+								:commentID="item.ID" 
+							/>
+						</section>
+
+						<section class="post-comments-answer">
+
+							<template v-if="LoginStatus">
+
+								<h5>Оставьте свой комментарий</h5>
+								<p>Не длинее 600 символов и не менее 6. <strong>Лимит: {{ charLimit }}</strong></p>
+
+								<textarea 
+									v-model="Message" 
+									name="comment_section" 
+									maxlength="400" 
+									placeholder="Напишите тут что-то в ответ." 
+									@input="playSound(Sounds.get('PostInput'))"
+								/>
+		
+								<button :class="$v.Message.$invalid ? 'disabled' : '' " type="button" @click="sendComment">
+									Ответить <span>( Ctrl + Enter )</span>
+								</button>
+
+							</template>
+
+							<template v-else>
+								<icon name="Info" />
+								<h5>Для комментирования необходима авторизация</h5>
+								<p>Это не так уж и сложно, да и получите сверху ещё больше функионала.</p>
+							</template>
+
+						</section>
+
+					</div>
+
+				</eccheuma-collapse>
+			</hardware-acceleration-decorator>
 
 		</client-only>
 
@@ -342,14 +346,15 @@
 			align-self: center;
 
 			padding: 0 40px;
+			color: rgb(var(--mono-800));
 
 			h4 {
 				font-weight: 900;
-				font-size: var(--font-size-1);
+				font-size: var(--font-size-36);
 			}
 			h6 {
 				font-weight: 700;
-				font-size: var(--font-size-3);
+				font-size: var(--font-size-18);
 				width: 60ch;
 			}
 
@@ -559,20 +564,20 @@
 
 			h4 {	
 				font: {
-					size: var(--font-size-1);
+					size: var(--font-size-36);
 					weight: 900;
 				}
 			}
 			h6 {
 				font: {
-					size: var(--font-size-3);
+					size: var(--font-size-18);
 					weight: 800;
 				}
 			}
 			span {
 
 				font: {
-					size: var(--font-size-3);
+					size: var(--font-size-18);
 					weight: 500;
 				}
 
@@ -586,7 +591,7 @@
 			h6 {
 				margin-right: 1vw;
 				font-weight: 800;
-				font-size: var(--font-size-3);
+				font-size: var(--font-size-18);
 			}
 
 			display: inline-flex;
@@ -613,7 +618,7 @@
 
 			color: rgb(var(--color-mono-700));
 			font: {
-				size: var(--font-size-1);
+				size: var(--font-size-36);
 				family: var(--decor-font);
 				weight: 500;
 			}
@@ -641,7 +646,7 @@
 
 			h5 {
 				color: rgb(var(--color-mono-700));
-				font-size: var(--font-size-2);
+				font-size: var(--font-size-24);
 				text-align: center;
 				font-weight: 800;
 			}
@@ -649,7 +654,7 @@
 				white-space: pre-wrap;
 				text-align: center;
 				font-weight: 500;
-				font-size: var(--font-size-4);
+				font-size: var(--font-size-16);
 			}
 			textarea {
 				resize: none;
@@ -704,6 +709,9 @@
 	import Icon									from '~/components/Icon.vue'
 	import CommonButton 				from '~/components/buttons/CommonButton.vue'
 
+	// FUNCTIONAL COMPONENTS
+	import HardwareAccelerationDecorator from '~/components/functional/HardwareAcceleration.vue';
+
 	//	С фильтрами происходит что-то не совсем ясное. 
 	//  Нормально работают в хроме, но лиса отказывается с ними адекватно дружить.
 
@@ -736,6 +744,7 @@
 	// MODULE
 	export default Vue.extend({
 		components: {
+			HardwareAccelerationDecorator,
 			EccheumaCollapse,
 			CommonButton,
 			Popover,
@@ -956,26 +965,36 @@
 					_size: IMAGE_CONTAINER.getBoundingClientRect().width * window.devicePixelRatio
 				})
 
+				if ( this.CLIENT_RENDER_CHECK && this.$PIXI.utils.isWebGLSupported() ) {
+					this.prepareAnimations(IMAGE_CONTAINER, URL)
+				} else {
+					this.ImageURL = URL;
+				}
+
+			},
+
+			prepareAnimations(el: Element, url: IMAGE_URL) {
+
 				const ANIMATION = (u_direction: DirectionOptions, cb?: AnimeCallBack ) => {
 					this.$AnimeJS({
 
-						targets: IMAGE_CONTAINER,
+						targets: el,
 						opacity: [1, 0],
-						duration: 500,
+						duration: 250,
 						direction: u_direction,
 						easing: 'linear',
 
 						...cb
 
 					})
-				} 
+				}
 
 				ANIMATION('normal', {
 					complete: () => { 
 
-						this.ImageURL = URL;
+						this.ImageURL = url;
 
-						this.decodeImage(URL).finally(() => ANIMATION('reverse'))
+						this.decodeImage(url).then(() => ANIMATION('reverse'))
 
 					}
 				})

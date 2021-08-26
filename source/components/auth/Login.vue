@@ -46,6 +46,20 @@
 				</template>
 			</div>
 
+			<caption-card 
+				v-if="AuthError" 
+				:status="[
+					{ 'error': AuthError === 'auth/invalid-email' }
+				]"
+			>
+				<template #type>
+					Ошибка входа
+				</template>
+				<template #desc>
+					{{ DefineAuthError(AuthError) }}
+				</template>
+			</caption-card>
+
 			<div class="auth_login-body-social">
 
 				<span>
@@ -72,18 +86,18 @@
 
 		<section class="auth_login-footer">
 
-			<button 
+			<eccheuma-button 
 				:class="[
 					{ disabled: $v.Form.$anyError }
 				]"
-				@click="sendForm()"
+				@click.native="sendForm()"
 				>
 				Войти
-			</button>
+			</eccheuma-button>
 
-			<button @click="toggleRegisterModal()">
+			<eccheuma-button @click.native="toggleRegisterModal()">
 				Зарегистрироваться
-			</button>
+			</eccheuma-button>
 			
 		</section>
 
@@ -96,28 +110,10 @@
 
 	&-container {
 
-		background: {
-			color: rgb(var(--color-mono-200));
-		}
-
-		border: {
-			radius: .7rem;
-		}
+		@extend %component;
 
 		overflow: {
 			x: hidden;
-		}
-
-		button {
-			@include push-button {
-
-				padding: 4px 10%;
-				line-height: 21px;
-
-				background: {
-					color: transparent;
-				}
-			}
 		}
 
 	}
@@ -127,7 +123,7 @@
 		position: relative;
 		display: flex;
 
-		min-height: 15vh;
+		min-height: 20vh;
 	
 		border: {
 			bottom: 1px solid rgb(var(--color-mono-400));
@@ -149,24 +145,21 @@
 				background-color: rgb(var(--color-mono-700));
 			}
 
-			span {
+			> span {
+
 				display: block;
 				color: rgb(var(--color-mono-700));
 
 				&:nth-of-type(1) {
 					font: {
-						size: var(--font-size-1);
+						size: var(--font-size-36);
 						family: var(--decor-font);
 					}
 
 					letter-spacing: .25ch;
-					line-height: var(--size-1);
+					line-height: var(--size-36);
 				}
 
-				font: {
-					size: .75rem;
-					weight: 700;
-				}
 			}
 		}
 
@@ -181,10 +174,10 @@
 
 		span {
 			display: block;
-			color: rgb(var(--color-mono-500));
+			color: rgb(var(--color-mono-800));
 			margin: { bottom: .5vh };
 			font: {
-				size: .65rem;
+				size: var(--font-size-14);
 				weight: 600;
 			}
 		}
@@ -193,7 +186,9 @@
 
 			width: 100%;
 
+			background-color: rgb(var(--color-mono-300));
 			border: 1px solid rgb(var(--color-mono-400));
+
 			border: {
 				radius: .7rem;
 			}
@@ -201,9 +196,11 @@
 			padding: .5vh 1vw;
 
 			font: {
-				size: .65rem;
+				size: var(--font-size-14);
 				weight: 600;
 			}
+
+			line-height: 3vh;
 
 			&:focus {
 				outline: 0px solid transparent;
@@ -234,7 +231,7 @@
 
 			margin: 2vh 0 0;
 
-			hr {
+			> hr {
 				margin: 1vh 15%;
 			}
 
@@ -257,23 +254,30 @@
 				justify-content: space-between;
 			}
 
+			button {
+				@include push-button {
+
+					padding: 4px 10%;
+					line-height: 21px;
+
+					background: {
+						color: transparent;
+					}
+				}
+			}
+
 		}
 
 	}
 	
 	&-footer {
 
+		border-top: 1px solid rgb(var(--color-mono-400));
 		padding: 2vh 0;
-
-		border: {
-			top: 1px solid rgb(var(--color-mono-400));
-		}
 
 		button {
 			width: 75%;
 			margin: 1vh auto;
-			display: block;
-			line-height: 21px;
 		}
 
 		.disabled {
@@ -298,6 +302,7 @@ import Vue from 'vue'
 
 // MIXINS
 	import EmitSound from '~/assets/mixins/EmitSound'
+	import F_AuthErrors from '~/assets/mixins/filters/AuthError'
 
 // TYPES 
 
@@ -308,14 +313,18 @@ import Vue from 'vue'
 	import type { REGISTER_FORM } from '~/store/Auth/Auth'
 
 	// COMPONENTS
+	import EccheumaButton from '~/components/buttons/CommonButton.vue';
 	import Icon 					from '~/components/Icon.vue';
+	import CaptionCard 		from '~/components/common/Caption.vue'
 
 // MODULE
 	export default Vue.extend({
 		components: {
+			EccheumaButton,
+			CaptionCard,
 			Icon,
 		},
-		mixins: [ EmitSound ],
+		mixins: [ EmitSound, F_AuthErrors ],
 		data() {
 			return {
 
@@ -338,6 +347,7 @@ import Vue from 'vue'
 
 			...mapState({
 				LoginStatus: 	state => (state as VuexModules).Auth.Auth.LoginStatus,
+				AuthError: 		state => (state as VuexModules).Auth.Auth.AuthError,
 			})
 
 		},

@@ -74,7 +74,7 @@
 		}
 
 		font: {
-			size: var(--font-size-4);
+			size: var(--font-size-16);
 			weight: 600;
 		}
 
@@ -175,10 +175,10 @@
 	
 							switch (this.position) {
 	
-								case 'top': console.log('top')
+								case 'top':
 									return -(ParentRect.height - (TargetMargin / 2) + PopoverRect.height + mar);
 	
-								case 'bottom': console.log('bottom')
+								case 'bottom':
 									return ParentRect.height 
 	
 								default: 

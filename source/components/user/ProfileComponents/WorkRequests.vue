@@ -99,7 +99,7 @@
 	import type { VuexModules } from '~/typescript/VuexModules'
 
 	// MIXINS
-	import F_WorkStatus 	from '~/assets/mixins/filters/WorkStatus'
+	import F_WorkStatus from '~/assets/mixins/filters/WorkStatus'
 
 	export default Vue.extend({
 		mixins: [ F_WorkStatus ],

@@ -56,12 +56,12 @@
         display: block;
         &:nth-child(1) {
           color: rgb(var(--color-mono-800));
-          font-size: var(--font-size-2);
+          font-size: var(--font-size-24);
           font-weight: 800;
         }
         &:nth-child(2) {
           color: rgb(var(--color-mono-500));
-          font-size: var(--font-size-3);
+          font-size: var(--font-size-18);
           font-weight: 500;
         }
       }
@@ -100,7 +100,7 @@ import type { WORKCASE } 					from '~/typescript/WorkCase'
 export default Vue.extend({
 	components: {
 		VueImage: () => import('~/components/common/ImageComponent/Image.vue'),
-		EccheumaSwiper: () => import('~/components/common/SwiperProto.vue')
+		EccheumaSwiper: () => import('~/components/common/EccheumaSwiper.vue')
 	},
 	mixins: [ EmitSound ],
 	data() {

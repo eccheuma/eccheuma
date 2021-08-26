@@ -60,7 +60,7 @@
 	
 			color: var(--nav-color);
 			font: {
-				size: var(--font-size-2);
+				size: var(--font-size-24);
 				family: var(--decor-font);
 			}
 

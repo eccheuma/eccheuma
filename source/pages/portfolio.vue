@@ -121,7 +121,7 @@
 		},
 		methods: {
 			GoRouterTo(prop) {
-				if (this.$route.path != prop) {
+				if (this.$route.path !== prop) {
 					setTimeout(() => {
 						this.EmitSound('Out');
 					}, 750);
@@ -192,7 +192,7 @@ $TransitionDuration: .25s
 			border-radius: 12px
 			i
 				display: block
-				font-size: var(--font-size-5)
+				font-size: var(--font-size-14)
 				margin-bottom: 12px
 				color: rgb(var(--color-mono-400))
 			&:before
