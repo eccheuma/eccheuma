@@ -9,11 +9,17 @@
 
 ## Технологии:
 
-* [Vue](https://github.com/vuejs/vue)
-* [Nuxt](https://github.com/nuxt)
-* [Firebase](https://github.com/firebase/)
-* [Anime.js](https://github.com/juliangarnier/anime)
-* [Pixi.js](https://github.com/pixijs)
+### Фронт-енд
+- [Vue](https://github.com/vuejs/vue)
+- [Anime.js](https://github.com/juliangarnier/anime)
+- [Pixi.js](https://github.com/pixijs)
+
+### Бэкенд
+- [Nuxt](https://github.com/nuxt)
+- [Firebase](https://github.com/firebase/)
+
+### Графический дизайн
+- [Figma](https://www.figma.com/proto/t6xVQlDqCRfxQOobCyydJj/Ecchema?page-id=216%3A106&node-id=273%3A705&viewport=402%2C48%2C0.08&scaling=scale-down-width&starting-point-node-id=273%3A705) : Кликабельный прототип
 
 ## Основные задачи приложения:
 * Удобный доступ к портфолио и его подробное описание.
