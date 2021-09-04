@@ -16,6 +16,10 @@
 			ready: {
 				type: Boolean,
 				default: true,
+			},
+			wrap: {
+				type: Boolean,
+				default: false,
 			}
 		},
 		data() {
@@ -85,8 +89,14 @@
 			} 
 
 		},
-		render(): any {
+		render(h): any {
+
+			if ( this.wrap ) {
+				return h('div', { staticClass: 'itersection::wrapper' }, this.$slots.default)
+			}
+
 			return this.$slots.default
+			
 		},
 	})
 </script>

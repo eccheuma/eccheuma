@@ -3,7 +3,7 @@
 
 		<section>
 			<span>Eccheuma</span>
-			<span>Ryova Graphical & Web Design</span>
+			<span>Веб-дизайн с русским духом</span>
 		</section>
 
 		<svg viewBox="0 0 157 24" :fill="!$isMobile ? `none` : `#333`" @click="GoToHoll">

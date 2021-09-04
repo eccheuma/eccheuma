@@ -26,7 +26,8 @@
 			<intesection-component 
 				:key="`GALLERY-IMAGE-${ image.ID }`" 
 				:style="`order: ${( BasePoint - image.ID ) + Images.length }`"
-				:rootMargin="5" 
+				:rootMargin="5"
+				:wrap="true" 
 				@isIntersecting="animateImage"
 				>
 				<vue-image
@@ -129,7 +130,7 @@
 		},
 		async fetch() {
 
-			if ( process.server && !this.CLIENT_RENDER_CHECK ) {
+			if ( process.server && !this.BROWSER ) {
 				await this.GetData();
 			}
 			

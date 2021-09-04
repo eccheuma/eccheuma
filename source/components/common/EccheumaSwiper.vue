@@ -202,7 +202,7 @@ import Vue, { PropOptions } from 'vue'
 				const DURATION 	= this.Configuration.animationDuration;
 
 				// CSS HOUDINI SUPPORT 
-				if ( window.CSS && CSS.number ) {
+				if ( window.CSS && CSS.number !== undefined ) {
 
 					const Y = (this.ContainerWidth * this.ActiveIndex) + SHIFT
 

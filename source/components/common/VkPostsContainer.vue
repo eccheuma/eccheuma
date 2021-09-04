@@ -1,31 +1,32 @@
 <template>
   <div class="vk-container">
 
-    <header class="vk-header pattern_bg">
+    <header class="vk-header">
       <i />
       <span>Посты из Вконтакте</span>
     </header>
 
     <template v-if="Posts.length">
-      <article v-for="(post, i) in Posts" :key="i" class="vk-post pattern_bg">
+      <article v-for="(post, i) in Posts" :key="i" class="vk-post">
         <header class="vk-post-header">
-          <a href="https://vk.com/eccheuma" :style="`background-image: url(${ EccheumaAvatar })`" />
           <section>
             <span>Eccheuma</span>
             <span>{{ post.date.Day }} в {{ post.date.Time }}</span>
           </section>
+          <hr>
+          <a href="https://vk.com/eccheuma" :style="`background-image: url(${ EccheumaAvatar })`" />
         </header>
-        <img :src="post.thumb" alt="">
-        <hr>
         <section class="vk-post-body">
+          <img :src="post.thumb" alt="">
+          <hr>
           <p>
             {{ post.body }}
           </p>
+          <hr>
+          <common-button :link="post.link" target="_blank">
+            Перейти к посту
+          </common-button>
         </section>
-        <hr>
-        <common-button :link="post.link" target="_blank">
-          Перейти к посту
-        </common-button>
         <footer class="vk-post-footer">
           <span>
             <icon name="Fire" />
@@ -44,7 +45,7 @@
     </template>
 
     <template v-else>
-      <article v-for="item in 3" :key="item" class="vk-post pattern_bg" />
+      <article v-for="item in 3" :key="item" class="vk-post" />
     </template>
 
   </div>
@@ -65,22 +66,26 @@
   }
   &-header {
 
+    @include gradient-border;
     @include component-shadow;
 
+    @extend %pattern-lines;
+
     padding: 2.5vh 2vw;
-    border-radius: .7rem;
+    border-radius: var(--border-radius);
 
     width: 100%;
+    height: 10vh;
 
-    display: inline-flex;
+    display: flex;
     justify-content: space-between;
-    align-items: center;
+    place-items: center;
 
     background-color: rgb(var(--color-mono-300));
-    color: rgb(var(--color-mono-800));
+    color: rgb(var(--color-mono-700));
 
     font: {
-      size: var(--font-size-16);
+      size: var(--font-size-14);
       weight: 700;
     }
 
@@ -105,19 +110,22 @@
   &-post {
 
     @include component-shadow;
+    @include gradient-border;
+
+    @extend %pattern-lines;
 
     display: grid;
-    padding: 2vh 1vw 3vh;
+    padding-bottom: 3vh;
 
     row-gap: 2vh;
 
     min-height: 40vh;
 
     overflow: hidden;
-    border-radius: .7rem;
+    border-radius: var(--border-radius);
 
     font: {
-      size: var(--font-size-18);
+      size: var(--font-size-20);
     }
 
     background-color: rgb(var(--color-mono-300));
@@ -125,7 +133,7 @@
     img {
       object-fit: cover;
       width: 100%;
-      border-radius: .7rem;
+      border-radius: var(--border-radius);
     }
 
     p {
@@ -133,7 +141,7 @@
       color: rgb(var(--color-mono-700));
 
       font: {
-        size: var(--font-size-18);
+        size: var(--font-size-20);
         family: var(--read-font);
       }
     }
@@ -152,13 +160,24 @@
 
       display: flex;
       align-items: center;
+      justify-content: flex-end;
       height: 100%;
+
+      padding: 2vh 1vw;
+
+      background-color: rgb(var(--color-mono-200));
 
       gap: 1vw;
 
+      hr {
+        height: 66%;
+        width: 1px;
+        background-color: var(--color-accent-edges-100);
+      }
+
       a {
 
-        height: 8vh;
+        height: clamp(60px, 4vw, 120px);
         aspect-ratio: 1/1;
 
         background: {
@@ -171,7 +190,7 @@
           radius: 100%;
           width: 2px;
           style: solid;
-          color: rgb(var(--color-mono-500));
+          color: var(--color-accent-edges-100);
         }
 
       }
@@ -180,20 +199,21 @@
         span {
 
           display: block;
+          text-align: right;
 
           &:nth-child(1) {
             font: {
               family: var(--decor-font);
-              size: var(--font-size-24);
+              size: var(--font-size-32);
             }
     
             letter-spacing: .25ch;
-            line-height: var(--size-36);
+            line-height: calc(var(--font-size-32) * 1.25);
           }
 
           &:nth-child(2) {
             font: {
-              size: var(--font-size-16);
+              size: var(--font-size-14);
             }
           }
   
@@ -204,17 +224,10 @@
 
     &-body {
 
-      span {
-        
-        display: block;
-        margin-bottom: 2vh;
-  
-        font: {
-          size: var(--font-size-14);
-          weight: 800;
-        }
-  
-      }
+      padding: 1vh 1vw;
+      display: flex;
+      flex-direction: column;
+      gap: 2vh;
 
       p {
         display: -webkit-box;
@@ -322,11 +335,13 @@
 
           if ( LOCAL_HASH && LOCAL_DATA && LOCAL_HASH === SERVER_HASH ) {
 
-            this.Posts = JSON.parse(LOCAL_DATA); console.log('Get VK posts from cache')
+            this.Posts = JSON.parse(LOCAL_DATA); 
+            // console.log('Get VK posts from cache')
 
           } else {
 
-            this.Posts = await this.getPosts(); console.log('Get VK posts from server')
+            this.Posts = await this.getPosts(); 
+            // console.log('Get VK posts from server')
 
             window.localStorage.setItem('VK_POSTS', JSON.stringify(this.Posts))
             window.localStorage.setItem('VK_HASH', SERVER_HASH)

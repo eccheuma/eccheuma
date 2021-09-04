@@ -94,7 +94,7 @@
 
 		gap: 2vh;
 
-		border-radius: .7rem;
+		border-radius: var(--border-radius);
 
 		&-body {
 
@@ -116,7 +116,7 @@
 
 	&-content {
 
-		@extend %component;
+		@extend %card-container;
 
 		padding-inline: 2vw;
 

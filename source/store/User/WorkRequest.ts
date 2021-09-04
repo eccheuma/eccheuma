@@ -100,7 +100,7 @@
 				commit('Loader/Loader_ChangeLoadMessage', 'Готово', { root: true })
 				commit('Notification/Notification_Status', true, { root: true })
 
-				commit('Notification/Set_Notification', NOTIFICATION_MESSAGE, { root: true })
+				commit('Notification/setNotification', NOTIFICATION_MESSAGE, { root: true })
 
 			} catch (e) {
 

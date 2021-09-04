@@ -65,7 +65,7 @@
 
 		padding: 2vh 3vw;
 
-		border-radius: .7rem;
+		border-radius: var(--border-radius);
 
 		width: 40ch;
 

@@ -61,7 +61,7 @@
         }
         &:nth-child(2) {
           color: rgb(var(--color-mono-500));
-          font-size: var(--font-size-18);
+          font-size: var(--font-size-20);
           font-weight: 500;
         }
       }

@@ -31,7 +31,7 @@
 			</template>
 		</section>
 
-		<section class="footer-info pattern_bg">
+		<section class="footer-info">
 			
 			<SearchBar v-if="!$isMobile" />
 
@@ -41,8 +41,8 @@
 			</section>
 
 			<section v-if="!$isMobile" class="footer-info-power_by">
-				<i class="fab fa-vuejs" />
-				<span>Работает на костях Vue and Nuxt</span>
+				<span>Работает на костях Vue и Nuxt</span>
+				<icon name="Vue" />
 			</section>
 
 		</section>
@@ -178,8 +178,9 @@
 	&-info {
 
 		@include gradient_border(block);
-
 		@include section_position($area: info);
+
+		@extend %pattern-lines;
 
 		margin: 	0vh -5vw;
 		padding: 	4vh 5vw;
@@ -210,7 +211,7 @@
 				&:nth-of-type(1) {
 					color: rgb(var(--color-mono-700));
 					font: {
-						size: var(--font-size-18);
+						size: var(--font-size-20);
 						weight: 500;
 					}
 				}
@@ -235,6 +236,11 @@
 					weight: 700;
 				}
 			}
+			i {
+				@include icon-size(4vh);
+				transform: scale(1.75);
+				margin: auto 0;
+			}
 		}
 
 	}
@@ -254,18 +260,19 @@
 
 				display: block; 
 				text-transform: uppercase;
+				color: rgb(var(--color-mono-400));
 
 				&:nth-child(1) {
-					color: rgb(var(--color-mono-400));
 					font-weight: 500;
 					letter-spacing: .25ch;
 					font-size: var(--font-size-36);
 					font-family: var(--decor-font);
 					line-height: var(--size-36);
+					margin-top: -1.5vh;
 				}
 
 				&:nth-child(2) {
-					color: rgb(var(--color-mono-400)); font-weight: 700; letter-spacing: 1px; font-size: .45rem
+					font-weight: 700; letter-spacing: 1px; font-size: var(--font-size-10);
 				}
 
 			}

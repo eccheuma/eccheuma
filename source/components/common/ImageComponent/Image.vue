@@ -96,7 +96,7 @@
 		
 		padding: 10px;
 	
-		border-radius: .7rem;
+		border-radius: var(--border-radius);
 		overflow: hidden;
 
 	}
@@ -187,7 +187,7 @@
 			padding: 5px;
 			display: block;
 			margin: auto;
-			border-radius: .7rem;
+			border-radius: var(--border-radius);
 
 			cursor: pointer;
 
@@ -220,7 +220,7 @@
 		background: rgba(var(--color-mono-200), .75);
 		color: rgb(var(--color-mono-800));
 
-		border-radius: .7rem;
+		border-radius: var(--border-radius);
 
     position: relative;
 		z-index: 1;
@@ -232,7 +232,7 @@
 		span {
 			display: block;
 			&:nth-of-type(1) {
-				font-size: var(--font-size-18);
+				font-size: var(--font-size-20);
 				font-weight: 800;
 			}
 			&:nth-of-type(2) {
@@ -318,35 +318,35 @@
 		watch: {
 			'content.path': {
 				handler() {
-					if ( this.CLIENT_RENDER_CHECK ) {
+					if ( this.BROWSER ) {
 						this.$nextTick(() => requestAnimationFrame(this.getImage))
 					}
 				}
 			},
-			Modal: {
-				handler() {
-					this.playSound(this.Sounds.get('ImageToggleModal'))
-				}
-			}
+			// Modal: {
+			// 	handler() {
+			// 		this.playSound(this.Sounds.get('ImageToggleModal'))
+			// 	}
+			// }
 		},
 		created() {
 
-			this.setSounds([
-				{
-					file: 'On',
-					name: 'ImageSearchIcon',
-					settings: { rate: .5, volume: .25 }
-				},
-				{
-					file: 'Tap',
-					name: 'ImageToggleModal',
-					settings: { rate: 1.25 }
-				}
-			])
+			// this.setSounds([
+			// 	{
+			// 		file: 'On',
+			// 		name: 'ImageSearchIcon',
+			// 		settings: { rate: .5, volume: .25 }
+			// 	},
+			// 	{
+			// 		file: 'Tap',
+			// 		name: 'ImageToggleModal',
+			// 		settings: { rate: 1.25 }
+			// 	}
+			// ])
 
 		},
 		async mounted() {
-			if ( this.CLIENT_RENDER_CHECK ) {
+			if ( this.BROWSER ) {
 
 				this.LocalDate = await this.GetLocalTime(this.content.date)
 
@@ -373,7 +373,7 @@
 					_size: IMAGE_CONTAINER?.getBoundingClientRect().width * window.devicePixelRatio || 720
 				})
 
-				if ( this.CLIENT_RENDER_CHECK && this.$PIXI.utils.isWebGLSupported() ) {
+				if ( this.BROWSER && this.$PIXI.utils.isWebGLSupported() ) {
 					this.prepareAnimations(IMAGE_CONTAINER, URL)
 				} else {
 					this.Source = URL;

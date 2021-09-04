@@ -24,7 +24,7 @@ import { ActionTree, MutationTree } from 'vuex'
 
 // MUTATIONS
 	export const mutations: MutationTree<CurentState> = {
-		Change_Status: (state, status?: boolean ) => {
+		changeNotificationState: (state, status?: boolean ) => {
 			state.status = status ?? !state.status
 		},
 		Change_Content(state, _content: NOTIFICATION_CONTENT ) {
@@ -34,11 +34,11 @@ import { ActionTree, MutationTree } from 'vuex'
 
 // ACTIONS
 	export const actions: ActionTree<CurentState, CurentState>  = {
-		Set_Notification({ commit }, payload: NOTIFICATION_CONTENT) {
+		setNotification({ commit }, payload: NOTIFICATION_CONTENT) {
 
 			commit('Change_Content', payload)
 
-			commit('Change_Status', true)
+			commit('changeNotificationState', true)
 
 		}
 	}

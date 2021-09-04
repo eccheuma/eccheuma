@@ -64,30 +64,40 @@
 
 		registerSound(vuex, sound: SoundInstance ): Howl {
 
-			const PREDEFINED_OPTIONS: Partial<HowlOptions> = {
-				preload: true,
-			}
-
-			const CURRENT_HOWL: Howl = new Howl({ 
-
-				...PREDEFINED_OPTIONS, 
-				...sound.settings,
-
-				onplayerror: () => {
-					CURRENT_HOWL.once('unlock', () => CURRENT_HOWL.play())
+			if ( !vuex.state.sounds.has(sound.name) ) {
+				
+				const PREDEFINED_OPTIONS: Partial<HowlOptions> = {
+					preload: true,
 				}
+	
+				const CURRENT_HOWL: Howl = new Howl({ 
+	
+					...PREDEFINED_OPTIONS, 
+					...sound.settings,
+	
+					onplayerror: () => {
+						CURRENT_HOWL.once('unlock', () => CURRENT_HOWL.play())
+					}
+	
+				});
 
-			});
+				vuex.commit('setSound', { name: sound.name, howl: CURRENT_HOWL });
 
-			vuex.commit('setSound', { name: sound.name, howl: CURRENT_HOWL });
+				CURRENT_HOWL.load();
+
+				console.debug(`[registerSound]: Load sound element | ${ sound.name }`);
+
+			}
 
 			return vuex.state.sounds.get(sound.name)!
 
 		},
 
-		playSound(_vuex, howl: Howl) {
+		playSound(_vuex, howl: Howl): Promise<void> {
 
-			howl ? howl.play() : console.warn('That sound probably not even registred.');
+			return new Promise((resolve) => {
+				howl.play(); setTimeout(resolve, howl.duration())
+			})
 
 		},
 
@@ -147,6 +157,6 @@
 
 			}
 
-		}
+		},
 
 	}

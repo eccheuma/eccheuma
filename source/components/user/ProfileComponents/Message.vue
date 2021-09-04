@@ -35,7 +35,7 @@
   display: grid;
   row-gap: 1vh;
 
-  border-radius: .7rem;
+  border-radius: var(--border-radius);
   border: 1px solid var(--border-color);
   padding: 2vh 1vw 4vh;
   color: rgb(var(--color-mono-900));
@@ -93,7 +93,7 @@
 
     color: rgb(var(--color-mono-800));
     font: {
-      size: var(--font-size-18);
+      size: var(--font-size-20);
       weight: 600;
     }
 

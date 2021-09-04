@@ -4,28 +4,24 @@
 		<section class="fixed-node">
 
 			<hardware-acceleration-decorator>
-				<page-loader />
+				<page-loader :stages="ApplicationLoadStages" :ignite="true" />
 			</hardware-acceleration-decorator>
 
-			<notification />
-
 			<client-only>
-		
+
+				<notification />
 				<portal-target name="Modal" :transition="MIXIN_Transition('opacity-transition')" slim />
-
 				<registration />
-
-				<!-- <vk-messages /> -->
 
 			</client-only>
 
 		</section>
 
 		<header-top />
-
 		<header-carousel />
 
-		<header-navigation :search="true" :background="true" />
+		<mobile-navigation v-if="$isMobile" />
+		<desktop-navigation v-else :search="true" :background="true" />
 
 		<section class="content-wrapper">
 
@@ -48,12 +44,27 @@ eccheuma-layout {
 
 	display: grid;
 	grid-template: {
-		columns: 100%;
-		rows: 10vh 75vh 15vh;
+		columns: $GLOBAL-BodySize;
+		rows: 10vh 75vh $GLOBAL-HeaderHeight;
 	};
 
 	.fixed-node {
 		position: absolute;
+	}
+
+	&:before {
+
+		content: '';
+		width: $GLOBAL-BodySize;
+		height: 1px;
+		position: fixed;
+		bottom: 0px;
+
+		background: linear-gradient(90deg, var(--color-accent-edges-100), var(--color-accent-edges-200), var(--color-accent-edges-100));
+		z-index: 9999;
+
+		cursor: pointer;
+
 	}
 
 }
@@ -63,26 +74,33 @@ eccheuma-layout {
 
 		display: grid;
 		grid-template: {
-			columns: minmax(min-content, 5vw) 1fr minmax(0, 5vw);
+			columns: 
+				$GLOBAL-AsideColumnsWidth 
+				minmax(min-content, 1440px) 
+				$GLOBAL-AsideColumnsWidth;
 			rows: 1fr;
 		}
 
 		column-gap: 1vw;
 
-		width: 100vw;
+		width: $GLOBAL-BodySize;
 		min-height: 100vh;
+		justify-content: space-between;
 		
 	}
 	&-container {
+
 		width: auto;
 		margin: 0 auto;
-		@media screen and ( max-width: $mobile-breakpoint ) {
-			width: 100vw;
-		}
 
 		border: {
 			right: 1px solid rgb(var(--color-mono-300));
 			left: 1px solid rgb(var(--color-mono-300));
+		}
+
+		// Mobile
+		@media screen and ( max-width: $mobile-breakpoint ) {
+			width: $GLOBAL-BodySize;
 		}
 
 	}
@@ -147,7 +165,7 @@ eccheuma-layout {
 	// COMPONENTS
 	import HeaderCarousel from '~/components/header/HeaderCarousel.vue'
 	import HeaderTop 			from '~/components/header/HeaderTop.vue'
-	import PageLoader 		from '~/components/common/PageLoader.vue'
+	import PageLoader 		from '~/components/common/Loader.vue'
 
 	// FUNCTIONAL COMPONENTS
 	import HardwareAccelerationDecorator from '~/components/functional/HardwareAcceleration.vue';
@@ -160,19 +178,24 @@ eccheuma-layout {
 	// MODULE
 	export default Vue.extend({ 
 		components: {
+
+			// Predefined components ==================================== //
 			HardwareAccelerationDecorator,
 			PageLoader,
 			HeaderCarousel,
 			HeaderTop,
+
 			// Async components ========================================= //
-			Registration: 		() => import('~/components/user/Registration.vue'),
-			HeaderNavigation: () => import('~/components/header/HeaderNavigation.vue'),
-			VkMessages: 			() => import('~/components/common/VK_Messages.vue'),
-			ScrollBar: 				() => import('~/components/common/ScrollBar.vue'),
-			Notification: 		() => import('~/components/common/Notification.vue'),
-			FooterComponent: 	() => import('~/components/common/Footer.vue'),
-			/// Mobile components ========================================= //
-			// MobileNavigation: () => import('~/components/_mobile/HeaderNavigation.vue'),
+			Registration: 			() => import('~/components/user/Registration.vue'),
+			DesktopNavigation:	() => import('~/components/header/HeaderNavigation.vue'),
+			ScrollBar: 					() => import('~/components/common/ScrollBar.vue'),
+			Notification: 			() => import('~/components/common/Notification.vue'),
+			FooterComponent: 		() => import('~/components/common/Footer.vue'),
+			// VkMessages: 				() => import('~/components/common/VK_Messages.vue'),
+
+			/// Mobile components ======================================= //
+			MobileNavigation: 	() => import('~/components/_mobile/HeaderNavigation.vue'),
+			
 		},
 		mixins: [ Transition ],
 		transition: {
@@ -182,6 +205,15 @@ eccheuma-layout {
 		data() {
 			return {
 				someAction: false,
+
+				ApplicationLoadStages: [
+					{ LoadPoint: 0, 	Message: 'Загрузка скриптов и данных' },
+					{ LoadPoint: 15, 	Message: 'Загрузка внешних API' },
+					{ LoadPoint: 30, 	Message: 'Монтирование элементов' },
+					{ LoadPoint: 80, 	Message: 'Остаточная компоновка элементов' },
+					{ LoadPoint: 100, Message: 'Готово!' },
+				]
+
 			}
 		},
 		head(): any {
@@ -200,24 +232,15 @@ eccheuma-layout {
 			}),
 
 		},
-		mounted() {
-
-			setTimeout(() => {
-
-				if ( !this.LoginStatus ) { this.setRegNotification() }
-
-			}, 6e5 );
-
-		},
 		methods: {
 
 			...mapMutations({
-				SetDeviceType: 						'SetDeviceType',
-				ChangeNotificationState: 	'Notification/Change_Status'
+				setDeviceType: 						'setDeviceType',
+				changeNotificationState: 	'Notification/changeNotificationState',
 			}),
 
 			...mapActions({
-				setNotification: 'Notification/Set_Notification',
+				setNotification: 'Notification/setNotification',
 			}),
 
 			setRegNotification() {

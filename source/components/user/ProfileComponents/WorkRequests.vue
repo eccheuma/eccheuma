@@ -69,7 +69,7 @@
 
 		background-color: rgb(var(--color-mono-200));
 		padding: 20px 40px;
-		border-radius: .7rem;
+		border-radius: var(--border-radius);
 		font-size: 12px;
 		font-weight: 700;
 		p {

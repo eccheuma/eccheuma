@@ -3,7 +3,7 @@ import 'firebase/database'
 import 'firebase/auth'
 
 // VUEX
-	import type { ActionTree } from 'vuex'
+	import type { ActionTree, MutationTree } from 'vuex'
 
 // TYPES
 	import type { REGISTER_FORM } from './Auth'
@@ -11,7 +11,7 @@ import 'firebase/auth'
 
 // STATE
 	export const state = () => ({
-
+		inAction: false as Boolean
 	})
 
 // CURENT STATE
@@ -20,24 +20,25 @@ import 'firebase/auth'
 // DECALARE MODULE
 	declare module '~/typescript/VuexModules' {
 		interface Auth {
-			Login: CurentState
+			Login: CurentState,
+		}
+	}
+
+// MUTATIONS
+	export const mutations : MutationTree<CurentState> = {
+		setAction(state, value: boolean) {
+			state.inAction = value
 		}
 	}
 
 // ACTIONS
 	export const actions: ActionTree<CurentState, VuexModules> = {
-		async SignIn({ dispatch, commit, rootState }, { email, password }: REGISTER_FORM) {
+		async SignIn({ commit }, { email, password }: REGISTER_FORM) {
+
+			commit('setAction', true)
+
 			try {
 
-				// console.log( _email, _password)
-
-				if ( rootState.Loader.Status.Loaded ) {
-
-					dispatch('Loader/Loader_Load', null, { root: true })
-					commit('Loader/Loader_ChangeLoadStatus_Counter', 35, { root: true })
-
-				}
-				
 				await firebase.auth().signInWithEmailAndPassword(email, password)
 
 				const uid = firebase.auth().currentUser?.uid
@@ -45,38 +46,23 @@ import 'firebase/auth'
 				commit('Auth/Auth/Change_userState', { _uid: uid, email }, { root: true })
 
 				// Загрузка стейта пользователя из Firebase
-				firebase.database().ref(`Users/${ uid }/state`)
-					.on('value', (data) => {
+				firebase.database().ref(`Users/${ uid }/state`).on('value', (data) => {
 
-						commit('User/State/Change_UserState', data.val(), { root: true })
+					commit('User/State/Change_UserState', data.val(), { root: true })
 
-					});
+				});
 
 				commit('Auth/Auth/ChangeLoginStatus', true, { root: true })
-
-				commit('Loader/Loader_ChangeLoadMessage', 'Вход в учётную запись', { root: true })
 
 			} catch (e) {
 
 				console.log(e)
 				
 				commit('Auth/Auth/ChangeAuthError', e.code, { root: true })
-
-				commit('Loader/Loader_ChangeLoadMessage', 'Отмена', { root: true })
-
-				setTimeout(() => {
-					dispatch('Loader/Loader_Reload', null, { root: true })
-				}, 500);
 				
 			} finally {
-				
-				commit('Loader/Loader_ChangeLoadStatus_Counter', 100, { root: true })
 
-				if ( !rootState.Loader.Status.Loaded ) {
-					setTimeout(() => {
-						dispatch('Loader/Loader_Reload', null, { root: true })
-					}, 500);
-				}
+				commit('setAction', false)
 
 			}
 		}

@@ -17,7 +17,7 @@
 				</template>
 			</div>
 			<div class="notification-button">
-				<common-button @click.native="ChangeNotificationState(!Notification.status)">
+				<common-button @click.native="changeNotificationState(!Notification.status)">
 					Скрыть уведомление
 				</common-button>
 			</div>
@@ -69,7 +69,7 @@
 			y: hidden;
 		}
 
-		width: 100vw;
+		width: $GLOBAL-BodySize;
 		z-index: 1020;
 
 		padding: 2vh 3vw;
@@ -101,8 +101,9 @@
 			z-index: 0; 
 			
 			top: 0; left: 0;
-			background-color: rgb(var(--color-mono-300));		
 			transform: rotate(30deg) scale(8);
+
+			--svg-fill: rgb(var(--color-mono-300));
 
 		}
 
@@ -118,7 +119,7 @@
 
 			i {
 				@include icon-size(5vh);
-				background-color: rgb(var(--color-mono-400));
+				--svg-fill: rgb(var(--color-mono-400));
 				transform: translateY(-2px);
 			}
 		}
@@ -184,7 +185,7 @@
 		},
 		methods: {
 			...mapMutations({
-				ChangeNotificationState: 'Notification/Change_Status' 
+				changeNotificationState: 'Notification/changeNotificationState' 
 			})
 		}
 	})

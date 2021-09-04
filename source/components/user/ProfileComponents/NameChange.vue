@@ -41,7 +41,7 @@
 			color: rgb(var(--color-mono-900));
 			background-color: rgb(var(--color-mono-300));
 			border: 1px solid rgb(var(--color-mono-400));
-			border-radius: .7rem;
+			border-radius: var(--border-radius);
 			width: 75%;
 		}
 	}	

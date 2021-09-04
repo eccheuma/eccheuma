@@ -21,8 +21,14 @@
 						v-model="Form.email"
 						type="email"
 						:class="[
-							{ invalid: $v.Form.email.$invalid && $v.Form.email.$dirty },
-							{ valid:	!$v.Form.email.$anyError && $v.Form.email.$dirty },
+							{ invalid: $v.Form.email.$invalid 
+								&& $v.Form.email.$dirty 
+								&& Form.email.length 
+							},
+							{ valid: !$v.Form.email.$anyError 
+								&& $v.Form.email.$dirty 
+								&& Form.email.length 
+							},
 						]"
 						@input="inputSound"
 						@change.once="$v.Form.email && $v.Form.email.$touch()"
@@ -37,8 +43,8 @@
 						v-model="Form.password"
 						type="password"
 						:class="[
-							{ invalid: $v.Form.password.$invalid && $v.Form.password.$dirty },
-							{ valid: !$v.Form.password.$anyError && $v.Form.password.$dirty }
+							{ invalid: $v.Form.password.$invalid && $v.Form.password.$dirty && Form.password.length },
+							{ valid: !$v.Form.password.$anyError && $v.Form.password.$dirty && Form.password.length }
 						]"
 						@input="inputSound"
 						@change.once="$v.Form.password && $v.Form.password.$touch()"
@@ -109,13 +115,9 @@
 .auth_login {
 
 	&-container {
-
-		@extend %component;
-
 		overflow: {
 			x: hidden;
 		}
-
 	}
 
 	&-header {
@@ -126,7 +128,7 @@
 		min-height: 20vh;
 	
 		border: {
-			bottom: 1px solid rgb(var(--color-mono-400));
+			bottom: 1px solid rgb(var(--color-mono-300));
 		}
 
 		&-wrap {
@@ -142,7 +144,7 @@
 
 			i {
 				@include icon-size(10vh);
-				background-color: rgb(var(--color-mono-700));
+				--svg-fill: rgb(var(--color-mono-700));
 			}
 
 			> span {
@@ -186,11 +188,12 @@
 
 			width: 100%;
 
+			color: rgb(var(--color-mono-700));
 			background-color: rgb(var(--color-mono-300));
-			border: 1px solid rgb(var(--color-mono-400));
+			border: 2px solid var(--color-accent-edges-100);
 
 			border: {
-				radius: .7rem;
+				radius: var(--border-radius);
 			}
 
 			padding: .5vh 1vw;
@@ -202,17 +205,19 @@
 
 			line-height: 3vh;
 
+			transition-duration: 500ms;
 			&:focus {
 				outline: 0px solid transparent;
+				border-color: var(--color-accent-edges-300);
 			}
 		}
 
 		.valid {
-			border: 1px solid var(--color-accent-pass);
+			border: 2px solid var(--color-accent-pass) !important;
 		}
 
 		.invalid {
-			border: 1px solid var(--color-accent-error);
+			border: 2px solid var(--color-accent-error) !important;
 		}
 
 		&-email {
@@ -229,7 +234,12 @@
 
 		&-social {
 
+			@include gradient_border;
+			@extend %pattern-lines;
+
 			margin: 2vh 0 0;
+			padding: 2vh 0;
+			background-color: rgb(var(--color-mono-300));
 
 			> hr {
 				margin: 1vh 15%;
@@ -272,7 +282,7 @@
 	
 	&-footer {
 
-		border-top: 1px solid rgb(var(--color-mono-400));
+		border-top: 1px solid rgb(var(--color-mono-300));
 		padding: 2vh 0;
 
 		button {
@@ -351,19 +361,17 @@ import Vue from 'vue'
 			})
 
 		},
-		created() {
-			this.setSounds([
-				{
-					file: 'Tap',
-					name: 'InputIncrement',
-					settings: { rate: 1.10 },
-				},
-				{
-					file: 'Tap',
-					name: 'InputDecrement',
-					settings: { rate: 0.95 },
-				},
-			])
+		mounted() {
+
+			if ( process.browser ) {
+
+				this.setSounds([
+					{ file: 'Off', name: 'Input::Increment', settings: { rate: 0.5, volume: .25 } },
+					{ file: 'Off', name: 'Input::Decrement', settings: { rate: 0.5, volume: .25 } },
+				])
+
+			}
+
 		},
 		methods: {
 
@@ -376,13 +384,9 @@ import Vue from 'vue'
 			}),
 
 			inputSound(input: InputEvent) {
-
 				if ( this.inFocus ) {
-
-					this.playSound(this.Sounds.get(input.data ? 'InputIncrement' : 'InputDecrement'))
-
+					this.playSound(this.Sounds.get(input.data ? 'Input::Increment' : 'Input::Decrement'))
 				}
-
 			},
 
 			sendForm() {

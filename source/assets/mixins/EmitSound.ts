@@ -16,9 +16,18 @@ export type FILE_NAME = 'Holl'
 	| 'Tap'
 	| 'Translate'
 
+export type SOUND_NAME = 'Ambient'
+	| 'Element::Action' 
+	| 'Element::Disabled'
+	| 'Element::Hover'
+	| 'Switch::On'
+	| 'Switch::Off'
+	| 'Input::Increment'
+	| 'Input::Decrement'
+
 export type SoundInstance = {
 	file: FILE_NAME,
-	name: string,
+	name: SOUND_NAME,
 	settings?: Partial<HowlOptions>
 }
 
@@ -26,8 +35,8 @@ export type SoundInstance = {
 declare module 'vue/types/vue' {
 	interface Vue {
 		setSounds: (sounds_arr: SoundInstance[]) => void,
-		playSound: (howl: Howl | undefined) => void
-		Sounds: Map<string, Howl>,
+		playSound: (howl: Howl | undefined) => Promise<void>
+		Sounds: Map<SOUND_NAME, Howl>,
 	}
 }
 
@@ -56,7 +65,7 @@ export default Vue.extend({
 
 			const DEFAULT_SETTINGS: Partial<HowlOptions> = {
 				src: `/audio/${ sound.file }.ogg`,
-				volume: .75,
+				volume: .25,
 				loop: false,
 				rate: 1,
 			};
@@ -73,10 +82,12 @@ export default Vue.extend({
 
 			sounds_arr.forEach((sound) => {
 				this.registerSound(this.predefineProperty(sound)).then((howl: Howl) => {
-
-					howl.load();
-
-					this.Sounds.set(sound.name, howl);
+											
+					try {
+						this.Sounds.set(sound.name, howl)
+					} catch (e) {
+						console.debug(e);
+					}
 
 				})
 			})

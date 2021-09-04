@@ -26,7 +26,7 @@
 	
 // MUTATIONS
 	export const mutations: MutationTree<RootState> = {
-		SetDeviceType(state, prop) {
+		setDeviceType(state, prop) {
 			state.isDesktop = prop
 		},
 		AppScroll(state, prop) {

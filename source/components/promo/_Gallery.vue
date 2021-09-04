@@ -27,7 +27,6 @@
 		@include gradient_border(block);
 
 		display: grid;
-		max-width: 1200px;
 
 		grid-template: {
 			columns: 40vw 30ch;

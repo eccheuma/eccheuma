@@ -4,17 +4,17 @@
 		<div
 			v-if="RegistrationModal"
 			class="registration-wrap"  
-			:class="{ 'utils::glassy': CLIENT_RENDER_CHECK && $PIXI.utils.isWebGLSupported() }"
+			:class="{ 'utils::glassy': BROWSER && $PIXI.utils.isWebGLSupported() }"
 			@click.self="ChangeModalStatus(false)"
 			@keydown.shift.enter="Auth"
 			>
 
-			<loader
+			<!-- <loader
 				:ElementLoad="LoaderStatus.Load"
 				:ElementLoadComplete="LoaderStatus.Loaded"
 				>
 				{{ LoaderMessage }}
-			</loader>
+			</loader> -->
 
 			<section class="registration-container">
 
@@ -110,12 +110,12 @@
 	// VUELIDATE
 
 	// COMPONENTS
-		import Loader from '~/components/common/Loader.vue'
+		// import Loader from '~/components/common/Loader.vue'
 
 	// MODULE
 		export default Vue.extend({
 			components: {
-				Loader
+				// Loader
 			},
 			data() {
 				return {
@@ -144,8 +144,8 @@
 
 					RegistrationModal: 	state => ( state as VuexModules ).Auth.Register.Modal,
 					AuthError: 					state => ( state as VuexModules ).Auth.Auth.AuthError,
-					LoaderMessage: 			state => ( state as VuexModules ).Loader.Message,
-					LoaderStatus: 			state => ( state as VuexModules ).Loader.Status,
+					// LoaderMessage: 			state => ( state as VuexModules ).Loader.Message,
+					// LoaderStatus: 			state => ( state as VuexModules ).Loader.Status,
 				}),
 
 			},
@@ -206,12 +206,12 @@
 .registration {
 	&-wrap {
 		position: fixed; top: 0; left: 0; z-index: 10000;
-		width: 100vw; height: 100vh;
+		width: $GLOBAL-BodySize; height: 100vh;
 		background-color: rgba(var(--color-mono-200), .9);
 		&:before {
 			content: '';
 			position: absolute; top: 0; left: 0;  z-index: -1;
-			width: 100vw; height: 100vh; opacity: .5;
+			width: $GLOBAL-BodySize; height: 100vh; opacity: .5;
 			background: {
 				image: url('~assets/images/SVG/Stripes.svg');
 				size: 20px;
@@ -238,7 +238,7 @@
 			rows: 1fr 6fr 1fr;
 		}
 
-		border-radius: .7rem; overflow: hidden;
+		border-radius: var(--border-radius); overflow: hidden;
 		border: 1px solid rgb(var(--color-mono-400))
 
 	}
@@ -307,7 +307,7 @@
 				display: block;
 				outline: none;
 				width: 90%;
-				border-radius: .7rem;
+				border-radius: var(--border-radius);
 				background-color: rgb(var(--color-mono-200));
 				border: 1px solid rgb(var(--color-mono-400));
 				color: rgba(var(--color-mono-900), .75);

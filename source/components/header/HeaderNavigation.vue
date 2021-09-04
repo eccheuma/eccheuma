@@ -21,31 +21,28 @@
 					:key="prop.ID" 
 					
 					class="navigation-item"
-					:class="{ disabled: prop.disabled }"
-					@mouseenter="playSound(Sounds.get('NavEnter'))" 
-					@click="playSound(Sounds.get('NavClick'))"
+					:class="[
+						{ disabled: prop.disabled },
+						{ active: CurentRoute === prop.route }
+					]"
+					@mouseenter="playSound(Sounds.get('Element::Hover'))" 
+					@click="playSound(Sounds.get('Element::Action'))"
 					>
 
 					<transition name="route_selector">
-						<span v-if="CurentRoute === prop.route" />
+						<span v-show="CurentRoute === prop.route" />
 					</transition>
 
+					<!-- prefetch -->
 					<nuxt-link 
 						:id="`nav_item-${ prop.ID }`"
 						:to="prop.route"
-
-						:class="[{ active: CurentRoute === prop.route }]"
-						
-						prefetch
-
 						@click="ScrollPage"
-					>
+						>
 
-							<!-- <i class="fas" :class="prop.icon" style="pointer-events: none" /> -->
+						<icon :name="prop.icon" />
 
-							<icon :name="prop.icon" />
-
-							{{ prop.name }}		
+						{{ prop.name }}		
 
 					</nuxt-link>
 					
@@ -78,7 +75,6 @@ $TransitionDuration: 250ms;
 		&-active {
 			opacity: 0;
 			transition: all $TransitionDuration ease;
-			transition-delay: $TransitionDuration;
 		}
 		&-to {
 			opacity: 1;
@@ -122,6 +118,7 @@ $TransitionDuration: 250ms;
 		padding-inline: 6vw;
 
 		display: grid; 
+		min-height: $GLOBAL-HeaderHeight;
 		
 		grid-template-columns: 1fr; 
 		gap: 15px; 
@@ -134,6 +131,22 @@ $TransitionDuration: 250ms;
 		background: {
 			color: var(--navigation-background, transparent);
 		};
+
+		transition-duration: $TransitionDuration;
+		.active {
+
+			color: rgb(var(--color-mono-800));
+
+			a {
+				transform: translateY(-2vh);
+			}
+
+			i {
+				--svg-fill: rgb(var(--color-mono-800)) !important;
+				transform: translateY(-9vh) rotate(-10deg) scale(2);
+			}
+
+		}
 
 	}
 	&-items {
@@ -168,22 +181,40 @@ $TransitionDuration: 250ms;
 		}
 
 		&:before {
+
 			content: '';
-			display: block; position: absolute; top: -1px;
-			width: 100%; height: .6px;
 			opacity: 0;
-			background: linear-gradient(90deg, rgba(var(--color-mono-900),.0) 0%, rgba(var(--color-mono-900),1) 50%, rgba(var(--color-mono-900),.0) 100%) !important ;
-			transition-duration: .5s;
+	
+			display: block; 
+			position: absolute; 
+			top: -1px;
+
+			width: 100%; 
+			height: 1px;
+
+			background: linear-gradient(90deg, transparent, var(--color-accent-lighting), transparent);
+			transition-duration: 500ms;
+
 		}
 
 		&:hover {
+			
 			&:before {
-				opacity: 1
+				opacity: 1;
 			}
+
+			a {
+				color: var(--color-accent-edges-300);
+				text-decoration: none;
+				i {
+					--svg-fill: var(--color-accent-edges-300);
+				}
+			}
+
 		}
 
 		span {
-
+			
 			display: block; 
 			position: absolute; 
 			top: -1px;
@@ -191,7 +222,7 @@ $TransitionDuration: 250ms;
 			width: 100%; 
 			height: 1px;
 			
-			background: linear-gradient(90deg, transparent, var(--color-accent-lighting), transparent) !important ;
+			background: linear-gradient(90deg, transparent, var(--color-accent-edges-200), transparent);
 
 		}
 
@@ -202,7 +233,6 @@ $TransitionDuration: 250ms;
 
 			cursor: pointer;
 
-			;
 			font: {
 				size: var(--font-size-24);
 				family: var(--decor-font);
@@ -214,11 +244,11 @@ $TransitionDuration: 250ms;
 			transition-duration: $TransitionDuration;
 			color: rgb(var(--color-mono-400));
 
-			z-index: 2000;
+			z-index: 1000;
 
 			@media screen and ( max-width: $mobile-breakpoint ) {
 				display: inline-flex;
-				font-size: var(--font-size-18);
+				font-size: var(--font-size-20);
 			}
 
 			i {
@@ -231,7 +261,7 @@ $TransitionDuration: 250ms;
 				pointer-events: none;
 
 				display: block;
-				background-color: rgb(var(--color-mono-400));
+
 				padding: 2vh 0 0px;
 				transition-duration: $TransitionDuration;
 				filter: drop-shadow(0px -5vh 0px rgba(var(--color-mono-900),0));
@@ -241,68 +271,7 @@ $TransitionDuration: 250ms;
 					display: none;
 				}
 
-			}
-
-			&:hover {
-
-				text-decoration: none;
-				color: rgb(var(--color-mono-900));
-				transform: translateY(-1.5vh);
-				
-				// filter: drop-shadow(0px 0px 10px white);
-
-				i {
-					color: rgb(var(--color-mono-900));
-					transform: scale(2) translateY(-5vh) rotate(-15deg);
-					background-color: rgb(var(--mono-800));
-				}
-
-				@media screen and ( max-width: $mobile-breakpoint ) {
-
-					text-decoration: unset;
-					color: unset;
-					transform: unset;
-					i {
-						color: unset;
-						transform: unset;
-					}
-
-				}
-
-			}
-
-		}
-
-		.disabled {
-			pointer-events: none;
-			a {
-				opacity: .1 !important 
-			}
-			&:before {
-				display: none !important
-			}
-		}
-
-		.active {
-
-			color: rgb(var(--color-mono-800)) !important;
-
-			@media screen and ( mix-width: $mobile-breakpoint ) {
-				transform: translateY(-1.5vh);
-			}
-
-			i {
-
-				transition-duration: $TransitionDuration;
-				display: block;
-				font-size: var(--font-size-18);
-				color: rgb(var(--color-mono-800)) !important;
-
-				background-color: rgb(var(--color-mono-800));
-
-				@media screen and ( mix-width: $mobile-breakpoint ) {
-					transform: scale(1.5) translateY(-5vh) !important;
-				}
+				--svg-fill: rgb(var(--color-mono-400));
 
 			}
 
@@ -318,7 +287,7 @@ $TransitionDuration: 250ms;
 		height: 10px;
 
 		background-color: rgb(var(--color-mono-400));
-		border-radius: .7rem;
+		border-radius: var(--border-radius);
 
 		&:last-of-type {
 			display: none;
@@ -418,20 +387,15 @@ $TransitionDuration: 250ms;
 				return this.$route.matched?.[0].path
 			},
 		},
-		created() {
-			this.setSounds([
-				{
-					file: 'On',
-					name: 'NavEnter',
-					settings: { rate: 1.25 },
-				}, {
-					file: 'On',
-					name: 'NavClick',
-					settings: { rate: 1 },
-				}
-			])
-		},
 		mounted() {
+
+			if ( process.browser ) {
+				this.setSounds([
+					{ file: 'On', name: 'Element::Action', 	settings: { rate: 0.50 } },
+					{ file: 'On', name: 'Element::Hover', 	settings: { rate: 0.25 } }
+				])
+			}
+
 			this.Ready = true;
 		},
 		methods: {

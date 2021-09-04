@@ -55,7 +55,7 @@
 			@include component-shadow;
 			@include gradient_border;
 
-			border-radius: .7rem;
+			border-radius: var(--border-radius);
 			padding: 2vh 2vw 4vh;
 		}
 

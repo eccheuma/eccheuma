@@ -16,7 +16,7 @@
   // background-color: rgb(var(--color-mono-200));
   color: rgb(var(--color-mono-700));
 
-  border-radius: .7rem;
+  border-radius: var(--border-radius);
 
   span {
 
@@ -25,7 +25,7 @@
 
     &:nth-child(1) {
       font: {
-        size: var(--font-size-48);
+        size: var(--font-size-56);
         family: var(--decor-font);
         weight: 900;
       }
@@ -34,7 +34,7 @@
     }
     &:nth-child(2) {
       font: {
-        size: var(--font-size-18);
+        size: var(--font-size-20);
         weight: 600;
       }
     }

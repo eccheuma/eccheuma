@@ -4,15 +4,14 @@
 		<user-profile v-if="LoginStatus && !$isMobile" />
 
 		<section class="eccheuma_swiper">
-			<eccheuma-swiper :options="{ buttons: true, indicators: true, auto: true }">
+			<eccheuma-swiper :options="{ buttons: !$isMobile, indicators: true, auto: true }">
 
-				<template #icon-prev="{ onEdge }">
+				<template v-if="!$isMobile" #icon-prev="{ onEdge }">
 					<button 
 						class="eccheuma_swiper-buttons" 
 						:class="[
-							{ onEdge }, { 'utils::glassy': CLIENT_RENDER_CHECK && !$isMobile && $PIXI.utils.isWebGLSupported() && !CarouselFocus }
+							{ onEdge }, { 'utils::glassy': BROWSER && !$isMobile && $PIXI.utils.isWebGLSupported() && !CarouselFocus }
 						]"
-						@click="playSound(Sounds.get('CarouselButton'))" 
 						@mouseenter="CarouselFocus = true" 
 						@mouseleave="CarouselFocus = false"
 						>
@@ -20,13 +19,12 @@
 					</button>
 				</template>
 
-				<template #icon-next="{ onEdge }">
+				<template v-if="!$isMobile" #icon-next="{ onEdge }">
 					<button 
 						class="eccheuma_swiper-buttons" 
 						:class="[
-							{ onEdge }, { 'utils::glassy': CLIENT_RENDER_CHECK && !$isMobile && $PIXI.utils.isWebGLSupported() && !CarouselFocus }
+							{ onEdge }, { 'utils::glassy': BROWSER && !$isMobile && $PIXI.utils.isWebGLSupported() && !CarouselFocus }
 						]"
-						@click="playSound(Sounds.get('CarouselButton'))" 
 						@mouseenter="CarouselFocus = true" 
 						@mouseleave="CarouselFocus = false"
 						>
@@ -48,7 +46,7 @@
 
 							<client-only>
 
-								<template v-if="CLIENT_RENDER_CHECK && $PIXI.utils.isWebGLSupported()">
+								<template v-if="BROWSER && $PIXI.utils.isWebGLSupported()">
 									<eccheuma-parallax 
 										:options="{ OpacityFade: true, OpacityFadeOffset: 100 }" 
 										:forcedScrollPosition="CommonCarouselScrollPosition"
@@ -129,7 +127,7 @@
 .header-carousel-container {
 
 	position: relative;
-	width: 100vw;
+	width: $GLOBAL-BodySize;
 
 }
 
@@ -137,7 +135,7 @@
 
 	position: relative; 
 
-	width: 100vw;
+	width: $GLOBAL-BodySize;
 	height: 100%; 
 
 	background: rgb(var(--mono-200)); 
@@ -152,7 +150,7 @@
 		position: relative;
 		display: inline-block; 
 
-		width: 100vw; 
+		width: $GLOBAL-BodySize; 
 		height: 100%;
 
 		&:after {
@@ -206,19 +204,14 @@
 		cursor: pointer;
 		color: rgb(var(--color-mono-900));
 		background-color: rgba(var(--color-mono-200), .75);
-		border: 1px solid rgba(var(--color-mono-900), .0);
-		border-radius: .7rem;
-		padding: 0 3vh;
+		border: 0px solid transparent;
+		border-radius: var(--border-radius);
+		padding: 0 2vh;
 		transition-duration: .5s;
 
-		&:hover {
-			background-color: rgba(var(--color-mono-200),.0);
-			&:nth-of-type(1) {
-				box-shadow: 1px 0px 0px 0px rgba(var(--color-mono-900),.25)
-			}
-			&:nth-of-type(2) {
-				box-shadow: -1px 0px 0px 0px rgba(var(--color-mono-900),.25)
-			}
+		i {
+			@include icon-size(2vw);
+			--svg-fill: var(--color-accent-edges-200);
 		}
 
 	}
@@ -257,7 +250,7 @@
 		z-index: 1010;
 		top: 0; left: 0; 
 		
-		width: 100vw;
+		width: $GLOBAL-BodySize;
 		height: 100%;
 
 		padding: 5vh 10vw;
@@ -431,17 +424,6 @@
 
 				}
 			}
-		},
-		created() {
-
-			this.setSounds([
-				{
-					file: 'Off',
-					name: 'CarouselButton',
-					settings: { rate: .75, volume: .25 }
-				},
-			])
-
 		},
 		methods: {
 

@@ -3,7 +3,7 @@
 
 		<div 
 			class="modal-wrap"
-			:class="{ 'utils::glassy': CLIENT_RENDER_CHECK && (!$isMobile || $PIXI.utils.isWebGLSupported()) }" 
+			:class="{ 'utils::glassy': BROWSER && (!$isMobile || $PIXI.utils.isWebGLSupported()) }" 
 			@mousewheel.prevent="changeZoom"
 			@click.self="ToggleModal" 
 		>
@@ -62,7 +62,7 @@
 .modal {
 	&-wrap {
 		position: fixed; top: 0; left: 0; z-index: 9999;
-		height: 100vh; width: 100vw;
+		height: 100vh; width: $GLOBAL-BodySize;
 		background-color: rgba(var(--color-mono-200), .9);
 		display: flex;
 	}
@@ -80,7 +80,7 @@
     height: 85vh;
     background-color: rgb(var(--color-mono-300));
     border: 1px solid rgb(var(--color-mono-400));
-    border-radius: .7rem;
+    border-radius: var(--border-radius);
     margin: auto;
 
 	}
@@ -93,7 +93,7 @@
 		background-color: rgb(var(--color-mono-200));
 		h6 {
 			font: {
-				size: var(--font-size-18);
+				size: var(--font-size-20);
 				weight: 700;
 			}
 		}
@@ -224,7 +224,7 @@
 			}
 		},
 		async created() {
-			if ( this.CLIENT_RENDER_CHECK ) {
+			if ( this.BROWSER ) {
 				this.URL = await this.getImageURL({ 
 					_path: this.path,
 					_size: 1440,

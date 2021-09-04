@@ -49,7 +49,9 @@ import { ActionTree, MutationTree } from 'vuex'
 
 			state.Content[to] = data; 
 			
-			console.log(`recive ${ from } data:`, data);
+			if ( process.server ) {
+				console.log(`recive ${ from } data:`, data);
+			}
 
 		},
 

@@ -63,7 +63,7 @@
 
 		&::-webkit-scrollbar {
 			&-track {
-				border-radius: .7rem;
+				border-radius: var(--border-radius);
 			}
 		}
 
@@ -104,7 +104,7 @@
 			display: block;
 			width: 100%;
 			height: 10vh;
-			border-radius: .7rem; 
+			border-radius: var(--border-radius); 
 			padding: .7rem;
 			font-size: .8rem;
 			font-weight: 700;

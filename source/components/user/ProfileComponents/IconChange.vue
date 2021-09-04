@@ -1,89 +1,42 @@
 <template>
-	<div class="user_profile-component-icon">
+	<div class="user_profile-component-picture">
 
-		<button @click="CustomIconArea = !CustomIconArea">
-			{{ CustomIconArea ? 'Выбрать из стандартных' : 'Загрузить своё изображение' }}
-		</button>
-
-		<i 
-			:class="{ PENDING }"
-			:style="`background-image: url(${ !NewIcon.length ? UserState.UserImageID : NewIcon }`" 
-		/>
-
-		<div class="user_profile-component-sections">
-			
-			<transition-group name="page_transition">
-
-				<template v-if="!CustomIconArea">
-					<section key="icon-area-0" class="user_profile-component-icon-prepared">
-
-						<span>
-							Zu nun und euch zug ernsten. Nebel früh und gleich walten, macht seelen wie träne geneigt kommt, versuch träne.
-						</span>
-
-						<template v-if="SelectableIcon.length">
-							<i 
-								v-for="(item, index) in SelectableIcon" 
-								:key="index"
-								:style="`background-image: url(${ item })`" 
-								@click="NewIcon = item" 
-							/>
-						</template>
-
-						<button :class="{ NonActive: !NewIcon }" @click="UploadProfileImage">
-							Подтвердить
-						</button>
-
-					</section>
+		<div class="user_profile-component-picture-user">
+			<i ref="iconPreview" :style="`background-image: url(${ NewIcon || UserState.UserImageID })`" />
+			<input 
+				v-show="false" 
+				id="CustomImage" 
+				ref="CustomIcon" 
+				type="file" 
+				accept=".png, .jpg, .webp" 
+				@change="uploadIcon"
+				>
+			<common-button type="label" for="CustomImage">
+				Загрузить своё
+			</common-button>
+		</div>
+		<hr>
+		<div class="user_profile-component-picture-predefined">
+			<h6>Выбрать из стандартных</h6>
+			<section class="user_profile-component-picture-predefined-icons">
+				<template v-for="(url, i) in SelectableIcon">
+					<i :key="i" :style="`background-image: url(${ url })`" @click="NewIcon = url" />
 				</template>
-
-				<template v-else>
-					<section key="icon-area-1" class="user_profile-component-icon-input">
-
-						<!-- <span>
-							Zu nun und euch zug ernsten. Nebel früh und gleich walten, macht seelen wie träne geneigt kommt, versuch träne gestalten die ist das. Einst ertönt dem vom und in mich. Entwöhntes aus irrt der der was die geisterreich die gleich..
-						</span> -->
-
-						<section>
-
-							<input 
-								v-show="false" 
-								id="CustomIcon" 
-								ref="CustomIcon" 
-								type="file" 
-								accept=".png, .jpg, .jpeg, .webp"
-								@change="UpdatePreviewImage($refs.CustomIcon)"
-							>
-
-							<label for="CustomIcon">
-								{{ CustomIconName.length ? CustomIconName : 'Файл не выбран' }}
-							</label>
-
-						</section>
-
-						<button 
-							:class="[
-								{ PENDING },
-								{ NonActive: !CustomIconName.length },
-							]"
-							@click="UploadProfileImage"
-							>
-							Отправить
-						</button>
-
-					</section>
-				</template>
-
-			</transition-group>
-
+			</section>
+		</div>
+		<hr>
+		<div class="user_profile-component-picture-footer">
+			<common-button :class="{ disabled: !NewIcon || NewIcon === UserState.UserImageID || Pending }" @click.native="updateIcon">
+				Подтвердить
+			</common-button>
 		</div>
 
 	</div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 
-.PENDING {
+.ICON-PENDING {
 	pointer-events: none;
 	animation: PENDING 500ms infinite alternate;
 	@keyframes PENDING {
@@ -96,115 +49,72 @@
 	}
 }
 
-.user_profile-component {
-	&-sections {
-		overflow-y: hidden;
+.user_profile-component-picture {
+	display: grid;
+	grid-template: {
+		rows: 50% 1px auto 1px min-content
 	}
-	&-icon {
 
-		display: grid;
-		grid-template: {
-			columns: 1fr;
-			rows: 2fr 3fr 5fr;
-		}
+	row-gap: 10px;
 
-		> button {
-			@include light-button { 
-				display: block;
-				width: 50%;
-				margin: auto;
-			}
-		}
+	&-user {
+
+		display: flex;
+		flex-direction: column;
+		place-items: center;
+
+		gap: 2vh;
 
 		i {
-			$s: 120px;
-			margin: auto;
-			height: $s;
-			width: $s;
+			display: inline-block;
+			height: 100%; 
+			aspect-ratio: 1/1;
 			border-radius: 100%;
-			border: 3px solid rgb(var(--color-mono-400));
-			background-position: center;
+			border: 3px solid rgb(var(--color-mono-800));
+			background-position: center center;
 			background-size: cover;
 			background-color: rgb(var(--color-mono-800));
 		}
+	}
 
-		&-prepared {
+	&-predefined {
 
-			height: 80px;
+		display: flex;
+		flex-direction: column;
+		place-items: center;
 
-			span {
-				display: block;
-				margin: 3vh 5vw;
-				color: rgb(var(--color-mono-900));
-				font: {
-					size: .75rem;
-				}
-			}
+		gap: 2vh;
 
-			button {
-				@include light-button { 
-					display: block;
-					width: 50%;
-					margin: 3vh auto 0;
-				};
-			}
+		&-icons {
+
+			margin: auto;
+
+			display: flex;
+			place-content: center;
+			width: 100%;
+			height: 100%;
+
+			gap: 1vw;
 
 			i {
-				$s: 50px;
-				cursor: pointer;
 				display: inline-block;
-				margin: auto 10px;
-				height: $s;
-				width: $s;
+				height: clamp(45px,10vh,100%); 
+				aspect-ratio: 1/1;
 				border-radius: 100%;
-				border: 2px solid rgb(var(--color-mono-800));
-
-				background: {
-					color: rgb(var(--color-mono-800));
-					position: center;
-					size: cover;
-				}
-				
-				transition-duration: .25s;
-				&:hover {
-					transform: scale(1.25);
-				}
+				border: 3px solid rgb(var(--color-mono-800));
+				background-position: center center;
+				background-size: cover;
+				background-color: rgb(var(--color-mono-800));
 			}
-			
 		}
 
-		&-input {
+	}
 
-			margin: 3vh 0;
-			padding: 0 5vw;
-
-			span {
-				color: rgb(var(--color-mono-900));
-				font: {
-					size: .75rem;
-				}
-			}
-
-			label {
-				@include light-button { 
-					display: block;
-					width: 50%;
-					margin: 3vh auto;
-					justify-self: center; 
-					align-self: center;
-				};
-			}
-
-			button {
-				@include light-button { 
-					display: block;
-					width: 50%;
-					margin: auto;
-				};
-			}
-
-		}
-
+	&-footer {
+		display: flex;
+		flex-direction: column;
+		place-items: center;
+		gap: 1vh;
 	}
 }
 
@@ -218,22 +128,42 @@
 	import firebase from 'firebase/app'
 	import 'firebase/database'
 
+	// IMPORTED TYPES
+	import type { AnimeAnimParams, AnimeInstance } from 'animejs'
+
 	// VUEX
 	import { mapState, mapActions } from 'vuex'
 	import type { VuexModules } from '~/typescript/VuexModules'
 
+	// COMPONENT
+	import CommonButton from '~/components/buttons/CommonButton.vue'
+
 	// TYPES 
-	type EXTENSIONS = [ string, 'png' | 'jpg' | 'jpeg' | 'webp' ]
+	type EXTENSIONS = [ string, 'png' | 'jpg' | 'jpeg' | 'webp' ];
+	type MODE				= 'custom' | 'predefined' | undefined;
+
+	// VARIABLES 
+	const DefaultIconAnimation: AnimeAnimParams = {
+		opacity: [1, 0],
+		scale: [1, .9],
+		duration: 500,
+		direction: 'alternate',
+		easing: 'easeInOutQuad',
+		autoplay: false,
+	}
 
 	export default Vue.extend({
+		components: {
+			CommonButton
+		},
 		data() {
 			return {
 
-				PENDING: false,
+				Animations: new Map() as Map<string, AnimeInstance>,
 
 				Warning: '',
-
-				CustomIconArea: false,
+				Mode: undefined as MODE,
+				Pending: false,
 
 				CustomIconName: '' as string,
 				NewIcon: '' as string,
@@ -249,8 +179,39 @@
 
 			}),
 		},
+		watch: {
+			Mode: 'animatePredefinedIcons',
+			Pending: {
+				handler(value) {
+
+					const PA = this.Animations.get('iconPending')!;
+								PA.play();
+
+					if ( !value ) {
+						PA.update = ({ progress }) => { 
+							if ( progress === 0 ) { PA.pause() }
+						}
+					} else {
+						PA.update = undefined
+					}
+
+				}
+			}
+		},
 		created() {
-			this.GetImagesList()
+			this.getDefaultIcons()
+		},
+		mounted() {
+
+			this.Animations.set('iconPending', this.$AnimeJS({
+
+				targets: this.$refs.iconPreview,
+				loop: true,
+
+				...DefaultIconAnimation,
+
+			}))
+
 		},
 		methods: {
 
@@ -258,7 +219,7 @@
 				FireBaseChange: 'User/State/FireBaseChange'
 			}),
 
-			async GetImagesList() {
+			async getDefaultIcons() {
 
 				const REFS = await firebase.storage().ref('UserIcons').list().then( res => res.items )
 
@@ -274,19 +235,11 @@
 				})
 
 			},
-			UploadProfileImage() {
 
-				const Property = {
-					prop: this.NewIcon,
-					entity: 'UserImageID' 
-				}
+			async uploadIcon() {
 
-				this.FireBaseChange(Property)
-
-			},
-			async SetCustomIcon() {
-
-				this.PENDING = true;
+				this.Pending = true;
+				this.NewIcon = '';
 
 				const EL 	= this.$refs.CustomIcon as HTMLInputElement
 
@@ -315,8 +268,8 @@
 						if ( URL ) { this.NewIcon = URL }
 						
 					} catch ( error ) { 
-						
-						console.log(error);
+
+						this.Warning = error
 
 					}
 
@@ -326,18 +279,55 @@
 					
 				}
 
-				this.PENDING = false;
+				const tempI 		= new Image();
+							tempI.src = this.NewIcon;
+
+				tempI.decode().then(() => {
+					this.Pending = false;
+				})
 
 			},
-			UpdatePreviewImage( element: any ) {
+
+			updateIcon() {
+
+				const Property = {
+					prop: this.NewIcon,
+					entity: 'UserImageID' 
+				}
+
+				this.FireBaseChange(Property)
+
+			},
+
+			updatePreviewImage( element: any ) {
 
 				const N = element.value.split( /\\/g ).pop().split( /\./g ) as EXTENSIONS
 
 				this.CustomIconName = `${ N[0] }.${ N[1] }`;
 
-				this.SetCustomIcon()
+				this.updateIcon()
 
 			},
+
+			animatePredefinedIcons() {
+
+				console.log('TEST');
+
+				this.$AnimeJS({
+					targets: this.$refs.icons,
+					duration: 1000,
+					easing: 'easeInOutQuad',
+					delay: this.$AnimeJS.stagger(100),
+					translateY: [40, 0],
+					opacity: [0, 1],
+				})
+			},
+
+			changeMode(mode: MODE) {
+
+				this.Mode = mode;
+
+			}
 			
 		},
 	})

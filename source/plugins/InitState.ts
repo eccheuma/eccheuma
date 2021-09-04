@@ -10,14 +10,15 @@ export default ({ env, isDev }: Context) => {
 	Vue.config.ignoredElements = ['eccheuma-wrapper', 'eccheuma-layout', 'eccheuma-intersection', 'eccheuma-collapse']
 
 	Vue.prototype.BUILD_HASH					= env.buildHash
-	Vue.prototype.CLIENT_RENDER_CHECK = process.browser;
+	Vue.prototype.BROWSER 						= process.browser;
+	Vue.prototype.SSR 								= process.server;
 	Vue.prototype.DEVELOPMENT 				= isDev;
 
 	firebase.database().ref('/App').once('value').then((data) => {
 		Vue.prototype.__SELF_KEY__  = data.val().__SELF_KEY__
 	})
 
-	if ( isDev ) {
+	if ( isDev && process.browser ) {
 		console.log(`%cEccheuma | Build: ${ env.buildHash }`,
 		'background-color: #141418; padding: 4px 20px; border-radius: 4px;')
 	}
@@ -27,7 +28,8 @@ export default ({ env, isDev }: Context) => {
 declare module 'vue/types/vue' {
 	interface Vue {
 		BUILD_HASH: string
-		CLIENT_RENDER_CHECK: boolean
+		BROWSER: boolean
+		SSR: boolean
 		DEVELOPMENT: boolean
 		__SELF_KEY__: string
 	}

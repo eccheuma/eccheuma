@@ -1,5 +1,10 @@
 $mobile-breakpoint: 768px;
 
+// GLOBAL COMPONENTS VARIABLES
+$GLOBAL-HeaderHeight: 15vh;
+$GLOBAL-AsideColumnsWidth: 5vw;
+$GLOBAL-BodySize: 100vw;
+
 @mixin icon-size($size: 21px) {
 	width: $size;
 	height: $size;
@@ -11,11 +16,17 @@ $mobile-breakpoint: 768px;
 
 @mixin push-button {
 
-	border: 1px solid rgba(var(--color-mono-500),.5);
+	cursor: pointer;
 
-	padding: 5px 25px;
+	border: {
+		width: 2px;
+		style: solid;
+		color: var(--color-accent-edges-100);
+	}
+
+	padding: .75vh 1vw;
 	margin: 0px 2px;
-	border-radius: .7rem;
+	border-radius: var(--border-radius);
 	color: rgb(var(--color-mono-400));
 	font-size: .65rem;
 	font-weight: 700;
@@ -24,9 +35,11 @@ $mobile-breakpoint: 768px;
 	@content;
 
 	&:hover {
-		transform: translateY(-0.5vh);
-		border: 1px solid transparent;
-		box-shadow: 0px 0.5vh 0px 0px rgba(var(--color-mono-200),.25);
+		// transform: translateY(-0.5vh);
+		// filter: drop-shadow(0 0 6px var(--color-accent-lighting));
+		border: {
+			color: var(--color-accent-edges-300);
+		}
 	}
 
 }
@@ -38,7 +51,7 @@ $mobile-breakpoint: 768px;
 	padding: 1vh 1vw;
 	background-color: rgb(var(--color-mono-300));
 	border: 1px solid rgb(var(--color-mono-400));
-	border-radius: .7rem;
+	border-radius: var(--border-radius);
 	width: 100%;
 	&:focus {
 		outline: none;
@@ -51,7 +64,7 @@ $mobile-breakpoint: 768px;
 	// FONT
 	font-size: 12px; font-weight: 600; color: rgb(var(--color-mono-200));
 	// BORDER
-	border: 1px solid rgba(var(--color-mono-200), .25); border-radius: .7rem;
+	border: 1px solid rgba(var(--color-mono-200), .25); border-radius: var(--border-radius);
 	// OTHER
 	background-color: rgb(var(--color-mono-800));
 	box-shadow: 0px 0px 0px 2px rgb(var(--color-mono-800));
@@ -68,14 +81,14 @@ $mobile-breakpoint: 768px;
 
 @mixin gradient_border($side: block) {
 
-	$GRAD: transparent 10px, var(--color-accent-edges) 50%, transparent calc(100% - 10px);
+	$GRAD: transparent 10px, var(--color-accent-edges-100) 50%, transparent calc(100% - 10px);
 	$BORDER: 1px solid transparent;
 
 	@if $side == block {
 		border-image: linear-gradient(90deg, $GRAD);
 		border-block: $BORDER;
 	}
-	@if $side == inline {
+	@else if $side == inline {
 		border-image-width: 1;
 		border-image: linear-gradient(180deg, $GRAD);
 		border-inline: $BORDER;
@@ -94,12 +107,40 @@ $mobile-breakpoint: 768px;
 	
 }
 
-%component {
+%card-container {
 
   @include gradient_border;
   @include component-shadow;
 
   background-color: rgb(var(--color-mono-200));
-  border-radius: .7rem;
+  border-radius: var(--border-radius);
+
+}
+
+%pattern-lines {
+
+  position: relative;
+	z-index: 1;
+
+	&::before {
+
+		content: '';
+
+		position: absolute;
+		top: 0; left: 0;
+
+		z-index: -1;
+
+		display: block;
+		width: 100%;
+		height: 100%;
+
+		background: {
+			image: url('~assets/images/__PATTERN__.png?size=200');
+		};
+
+		opacity: 4%;
+
+	}
 
 }

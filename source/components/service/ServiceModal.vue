@@ -1,12 +1,12 @@
 <template>
 	<div class="service_modal-container">
 
-		<Loader
+		<!-- <Loader
 			:ElementLoad="LoaderStatus.Load"
 			:ElementLoadComplete="LoaderStatus.Loaded"
 			>
 			{{ LoaderMessage }}
-		</Loader>
+		</Loader> -->
 
 		<section class="service_modal-user">
 			<i :style="`background-image: url(${ UserState.UserImageID })`" />
@@ -47,7 +47,7 @@
 
 		column-gap: 2vw;
 
-		width: 100vw; height: 100vh;
+		width: $GLOBAL-BodySize; height: 100vh;
 
 		background: {
 			color: rgba(var(--color-mono-200), .95);
@@ -135,16 +135,19 @@
 
 // COMPONENTS
 	import CostCalc from '~/components/service/CostCalc.vue'
-	import Loader 	from '~/components/common/Loader.vue'
+	// import Loader 	from '~/components/common/Loader.vue'
 
 // TYPES
 	import type { VuexModules } from '~/typescript/VuexModules'
 
-	import type { SELECTED_SERVICE, CATEGOTIES } from '~/typescript/Services.ts'
+	import type { SELECTED_SERVICE, CATEGOTIES } from '~/typescript/Services'
 
 // MODULE
 	export default Vue.extend({
-		components: { CostCalc, Loader },
+		components: { 
+			CostCalc, 
+			// Loader 
+		},
 		props: {
 			serviceType: {
 				type: String,
@@ -163,8 +166,6 @@
 
 				LoginStatus: 		state => ( state as VuexModules ).Auth.Auth.LoginStatus,
 				UserState: 			state => ( state as VuexModules ).User.State.UserState,
-				LoaderMessage: 	state => ( state as VuexModules ).Loader.Message,
-				LoaderStatus: 	state => ( state as VuexModules ).Loader.Status,
 
 			}),
 		},

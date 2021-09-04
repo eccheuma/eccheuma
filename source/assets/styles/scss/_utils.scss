@@ -59,7 +59,10 @@
 }
 
 .utils\:\:glassy {
-	backdrop-filter: blur(4px)
+	backdrop-filter: blur(4px);
+	// @media screen and ( max-width: $mobile-breakpoint ) {
+	// 	backdrop-filter: unset !important;
+	// }
 }
 
 .utils\:\:voided {
@@ -68,5 +71,5 @@
 }
 
 .utils\:\:component-shadow {
-	box-shadow: 0px 0px 10px rgba(var(--color-mono-000), .33);
+	box-shadow: 0px 0px 10px rgba(var(--color-mono-000), 0.33);
 }

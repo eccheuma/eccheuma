@@ -135,27 +135,28 @@
 
 </script>
 
-<style lang="sass" scoped>
+<style lang="scss" scoped>
 
-.CursorFX
-	pointer-events: none
-	position: absolute
-	top: 0px
-	left: 0px
-	height: 10px
-	width: 10px
-	background-color: rgb(var(--mono-900))
-	z-index: 9999
-	border-radius: 100%
-	filter: blur(3px)
-	// mix-blend-mode: hard-light
-	&-Wrap
-		overflow: hidden
-		position: absolute
-		top: 0
-		left: 0
-		width: 100%
-		height: 100%
-		-webkit-mask-image: radial-gradient(circle, black 50%, transparent 100%)
+.CursorFX {
+	pointer-events: none;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+	height: 10px;
+	width: 10px;
+	background-color: var(--color-accent-lighting);
+	z-index: 9999;
+	border-radius: 100%;
+	filter: blur(3px);
+	&-Wrap {
+		overflow: hidden;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		mask-image: radial-gradient(circle, black 50%, transparent 100%);
+	}
+}
 
 </style>

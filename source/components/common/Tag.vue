@@ -16,33 +16,37 @@
 
   .transparent\:\:false {
     background-color: rgba(var(--mono-200), 1);
+    backdrop-filter: unset !important;
   }
 
   .scheme\:\:light {
     color: rgb(var(--mono-200));
-    background-color: rgb(var(--mono-800));
+    background-color: rgb(var(--mono-700));
   }
 
   span {
 
-    padding: .5vh 2vw 1vh;
-    color: rgb(var(--mono-800));
+    cursor: pointer;
+    display: flex;
 
     width: max-content;
-    height: max-content;
+    height: 6vh;
+    padding: 0 4ch;
 
-    cursor: pointer;
+    place-items: center;
 
+    color: rgb(var(--mono-800));
     font: {
-      size: var(--font-size-24);
+      size: var(--font-size-21);
       weight: 500;
 			family: var(--decor-font);
     }
 
-    letter-spacing: .1ch;
+    letter-spacing: .25ch;
+    line-height: var(--font-size-21);
 
     background-color: rgba(var(--mono-200), .75);
-    border-radius: .7rem;
+    border-radius: var(--border-radius);
 
   }
 

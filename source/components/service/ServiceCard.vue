@@ -1,6 +1,6 @@
 <template>
 	<div class="service-card" :class="{ 'service-widecard': wide }">
-		<section class="service-card-header pattern_bg">
+		<section class="service-card-header">
 			<span>{{ payload.title }}</span>
 			<span>{{ payload.subTitle }}</span>
 		</section>
@@ -40,7 +40,12 @@
 			</template>
 		</section>
 		<caption-card>
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Et, doloribus vel ea ipsum ratione eligendi at alias. Distinctio, voluptate id.
+			<template #type>
+				Lorem ipsum.
+			</template>
+			<template #desc>
+				Dreary disaster ghastly whispered nepenthe lore, echo word my on there soul. And the sainted air from, and into once.
+			</template>
 		</caption-card>
 		<section class="service-card-footer">
 			<common-button>
@@ -69,7 +74,7 @@
 	display: flex;
 	justify-content: space-between;
 	
-	border-radius: .7rem;
+	border-radius: var(--border-radius);
 	margin: 1vh 0;
 
 	line-height: 3vh;
@@ -82,7 +87,7 @@
 
 	display: grid;
 	grid-template: {
-		rows: min-content 30vh auto auto 10vh min-content;
+		rows: min-content 30vh auto auto minmax(10vh, min-content) min-content;
 		areas: 	'head'
 						'desc'
 						'cost'
@@ -100,7 +105,7 @@
 	section {
 
 		background: rgb(var(--color-mono-300));
-		border-radius: .7rem;
+		border-radius: var(--border-radius);
 		padding: 2vh 1.25vw;
 
 		h6 {
@@ -121,6 +126,10 @@
 	}
 
 	&-header {
+
+		@include gradient_border;
+
+		@extend %pattern-lines;
 
 		grid-area: head;
 
@@ -165,14 +174,18 @@
 	}
 	&-notice {
 		grid-area: note;
-		background-color: rgb(var(--color-mono-800)) !important;
 	}
 	&-footer {
+
+		@include gradient_border;
+
+		@extend %pattern-lines;
 
 		grid-area: foot;
 
 		display: flex;
 		place-content: center
+
 	}
 }
 

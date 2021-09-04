@@ -18,9 +18,8 @@
 		<section class="scroll_panel-mute">
 			<span
 				:class="[{ active: GlobalHowler.mute && !GlobalHowler.inChange }, { change: GlobalHowler.inChange }]"
-				@click="globalMute(!GlobalHowler.mute)"
+				@click="muteSounds(!GlobalHowler.mute)"
 			>
-				<!-- <i class="fas" :class="GlobalHowler.mute ? `fa-volume-mute` : `fa-volume-up`" /> -->
 
 				<icon name="Mute" />
 
@@ -48,9 +47,17 @@
 
 		<section class="scroll_panel-arrows">
 
-			<icon name="Arrow" @click.native="scrollPage(0)" />
+			<icon 
+				name="Arrow" 
+				@mouseenter.native="playSound(Sounds.get('Element::Hover'))" 
+				@click.native="scrollPage(0)" 
+				/>
 
-			<icon name="Arrow" @click.native="scrollPage(9999)" />
+			<icon 
+				name="Arrow" 
+				@mouseenter.native="playSound(Sounds.get('Element::Hover'))" 
+				@click.native="scrollPage(9999)" 
+				/>
 
 		</section>
 
@@ -88,14 +95,14 @@
 			@include component-shadow;
 
 			background-color: rgb(var(--color-mono-200));
-			border-radius: .7rem;
+			border-radius: var(--border-radius);
 
 			overflow: hidden;
 
 		}
 
 		hr {
-			background: rgb(var(--color-mono-400));
+			background: var(--color-accent-edges-100);
 			margin: 0 0.75vw;
 		}
 
@@ -106,8 +113,9 @@
 
 		padding: 1vh 0;
 
-		i { @include icon-size(var(--size-36));
-			background-color: rgb(var(--color-mono-500));
+		i { 
+			@include icon-size(var(--size-36));
+			--svg-fill: rgb(var(--color-mono-500));
 		}
 
 		span {
@@ -154,8 +162,9 @@
 
 			transition: all 250ms ease-in-out;
 
-			i { @include icon-size(2.75vh);
-				background-color: rgb(var(--color-mono-500));
+			i { // icon styles
+				@include icon-size(2.75vh);
+				--svg-fill: rgb(var(--color-mono-500));
 			}
 
 		}
@@ -171,8 +180,9 @@
 		background-color: rgb(var(--color-mono-200));
 		padding: 10px 0;
 
-		i { @include icon-size(var(--size-36));
-			background-color: rgb(var(--color-mono-500));
+		i { // icon styles
+			@include icon-size(var(--size-36));
+			--svg-fill: rgb(var(--color-mono-500));
 		}
 
 		$pad: 2px;
@@ -191,7 +201,7 @@
 			padding: $pad;
 
 			background-color: rgb(var(--color-mono-300));
-			border: 1px solid rgb(var(--color-mono-400));
+			border: 2px solid var(--color-accent-edges-100);
 			border: {
 				radius: 10rem;
 			}
@@ -201,7 +211,7 @@
 				position: absolute;
 				top: 2px;
 
-				width: calc(100% - #{ $pad * 2});
+				width: calc(100% - #{ $pad * 2 });
 				aspect-ratio: 1/1;
 				background-color: rgb(var(--color-mono-700));
 				border: {
@@ -217,7 +227,7 @@
 		.active {
 			span {
 				position: absolute;
-				top: calc((100% - #{ $wid }) + #{ $pad + 1px }); // (Высота контейнера - Ширина тумблера) + ( Отступ + Ширина обводки )
+				top: calc((100% - #{ $wid }) + #{ $pad + 3px }); // (Высота контейнера - Ширина тумблера) + ( Отступ + Ширина обводки )
 				background-color: rgb(var(--color-mono-800));
 			}
 		}
@@ -233,18 +243,19 @@
 
 		row-gap: 1vh;
 
-		i { @include icon-size(var(--size-48));
+		i { // icon styles
+			
+			@include icon-size(var(--size-48));
+			--svg-fill: rgb(var(--color-mono-400));
 
 			text-align: center; 
 			font-size: 1.5vw;
-
-			background-color: rgb(var(--color-mono-400));
 
 			cursor: pointer;
 			transition-duration: 250ms;
 
 			&:hover {
-				background-color: rgb(var(--color-mono-800));
+				--svg-fill: rgb(var(--color-mono-800));
 			} 
 
 			&:nth-of-type(1) {
@@ -277,7 +288,7 @@
 	import type { APP_THEME } 	from '~/typescript/App'
 
 // MIXINS
-	import EmitSound, { SoundInstance } from '~/assets/mixins/EmitSound'
+	import EmitSound from '~/assets/mixins/EmitSound'
 
 // MODULE
 	export default Vue.extend({
@@ -301,36 +312,22 @@
 			}),
 
 		},
-		created() {
+		mounted() {
 
-			if ( process.client && window.matchMedia('(prefers-color-scheme: light)').matches ) {
-				
-				let THEME: APP_THEME = 'dark'
-				
-				THEME = 'light'
+			if ( process.browser ) {
 
-				this.setUI(THEME)
-			
+				this.setSounds([
+					{ file: 'On', 	name: 'Switch::On', 			settings: { rate: 1.00 } },
+					{ file: 'Off', 	name: 'Switch::Off', 			settings: { rate: 1.00 } },
+					{ file: 'On', 	name: 'Element::Action', 	settings: { rate: 0.50 } },
+					{ file: 'On', 	name: 'Element::Hover', 	settings: { rate: 0.25 } }
+				])
+
+				window.matchMedia('(prefers-color-scheme: light)').matches 
+					? this.setUI('light' as APP_THEME)
+					: this.setUI('dark' as APP_THEME)
+
 			}
-
-			const S: SoundInstance[] = [
-				{
-					file: 'Off',
-					name: 'ThemeLight',
-					settings: { rate: 1.25, volume: .25 },
-				},
-				{
-					file: 'Off',
-					name: 'ThemeDark',
-					settings: { rate: .75, volume: .25 },
-				},
-				{
-					file: 'On',
-					name: 'ScrollButton',
-				}
-			]
-
-			this.setSounds(S)
 
 		},
 		methods: {
@@ -345,13 +342,22 @@
 
 			scrollPage(to: 0 | 9999) {
 
-				this.playSound(this.Sounds.get('ScrollButton')!)
+				this.playSound(this.Sounds.get('Element::Action'))
 
 				window.scrollTo({
 					top: to,
 					left: 0,
 					behavior: 'smooth'
 				});
+
+			},
+
+			muteSounds(status: boolean) {
+
+				this.playSound(this.Sounds.get(status ? 'Switch::On' : 'Switch::Off')).then(() => {
+					this.globalMute(status);
+				});
+
 			},
 
 			changeTheme(theme: APP_THEME) {
@@ -359,19 +365,12 @@
 				this.setUI(theme); 
 
 				switch (theme) {
-
 					case 'light': 
-
-						this.playSound(this.Sounds.get('ThemeLight')!)
-
-					break;
-
+						this.playSound(this.Sounds.get('Switch::On')); 
+						break;
 					case 'dark': 
-					
-						this.playSound(this.Sounds.get('ThemeDark')!)
-
-					break;
-
+						this.playSound(this.Sounds.get('Switch::Off')); 
+						break;
 				}
 
 			},

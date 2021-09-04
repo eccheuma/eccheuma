@@ -41,7 +41,7 @@
 			flex-direction: column;
 			gap: 2vh;
 
-			border-radius: .7rem;
+			border-radius: var(--border-radius);
 
 		}
 	}

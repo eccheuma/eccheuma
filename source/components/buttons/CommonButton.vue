@@ -1,6 +1,6 @@
 <template>
   <component 
-    :is="link ? 'a' : 'button'" 
+    :is="type" 
     ref="button" 
     :class="[
       { 'action': indicator },
@@ -10,7 +10,7 @@
 
     <cursor-visual />
 
-    <span class="pattern_bg">
+    <span>
       <slot />
     </span>
 
@@ -20,6 +20,7 @@
 <style lang="scss" scoped>
 
 .scheme\:\:dark {
+  --eccheuma-button-border: var(--color-accent-edges-100);
   --eccheuma-button-text: rgb(var(--color-mono-800));
   --eccheuma-button-color: rgb(var(--color-mono-300));
 }
@@ -40,8 +41,10 @@
 
 }
 
-button, a {
+button, a, label {
 
+  --eccheuma-button-border: var(--color-accent-edges-100);
+  --eccheuma-button-border-active: var(--color-accent-edges-300);
   --eccheuma-button-text: rgb(var(--color-mono-300));
   --eccheuma-button-color: rgb(var(--color-mono-800));
 
@@ -52,8 +55,8 @@ button, a {
 
   background: transparent;
 
-	border: 2px solid var(--eccheuma-button-color); 
-  border-radius: .7rem;
+	border: 2px solid var(--eccheuma-button-border); 
+  border-radius: var(--border-radius);
 
   padding: 2px;
   min-width: 180px;
@@ -61,7 +64,15 @@ button, a {
   font-size: var(--font-size-14);
   font-weight: 800; 
 
-  span {    
+  transition-duration: .25s;
+
+  &:hover {
+    border-color: var(--eccheuma-button-border-active);
+	}
+
+  span {
+    
+    @extend %pattern-lines;
     
     width: 100%;
     height: 100%;
@@ -79,15 +90,10 @@ button, a {
 
     padding: 0 2vw;
 
-    transition-duration: .25s;
-
   }
-
-  transition-duration: .25s;
 
 	&:hover {
 		text-decoration: none; 
-    background-color: var(--eccheuma-button-color);
 	}
 
 }
@@ -109,9 +115,13 @@ button, a {
 		},
     mixins: [ EmitSound, HashGenerator ],
     props: {
+      type: {
+        type: String,
+        default: 'button',
+      },
       link: {
         type: String,
-        default: null,
+        default: '',
       },
       scheme: {
         type: String,
@@ -131,22 +141,22 @@ button, a {
     },
     created() {
 
-      this.setSounds([
-        { file: 'Off',  name: 'ButtonHover', settings: { rate: 1.00, volume: .5 } },
-        { file: 'Off',  name: 'ButtonClick', settings: { rate: 1.25, volume: .5 } },
-      ])
+      // this.setSounds([
+      //   { file: 'Off',  name: 'ButtonHover', settings: { rate: 1.00, volume: .25 } },
+      //   { file: 'Off',  name: 'ButtonClick', settings: { rate: 1.25, volume: .25 } },
+      // ])
 
     },
     mounted() {
 
       const ELEMENT = this.$refs.button as HTMLElement;
 
-      if ( this.link ) {
+      if ( this.type === 'a' ) {
         ELEMENT.setAttribute('href', this.link)
       }
 
-      ELEMENT.addEventListener('mouseenter',  () => this.playSound(this.Sounds.get('ButtonHover')!));
-      ELEMENT.addEventListener('click',       () => this.playSound(this.Sounds.get('ButtonClick')!))
+      // ELEMENT.addEventListener('mouseenter',  () => this.playSound(this.Sounds.get('ButtonHover')!));
+      // ELEMENT.addEventListener('click',       () => this.playSound(this.Sounds.get('ButtonClick')!));
 
     }
   })

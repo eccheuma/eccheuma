@@ -1,9 +1,19 @@
 <template>
 	<section class="auth_wrapper">
 
-		<loader />
+		<!-- <loader 
+			v-if="loader"
+			:stages="authLoadStages" 
+			:controllable="true"
+			:ignite="true" 
+			:forcedStage="Number(LoginStatus)" 
+			style="position: absolute"
+			@active="shutdownLoader"
+		/> -->
 
-		<component :is="!LoginStatus ? 'AuthLogin' : 'AuthProfile'" />
+		<transition name="opacity-transition" mode="out-in">
+			<component :is="!LoginStatus ? 'AuthLogin' : 'AuthProfile'" />
+		</transition>
 
 	</section>
 </template>
@@ -13,10 +23,12 @@
 .auth_wrapper {
 
 	@include component-shadow;
+	
+	@extend %card-container;
 
-	position: relative;
+	position: relative; z-index: 1;
 	color: rgb(var(--color-mono-200));
-	border-radius: .7rem;
+	border-radius: var(--border-radius);
 	overflow: hidden;
 	width: 100%;
 }
@@ -31,7 +43,7 @@
 	import { mapState } from 'vuex'
 
 	// COMPONENTS
-	import Loader from '~/components/common/Loader.vue'
+	// import Loader, { LoadStage } from '~/components/common/Loader.vue'
 
 	import AuthLogin 			from '~/components/auth/Login.vue'
 	import AuthProfile 		from '~/components/auth/Profile.vue'
@@ -42,23 +54,42 @@
 	// MODULE
 	export default Vue.extend({
 		components: {
-			Loader,
+			// Loader,
 			AuthLogin,
 			AuthProfile,
+		},
+		data() {
+			return {
+
+				// loader: true,
+
+				// authLoadStages: [
+				// 	{ LoadPoint: 0, Message: 'Отправка формы' },
+				// 	{ LoadPoint: 100, Message: 'Вход' },
+				// ] as LoadStage[],
+
+			}
 		},
 		computed: {
 
 			...mapState({
-
-				UI:							state => ( state as VuexModules ).App.UI,
-
-				LoaderMessage: 	state => ( state as VuexModules ).Loader.Message,
-				LoaderStatus:		state => ( state as VuexModules ).Loader.Status,
 				LoginStatus: 		state => ( state as VuexModules ).Auth.Auth.LoginStatus,
-
+				// LoginAction:		state => ( state as VuexModules ).Auth.Login.inAction,
 			})
 
-		}
+		},
+		// watch: {
+		// 	LoginAction: {
+		// 		handler() {
+		// 			this.loader = true;
+		// 		}
+		// 	}
+		// },
+		// methods: {
+		// 	shutdownLoader() {
+		// 		this.loader = false;
+		// 	}
+		// }
 	})
 	
 </script>

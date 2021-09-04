@@ -1,7 +1,3 @@
-<template>
-  <i class="icon" :style="`-webkit-mask-image: url(${ require(`~/assets/icons/Icon=${ name }.svg`) })`" />
-</template>
-
 <style lang="scss">
 
   $size: 21px;
@@ -14,24 +10,30 @@
     width:  $size;
     height: $size;
 
-    background: {
-      color: rgb(var(--color-mono-800));
+    background: transparent !important;
+    padding: 0 !important;
+
+    svg {
+      width:  100% !important;
+      height: 100% !important;
+      display: flex;
+      transition: inherit;
+      path {
+        place-self: center;
+        fill: var(--svg-fill, rgb(var(--color-mono-500)));
+        transition: inherit;
+      }
     }
-
-    mask: {
-      size: contain;
-      repeat: no-repeat;
-    };
-
-    // CHROME TRANSFORM CORNER FIX
-    background-clip: padding-box;
-    border: 0.1px solid transparent;
 
   }
 
 </style>
 
 <script lang="ts">
+
+  // <template>
+  //   <i class="icon" :style="`-webkit-mask-image: url(${ require(`~/assets/icons/Icon=${ name }.svg`) })`" />
+  // </template>
 
   import Vue, { PropOptions } from 'vue'
 
@@ -41,6 +43,14 @@
         type: String,
         default: 'JS'
       } as PropOptions<string>
+    },
+    render(h) {
+      return h('i', { 
+        class: 'icon',
+        domProps: {
+          innerHTML: require(`~/assets/icons/Icon=${ this.name }.svg?include`)
+        } 
+      })
     },
   })
 

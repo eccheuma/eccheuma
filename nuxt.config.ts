@@ -1,6 +1,5 @@
-import { writeFile, readFileSync }  from 'fs';
+import { writeFile }  from 'fs';
 import { createHash } from 'crypto';
-import path           from 'path';
 
 // TYPES
 import type { NuxtConfig } from '@nuxt/types';
@@ -26,6 +25,8 @@ writeFile('version.txt', hash, () => console.log(`≏ Hash build: ${ hash }`))
 const config: NuxtConfig = {
 
   srcDir: 'source',
+  buildDir: 'app',
+
   globalName: 'app',
   globals: {
     id: globalName => `${ globalName }`,
@@ -44,7 +45,13 @@ const config: NuxtConfig = {
     // https: certificate
   },
 
+  loading: {
+    color: 'hsl(30,18%,60%)',
+    height: '4px'
+  },
+
   router: {
+    prefetchLinks: false,
     linkPrefetchedClass:  'prefetched',
     linkActiveClass:      'active',
     linkExactActiveClass: 'exact',
@@ -84,13 +91,22 @@ const config: NuxtConfig = {
     babel: {
       presets({ envName }) {
 
+        const target = envName === 'modern' ? 'client' : envName
+
         const envTargets = {
           client: { browsers: ['> 0.25%, not dead'] },
           server: { node: 'current' },
         }
 
         return [
-          ['@nuxt/babel-preset-app', { targets: envTargets[envName], corejs: { version: 3 } }]
+          [ '@nuxt/babel-preset-app', 
+            { 
+              targets: envTargets[target], 
+              corejs: { 
+                version: 3 
+              },  
+            }
+          ]
         ]
 
       }
@@ -126,7 +142,7 @@ const config: NuxtConfig = {
 
     extend({ module }) {
 
-      module.rules.push({
+      module!.rules.push({
         test: /\.(ogg|wav)$/i,
         loader: 'file-loader',
         options: {
@@ -142,6 +158,12 @@ const config: NuxtConfig = {
     defaultImageLoader: 'responsive-loader',
     responsive: {
       adapter: require('responsive-loader/sharp')
+    },
+    svgo: {
+      plugins: [
+        { name: 'removeUselessDefs' },
+        { name: 'cleanupAttrs' },
+      ]
     }
   },
 
@@ -151,9 +173,9 @@ const config: NuxtConfig = {
     { src: '~/plugins/Firebase.ts' },
     { src: '~/plugins/VuePortal.js' },
     { src: '~/plugins/MobileDetection.ts' },
+    { src: '~/plugins/Anime.ts' },
     // Client plugins TypeScript
     { src: '~/plugins/Pixi.ts',       mode: 'client' },
-    { src: '~/plugins/Anime.ts',      mode: 'client' },
     { src: '~/plugins/Howler.ts',     mode: 'client' },
     { src: '~/plugins/Vuelidate.ts',  mode: 'client' },
     // Client plugins

@@ -16,7 +16,7 @@
 		</transition> -->
 
 		<client-only>
-			<pixi-canvas v-if="CLIENT_RENDER_CHECK && $PIXI.utils.isWebGLSupported()" key="canvas" @ready.once="Animate" />
+			<canvas-component v-if="BROWSER && $PIXI.utils.isWebGLSupported()" @ready.once="Animate" />
 		</client-only>
 
 		<section class="holl-mute">
@@ -31,7 +31,7 @@
 		<section class="holl-info">
 
 			<span class="index_app_version">
-				СБОРКА: {{ BUILD_HASH || '000000' }}
+				СБОРКА: {{ BUILD_HASH }}
 			</span>
 
 		</section>
@@ -119,7 +119,7 @@
 			display: grid;
 			grid-template: {
 				columns: 1fr 12fr 1fr;
-				rows: 10vh 40vh 1fr 15vh 10vh;
+				rows: 10vh 40vh 1fr 1fr 10vh;
 				areas: ". build 	mute" ". logo 	." ". nav 		." ". quote 	." ". links 	.";
 			}
 
@@ -155,7 +155,7 @@
 				opacity: .25;
 
 				background: {
-					image: url('~assets/images/Background.png?placeholder=true&size=600');
+					image: url('~assets/images/Background.png?placeholder=true&size=360');
 					size: cover;
 					position: center;
 					repeat: no-repeat;
@@ -283,16 +283,13 @@
 					color: rgb(var(--color-mono-700));
 					
 					font: {
-						size: var(--font-size-48);
+						size: 6.75vh;
 						family: var(--decor-font);
 					}
 
-					text-shadow: 0px 0px 2px rgb(var(--color-mono-500));
-
 					letter-spacing: 0.5ch;
-					line-height: var(--size-36);
-
-					text-rendering: optimizeSpeed;
+					margin-right: -0.25ch;
+					line-height: 5.75vh;
 
 				}
 
@@ -355,8 +352,8 @@
 
 				i {
 					margin: 0 4px;
-					background: rgb(var(--color-mono-400));
 					transition-duration: 500ms;
+					--svg-fill: rgb(var(--color-mono-400));
 				}
 
 				&:hover {
@@ -365,7 +362,7 @@
 					text-decoration: underline;
 					i {
 						margin: 0 4px;
-						background: rgb(var(--color-mono-900));
+						--svg-fill: rgb(var(--color-mono-900));
 					}
 				}
 
@@ -391,9 +388,8 @@
 
 // COMPONENTS
 	import HeaderNavigation from '~/components/header/HeaderNavigation.vue'
+	import CanvasComponent	from '~/components/common/Canvas.vue';
 	import Icon 						from '~/components/Icon.vue'
-
-	import PixiCanvas				from '~/components/common/PixiCanvas.vue';
 
 // VARIABLES
 	const PLACEHOLDER = require('~/assets/images/Background.png?placeholder=true&size=300').src
@@ -401,15 +397,15 @@
 // MODULE
 	export default Vue.extend({
 		components: {
+			CanvasComponent,
 			HeaderNavigation,
 			Icon,
-			PixiCanvas
 		},
 		mixins: [ EmitSound ],
 		data() {
 			return {
 
-				CanvasReady: false,
+				CanvasReady: false as boolean | undefined,
 
 				CurentQuoteIndex: 0,
 
@@ -480,23 +476,38 @@
 				}
 			},
 		},
+		created() {
+
+			if ( process.browser ) {
+
+				window.onload = () => {
+					setTimeout(() => {
+
+						console.debug('READY!')
+
+						if ( !this.CanvasReady ) {
+							this.CanvasReady = undefined;
+						}
+
+					}, 1000)
+				}
+
+			}
+
+		},
 		mounted() {
 
 			this.initQuoteChanger(); 
 
-			this.setSounds([
-				{
-					file: 'Holl',
-					name: 'Ambient',
-					settings: { rate: .45, volume: 1.25, loop: true },
-				}
-			])
-			
-			setTimeout(() => { 
-				if ( !this.CanvasReady ) {
-					this.CanvasReady = true
-				}
-			}, 5000)
+			if ( process.browser ) {
+				this.setSounds([
+					{
+						file: 'Holl',
+						name: 'Ambient',
+						settings: { rate: .45, volume: 1.25, loop: true },
+					}
+				])
+			}
 
 		},
 		beforeDestroy() {
@@ -513,7 +524,7 @@
 		methods: {
 
 			...mapMutations({
-				SetDeviceType: 'SetDeviceType'
+				setDeviceType: 'setDeviceType'
 			}),
 
 			...mapActions({

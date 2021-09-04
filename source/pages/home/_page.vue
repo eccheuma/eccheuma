@@ -2,17 +2,19 @@
 	<section class="home-page">
 
 		<template v-for="( item, index ) in Posts">
-			<!-- v-if="index === 0" -->
+
 			<intesection-component 
 				:key="`Post-${ index }`" 
 
 				:style="`order: ${ Posts.length - index }`"
+				:ignite="!$isMobile"
 				:rootMargin="5"
 
 				@isIntersecting="animateIntersection"
 			>
 				<post :order="0" :payload="item" />
 			</intesection-component>
+
 		</template>
 		
 		<promo-banner 
@@ -157,7 +159,7 @@
 
 			animateIntersection(intersection: boolean, slotNode: Node) {
 
-				if ( this.CLIENT_RENDER_CHECK && this.$PIXI.utils.isWebGLSupported() ) {
+				if ( this.BROWSER && this.$PIXI.utils.isWebGLSupported() ) {
 					this.$AnimeJS({
 						targets: slotNode,
 						easing: 'linear',

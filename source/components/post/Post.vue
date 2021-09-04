@@ -5,7 +5,6 @@
 		@keydown.ctrl.enter="sendComment"
 		> 
 
-		<!-- Post description, Image, Tage and etc. -->
 		<div 
 			ref="ImageHolder" 
 			class="post-header"
@@ -13,9 +12,6 @@
 				{ 'utils::cooled-sections': Cooled },
 			]" 
 		>
-
-			<!-- <displacement-filter :name="filter.name" :status="filter.status" /> -->
-			<!-- <img :src="ImageURL.webp" :alt="payload.description" :style="`filter: url(#filter::${ filter.name })`"> -->
 
 			<picture class="post-header-image">
 				<source :srcset="ImageURL.avif" type="image/avif">
@@ -43,7 +39,6 @@
 
 		</div>
 
-		<!-- Footer. Social buttons and Author Icon -->
 		<div 
 			class="post-footer" 
 			:class="[
@@ -61,7 +56,6 @@
 						{ disabled: !LoginStatus }
 					]"
 					@click="sendLike"
-					@mouseenter="playSound(Sounds.get('PostSocialButton'))"
 					>
 
 					<icon name="Fire" />
@@ -86,7 +80,6 @@
 					:id="`CommentPopOver-${ payload.ID }`" 
 					:class="{ active: CommentSection }"
 					@click="toggleSection(!CommentSection, 'CommentSection')"
-					@mouseenter="playSound(Sounds.get('PostSocialButton'))"
 					>
 
 					<icon name="Comment" />
@@ -110,11 +103,12 @@
 			</section>
 
 			<section class="post-footer-collapse">
-				<!-- <button @click="toggleSection(!ContentSection, 'ContentSection')">
-					{{ !ContentSection ? 'Развернуть пост' : 'Свернуть пост' }}
-				</button> -->
 
-				<common-button :scheme="UI" @click.native="toggleSection(!ContentSection, 'ContentSection')">
+				<common-button 
+					:scheme="UI"
+					@mouseenter.native.once="prepareContent = true" 
+					@click.native="toggleSection(!ContentSection, 'ContentSection')"
+					>
 					{{ !ContentSection ? 'Развернуть пост' : 'Свернуть пост' }}
 				</common-button>
 
@@ -133,116 +127,118 @@
 
 		</div>
 
-		<!-- Comments and Content -->
 		<client-only>
 
-			<hardware-acceleration-decorator>
-				<eccheuma-collapse :active="ContentSection">
+			<keep-alive>
+				<hardware-acceleration-decorator v-if="SSR || Content.length">
+					<eccheuma-collapse :active="ContentSection">
 
-					<article 
-						class="post-content" 
-						:class="[
-							{ 'rounded': !ContentSection && !CommentSection },
-							{ 'rounded-bottom': ContentSection && !CommentSection }
-						]"
-					>
+						<article 
+							class="post-content" 
+							:class="[
+								{ 'rounded': !ContentSection && !CommentSection },
+								{ 'rounded-bottom': ContentSection && !CommentSection }
+							]"
+						>
 
-						<header class="post-content-header">
-							<h4>{{ payload.title }}</h4>
-							<h6>{{ payload.description }}</h6>
-							<span>{{ AuthorInfo ? AuthorInfo.UserName : '' }} | {{ PostDate.Day }} в {{ PostDate.Time }}</span>
-						</header>
+							<header class="post-content-header">
+								<h4>{{ payload.title }}</h4>
+								<h6>{{ payload.description }}</h6>
+								<span>{{ AuthorInfo ? AuthorInfo.UserName : '' }} | {{ PostDate.Day }} в {{ PostDate.Time }}</span>
+							</header>
 
-						<template v-if="editContent">
-							<slot />
-						</template>
-
-						<template v-else>
-							<post-content :source="Content" />
-						</template>
-
-						<section class="post-content-tags">
-							<h6>Теги: </h6>
-							<tag v-for="(item, i) in payload.tags" :key="i" :transparent="false" :light="UI !== 'light'">
-								#{{ item }}
-							</tag>
-						</section>
-
-						<hr>
-
-						<section class="post-content-comments">
-							<common-button class="interface-dark" scheme="dark" @click.native="toggleSection(!CommentSection, 'CommentSection')">
-								Открыть комментарии
-							</common-button>
-						</section>
-
-					</article>
-					
-				</eccheuma-collapse>
-			</hardware-acceleration-decorator>
-
-			<hardware-acceleration-decorator>
-				<eccheuma-collapse :active="CommentSection">	
-
-					<div 
-						class="post-comments" 
-						:class="[
-							{ 'rounded': !CommentSection },
-							{ 'rounded-bottom': CommentSection }
-						]"
-					>
-
-						<template v-if="!sortedComments.length">
-							<section class="post-comments-first">
-								<span>
-									" Тут ещё нет комментариев, но это пока... "
-								</span>
-							</section>
-						</template>
-
-						<section class="post-comments-content">
-							<post-comment 
-								v-for="item in sortedComments" 
-								:key="item.Date" 
-								:userID="item.UserID"
-								:postID="payload.ID" 
-								:commentID="item.ID" 
-							/>
-						</section>
-
-						<section class="post-comments-answer">
-
-							<template v-if="LoginStatus">
-
-								<h5>Оставьте свой комментарий</h5>
-								<p>Не длинее 600 символов и не менее 6. <strong>Лимит: {{ charLimit }}</strong></p>
-
-								<textarea 
-									v-model="Message" 
-									name="comment_section" 
-									maxlength="400" 
-									placeholder="Напишите тут что-то в ответ." 
-									@input="playSound(Sounds.get('PostInput'))"
-								/>
-		
-								<button :class="$v.Message.$invalid ? 'disabled' : '' " type="button" @click="sendComment">
-									Ответить <span>( Ctrl + Enter )</span>
-								</button>
-
+							<template v-if="editContent">
+								<slot />
 							</template>
 
 							<template v-else>
-								<icon name="Info" />
-								<h5>Для комментирования необходима авторизация</h5>
-								<p>Это не так уж и сложно, да и получите сверху ещё больше функионала.</p>
+								<post-content :source="Content" />
 							</template>
 
-						</section>
+							<section class="post-content-tags">
+								<h6>Теги: </h6>
+								<tag v-for="(item, i) in payload.tags" :key="i" :transparent="false" :light="UI !== 'light'">
+									#{{ item }}
+								</tag>
+							</section>
 
-					</div>
+							<hr>
 
-				</eccheuma-collapse>
-			</hardware-acceleration-decorator>
+							<section class="post-content-comments">
+								<common-button class="interface-dark" scheme="dark" @click.native="toggleSection(!CommentSection, 'CommentSection')">
+									Открыть комментарии
+								</common-button>
+							</section>
+
+						</article>
+						
+					</eccheuma-collapse>
+				</hardware-acceleration-decorator>
+			</keep-alive>
+
+			<keep-alive>
+				<hardware-acceleration-decorator>
+					<eccheuma-collapse :active="CommentSection">	
+
+						<div 
+							class="post-comments" 
+							:class="[
+								{ 'rounded': !CommentSection },
+								{ 'rounded-bottom': CommentSection }
+							]"
+						>
+
+							<template v-if="!sortedComments.length">
+								<section class="post-comments-first">
+									<span>
+										" Тут ещё нет комментариев, но это пока... "
+									</span>
+								</section>
+							</template>
+
+							<section class="post-comments-content">
+								<post-comment 
+									v-for="item in sortedComments" 
+									:key="item.Date" 
+									:userID="item.UserID"
+									:postID="payload.ID" 
+									:commentID="item.ID" 
+								/>
+							</section>
+
+							<section class="post-comments-answer">
+
+								<template v-if="LoginStatus">
+
+									<h5>Оставьте свой комментарий</h5>
+									<p>Не длинее 600 символов и не менее 6. <strong>Лимит: {{ charLimit }}</strong></p>
+
+									<textarea 
+										v-model="Message" 
+										name="comment_section" 
+										maxlength="400" 
+										placeholder="Напишите тут что-то в ответ." 
+									/>
+			
+									<button :class="$v.Message.$invalid ? 'disabled' : '' " type="button" @click="sendComment">
+										Ответить <span>( Ctrl + Enter )</span>
+									</button>
+
+								</template>
+
+								<template v-else>
+									<icon name="Info" />
+									<h5>Для комментирования необходима авторизация</h5>
+									<p>Это не так уж и сложно, да и получите сверху ещё больше функионала.</p>
+								</template>
+
+							</section>
+
+						</div>
+
+					</eccheuma-collapse>
+				</hardware-acceleration-decorator>
+			</keep-alive>
 
 		</client-only>
 
@@ -257,11 +253,11 @@
 		@include gradient_border(block);
 		@include component-shadow;
 
-		border-radius: .7rem;
+		border-radius: var(--border-radius);
 
 		.rounded {
 
-			border-radius: .7rem;
+			border-radius: var(--border-radius);
 
 			&-top {
 				border-radius: 0 0 .7rem .7rem !important;
@@ -294,19 +290,42 @@
 		}
 
 		&:before {
+
 			content: "";
-			position: absolute; top: 0; left: 0; z-index: 1;
-			width: 100%; height: 100%;
-			background-image: url(~assets/images/Stripes.png?format=webp&size=20);
+
+			position: absolute; 
+			z-index: 1;
+			
+			top: 0; 
+			left: 0; 
+
+			width: 100%; 
+			height: 100%;
+
 			opacity: .75;
+
+			// Desktop
+			@media screen and ( min-width: $mobile-breakpoint ) {
+				background-image: url(~assets/images/Stripes.png?format=webp&size=20);
+			}
+
 		}
 
 		&:after {
 			content: "";
 			position: absolute; top: 0; left: 0; z-index: 2;
-			width: 100%; height: 100%;
-			background-color: rgb(var(--mono-200));
-			opacity: .5;
+			width: 100%; 
+			height: 100%;
+
+			// Desktop
+			@media screen and ( min-width: $mobile-breakpoint ) {
+				background: linear-gradient(180deg, rgb(var(--mono-200),.5) 80%, rgb(var(--mono-200)) 100%);
+			}
+
+			// Mobile
+			@media screen and ( max-width: $mobile-breakpoint ) {
+				background: linear-gradient(180deg, rgb(var(--mono-200),.5) 50%, rgb(var(--mono-200)) 100%);
+			}
 		}
 
 		&-image {
@@ -348,14 +367,18 @@
 			padding: 0 40px;
 			color: rgb(var(--mono-800));
 
+			@media screen and ( max-width: $mobile-breakpoint ) {
+				text-align: center;
+			}
+
 			h4 {
 				font-weight: 900;
-				font-size: var(--font-size-36);
+				font-size: var(--font-size-42);
 			}
 			h6 {
-				font-weight: 700;
-				font-size: var(--font-size-18);
-				width: 60ch;
+				font-weight: 600;
+				font-size: var(--font-size-20);
+				width: clamp(0px, 65ch, 100%);
 			}
 
 		}
@@ -381,13 +404,14 @@
 		transition: border-radius 250ms ease-in-out;
 
 		background-color: rgb(var(--color-mono-200));
+		border-top: 1px solid var(--color-accent-edges-100);
 
 		display: grid;
 
 		padding: 0 2vw;
 
 		grid-template: {
-			columns: 1fr 3fr 1fr;
+			columns: 2fr min-content 2fr;
 			rows: 10vh;
 			areas: 'social collapse author'
 		}
@@ -399,6 +423,7 @@
 			padding: 2vh 0;
 			row-gap: 2vh;
 
+			justify-content: center;
 			grid-template: {
 				columns: 1fr;
 				rows: auto;
@@ -411,11 +436,11 @@
 
 		.active {
 
-			background-color: rgb(var(--color-mono-300));
-			color: rgb(var(--color-mono-800));
+			background-color: rgb(var(--color-mono-800));
+			color: rgb(var(--color-mono-300));
 
 			i {
-				background-color: rgb(var(--color-mono-800));
+				background-color: rgb(var(--color-mono-300));
 			}
 
 		}
@@ -427,6 +452,10 @@
 
 		&-social {
 
+			@media screen and ( max-width: $mobile-breakpoint ) {
+				place-self: center;
+			}
+
 			justify-self: start;
 			align-self: center;
 			
@@ -435,18 +464,16 @@
 				column: social; 
 			}
 
+			column-gap: 2px;
+
 			button {
 
 				display: inline-flex;
-
 				column-gap: 4px;
 
 				@include push-button {
 
 					background-color: transparent;
-					padding: 6px 15px;
-					margin-right: 1ch;
-
 					color: rgb(var(--color-mono-700));
 
 					transition-duration: 250ms;
@@ -467,6 +494,10 @@
 		
 		&-collapse {
 
+			@media screen and ( max-width: $mobile-breakpoint ) {
+				place-self: center;
+			}
+
 			justify-self: center;
 			align-self: center;
 			
@@ -474,15 +505,6 @@
 				row: 		collapse; 
 				column: collapse; 
 			}
-
-			// button {
-			// 	@include push-button {
-			// 		background-color: transparent;
-			// 		padding: 6px 6vw;
-			// 		line-height: 21px;
-			// 		width: 100%;
-			// 	}
-			// }
 
 		}
 
@@ -492,7 +514,7 @@
 
 			@media screen and ( max-width: $mobile-breakpoint ) {
 				transform: unset;
-				border-bottom: 1px solid rgb(var(--color-mono-200));
+				place-self: center;
 			}
 
 			z-index: 3;
@@ -526,7 +548,8 @@
 					color: rgb(var(--color-mono-800));
 				}
 
-				border: 4px solid rgb(var(--color-mono-200)); border-radius: 100%;
+				border: 4px solid var(--color-accent-edges-100);
+				border-radius: 100%;
 
 				height: $iconSize; 
 				width: $iconSize;
@@ -568,22 +591,25 @@
 					weight: 900;
 				}
 			}
+
 			h6 {
 				font: {
 					size: var(--font-size-18);
 					weight: 800;
 				}
 			}
+
 			span {
 
 				font: {
-					size: var(--font-size-18);
-					weight: 500;
+					size: var(--font-size-14);
+					weight: 700;
 				}
 
-				color: rgb(var(--color-mono-600));
+				color: rgb(var(--color-mono-500));
 
 			}
+
 		}
 
 		&-tags {
@@ -591,7 +617,7 @@
 			h6 {
 				margin-right: 1vw;
 				font-weight: 800;
-				font-size: var(--font-size-18);
+				font-size: var(--font-size-20);
 			}
 
 			display: inline-flex;
@@ -660,13 +686,29 @@
 				resize: none;
 				display: block;
 				width: 100%;
-				height: 90px;
-				border-radius: .7rem;
+				height: 20vh;
+
+				color: rgb(var(--color-mono-800));
+				background-color: rgb(var(--color-mono-200));
+
+				border: {
+					style: solid;
+					width: 2px;
+					color: var(--color-accent-edges-100);
+					radius: var(--border-radius);
+				}
+
 				padding: 15px 20px;
-				margin-top: 4vh;
 				font-size: 12px;
-				background-color: rgb(var(--color-mono-900));
-				color: rgb(var(--color-mono-200));
+				transition-duration: 500ms;
+
+				&:focus {
+					outline: none;
+					border: {
+						color: var(--color-accent-edges-300);
+					}
+				}
+
 			}
 			button {
 				@include push-button {
@@ -765,7 +807,7 @@
 			payload: {
 				type: Object,
 				required: true
-			} as PropOptions< POST >,
+			} as PropOptions<POST>,
 			order: {
 				type: Number,
 				required: true,
@@ -778,12 +820,7 @@
 		data() {
 			return {
 
-				// filter: {
-				// 	name: 'XXX',
-				// 	status: false,
-				// },
-
-				Cooled: process.browser,
+				Cooled: false,
 
 				ImageURL: PLACEHOLDER,
 
@@ -797,6 +834,8 @@
 				ContentSection: false,
 				CommentSection: false,
 
+				prepareContent: false,
+
 				LikedFocus: false,
 				CommentFocus: false,
 
@@ -807,6 +846,13 @@
 				Likes: 		{} as {[ID: string]: LIKE}
 
 			}
+		},
+		async fetch() {
+
+			this.PostDate = await this.GetLocalTime(this.payload.date);
+
+			this.getAuthor();
+
 		},
 		computed: {
 
@@ -842,65 +888,64 @@
 					this.$nextTick().then(this.updateImage)
 				},
 			},
-		},
-		async created() {
-
-			this.PostDate = await this.GetLocalTime(this.payload.date);
-
-			const Watcher = this.$watch('Cooled', () => {
-				if ( Watcher ) {
-					this.updateImage(); Watcher()
+			Message: {
+				handler(n: string, o: string) {
+					this.playSound(this.Sounds.get(n.length > o.length ? 'Input::Increment' : 'Input::Decrement'));
 				}
-			}); 
+			},
+		},
+		created() {
 
-			this.getAuthor();
-			this.listenSnapshots(['Likes', 'Comments', 'Content']);
+			if ( process.browser ) {
+				
+				const watchCooledStatus = this.$watch('Cooled', (status) => {
+					if ( !status ) {
 
-			// @mouseenter="EmitSound('On', { rate: .45, volume: .25 })
+						this.listenDataSnapshots('Comments');
+						this.updateImage(); 
+						
+						watchCooledStatus(); console.debug('[Post]: watchCooledStatus | init')
 
-			this.setSounds([
-				{
-					file: 'On',
-					name: 'PostSocialButton',
-					settings: { rate: .45, volume: .25 },
-				},
-				{
-					file: 'On',
-					name: 'PostInput',
-				},
-				{
-					file: 'Out',
-					name: 'PostToggleIn',
-					settings: { rate: .8, volume: .25 },
-				},
-				{
-					file: 'Out',
-					name: 'PostToggleOut',
-					settings: { rate: .6, volume: .25 },
-				},
-				{
-					file: 'Tap',
-					name: 'PostLikeInc',
-					settings: { rate: .75, volume: .25 },
-				},
-				{
-					file: 'Tap',
-					name: 'PostLikeDec',
-					settings: { rate: .5, volume: .25 },
-				},
-			]);
+					}
+				}); 
+	
+				const watchCommentSection = this.$watch('CommentSection', () => {
+
+					if ( this.LoginStatus ) {
+
+						this.setSounds([
+							{ file: 'On', 	name: 'Input::Increment', 			settings: { rate: 1.00, volume: 0.25 } },
+							{ file: 'Off', 	name: 'Input::Decrement', 			settings: { rate: 1.00, volume: 0.25 } },
+						])
+		
+						watchCommentSection();
+
+					}
+	
+				})
+	
+				const watchPrepareContent = this.$watch('prepareContent', () => {
+					this.listenDataSnapshots('Content'); watchPrepareContent();
+				});
+
+				this.setSounds([
+					{ file: 'Off', 	name: 'Element::Action', settings: { rate: 1.00, volume: 0.25 } },
+				]);
+		
+				this.setSounds([
+					{ file: 'Tap', 	name: 'Switch::On',		settings: { rate: 1.00, volume: 0.25 } },
+					{ file: 'Tap', 	name: 'Switch::Off',	settings: { rate: 0.50, volume: 0.25 } },
+				]);
+
+			}
 
 		},
 		mounted() {
 
-			if ( !this.$isMobile ) {
-				this.initCooler(this.$el, (cooled: boolean) => { this.Cooled = cooled })
-			} else {
-				this.Cooled = false;
-			}
-
-			if ( this.CLIENT_RENDER_CHECK ) {
-				if ( !this.Cooled ) { this.updateImage() }
+			if ( process.browser ) {
+				setTimeout(() => {
+					this.initCooler(this.$el, (cooled: boolean) => { this.Cooled = cooled })
+				}, 3000)
 			}
 
 		},
@@ -930,17 +975,13 @@
 
 			},
 
-			listenSnapshots( sections: SECTIONS[] ) {
+			listenDataSnapshots(section: SECTIONS) {
 
-				sections.forEach((section: SECTIONS) => {
-
-					firebase.database()
-						.ref(`Posts/PostID-${ this.payload.ID }/${ section.toLowerCase() }`)
-						.on('value', (data) => {
-							this[section] = data.val()
-						})
-
-				})
+				firebase.database()
+					.ref(`Posts/PostID-${ this.payload.ID }/${ section.toLowerCase() }`)
+					.on('value', (data) => {
+						this[section] = data.val(); console.debug(`[Post]: listenDataSnapshots | ${ section }`)
+					})
 
 			}, 
 
@@ -952,7 +993,7 @@
 
 				this[section] = status;
 
-				this.playSound(this.Sounds.get(status ? 'PostToggleIn' : 'PostToggleOut'));
+				this.playSound(this.Sounds.get(status ? 'Switch::On' : 'Switch::Off'));
 
 			},
 
@@ -965,7 +1006,7 @@
 					_size: IMAGE_CONTAINER.getBoundingClientRect().width * window.devicePixelRatio
 				})
 
-				if ( this.CLIENT_RENDER_CHECK && this.$PIXI.utils.isWebGLSupported() ) {
+				if ( this.BROWSER && this.$PIXI.utils.isWebGLSupported() ) {
 					this.prepareAnimations(IMAGE_CONTAINER, URL)
 				} else {
 					this.ImageURL = URL;
@@ -1035,13 +1076,13 @@
 
 				if ( this.userLiked && this.LoginStatus ) {
 
-					this.playSound(this.Sounds.get('PostLikeDec'));
+					this.playSound(this.Sounds.get('Switch::Off'));
 
 					firebase.database().ref(REF).remove()
 
 				} else {
 
-					this.playSound(this.Sounds.get('PostLikeInc'));
+					this.playSound(this.Sounds.get('Switch::On'));
 
 					firebase.database().ref(REF).set({
 						hash: this.HashGenerator()

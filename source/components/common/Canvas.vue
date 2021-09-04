@@ -10,13 +10,21 @@
 
 	z-index: 1;
 
-	top: 0; left: 0;
-	height: 100vh; width: 100vw;
+	top: 0; 
+	left: 0;
+
+	height: 100vh; 
+	width: 100vw;
 
 	overflow: hidden;
 
 	background: {
 		color: rgb(var(--color-mono-200));
+	}
+
+	canvas {
+		height: 100vh !important; 
+		width: 100vw !important;
 	}
 
 }
@@ -43,7 +51,7 @@
 		},
 		{
 			name: 'Pattern',
-			path: require('~/assets/images/__PATTERN__.png?format=webp&size=512').src
+			path: require('~/assets/images/__PATTERN__.png?format=webp&size=480').src
 		},
 		{
 			name: 'Stripes',
@@ -64,6 +72,9 @@
 
 // MODULE
 	export default Vue.extend({
+		middleware() {
+			console.time('middleware')
+		},
 		data() {
 			return {
 
@@ -98,18 +109,20 @@
 			app: {
 				handler() {
 					this.$el.appendChild(this.app.view)
-				}
+				},
 			},
 			resources: {
-				handler() { this.Composite(this.resources) }
+				handler() { 
+					this.Composite(this.resources) 
+				}, 
 			},
 		},
 		created() {
 
 			console.time('Canvas execution')
 
-			setTimeout(this.Loader, 0);
-			setTimeout(this.ApplicationInit, 0);
+			this.Loader();
+			this.ApplicationInit();
 
 		},
 		mounted() {
@@ -120,8 +133,6 @@
 			this.$AnimeJS.running.forEach(( instance ) => {
 				instance.pause(); this.$AnimeJS.remove(instance)	
 			})
-
-			this.$nextTick(() => { this.app.destroy(true) })
 
 			window.removeEventListener('mousemove', this.ChangeMouseCoordinate, { capture: true })
 
@@ -135,12 +146,13 @@
 				this.container 	= new this.$PIXI.Container();
 				this.app 				= new this.$PIXI.Application({
 					height: window.innerHeight,
-					width: window.innerWidth,
+					width: 	window.innerWidth,
 					resolution: 1,
 					backgroundColor: 0x000000,
 				})
 
-				this.app.stage.addChild(this.container)
+				this.app.stage.addChild(this.container);
+				this.app.ticker.autoStart = false;
 
 				console.timeEnd('Initialise')
 
@@ -187,7 +199,11 @@
 						duration: 5000,
 						easing: 'easeInOutQuad',
 						begin: () => {
-							this.$emit('ready')
+
+							this.$emit('ready');
+
+							requestAnimationFrame(this.app.ticker.start);
+
 						},
 					})
 
@@ -397,8 +413,7 @@
 									Lines.tileScale.x = Lines.tileScale.y = 1;
 									Lines.width 			= this.app.screen.width;
 									Lines.height 			= this.app.screen.height;
-									Lines.alpha				= .15;
-									// Lines.blendMode 	= this.$PIXI.BLEND_MODES.MULTIPLY
+									Lines.alpha				= .1;
 
 						resolve(Lines);
 

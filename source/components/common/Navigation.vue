@@ -35,7 +35,7 @@
 		background-color: rgb(var(--color-mono-200));
 
 		padding: 0 20vw;
-		border-radius: .7rem;
+		border-radius: var(--border-radius);
 
 		grid-template: {
 			columns: repeat(auto-fit, minmax(10px, min-content));
@@ -111,7 +111,7 @@
     aspect-ratio: 1/3;
 
 		background-color: rgb(var(--color-mono-500));
-		border-radius: .7rem;
+		border-radius: var(--border-radius);
 
 	}
 }
@@ -159,20 +159,20 @@
 			},
 		},
 		created() {
-			this.setSounds([
-				{
-					file: 'Tap',
-					name: 'PortfolionNavHover',
-					settings: { rate: 1.25 }
-				},
-			])
+			if ( process.browser ) {
+				this.setSounds([
+					{ file: 'On', name: 'Element::Action', 	settings: { rate: 0.50 } },
+					{ file: 'On', name: 'Element::Hover', 	settings: { rate: 0.25 } }
+				])
+			}
 		},
 		mounted() {
 
 			const LINK_COMPONENTS = this.$refs.links as Vue[]
 
 			LINK_COMPONENTS.forEach((component) => {
-				component.$el.addEventListener('mouseenter', () => this.playSound(this.Sounds.get('PortfolionNavHover')))
+				component.$el.addEventListener('mouseenter', 	() => this.playSound(this.Sounds.get('Element::Hover')))
+				component.$el.addEventListener('click', 			() => this.playSound(this.Sounds.get('Element::Action')))
 			})
 
 		},

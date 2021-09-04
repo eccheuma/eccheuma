@@ -7,7 +7,7 @@
 		</section>
 
 		<keep-alive>
-			<component :is="PromoType" class="pattern_bg" />
+			<component :is="PromoType" />
 		</keep-alive>
 
 		<section class="promo_footer" :class="{ cooled: Cooled }">
@@ -32,7 +32,7 @@
 .promo {
 	&_container {
 
-		@extend %component;
+		@extend %card-container;
 
 		display: grid; 
 		justify-items: center;
@@ -63,6 +63,8 @@
 		display: grid;
 		width: 100%;
 
+		gap: var(--size-10);
+
 		@include gradient_border(bottom);
 
 		background: {
@@ -72,22 +74,28 @@
 		h4 {
 			font-weight: 800;
 			width: 100%;
-			font-size: var(--font-size-48);
+			font-size: var(--font-size-56);
 			font-family: var(--decor-font);
 
 			letter-spacing: .25ch;
-			line-height: var(--size-48);
+			line-height: var(--size-56);
+			color: rgb(var(--color-mono-700));
 
 		}
 		p {
-			font-weight: 600;
-			font-size: var(--font-size-18);
+			font-weight: 700;
+			font-size: var(--font-size-16);
 			width: calc(min(100%, 70ch));
-			color: rgb(var(--color-mono-700));
+			color: rgb(var(--color-mono-500));
+			line-height: var(--size-24);
+			margin: 0;
 		}
 		@media screen and ( max-width: $mobile-breakpoint ) {
 			text-align: center !important;
 		}
+	}
+	&_body {
+		@extend %pattern-lines;
 	}
 	&_footer {
 

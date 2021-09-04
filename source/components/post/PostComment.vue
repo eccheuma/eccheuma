@@ -1,5 +1,5 @@
 <template>
-	<div v-if="Object.keys(RecivedData).length " :id="`HASH-${ commentID }`" class="post-comment-item pattern_bg">
+	<div v-if="Object.keys(RecivedData).length " :id="`HASH-${ commentID }`" class="post-comment-item">
 
 		<section class="post-comment-item-icon">
 			<i class="post_comment-icon" :style="`background-image: url(${ Author.UserImageID })`" />
@@ -31,6 +31,9 @@
 .post-comment-item {
 
 	@include component-shadow;
+	@include gradient-border;
+
+	@extend %pattern-lines;
 
 	@media screen and ( max-width: $mobile-breakpoint ) {
 		
@@ -52,7 +55,7 @@
 	padding: 5vh 2vw;
 	margin: { bottom: 2vh };
 
-	border-radius: .7rem;
+	border-radius: var(--border-radius);
 	background-color: rgb(var(--color-mono-300));
 
 	grid-template: {
@@ -83,7 +86,7 @@
 				repeat: 	no-repeat;
 			}
 	
-			border: 4px solid rgb(var(--color-mono-200));
+			border: 2px solid var(--color-accent-edges-200);
 			// box-shadow: 0px 1vh 0px 0px rgb(var(--color-mono-800));
 			border-radius: 100%;
 
@@ -119,12 +122,12 @@
 		span {
 			display: block;
 			&:nth-of-type(1) {
-				font-size: var(--font-size-18);
+				font-size: var(--font-size-20);
 				font-weight: 800;
 				color: rgb(var(--color-mono-800));
 			}
 			&:nth-of-type(2) {
-				font-size: var(--font-size-18);
+				font-size: var(--font-size-20);
 				font-weight: 600;
 				color: rgb(var(--color-mono-600));
 			}
@@ -151,12 +154,17 @@
 			line-height: 2.5vh;
 			color: rgb(var(--color-mono-800));
 			font: {
-				size: 	var(--font-size-18);
+				size: 	var(--font-size-20);
 				family: var(--read-font);
 				weight: 500;
 			}
 
-			width: 65ch;
+			width: clamp(30ch, 65ch, 100%);
+
+			// MOBILE
+			@media screen and ( max-width: $mobile-breakpoint ) {
+				padding: 0 4vw;
+			}
 
 		}
 
@@ -237,13 +245,15 @@
 		},
 		async created() {
 
-			this.setSounds([
-				{
-					file: 'Tap',
-					name: 'SendComment',
-					settings: { rate: .33, volume: .25 },
-				}
-			])
+			if ( process.browser ) {
+				this.setSounds([
+					{
+						file: 'Tap',
+						name: 'Element::Action',
+						settings: { rate: .33, volume: .25 },
+					}
+				])
+			}
 
 			firebase.database()
 				.ref(`Users/${ this.userID }/state`)	
@@ -271,7 +281,7 @@
 				firebase.database()
 					.ref(`Posts/PostID-${ this.postID }/comments/Hash-${ this.commentID }`)
 					.remove()
-					.then(() => this.playSound(this.Sounds.get('SendComment')))
+					.then(() => this.playSound(this.Sounds.get('Element::Action')))
 
 			}
 

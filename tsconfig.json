@@ -25,15 +25,12 @@
       ]
     },
     "types": [
+      "vue/types",
       "@nuxt/types",
-      "@types/node"
+      "@types/node",
+      "@types/w3c-css-typed-object-model-level-1"
     ]
   },
-  "include": [
-    "global.d.ts",    
-    "source/**/*.ts",
-    "source/**/*.vue", "Untitled-2.ts",
-  ],
   "exclude": [
     ".nuxt",
     ".firebase",

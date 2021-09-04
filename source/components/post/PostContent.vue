@@ -39,7 +39,7 @@
 
 		iframe {
 			overflow: hidden;
-			border-radius: .7rem;
+			border-radius: var(--border-radius);
 			margin: 40px 20px;
 			max-width: 95%;
 			min-height: 420px;
@@ -75,10 +75,16 @@
 		// }
 
 		p {
-			font-size: var(--font-size-18);
+			font-size: var(--font-size-20);
 			font-weight: 500;
 			line-height: 1.4rem;
-			width: 75ch;
+			width: clamp(35ch, 75ch, 100%);
+
+			// // Mobile
+			// @media screen and ( max-width: $mobile-breakpoint ) {
+			// 	width: $GLOBAL-BodySize;
+			// }
+
 		}
 
 		h5 {

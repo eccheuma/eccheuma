@@ -42,7 +42,7 @@ $h: 10vh;
 
   column-gap: 4vw;
 
-	border-radius: .7rem;
+	border-radius: var(--border-radius);
 
 	align-content: center;
 	justify-content: center;

@@ -10,22 +10,11 @@
         default: true,
       }
     },
-    // render(h): any {
-
-    //   const slotDef     = this.$slots.default![0];
-    //   const activeClass = this.active ? 'utils::cooled' : null;
-
-    //   try {
-
-    //     slotDef.data?.class = activeClass;
-        
-    //   } catch (error) {
-    //     console.debug(error);
-    //   }
+    render(h) {
       
-    //   return slotDef;
+      return this.$slots.default![0];
 
-    // }    
+    }    
   })
 
 </script>

@@ -1,5 +1,5 @@
 <template>
-	<div class="eccheuma-collapse" :style="styleObject" :class="{ 'utils::dead-GPU': CLIENT_RENDER_CHECK && !$PIXI.utils.isWebGLSupported() }">
+	<div class="eccheuma-collapse" :style="styleObject" :class="{ 'utils::dead-GPU': BROWSER && !$PIXI.utils.isWebGLSupported() }">
 		<slot />
 	</div>
 </template>

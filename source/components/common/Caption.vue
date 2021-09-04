@@ -27,7 +27,7 @@
     padding: .5vh;
     i {
       @include icon-size(4vh);
-      background-color: var(--caption-card-color);
+      --svg-fill: var(--caption-card-color);
     }
   }
   &-container {
@@ -42,7 +42,7 @@
     column-gap: 1vw;
     align-items: center;
 
-    border-radius: .7rem;
+    border-radius: var(--border-radius);
     background-color: var(--caption-card-bg);
     color: var(--caption-card-color);
     padding: 1vw;
@@ -86,10 +86,11 @@
     }
 
     span {
+      display: flex;
       color: var(--caption-card-color) !important;
       font: {
-        size: var(--font-size-12);
-        weight: 600;
+        size: var(--font-size-14);
+        weight: 700;
       }
     }
 

@@ -54,7 +54,7 @@
 	}
 
 	p {
-		font-size: var(--font-size-18);
+		font-size: var(--font-size-20);
     font-family: var(--read-font);
     font-weight: 500;
     color: rgb(var(--color-mono-700));

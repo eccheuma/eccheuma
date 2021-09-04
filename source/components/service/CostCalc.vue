@@ -175,7 +175,7 @@ v-for="( item, index ) in Addictions"
 			overflow: hidden;
 			background-color: rgb(var(--color-mono-300));
 			border: 1px solid rgb(var(--color-mono-400));
-			border-radius: .7rem;
+			border-radius: var(--border-radius);
 			width: 100%;
 			&:focus {
 				outline: none;
@@ -191,7 +191,7 @@ v-for="( item, index ) in Addictions"
 					-webkit-appearance: none;
 					height: 100%;
 					width: 6px;
-					border-radius: .7rem;
+					border-radius: var(--border-radius);
 					background-color: rgb(var(--color-mono-500));
 					cursor: pointer;
 					transition-duration: .5s;
@@ -243,7 +243,7 @@ v-for="( item, index ) in Addictions"
 			display: inline-block;
 			outline: none;
 			width: 90%;
-			border-radius: .7rem;
+			border-radius: var(--border-radius);
 			background-color: rgb(var(--color-mono-200));
 			border: 1px solid rgb(var(--color-mono-400));
 			color: rgba(var(--color-mono-900), .75);
@@ -255,7 +255,7 @@ v-for="( item, index ) in Addictions"
 
 		option {
 			border: 0px solid rgb(var(--color-mono-900));
-			font-size: var(--font-size-18);
+			font-size: var(--font-size-20);
 			color: rgba(var(--color-mono-900), .75);
 			font-weight: 700;
 		}
@@ -263,7 +263,7 @@ v-for="( item, index ) in Addictions"
 	}
 	&-aside {
 		position: relative;
-		border-radius: .7rem;
+		border-radius: var(--border-radius);
 
 		max-height: 65vh;
 		overflow-y: scroll;
@@ -294,7 +294,7 @@ v-for="( item, index ) in Addictions"
 				line-height: 10px;
 				background-color: var(--color-accent-pass);
 				color: rgb(var(--color-mono-200));
-				border-radius: .7rem;
+				border-radius: var(--border-radius);
 			}
 		}
 

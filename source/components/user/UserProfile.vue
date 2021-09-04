@@ -166,7 +166,7 @@
 }
 
 .user_profile-collapse {
-	position: absolute; z-index: 1000;
+	position: absolute; z-index: 1020;
 }
 
 .UserProfileComponentTransition {
@@ -223,7 +223,7 @@
 
 	&-container {
 
-		// position: absolute; z-index: 1000;
+		position: relative;
 		width: calc(100vw - 10px);
 		height: 75vh;
 
@@ -233,6 +233,8 @@
 
 		backdrop-filter: blur(3px);
 		background-color: rgba(var(--color-mono-200),.9);
+
+		z-index: 1010;
 
 		display: grid; 
 		grid-template: {
@@ -318,7 +320,7 @@
 		&-footer {
 
 			background-color: rgb(var(--color-mono-300));
-			border-radius: .7rem;
+			border-radius: var(--border-radius);
 			padding: 3vh 1.5vw;
 
 			height: min-content;

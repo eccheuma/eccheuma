@@ -17,11 +17,10 @@
 				<div v-if="area" :key="index" class="auth_profile-body-section">
 					<strong>{{ area.title }}</strong>
 					<span>{{ area.value }}</span>
-					<i class="fas fa-info-circle">
+					<icon :name="area.icon" />
 						<!-- <popover>
 							{{ area.info }}
 						</popover> -->
-					</i>
 				</div>
 			</template>
 
@@ -51,15 +50,13 @@
 .auth_profile {
 	&-container {
 
-		color: rgb(var(--color-mono-300));
-
 		overflow: {
 			y: hidden;
 			x: hidden;
 		}
 
 		border: {
-			radius: .7rem;
+			radius: var(--border-radius);
 		}
 
 		background: {
@@ -72,11 +69,11 @@
 
 		display: grid;
 		position: relative;
-		justify-content: center;
-		align-content: center;
+		place-content: center;
+		justify-items: center;
 
-		// height: 30vh;
-		padding: 2vh 0;
+		gap: 2vh;
+		padding-block: 2vh;
 
 		color: rgb(var(--color-mono-800));
 		background: {
@@ -97,8 +94,8 @@
 			}
 
 			mix-blend-mode: color;
-
 			z-index: 1;
+
 		}
 
 		&:after {
@@ -115,10 +112,13 @@
 			);
 
 			z-index: 1;
+
 		}
 
 		i {
-			height: clamp(100px, 15vh, 100%);
+
+			// height: clamp(100px, 15vh, 100%);
+			height: 100px;
 			aspect-ratio: 1/1;
 			z-index: 2;
 
@@ -131,8 +131,8 @@
 			border: {
 				radius: 100%;
 				width: 4px;
-				style: outset;
-				color: rgb(var(--color-mono-600));
+				style: solid;
+				color: var(--color-accent-edges-100);
 			}
 
 		}
@@ -191,13 +191,13 @@
 					row: 		value;
 				}
 
-				padding: .5vh 1vw;
+				padding: 1vh 1vw;
 
 				color: rgb(var(--color-mono-800));
 
 				border: 1px solid rgb(var(--color-mono-400));
 				border: {
-					radius: .7rem;
+					radius: var(--border-radius);
 				}
 
 				font: {
@@ -205,31 +205,6 @@
 					weight: 600;
 				}
 
-			}
-
-			i {
-
-				cursor: pointer;
-
-				grid: {
-					column: info;
-					row: 		info;
-				}
-
-				justify-self: center;
-				align-self: center;
-
-				color: rgb(var(--color-mono-500));
-
-				font: {
-					size: 1rem;
-				}
-
-				transition: color, transform 250ms ease-in-out;
-				&:hover {
-					color: rgb(var(--color-mono-300));
-					transform: scale(1.25);
-				}
 			}
 
 		}
@@ -268,6 +243,7 @@
 	import EccheumaButton from '~/components/buttons/CommonButton.vue';
 	// import Popover 				from '~/components/common/Popover.vue';
 	import Tag 						from '~/components/common/Tag.vue';
+	import Icon						from '~/components/Icon.vue'
 
 // MIXINS 
 	import F_UserStatus from '~/assets/mixins/filters/UserStatus'
@@ -280,6 +256,7 @@
 	type PROFILE_AREA = {
 		title: string
 		value: string | number
+		icon: string
 		info?: string
 	}
 
@@ -287,6 +264,7 @@
 	export default Vue.extend({
 		components: {
 			// Popover,
+			Icon,
 			Tag,
 			EccheumaButton,
 		},
@@ -308,17 +286,20 @@
 					UserBalance: {
 						title: 'Баланс',
 						value: `${ this.UserState.UserBalance } ₽`,
-						info: 'Ваш текущий баланс.'
+						info: 'Ваш текущий баланс.',
+						icon: 'Service',
 					},
 					UserWorkStatus: {
 						title: 'Статус заказа',
 						value: this.DefineWorkStatus(this.UserState.UserWorkStatus),
-						info: 'Текущий статус последнего заказа заказа'
+						info: 'Текущий статус последнего заказа заказа',
+						icon: 'Fire',
 					},
 					Messages: {
 						title: 'Сообщения',
 						value: this.NewMessages,
-						info: `Последнее сообщенее: "${ LastMessage?.slice(0, 65) }"`
+						info: `Последнее сообщенее: "${ LastMessage?.slice(0, 65) }"`,
+						icon: 'Message',
 					}
 				}
 			}
