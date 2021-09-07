@@ -1,0 +1,75 @@
+.utils\:\:cooled {
+	
+	&-node {
+		display: none !important
+	}
+	
+	&-sections {
+		section {
+			display: none !important
+		}
+	}
+
+}
+
+.interface {
+	&-dark {
+
+		--color-mono-900: var(--mono-200);
+		--color-mono-800: var(--mono-300);
+		--color-mono-400: var(--mono-500);
+		--color-mono-300: var(--mono-700);
+		--color-mono-200: var(--mono-800);
+
+	}	
+}
+
+.pattern_bg {
+
+	position: relative;
+	z-index: 1;
+
+	&::before {
+
+		content: '';
+
+		position: absolute;
+		top: 0; left: 0;
+
+		z-index: -1;
+
+		display: block;
+		width: 100%;
+		height: 100%;
+
+		background: {
+			image: url('~assets/images/__PATTERN__.png?size=350');
+			color: rgb(var(--mono-300));
+		};
+
+		opacity: 3%;
+
+	}
+
+}
+
+.disabled {
+	pointer-events: none;
+	opacity: .1;
+}
+
+.utils\:\:glassy {
+	backdrop-filter: blur(4px);
+	// @media screen and ( max-width: $mobile-breakpoint ) {
+	// 	backdrop-filter: unset !important;
+	// }
+}
+
+.utils\:\:voided {
+	height: 0px;
+	width: 0px;
+}
+
+.utils\:\:component-shadow {
+	box-shadow: 0px 0px 10px rgba(var(--color-mono-000), 0.33);
+}

@@ -1,0 +1,154 @@
+<template>
+	<div id="HomePage" class="home-container">
+
+		<main>
+
+			<client-only>
+				<auth v-if="$isMobile" />
+			</client-only>
+
+			<pagination :payload="{ order: 1, scrollTarget: 445, section: 'home', delay: 0 }" />
+
+			<nuxt-child 
+				:key="$route.path" 
+				class="home-content"
+			/>
+
+			<pagination style="align-self: end" :payload="{ order: -1, scrollTarget: 445, section: 'home', delay: 0 }" />
+
+		</main>
+
+		<aside>
+
+			<client-only>
+
+				<auth v-if="!$isMobile" />
+
+				<vk-posts-container />
+
+			</client-only>
+			
+		</aside>
+
+	</div>
+</template>
+
+<style lang="scss" scoped>
+
+aside {
+
+	padding: 2vh 10px;
+	display: grid;
+	row-gap: 2vh;
+	align-content: start;
+
+}
+
+main {
+	display: grid;
+	row-gap: 2vh;
+	align-content: start;
+	padding: 2vh 10px;
+}
+
+.home {
+	&-container {
+		display: grid;
+		column-gap: 15px;
+		grid-template-columns: 9fr 3fr;
+		@media screen and ( max-width: $mobile-breakpoint ) {
+			grid-template-columns: 1fr;
+		}
+	}
+	&-content {
+		display: grid;
+		row-gap: 2vh;
+	}
+}
+
+</style>
+
+<script lang="ts">
+
+	import Vue from 'vue'
+
+	import { mapMutations, mapState } from 'vuex'
+
+	import firebase from 'firebase/app'
+	import 'firebase/database'
+
+// MIXINS
+	import TransitionSound 		from '~/assets/mixins/TransitionSound'
+	import TransitionProperty from '~/assets/mixins/PageTransitionProperty'
+
+// COMPONENTS
+	import Pagination 			from '~/components/common/Pagination.vue'
+	import Auth 							from '~/components/auth/Wrap.vue'
+
+// TYPES
+	import type { VuexModules } from '~/typescript/VuexModules'
+
+// LOAD POLITIC
+	import { load_ranges } from '~/config/LoadPolitic'
+
+// MODULE
+	export default Vue.extend({ 
+		components: {
+			Pagination,
+			Auth,
+			VkPostsContainer: () => import('~/components/common/VkPostsContainer.vue'),
+		},
+		mixins: [ TransitionSound, TransitionProperty ],
+		layout: 'Application', 
+		scrollToTop: false, 
+		data() {
+			return {
+
+				Title: 'Главная',
+
+				LoadRange: load_ranges.posts,
+
+			}
+		},
+		head () {
+			return {
+				title: 'Eccheuma | Главная',
+				meta: [
+					{ 
+						hid: 'description', 
+						name: 'description', 
+						content: 'Главная страница. Тут собраны статьи на завязанные на профильную тему.',
+					},
+					{
+						hid: 'og:title', 
+						property: 'og:title',
+						content: 'Escape from Mordorland - Главная',
+					},
+					{
+						hid: 'og:description', 
+						property: 'og:description',
+						content: 'Главная страница. Тут собраны статьи на завязанные на профильную тему.',
+					},
+				],
+			}
+		},
+		computed: {
+			...mapState({
+				LoginStatus: state => (state as VuexModules).Auth.Auth.LoginStatus
+			})
+		},
+		async created() {
+
+			const PostsQuantity: number = await firebase.database().ref('Posts').once('value').then( data => data.numChildren() );
+
+			this.ChangePageQuantity( Math.ceil( PostsQuantity / this.LoadRange ) );
+
+		},
+		methods: {
+			...mapMutations({
+				ChangePageQuantity: 'PageSelector/ChangePageQuantity'
+			})
+		},
+	})
+
+</script>

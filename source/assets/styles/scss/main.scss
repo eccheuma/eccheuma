@@ -1,0 +1,76 @@
+@import "_variables";
+@import "_utils";
+@import "_transitions";
+@import "_fonts";
+
+::placeholder {
+	color: rgb(var(--color-mono-500));
+}
+
+::selection {
+	background-color: var(--accent);
+	color: rgb(var(--mono-200));
+}
+
+// :root {
+// 	--test: 1vw;
+// }
+
+* { 
+
+	@supports (scrollbar-color: red red) and (scrollbar-width: thin) {
+		scrollbar-color: rgb(var(--color-mono-400)) rgb(var(--color-mono-200));
+		scrollbar-width: thin;
+	}
+
+	&::-webkit-scrollbar {
+
+		$w: 1vw;
+		$line-w: 0.1vw;
+		
+		width: $w;
+
+		&-track {
+			background-color: var(--color-accent-edges-100);
+			border: #{ ($w - $line-w) / 2 } solid rgb(var(--color-mono-200));
+			border-radius: var(--border-radius);
+		}
+		&-thumb {
+
+			cursor: pointer;
+
+			border-radius: 2rem;
+			// background-color: rgb(var(--color-mono-400));
+			background-color: var(--color-accent-edges-200);
+			background: linear-gradient(45deg, var(--color-accent-edges-100), var(--color-accent-edges-300), var(--color-accent-edges-200));
+			border: 3px solid rgb(var(--color-mono-200));
+
+		}
+
+	}
+}
+
+body {
+	background-color: rgb(var(--color-mono-100));
+	width: 100vw;
+	height: 100vh;
+	overflow-x: hidden;
+	font-size: var(--font-size-18);
+	position: relative;
+	line-height: 1.65;
+	color: rgb(var(--color-mono-900));
+	font-family: var(--default-font), sans-serif;
+
+	scrollbar-gutter: stable;
+
+}
+
+main {
+
+	background-color: rgb(var(--color-mono-200));
+
+}
+
+aside {
+	background-color: rgb(var(--color-mono-200));
+}
