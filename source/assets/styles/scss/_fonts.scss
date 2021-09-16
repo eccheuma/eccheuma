@@ -1,0 +1,25 @@
+@import "_font-face";
+
+@each $type, $weight in ( Regular, 500 ), ( Medium, 600 ), ( Bold, 800 ), ( Black, 900 ) {
+	@font-face {
+		font-family: 'Montserrat';
+		font-weight: #{$weight};
+		src: url('~assets/fonts/Montserrat/Montserrat-#{$type}.woff2');
+		// unicode-range: U+3000-9FFF, U+ff??;
+		// U+0400-U+04FF;
+		// U+0400..U+04FF
+	}
+}
+
+@each $type, $weight in ( Medium, 600 ), ( Bold, 800 ) {
+	@font-face {
+		font-family: 'Bitter';
+		font-weight: #{ $weight };
+		src: url('~assets/fonts/Bitter/Bitter-#{$type}.woff2');
+	}
+}
+
+@font-face {
+	font-family: 'Dobrozrachniy';
+	src: url('~assets/fonts/Dobrozrachniy/Dobrozrachniy-Regular.woff2');
+}

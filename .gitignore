@@ -1,0 +1,14 @@
+# 
+.firebase
+.nuxt
+
+#
+app
+container
+functions
+
+# Node Modules
+node_modules
+
+*.rules
+*.rules.*
