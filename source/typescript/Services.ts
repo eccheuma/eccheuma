@@ -1,41 +1,42 @@
 
 // COST CALC TYPES
-
-export type CATEGOTIES = 'WebApplications' | 'GraphicalDesign' | 'HTMLcode'
+export type CATEGORY = 'WebApplications' | 'GraphicalDesign' | 'HTMLcode'
 
 export type WebApplications		= 'Landing' | 'VueApplication'
 export type GraphicalDesign 	= 'MockupBlock' | 'MockupPage' | 'Logo' | 'Vector' | 'BusinessСard'
 export type HTMLcode					= 'HTMLMockupPage' | 'HTMLMockupSection' | 'Letter'  
 
-export type PRODUCTS<T> = T
+export type PRODUCTS = WebApplications | GraphicalDesign | HTMLcode
 
-export type SERVICE = {
-	Type: PRODUCTS<WebApplications>
-			| PRODUCTS<GraphicalDesign>
-			| PRODUCTS<HTMLcode>
+interface ServiceTiming {
+	Delivery: number
+};
+
+export interface SERVICE extends ServiceTiming {
+	Type: PRODUCTS
 	Cost: number
 	Name: string
-	Time: string
-	Descriprion?: string
+	Delivery: number
+	Description?: string
 }
 
-export type ADDICTION = {
+export interface ADDICTION extends ServiceTiming {
 	Cost: number
 	Type: string
 	Title: string
-	Single: boolean
+	Quantity: number
 	Descriprion?: string
 }
 
 export type SELECTED_SERVICE = {
 	Quantity: number
-	Category: CATEGOTIES
+	Category: CATEGORY
 	Service: SERVICE
 	Addiction: ADDICTION
 }
 
 export type SERVICES_CARD = {
-	path: CATEGOTIES
+	path: CATEGORY
 	title: string
 	subTitle: string
 	description: string
@@ -44,6 +45,14 @@ export type SERVICES_CARD = {
 export type REQUEST_STATUS = {
 	0: 'Отправлен на рассмотрение',
 	1: 'Поставлен в очередь'
-	2: 'Ждёт осмотра'
-	3: 'В процессе выполнения'
+	2: 'В процессе выполнения'
+	3: 'Ожидает проверку'
+}
+
+export interface ORDER extends SERVICE, ServiceTiming {
+	ID: string,
+	Status: keyof REQUEST_STATUS
+	Accepted: number
+	Recived: number
+	Declined: boolean
 }

@@ -7,14 +7,29 @@
 
 			<section-header>
 				<template #header>	
-					<span>Нужен сайт? Я его вам дать.</span>
+					<span>C большой вероятностью, вы пришли сюда за этим</span>
 				</template>
-				<template #default>
-					<span>УГА БУГА</span>
-				</template>
+				<!-- <template #default>
+					<span></span>
+				</template> -->
 			</section-header>
 
 			<service-card :payload="Products[0]" :wide="true" />
+
+		</section>
+
+		<section class="service-calculator">
+
+			<section-header>
+				<template #header>	
+					<span>Калькулятор стоимости</span>
+				</template>
+				<template #default>
+					<span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore sed aliquam rerum aspernatur enim quidem.</span>
+				</template>
+			</section-header>
+
+			<calculator />
 
 		</section>
 
@@ -34,10 +49,6 @@
 			</div>	
 
 		</section>
-
-		<!-- <section class="service-calc">
-			<cost-calc default-category="" :category-defined="false" />
-		</section> -->
 
 	</main>
 </template>
@@ -91,10 +102,11 @@
 	// COMPONENTS
 	import SectionHeader 		from '~/components/common/SectionHeader.vue'
 	import ServiceCard 			from '~/components/service/ServiceCard.vue'
+	import Calculator				from '~/components/service/Calculator.vue'
 	import PromoBanner      from '~/components/promo/PromoBanner.vue'
 
 	// TYPES 
-	import type { CATEGOTIES, SERVICES_CARD } from '~/typescript/Services'
+	import type { CATEGORY, SERVICES_CARD } from '~/typescript/Services'
 
 	// MODULE
 	export default Vue.extend({
@@ -102,8 +114,7 @@
 			ServiceCard,
 			SectionHeader,
 			PromoBanner,
-			// Async components ========================================= //
-			// CostCalc: () => import( '~/components/service/CostCalc.vue' ),
+			Calculator,
 		}, 
 		mixins: [ TransitionSound ],
 		layout: 'Application',
@@ -133,7 +144,7 @@
 					}
 				] as SERVICES_CARD[],
 
-				Categories: ['WebApplications', 'GraphicalDesign', 'HTMLcode'] as CATEGOTIES[]
+				Categories: ['WebApplications', 'GraphicalDesign', 'HTMLcode'] as CATEGORY[]
 			}
 		},
 		head () {

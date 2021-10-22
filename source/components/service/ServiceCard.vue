@@ -147,7 +147,7 @@
 					family: var(--decor-font);
 				}
 
-				letter-spacing: .25ch;
+				letter-spacing: .15ch;
 				line-height: var(--size-36);
 
 			}
@@ -257,18 +257,12 @@
 		},
 		computed: {
 			...mapState({
-				LoginStatus: 		state => (state as VuexModules).Auth.Session.LoginStatus
+				LoginStatus: state => (state as VuexModules).Auth.Session.LoginStatus
 			})
 		},
 		async fetch() {
 
-			firebase.database()
-				.ref(`Service/${ this.payload.path }`)
-				.on('value', (data) => {
-
-					this.Services = Object.values(data.val()) as SERVICE[]
-
-				})
+			this.Services = await this.getData();
 
 		},
 		methods: {
@@ -279,6 +273,14 @@
 
 			ToggleModal(value: boolean) {
 				this.Modal = value
+			},
+
+			async getData() {
+
+				const snapshot = firebase.database().ref(`Service/${ this.payload.path }`).once('value');
+
+				return Object.values((await snapshot).val()) as SERVICE[]
+
 			}
 
 		},

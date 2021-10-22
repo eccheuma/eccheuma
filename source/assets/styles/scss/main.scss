@@ -29,19 +29,44 @@
 
 		&-track {
 			background-color: var(--color-accent-edges-100);
-			border: #{ ($w - $line-w) / 2 } solid rgb(var(--color-mono-200));
+			border-inline: #{ ($w - $line-w) / 2 } solid rgb(var(--color-mono-200));
 		}
 		&-thumb {
 
 			cursor: pointer;
 
-			border-radius: 2rem;
+			border-radius: 5px;
 			background-color: var(--color-accent-edges-200);
 			background: linear-gradient(45deg, var(--color-accent-edges-100), var(--color-accent-edges-300), var(--color-accent-edges-200));
 			border: 3px solid rgb(var(--color-mono-200));
+
 		}
 
 	}
+}
+
+input[type="range"] {
+
+	-webkit-appearance: none;
+	background: rgb(var(--color-mono-200));
+	border: 1px solid rgb(var(--color-mono-400));
+	padding: .5vh 1vw;
+	border-radius: var( --border-radius);
+	width: 100%;
+	overflow: hidden;
+	height: 4vh;
+
+	&::-webkit-slider-thumb {
+
+		-webkit-appearance: none;
+
+		height: 2.5vh;
+		aspect-ratio: 1/2;
+		border-radius: 3px;
+		background: rgb(var(--color-mono-800));
+
+	}
+
 }
 
 body {

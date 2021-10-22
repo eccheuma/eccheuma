@@ -147,7 +147,7 @@
 				}
 
 				line-height: var(--size-56);
-				letter-spacing: .25ch;
+				letter-spacing: .15ch;
 				margin-right: -.25ch;
 
 			}

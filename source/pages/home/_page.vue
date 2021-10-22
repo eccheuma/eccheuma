@@ -2,19 +2,7 @@
 	<section class="home-page">
 
 		<template v-for="( item, index ) in Posts">
-
-			<intesection-component 
-				:key="`PostID-${ item.date }`" 
-
-				:style="`order: ${ Posts.length - index }`"
-				:ignite="!$isMobile"
-				:rootMargin="5"
-
-				@isIntersecting="animateIntersection"
-			>
-				<post :order="0" :payload="item" />
-			</intesection-component>
-
+			<post :key="item.date"  :style="`order: ${ Posts.length - index }`" :payload="item" />
 		</template>
 		
 		<promo-banner
@@ -28,7 +16,7 @@
 			v-if="Posts.length >= 4"
 			key="Style"
 			promo-type="Style"
-			:style="`order: ${ 3 }`"
+			:style="`order: ${ 4 }`"
 		/>
 
 	</section>
@@ -57,28 +45,15 @@
 	// COMPONENTS
 	import PromoBanner 					from '~/components/promo/PromoBanner.vue';
 	import Post 								from '~/components/post/Post.vue';
-	import IntesectionComponent from '~/components/functional/intersectionComponent.vue'
 
 	// LOAD POLITIC
 	import { load_ranges } from '~/config/LoadPolitic'
-
-	// INERSECTION OBSERVER ANIMATION
-	const OBSERVER_ANIMATION = {
-		in: {
-			opacity: [0, 1],
-			delay: 250,
-		},
-		out: {
-			opacity: [1, 0],
-		}
-	}
 
 	// MODULE
 	export default Vue.extend({
 		components: {
 			PromoBanner,
 			Post,
-			IntesectionComponent,
 		},
 		mixins: [ PageTransitionProperty ],
 		async middleware({ params, query, redirect }) {
@@ -155,21 +130,6 @@
 			...mapMutations({
 				ChangePage: 'PageSelector/ChangePage'
 			}),
-
-			animateIntersection(intersection: boolean, slotNode: Node) {
-
-				if ( this.BROWSER && this.$PIXI.utils.isWebGLSupported() ) {
-					this.$AnimeJS({
-						targets: slotNode,
-						easing: 'linear',
-						round: 100,
-	
-						...OBSERVER_ANIMATION[intersection ? 'in' : 'out']
-	
-					})
-				}
-
-			},
 
 			async GetData() {
 

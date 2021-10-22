@@ -158,7 +158,7 @@
 						family: var(--decor-font);
 					}
 
-					letter-spacing: .25ch;
+					letter-spacing: .15ch;
 					line-height: var(--size-36);
 				}
 

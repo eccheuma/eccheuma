@@ -222,19 +222,11 @@ eccheuma-layout {
 
 			}
 		},
-		// head(): any {
-		// 	return {
-		// 		link: [
-		// 			{ rel: 'icon', href: `/${ this.someAction ? 'IconAction' : 'Icon' }.svg` },
-		// 		]
-		// 	}
-		// },
 		computed: {
 
 			...mapState({
 				UI:						state => (state as VuexModules).App.UI,
 				LoginStatus:	state => (state as VuexModules).Auth.Session.LoginStatus,
-				Muted:				state => (state as VuexModules).Sound.global.mute,
 			}),
 
 		},

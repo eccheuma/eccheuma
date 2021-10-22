@@ -5,7 +5,8 @@ import { createHash } from 'crypto';
 import type { NuxtConfig } from '@nuxt/types';
 
 // TEMPLATES
-import HEAD_CONFIG from './container/defaultHead';
+import HEAD_CONFIG    from './container/defaultHead';
+import genearateName  from './container/nameGenerator';
 
 // VARIABLES
 const chunkSize     = 1.25;
@@ -19,7 +20,7 @@ const hash          = createHash('md5').update(Math.random().toString()).digest(
 // }
 
 // WRITE A VERSION
-writeFile('version.txt', hash, () => console.log(`≏ Hash build: ${ hash }`))
+writeFile('version.txt', hash, () => console.log(`≏ Hash build: ${ genearateName(4) }:${ hash }`))
 
 // CONFIG
 const config: NuxtConfig = {
@@ -93,6 +94,17 @@ const config: NuxtConfig = {
     parallel: inDevelopment,
     publicPath: 'resources',
 
+    postcss: {
+      preset: {
+        stage: 2,
+        autoprefixer: {
+          grid: false,
+          supports: true,
+        },
+        browsers: 'last 2 versions',
+      }
+    },
+
     babel: {
       presets({ envName }) {
 
@@ -119,15 +131,20 @@ const config: NuxtConfig = {
 
     filenames: {
       font:   () => 'fonts/[name].[ext]',
-      chunk:  ({ isDev }) => isDev ? '[id].js'  : `[id].${ hash }.js`,
-      css:    ({ isDev }) => isDev ? '[id].css' : `[id].${ hash }.css`,
+      chunk:  ({ isDev }) => isDev ? '[name].js'  : `[name].${ hash }.js`,
+      css:    ({ isDev }) => isDev ? '[name].css' : `[name].${ hash }.css`,
     },
 
     extractCSS: !inDevelopment,
     optimizeCSS: {
       cssProcessor: require('cssnano'),
       cssProcessorPluginOptions: {
-        preset: [require('cssnano-preset-default'), { discardComments: false }]
+        preset: [
+          require('cssnano-preset-default'), 
+          { 
+            mergeIdents: true,
+          }
+        ]
       }
     },
 
@@ -136,11 +153,13 @@ const config: NuxtConfig = {
       mergeDuplicateChunks: true,
       minimize: !inDevelopment,
 
+      namedChunks: true,
+      namedModules: true,
+
       splitChunks: {
         chunks: 'async',
-        minSize: 20000 * chunkSize,
-        maxSize: 1048576 * chunkSize,
-        minChunks: 1,
+        minChunks: 2,
+        name: genearateName(4),
       }
 
     },

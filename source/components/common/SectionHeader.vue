@@ -30,7 +30,7 @@
         weight: 900;
       }
 
-      letter-spacing: .25ch;
+      letter-spacing: .15ch;
     }
     &:nth-child(2) {
       font: {

@@ -59,8 +59,6 @@
 
 				inViewport: false,
 
-				Init: false,
-
 				ElementPosition: { Top: 0, Bottom: 0 } as POSITION,
 				ScrollPosition: 0,
 
@@ -74,7 +72,7 @@
 			}
 		},
 		computed: {
-			TranslateValue(): number {
+			translateValue(): number {
 
 				const MULTIPLIER 	= this.options.Multiplier || this.DefaultOptions.Multiplier
 				const DIR 				= this.options.Direction 	|| this.DefaultOptions.Direction
@@ -89,7 +87,7 @@
 				}
 
 			},
-			OpacityValue(): number {
+			opacityValue(): number {
 
 				const H = this.ElementPosition.Top + this.ElementPosition.Bottom;
 
@@ -101,45 +99,43 @@
 			inViewport: {
 				handler() {
 					if ( this.inViewport ) {
-
-						window.addEventListener('scroll', this.ScrollHandler);
-
+						window.addEventListener('scroll', this.scrollHandler);
 					} else {
-
-						window.removeEventListener('scroll', this.ScrollHandler);
-
+						window.removeEventListener('scroll', this.scrollHandler);
 					}
 				},
 			},
-			TranslateValue: {
+			translateValue: {
 				handler() { 
 
-					const css = `transform: translateY(${ this.TranslateValue as number }px)`;
+					const css = `transform: translateY(${ this.translateValue as number }px)`;
 
-					this.StyleElement('Container', css); 
+					this.setStyleElement('Container', css); 
 
 				}
 			},
-			OpacityValue: {
+			opacityValue: {
 				handler() { 
-					this.StyleElement(
-						'Wrapper', 
-						`opacity: ${ this.OpacityValue }%`, 
-					)
+					if ( this.inViewport ) {
+						this.setStyleElement(
+							'Wrapper', 
+							`opacity: ${ this.opacityValue }%`
+						)
+					}
 				}
 			},
 			ScrollPosition: {
 				handler() {
-					if (this.inViewport) {
+					requestIdleCallback(() => {
 						this.$emit('scroll-position', this.ScrollPosition);
-					}
+					})
 				}
 			},
 			forcedScrollPosition: {
 				handler() {
-					if (!this.inViewport) {
+					requestIdleCallback(() => {
 						this.ScrollPosition = this.forcedScrollPosition;
-					}
+					})
 				}
 			}
 		},
@@ -158,55 +154,30 @@
 					this.inViewport = entry.pop()?.isIntersecting || false 
 				}).observe(this.$el)
 				
-				window.addEventListener('scroll', this.ScrollHandler);
-
-				this.Init = true
+				window.addEventListener('scroll', this.scrollHandler);
 
 			},
 
-			ElementInView(): boolean {
-
-				const ELEMENT = this.ElementPosition
-
-				const VIEW = {
-					Top: this.ScrollPosition,
-					Bottom: this.ScrollPosition + window.innerHeight,
-				}
-
-				return VIEW.Top <= ELEMENT.Bottom || ELEMENT.Bottom >= VIEW.Top
-				
+			scrollHandler(): void {
+				requestAnimationFrame( () => {
+					if ( this.inViewport && this.ScrollPosition !== window.scrollY) {
+						this.ScrollPosition = window.scrollY;
+					}
+				})
 			},
 
-			ScrollHandler(): void {
-
-				if ( this.inViewport && this.ScrollPosition !== Math.trunc( window.scrollY )) {
-					requestAnimationFrame( () => {
-						this.ScrollPosition = Math.trunc( window.scrollY );
-					})
+			setStyleElement(id: string, css: string ) {
+				if ( this.inViewport ) {
+					(this.$refs[id] as Element).setAttribute('style', css ) 
 				}
-
-			},
-
-			StyleElement(_REF: string, _CSS: string ) {
-
-				if ( this.ElementInView() ) { 
-					
-					const ELEMENT = this.$refs[_REF] as Element
-					
-					requestAnimationFrame( () => { 
-						ELEMENT.setAttribute('style', _CSS ) 
-					})
-
-				}
-				
 			},
 
 			getElementPosition(el: HTMLElement): Promise<POSITION> {
 				return new Promise((resolve) => {
 
 					const VALUES: POSITION = {
-						Top: 		el.getBoundingClientRect().top 		+ pageYOffset, 
-						Bottom: el.getBoundingClientRect().bottom + pageYOffset,
+						Top: 		el.getBoundingClientRect().top 		+ scrollY, 
+						Bottom: el.getBoundingClientRect().bottom + scrollY,
 					}
 					
 					resolve(VALUES)

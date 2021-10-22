@@ -77,7 +77,7 @@
 			font-size: var(--font-size-56);
 			font-family: var(--decor-font);
 
-			letter-spacing: .25ch;
+			letter-spacing: .15ch;
 			line-height: var(--size-56);
 			color: rgb(var(--color-mono-900));
 

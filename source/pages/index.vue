@@ -79,33 +79,7 @@
 		}
 	}
 
-	.active {
-		color: rgb(var(--color-mono-200)) !important;
-		background-color: rgb(var(--color-mono-900)) !important;
-		animation: Mute 1s infinite alternate;
-		@keyframes Mute {
-			0% {
-				transform: scale(0.85);
-			}
-			100% {
-				transform: scale(1);
-			}
-		}
-	}
-
 	.holl {
-		&-wall {
-
-			position: absolute; top: 0; left: 0; z-index: 9999;
-
-			width: 100vw;
-			height: 100vh;
-
-			background: {
-				color: rgba(var(--color-mono-200), 1);
-			}
-
-		}
 		&-container {
 			display: grid;
 			grid-template: {
@@ -192,6 +166,7 @@
 			justify-self: center;
 
 			span {
+				
 				$size: 50px;
 
 				cursor: pointer;
@@ -209,7 +184,23 @@
 					@include icon-size(24px);
 					margin: auto;
 				}
+
 			}
+
+			.active {
+				color: rgb(var(--color-mono-200)) !important;
+				background-color: rgb(var(--color-mono-900)) !important;
+				animation: Mute 1s infinite alternate;
+				@keyframes Mute {
+					0% {
+						transform: scale(0.85);
+					}
+					100% {
+						transform: scale(1);
+					}
+				}
+			}
+
 		}
 		&-info {
 			@include section_position($area: build);
@@ -392,7 +383,9 @@
 			HeaderNavigation,
 			Icon,
 		},
-		mixins: [ EmitSound ],
+		mixins: [ 
+			EmitSound 
+		],
 		data() {
 			return {
 
@@ -421,8 +414,7 @@
 		head: {
 			link: [
 
-				{ rel: 'icon', 			href: 'Icon.svg' },
-				{ rel: 'prefetch', 	href: require('@/static/audio/Holl.ogg').default, as:'fetch', crossorigin: true },
+				{ rel: 'prefetch', 	href: require('~/static/audio/Holl.ogg').default, as:'fetch', crossorigin: true },
 				{ rel: 'prefetch', 	href: PLACEHOLDER },
 
 			]

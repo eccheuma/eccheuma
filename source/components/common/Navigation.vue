@@ -66,7 +66,7 @@
 				family: var(--decor-font);
 			}
 
-			letter-spacing: .25ch;
+			letter-spacing: .15ch;
 
 			span {
 				position: absolute;

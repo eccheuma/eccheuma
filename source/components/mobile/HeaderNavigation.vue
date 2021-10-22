@@ -33,7 +33,7 @@
         weight: 500;
       }
 
-      letter-spacing: .25ch;
+      letter-spacing: .15ch;
       line-height: var(--font-size-24);
     }
 

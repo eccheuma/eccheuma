@@ -1,135 +1,136 @@
 <template>
-	<section
-		:id="`PostID-${ payload.ID }`" 
-		class="post-container"
-		:data-hash="HashGenerator(12)"
-		@keydown.ctrl.enter="sendComment"
-		> 
+	<intesection-component :ignite="!$isMobile" :rootMargin="15" @isIntersecting="animateIntersection">
+		<section
+			:id="`PostID-${ payload.ID }`" 
+			class="post-container"
+			:data-hash="HashGenerator(12)"
+			@keydown.ctrl.enter="sendComment"
+			ref="post"
+			> 
 
-		<div 
-			ref="ImageHolder" 
-			class="post-header"
-			>
+			<div 
+				ref="ImageHolder" 
+				class="post-header"
+				>
 
-			<picture class="post-header-image">
-				<source :srcset="ImageURL.avif" type="image/avif">
-				<img :src="ImageURL.webp" :alt="payload.description">
-			</picture>
+				<picture class="post-header-image">
+					<source :srcset="ImageURL.avif" type="image/avif">
+					<img :src="ImageURL.webp" :alt="payload.description">
+				</picture>
 
-			<section v-once class="post-header-tags">
+				<section v-once class="post-header-tags">
 
-				<tag v-for="(item, i) in payload.tags" :key="i">
-					#{{ item }}
-				</tag>
-
-			</section>
-
-			<section v-once class="post-header-title">
-				<h4>{{ payload.title }}</h4>
-				<h6>{{ payload.description }}</h6>
-			</section>
-
-			<section class="post-header-time">
-				<tag>
-					{{ PostDate.Day }} в {{ PostDate.Time }}
-				</tag>
-			</section>
-
-		</div>
-
-		<div 
-			class="post-footer"  
-			:class="[
-				{ 'utils::cooled-sections': Cooled },
-				{ 'rounded-bottom': !ContentSection && !CommentSection },
-			]"
-			>
-
-			<section class="post-footer-social">
-
-				<button 
-					:id="`LikePopOver-${ payload.ID }`"
-					:class="[
-						{ active: userLiked }, 
-						{ disabled: !LoginStatus }
-					]"
-					@click="sendLike"
-					>
-
-					<icon name="Fire" />
-
-					<client-only>
-						
-						<template v-if="Object.keys(Likes || {}).length">
-							<span>{{ Object.keys(Likes || {}).length }}</span>
-						</template>
-
-						<span slot="placeholder" />
-
-					</client-only>
-
-				</button>
-
-				<popover :target="`LikePopOver-${ payload.ID }`">
-					{{ LoginStatus ? 'Поставить лайк' : 'Авторизируйтесь для оценки' }}
-				</popover>
-
-				<button 
-					:id="`CommentPopOver-${ payload.ID }`" 
-					:class="{ active: CommentSection }"
-					@click="toggleSection(!CommentSection, 'CommentSection')"
-					>
-
-					<icon name="Comment" />
-
-					<client-only>
-
-						<template v-if="sortedComments.length">
-							<span>{{ sortedComments.length }}</span>
-						</template>
-
-						<span slot="placeholder" />
-
-					</client-only>
-
-				</button>
-
-				<popover :target="`CommentPopOver-${ payload.ID }`">
-					Открыть комметарий
-				</popover>
-
-			</section>
-
-			<section class="post-footer-collapse">
-
-				<common-button 
-					:scheme="UI"
-					:sound="false"
-					@mouseenter.native.once="prepareContent = true" 
-					@click.native="toggleSection(!ContentSection, 'ContentSection')"
-					>
-					{{ !ContentSection ? 'Развернуть пост' : 'Свернуть пост' }}
-				</common-button>
-
-			</section>				
-
-			<section class="post-footer-author">
-
-				<template v-if="AuthorInfo">
-					<tag>
-						{{ AuthorInfo.UserName }}
+					<tag v-for="(item, i) in payload.tags" :key="i">
+						#{{ item }}
 					</tag>
-					<i :style="`background-image: url(${ AuthorInfo.UserImageID })`" />
-				</template>
 
-			</section>
+				</section>
 
-		</div>
+				<section v-once class="post-header-title">
+					<h4>{{ payload.title }}</h4>
+					<h6>{{ payload.description }}</h6>
+				</section>
 
-		<client-only>
+				<section class="post-header-time">
+					<tag>
+						{{ PostDate.Day }} в {{ PostDate.Time }}
+					</tag>
+				</section>
 
-			<keep-alive>
-				<hardware-acceleration-decorator v-if="!Cooled">
+			</div>
+
+			<div 
+				class="post-footer"  
+				:class="[
+					{ 'utils::cooled-sections': Cooled && !$isMobile },
+					{ 'rounded-bottom': !ContentSection && !CommentSection },
+				]"
+				>
+
+				<section class="post-footer-social">
+
+					<button 
+						:id="`LikePopOver-${ payload.ID }`"
+						:class="[
+							{ active: userLiked }, 
+							{ disabled: !LoginStatus }
+						]"
+						@click="sendLike"
+						>
+
+						<icon name="Fire" />
+
+						<client-only>
+							
+							<template v-if="Object.keys(Likes || {}).length">
+								<span>{{ Object.keys(Likes || {}).length }}</span>
+							</template>
+
+							<span slot="placeholder" />
+
+						</client-only>
+
+					</button>
+
+					<popover :target="`LikePopOver-${ payload.ID }`">
+						{{ LoginStatus ? 'Поставить лайк' : 'Авторизируйтесь для оценки' }}
+					</popover>
+
+					<button 
+						:id="`CommentPopOver-${ payload.ID }`" 
+						:class="{ active: CommentSection }"
+						@click="toggleSection(!CommentSection, 'CommentSection')"
+						>
+
+						<icon name="Comment" />
+
+						<client-only>
+
+							<template v-if="sortedComments.length">
+								<span>{{ sortedComments.length }}</span>
+							</template>
+
+							<span slot="placeholder" />
+
+						</client-only>
+
+					</button>
+
+					<popover :target="`CommentPopOver-${ payload.ID }`">
+						Открыть комметарий
+					</popover>
+
+				</section>
+
+				<section class="post-footer-collapse">
+
+					<common-button 
+						:scheme="UI"
+						:sound="false"
+						@mouseenter.native.once="prepareContent = true" 
+						@click.native="toggleSection(!ContentSection, 'ContentSection')"
+						>
+						{{ !ContentSection ? 'Развернуть пост' : 'Свернуть пост' }}
+					</common-button>
+
+				</section>				
+
+				<section class="post-footer-author">
+
+					<template v-if="AuthorInfo">
+						<tag>
+							{{ AuthorInfo.UserName }}
+						</tag>
+						<i :style="`background-image: url(${ AuthorInfo.UserImageID })`" />
+					</template>
+
+				</section>
+
+			</div>
+
+			<client-only>
+
+				<hardware-acceleration-decorator>
 					<collapse :active="ContentSection">
 
 						<article 
@@ -173,10 +174,8 @@
 						
 					</collapse>
 				</hardware-acceleration-decorator>
-			</keep-alive>
 
-			<keep-alive>
-				<hardware-acceleration-decorator v-if="!Cooled">
+				<hardware-acceleration-decorator>
 					<collapse :active="CommentSection">	
 
 						<div 
@@ -235,11 +234,11 @@
 
 					</collapse>
 				</hardware-acceleration-decorator>
-			</keep-alive>
 
-		</client-only>
+			</client-only>
 
-	</section>
+		</section>
+	</intesection-component>
 </template>
 
 <style lang="scss">
@@ -371,12 +370,12 @@
 			h4 {
 				font-weight: 900;
 				font-size: var(--font-size-42);
-				width: 25ch;
+				width: clamp(min-content, 25ch, 100%);
 			}
 			h6 {
 				font-weight: 600;
 				font-size: var(--font-size-20);
-				width: clamp(0px, 65ch, 100%);
+				width: clamp(min-content, 65ch, 100%);
 			}
 
 		}
@@ -562,10 +561,6 @@
 
 		transition: border-radius 250ms ease-in-out;
 
-		@media screen and ( max-width: $mobile-breakpoint ) {
-			padding: 0 5vw;
-		}
-
 		background-color: rgb(var(--color-mono-200));
 		color: rgb(var(--color-mono-900));
 		min-height: 50vh;
@@ -750,7 +745,8 @@
 	import CommonButton 				from '~/components/buttons/CommonButton.vue'
 
 	// FUNCTIONAL COMPONENTS
-	import HardwareAccelerationDecorator from '~/components/functional/HardwareAcceleration.vue';
+	import HardwareAccelerationDecorator 	from '~/components/functional/HardwareAcceleration.vue';
+	import IntesectionComponent 					from '~/components/functional/intersectionComponent.vue'
 
 	//	С фильтрами происходит что-то не совсем ясное. 
 	//  Нормально работают в хроме, но лиса отказывается с ними адекватно дружить.
@@ -787,6 +783,7 @@
 	export default Vue.extend({
 		components: {
 			HardwareAccelerationDecorator,
+			IntesectionComponent,
 			Collapse,
 			CommonButton,
 			Popover,
@@ -808,10 +805,6 @@
 				type: Object,
 				required: true
 			} as PropOptions<POST>,
-			order: {
-				type: Number,
-				required: true,
-			},
 			editContent: {
 				type: Boolean,
 				default: false
@@ -827,7 +820,7 @@
 				AuthorInfo: new Object() as USER_STATE | null,
 
 				Message: '',
-				PreviosMessage: undefined,
+				PreviosMessage: '',
 				CharLimit: CHAR_LIMIT,
 
 				ContentSection: false,
@@ -835,14 +828,13 @@
 
 				prepareContent: false,
 
-				LikedFocus: false,
-				CommentFocus: false,
-
 				PostDate: { Day: '', Time: '' } as FORMATED_DATE,
 
 				Content: 	[] as POST_CONTENT[],
 				Comments: {} as {[ID: string]: COMMENT},
-				Likes: 		{} as {[ID: string]: LIKE}
+				Likes: 		{} as {[ID: string]: LIKE},
+
+				IntersectionAnimation: undefined as Animation | undefined
 
 			}
 		},
@@ -888,12 +880,17 @@
 					this.playSound(this.Sounds.get(n.length > o.length ? 'Input::Increment' : 'Input::Decrement'));
 				}
 			},
+			userLiked: {
+				handler(value: boolean) {
+					this.playSound(this.Sounds.get(value ? 'Switch::On' : 'Switch::Off'));
+				}
+			},
 		},
 		created() {
 
 			if ( process.browser ) {
 				
-				const watchCooledStatus = this.$watch('Cooled', (status) => {
+				const watchCooledStatus 	= this.$watch('Cooled', (status) => {
 					if ( !status ) {
 
 						this.listenDataSnapshots('Comments');
@@ -922,6 +919,10 @@
 					this.listenDataSnapshots('Content'); watchPrepareContent();
 				});
 
+				const watchIntersectionAnimation = this.$watch('IntersectionAnimation', () => {
+					this.IntersectionAnimation!.reverse(); watchIntersectionAnimation();
+				})
+
 			}
 
 		},
@@ -932,6 +933,15 @@
 				this.initCooler(this.$el, (cooled: boolean) => {
 					this.Cooled = cooled
 				});
+
+				this.IntersectionAnimation = (this.$refs.post as HTMLElement).animate([
+					{ opacity: 0 },
+					{ opacity: 1 }
+				], {
+					easing: 'ease-in-out',
+					duration: 1000,
+					fill: "both",
+				})
 
 				this.setSounds([
 					{ file: 'Off', 	name: 'Element::Action', settings: { rate: 0.50 } },
@@ -957,7 +967,7 @@
 
 			...mapActions({
 				GetLocalTime: 'GetLocalTime',
-				getImageURL: 'Images/getImageURL',
+				getImageURL: 	'Images/getImageURL',
 				decodeImage:  'Images/decodeImage',
 			}),
 			
@@ -1010,29 +1020,35 @@
 
 			},
 
+			animateIntersection(intersection: boolean) {
+				if ( this.IntersectionAnimation ) {
+
+					this.IntersectionAnimation.cancel(); 
+					this.IntersectionAnimation.updatePlaybackRate(intersection ? 1 : -1); 
+					this.IntersectionAnimation.play();
+
+				}
+			},
+
 			prepareAnimations(el: Element, url: IMAGE_URL) {
 
-				const ANIMATION = (u_direction: DirectionOptions, cb?: AnimeCallBack ) => {
+				const animationFn = (_direction: DirectionOptions, callback?: AnimeCallBack ) => {
 					this.$AnimeJS({
 
 						targets: el,
 						opacity: [1, 0],
 						duration: 250,
-						direction: u_direction,
+						direction: _direction,
 						easing: 'linear',
 
-						...cb
+						...callback
 
 					})
 				}
 
-				ANIMATION('normal', {
+				animationFn('normal', {
 					complete: () => { 
-
-						this.ImageURL = url;
-
-						this.decodeImage(url).then(() => ANIMATION('reverse'))
-
+						this.ImageURL = url; this.decodeImage(url).then(() => animationFn('reverse'))
 					}
 				})
 
@@ -1042,9 +1058,9 @@
 
 				if ( !this.$v.Message.$anyError && this.LoginStatus && this.PreviosMessage !== this.Message ) {
 
-					const HASH = this.HashGenerator()
+					this.PreviosMessage = this.Message;
 
-					const SECTION: SECTIONS = 'Comments'
+					const HASH = this.HashGenerator()
 
 					const COMMENT: COMMENT = {
 						ID: HASH,
@@ -1054,8 +1070,8 @@
 					}
 	
 					firebase.database()
-						.ref(`Posts/PostID-${ this.payload.ID }/${ SECTION.toLowerCase() }/Hash-${ HASH }`)
-						.set( COMMENT )
+						.ref(`Posts/PostID-${ this.payload.ID }/comments/Hash-${ HASH }`)
+						.set(COMMENT)
 						.then(() => { this.Message = '' })
 
 				}
@@ -1064,23 +1080,17 @@
 
 			sendLike(): void {
 
-				const Section: SECTIONS = 'Likes'
-
-				const REF = `Posts/PostID-${ this.payload.ID }/${ Section.toLowerCase() }/${ this.StoreUser.UserID }`
+				const REFERENCE = firebase.database().ref(`Posts/PostID-${ this.payload.ID }/likes/${ this.StoreUser.UserID }`)
 
 				if ( this.userLiked && this.LoginStatus ) {
 
-					this.playSound(this.Sounds.get('Switch::Off'));
-
-					firebase.database().ref(REF).remove()
+					REFERENCE.remove();
 
 				} else {
 
-					this.playSound(this.Sounds.get('Switch::On'));
-
-					firebase.database().ref(REF).set({
+					REFERENCE.set({
 						hash: this.HashGenerator()
-					})
+					});
 
 				}
 

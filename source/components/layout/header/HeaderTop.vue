@@ -104,7 +104,7 @@
 			&:nth-child(1) {
 				color: rgb(var(--color-mono-900));
 				font-weight: 500;
-				letter-spacing: .25ch;
+				letter-spacing: .15ch;
 				font-size: var(--font-size-36);
 				font-family: var(--decor-font);
 				line-height: var(--size-42);

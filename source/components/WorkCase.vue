@@ -172,7 +172,7 @@
 							weight: 500;
 						}
 
-						letter-spacing: .25ch;
+						letter-spacing: .15ch;
 
 					}
 
@@ -357,7 +357,7 @@
 							weight: 500;
 						}
 						
-						letter-spacing: .25ch;
+						letter-spacing: .15ch;
 						margin-left: .25ch;
 						line-height: 5vh;
 
@@ -384,7 +384,7 @@
 						weight: 500;
 					}
 
-					letter-spacing: .25ch;
+					letter-spacing: .15ch;
 
 				}
 

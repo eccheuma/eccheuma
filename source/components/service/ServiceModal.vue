@@ -134,25 +134,25 @@
 	import { mapState, mapActions, mapMutations } from 'vuex'
 
 // COMPONENTS
-	import CostCalc from '~/components/service/CostCalc.vue'
+	import Calculator from '~/components/service/Calculator.vue'
 	// import Loader 	from '~/components/common/Loader.vue'
 
 // TYPES
 	import type { VuexModules } from '~/typescript/VuexModules'
 
-	import type { SELECTED_SERVICE, CATEGOTIES } from '~/typescript/Services'
+	import type { SELECTED_SERVICE, CATEGORY } from '~/typescript/Services'
 
 // MODULE
 	export default Vue.extend({
 		components: { 
-			CostCalc, 
+			Calculator, 
 			// Loader 
 		},
 		props: {
 			serviceType: {
 				type: String,
 				required: true
-			} as PropOptions<CATEGOTIES>
+			} as PropOptions<CATEGORY>
 		},
 		data() {
 			return {

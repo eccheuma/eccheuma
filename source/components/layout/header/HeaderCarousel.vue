@@ -51,7 +51,7 @@
 
 							<client-only>
 
-								<template v-if="BROWSER && $PIXI.utils.isWebGLSupported()">
+								<template v-if="BROWSER && $PIXI.utils.isWebGLSupported() && !$isMobile">
 									<parallax 
 										:options="{ OpacityFade: true, OpacityFadeOffset: 100 }" 
 										:forcedScrollPosition="CommonCarouselScrollPosition"
@@ -82,15 +82,6 @@
 										</template>
 									</picture>
 								</template>
-
-								<section slot="placeholder">
-									<div 
-										ref="ImageHolder" 
-										class="eccheuma_swiper-image" 
-										:class="{'content-hidden': index > ( activeIndex + 1 ) || index < ( activeIndex - 1 )}"
-										:style="`background-image: url(${ ImagePlaceholder })`" 
-									/>
-								</section>
 
 							</client-only>
 
@@ -390,6 +381,8 @@
 		data() {
 			return {
 
+				ready: false,
+
 				ImagePlaceholder: PLACEHOLDER_L,
 
 				Focus: false,
@@ -428,7 +421,7 @@
 					})
 
 					this.getImages(this.PostContent).then((data) => {
-						this.PostImages = data.reverse()
+						this.PostImages = data.reverse();
 					});
 
 				}
@@ -448,7 +441,9 @@
 				const PROMISES = posts.map(async (post): Promise<IMAGE_URL> => {
 					return await this.getImageURL({ 
 						_path: post.image,
-						_size: window.innerWidth * window.devicePixelRatio
+						_size: this.$isMobile 
+							? ( window.innerWidth * window.devicePixelRatio ) * 1.5
+							: ( window.innerWidth * window.devicePixelRatio )
 					})
 				})
 

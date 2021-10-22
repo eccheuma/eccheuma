@@ -1,4 +1,4 @@
-import { WebApplications, HTMLcode, GraphicalDesign, CATEGOTIES, SERVICE, ADDICTION } from '~/typescript/Services';
+import { WebApplications, HTMLcode, GraphicalDesign, CATEGORY, SERVICE, ADDICTION } from '~/typescript/Services';
 import { USER_STATE, USER_REQUEST } from '~/typescript/User';
 import { IMAGE_PROPERTY } from '~/typescript/Image' 
 import { WORKCASE }       from '~/typescript/WorkCase'
@@ -9,7 +9,7 @@ import { POST }           from '~/typescript/Post'
   type HASH_LIKE = string;
 
   type CASE_TYPE    = WebApplications | HTMLcode | GraphicalDesign;
-  type SERVICE_TYPE = CATEGOTIES;
+  type SERVICE_TYPE = CATEGORY;
 
 // MODULE
   export type FirebaseDatabaseContract = {
@@ -36,7 +36,7 @@ import { POST }           from '~/typescript/Post'
     },
     Service: {
       Addictions: {
-        [k in CATEGOTIES]: Array<ADDICTION>
+        [k in CATEGORY]: Array<ADDICTION>
       },
       Products: {
         [k in SERVICE_TYPE]: Array<SERVICE>

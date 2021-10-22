@@ -4,124 +4,130 @@
 		class="user_profile-collapse"
 		:active="UserProfileArea" 
 		:options="{ duration: 500, emit: true }"
-		@collapsed="AnimateContainer"
+		@collapsed="(v) => active = v"
 		>
 
 		<section ref="UserProfileContainer" class="user_profile-container">
 
-			<div class="user_profile-info">
+			<transition name="opacity-transition">
+				<div v-show="active" class="user_profile-info">
 
-				<section v-once class="user_profile-info-header">
-					<h6>Профиль</h6>
-					<span>Информация о балансе и заказе</span>
-				</section>
+					<section v-once class="user_profile-info-header">
+						<h6>Профиль</h6>
+						<span>Информация о балансе и заказе</span>
+					</section>
 
-				<hr v-once>
-
-				<section class="user_profile-info-body">
-					<i ref="UserIcon" :style="`background-image: url(${ UserState.UserImageID }); transform: scale(0)`" />
-					<div class="user_profile-info-body-name">
-						<tag :light="true">
-							{{ UserState.UserName }}
-						</tag>
-						<span>{{ DefineUserStatus(UserState.UserStatus) }}</span>
-					</div>
-				</section>
-
-				<hr v-once>
-
-				<section class="user_profile-info-footer">
-
-					<h6>Информация</h6>
 					<hr v-once>
-					<div class="user_profile-info-footer-list">
 
-						<span>
-							<div>Баланс: </div>
-							<strong>{{ UserState.UserBalance }} ₽</strong>
-						</span>
-						<span>
-							<div>Сообщений: </div>
-							<strong>{{ MessagesCount }} ( Новых: {{ NewMessages }} )</strong>
-						</span>
+					<section class="user_profile-info-body">
+						<i ref="UserIcon" :style="`background-image: url(${ UserState.UserImageID }); transform: scale(0)`" />
+						<div class="user_profile-info-body-name">
+							<tag :light="true">
+								{{ UserState.UserName }}
+							</tag>
+							<span>{{ DefineUserStatus(UserState.UserStatus) }}</span>
+						</div>
+					</section>
 
-						<!-- <template v-if="ActiveRequest.length">
+					<hr v-once>
+
+					<section class="user_profile-info-footer">
+
+						<h6>Информация</h6>
+						<hr v-once>
+						<div class="user_profile-info-footer-list">
+
 							<span>
-								<div>Тип заказа:  </div>
-								<strong>{{ ActiveRequest[0].Service.Name || 'Не указан' }}</strong>
+								<div>Баланс: </div>
+								<strong>{{ UserState.UserBalance }} ₽</strong>
 							</span>
 							<span>
-								<div>Статус заказа: </div>
-								<strong>{{ DefineWorkStatus(ActiveRequest[0].Status) }}</strong>
+								<div>Сообщений: </div>
+								<strong>{{ MessagesCount }} ( Новых: {{ NewMessages }} )</strong>
 							</span>
+
+							<!-- <template v-if="ActiveRequest.length">
+								<span>
+									<div>Тип заказа:  </div>
+									<strong>{{ ActiveRequest[0].Service.Name || 'Не указан' }}</strong>
+								</span>
+								<span>
+									<div>Статус заказа: </div>
+									<strong>{{ DefineWorkStatus(ActiveRequest[0].Status) }}</strong>
+								</span>
+								<span>
+									<div>Цена заказа: </div>
+									<strong>{{ ActiveRequest[0].Service.Cost || 0 }} ₽</strong>
+								</span>
+							</template> -->
+
 							<span>
-								<div>Цена заказа: </div>
-								<strong>{{ ActiveRequest[0].Service.Cost || 0 }} ₽</strong>
+								<div>Заказов в прогрессе: </div>
+								<strong>{{ RequestsQuantity }}</strong>
 							</span>
-						</template> -->
 
-						<span>
-							<div>Заказов в прогрессе: </div>
-							<strong>{{ RequestsQuantity }}</strong>
-						</span>
+						</div>
 
-					</div>
+					</section>
 
-				</section>
+				</div>
+			</transition>
 
-			</div>
+			<transition name="opacity-transition">
+				<div v-show="active"  class="user_profile-content">
 
-			<div class="user_profile-content">
+					<section class="user_profile-content-header">
+						<h6>{{ ComponentInfo.Title }}</h6>
+						<span>{{ ComponentInfo.Sub }}</span>
+					</section>
 
-				<section class="user_profile-content-header">
-					<h6>{{ ComponentInfo.Title }}</h6>
-					<span><i class="fas fa-info-circle" /> Информация о балансе и заказе</span>
-				</section>
+					<hr v-once>
+					
+					<transition name="UserProfileComponentTransition" mode="out-in">
 
-				<hr v-once>
-				
-				<transition name="UserProfileComponentTransition" mode="out-in">
+						<component :is="CurentPreferencesComponent" :key="`${CurentPreferencesComponent}-Key`" />
 
-					<component :is="CurentPreferencesComponent" :key="`${CurentPreferencesComponent}-Key`" />
+					</transition>
 
-				</transition>
+				</div>
+			</transition>
 
-			</div>
+			<transition name="opacity-transition">
+				<div v-show="active" class="user_profile-navigation">
 
-			<div class="user_profile-navigation">
+					<section v-once class="user_profile-navigation-header">
+						<h6>Навигация</h6>
+						<span>Выберите нужный пункт меню</span>
+					</section>
 
-				<section v-once class="user_profile-navigation-header">
-					<h6>Навигация</h6>
-					<span>Выберите нужный пункт меню</span>
-				</section>
+					<hr v-once>
 
-				<hr v-once>
+					<section class="user_profile-navigation-body">
 
-				<section class="user_profile-navigation-body">
+						<common-button 
+							v-for="(item, index) in PreferencesArea" 
+							:key="`navigation-button-${ index }`"
+							:indicator="Boolean(item.Component === 'Messages' && NewMessages)"
+							:class="[
+								{ active: CurentPreferencesComponent === item.Component }
+							]"
+							@click.native="AreaToggle( item.Component )"
+							>
+							{{ item.Name }}
+						</common-button>
 
-					<common-button 
-						v-for="(item, index) in PreferencesArea" 
-						:key="`navigation-button-${ index }`"
-						:indicator="Boolean(item.Component === 'Messages' && NewMessages)"
-						:class="[
-							{ active: CurentPreferencesComponent === item.Component }
-						]"
-						@click.native="AreaToggle( item.Component )"
-						>
-						{{ item.Name }}
-					</common-button>
+					</section>
 
-				</section>
+					<hr v-once>
 
-				<hr v-once>
+					<section v-once class="user_profile-navigation-footer">
+						<common-button @click.native="Logout">
+							Выход из аккаунта
+						</common-button>
+					</section>
 
-				<section v-once class="user_profile-navigation-footer">
-					<common-button @click.native="Logout">
-						Выход из аккаунта
-					</common-button>
-				</section>
-
-			</div>
+				</div>
+			</transition>
 
 		</section>
 
@@ -142,7 +148,7 @@ $padX: 1vw;
 	display: flex;
 	flex-direction: column;
 
-	height: 8vh;
+	height: 6vh;
 
 	h6 {
 
@@ -154,7 +160,7 @@ $padX: 1vw;
 			// weight: 700;
 		}
 
-		letter-spacing: .25ch;
+		letter-spacing: .15ch;
 		line-height: var(--size-36);
 
 	}
@@ -239,8 +245,6 @@ $padX: 1vw;
 
 		overflow: hidden;
 
-		text-align: center;
-
 		backdrop-filter: blur(12px);
 		background-color: rgba(var(--color-mono-200),.9);
 
@@ -266,10 +270,6 @@ $padX: 1vw;
 			}
 		}
 
-		div > {
-			opacity: 0;
-		}
-
 		hr {
 			width: 100%;
 			background-color: rgb(var(--color-mono-400));
@@ -287,7 +287,7 @@ $padX: 1vw;
 			rows: auto 1px 1fr 1px min-content;
 		}
 
-		row-gap: 10px;
+		row-gap: 2vh;
 		padding: 2vh 1vw;
 
 		border: {
@@ -355,7 +355,7 @@ $padX: 1vw;
 				color: rgb(var(--color-mono-1000));
 				font-size: var(--font-size-36);
 				font-family: var(--decor-font);
-				letter-spacing: .25ch;
+				letter-spacing: .15ch;
 				margin-bottom: 1vh;
 			}
 
@@ -394,7 +394,7 @@ $padX: 1vw;
 			rows: auto 1px 1fr;
 		}
 
-		row-gap: 10px;
+		gap: 2vh;
 		padding: 2vh 1vw;
 
 		// height: 70vh;
@@ -413,7 +413,7 @@ $padX: 1vw;
 		grid-area: nav;
 
 		display: grid;
-		row-gap: 10px;
+		gap: 2vh;
 
 		grid-template: {
 			rows: auto 1px 1fr 1px min-content;
@@ -489,8 +489,16 @@ $padX: 1vw;
 		import CommonButton	from '~/components/buttons/CommonButton.vue'
 		import Collapse 		from '~/components/common/Collapse.vue'
 		import Tag 					from '~/components/common/Tag.vue'
+import TransitionWrapper from '../functional/TransitionWrapper.vue';
 
-		type MODULES = 'Messages' | 'NameChange' | 'IconChange' | 'WorkRequests'
+		type MODULES = 'Messages' | 'NameChange' | 'IconChange' | 'Orders';
+
+		type COMPONENT_HEADER = {
+			[K in MODULES]: {
+				Title: string,
+				Sub: String
+			}
+		}
 
 	// ANIMATION STATES 
 
@@ -499,7 +507,7 @@ $padX: 1vw;
 		const ANIMATION_VARIATIONS: {[K in ICON_ANIMATION_STATES]: AnimeAnimParams } = {
 			'init': {
 				scale: [0, 1],
-				delay: 250,
+				delay: 500,
 				duration: 250,
 				easing: 'easeInOutCubic',
 			},
@@ -522,10 +530,11 @@ $padX: 1vw;
 			Collapse,
 			Tag,
 			CommonButton,
-			Messages: 		() => import('~/components/profile/submodules/Messages/Messages.vue'),
+			Messages: 		() => import('~/components/profile/submodules/Messages/module.vue'),
+			Orders: 			() => import('~/components/profile/submodules/Orders/module.vue'),
 			NameChange: 	() => import('~/components/profile/submodules/NameChange.vue'),
 			IconChange: 	() => import('~/components/profile/submodules/IconChange.vue'),
-			WorkRequests: () => import('~/components/profile/submodules/WorkRequests.vue'),
+TransitionWrapper,
 		},
 		mixins: [ D_WorkStatus, F_UserStatus ],
 		data() {
@@ -537,10 +546,12 @@ $padX: 1vw;
 
 					{ Component: 'Messages', 			Name: 'Сообщения' 		},
 					{ Component: 'IconChange', 		Name: 'Смена иконки'	},
-					{ Component: 'WorkRequests', 	Name: 'Запросы'				},
+					{ Component: 'Orders', 				Name: 'Запросы'				},
 					{ Component: 'NameChange', 		Name: 'Изменить Имя'	},
 
 				] as Array<{ Component: MODULES, Name: string }>,
+
+				active: true,
 				
 			}
 		},
@@ -560,50 +571,72 @@ $padX: 1vw;
 				ActiveRequest: 		state => (state as VuexModules).User.WorkRequest.ActiveRequests,
 			}),
 
-			ComponentInfo(): { Title: string, Sub: string } {
+			ComponentInfo() {
 
-				const T = {
-					Messages: {
-						Title: 'Сообщения',
-						Sub: 'Подсказка: Нажмите "Ctrl + Enter" для отправки сообщения.',
-					},
-					NameChange: {
-						Title: 'Смена имени пользователя',
-						Sub: 'Подсказка: Нажмите "Shift + Enter" для подтверждения.',
-					},
-					IconChange: {
-						Title: 'Смена иконки профиля',
-						Sub: 'Подсказка: Нажмите "Shift + Enter" для подтверждения.',
-					},
-					WorkRequests: {
-						Title: 'Статус заказа',
-						Sub: 'Данная сводка полезна для проверки. В случае чего, пишите в чат через сообщения.',
-					},
+				switch (this.CurentPreferencesComponent) {
+
+					case 'Messages': 
+						return {
+							Title: 'Сообщения',
+							Sub: 'Подсказка: Нажмите "Ctrl + Enter" для отправки сообщения.',
+						}
+
+					case 'NameChange': 
+						return {
+							Title: 'Смена имени пользователя',
+							Sub: 'Подсказка: Нажмите "Ctrl + Enter" для подтверждения.',
+						}
+
+					case 'IconChange': 
+						return {
+							Title: 'Смена иконки профиля',
+							Sub: 'Подсказка: Нажмите "Ctrl + Enter" для подтверждения.',
+						}
+
+					case 'Orders': 
+						return {
+							Title: 'Статус заказа',
+							Sub: 'Данная сводка полезна для проверки. В случае чего'
+						}
+
+					default:
+						return {
+							Title: 'Название для компонента',
+							Sub: 'Явно что-то пошло не так...'
+						}
+
 				}
-
-				return T[this.CurentPreferencesComponent]
 
 			},
 
 		},
 		watch: {
+
 			'UserState.UserImageID': {
 				handler() {
 					this.AnimateUserIcon('update'); 
 				},
 			},
+
 			GetRequestsQuantity: {
 				handler() {
 					this.$store.dispatch('User/WorkRequest/Set_ActiveRequest')
 				}
 			},
+
+			active: {
+				handler() {
+					this.AnimateUserIcon('init')
+				}
+			},
+
 		},
 		created() {
 
 			this.Set_RequestQuantity(); 
 			this.Set_RequestContent(); 
 
-			this.getMessages(); 
+			this.getMessages();
 
 		},
 		mounted() {
@@ -617,7 +650,7 @@ $padX: 1vw;
 				// AUTH
 				Logout: 							'Auth/Logout',
 				// MESSAGES
-				getMessages: 	'User/Messages/getMessages',
+				getMessages: 					'User/Messages/getMessages',
 				checkUnreaded: 				'User/Messages/checkUnreaded',
 				// WORK REQUESTS
 				Set_RequestQuantity: 	'User/WorkRequest/Set_RequestQuantity',
@@ -637,28 +670,6 @@ $padX: 1vw;
 					...ANIMATION_VARIATIONS[type],
 
 				});
-
-			},
-
-			AnimateContainer(active: boolean) {
-				
-				this.$AnimeJS({
-					targets: (this.$refs.UserProfileContainer as HTMLElement).children,
-					opacity: active ? [0, 1] : [1, 0],
-					duration: active ? 500 : 0,
-					easing: 'easeInOutCubic',
-					complete: () => {
-						switch (active) {
-
-							case true: 
-								this.AnimateUserIcon('init'); break;
-						
-							case false: 
-								this.AnimateUserIcon('close'); break;
-
-						}
-					}
-				})
 
 			},
 

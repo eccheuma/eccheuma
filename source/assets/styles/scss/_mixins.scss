@@ -117,7 +117,7 @@ $mobile-breakpoint: 768px;
   position: relative;
 	z-index: 1;
 
-	&::before {
+	&:before {
 
 		content: '';
 
@@ -135,7 +135,7 @@ $mobile-breakpoint: 768px;
 			blend-mode: difference;
 		};
 
-		opacity: 5% !important;
+		opacity: 0.05;
 
 	}
 

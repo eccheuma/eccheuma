@@ -16,7 +16,6 @@
 		AppScroll: false,
 		isDesktop: true,
 
-		HeaderHeight: 100,
 		LocalTime: {} as FORMATED_DATE
 
 	})
@@ -31,9 +30,6 @@
 		},
 		AppScroll(state, prop) {
 			state.AppScroll = prop ?? !state.AppScroll
-		},
-		Change_HeaderHeight(state, prop) {
-			state.HeaderHeight = prop
 		},
 		Change_LocalTime(state, prop) {
 			state.LocalTime = prop

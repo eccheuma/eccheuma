@@ -16,10 +16,6 @@
         "source": "**/*.*",
         "headers": [
           {
-            "key": "allowKeepAlive",
-            "value": "true"
-          },
-          {
             "key": "Cache-Control",
             "value": "max-age=2592000"
           }

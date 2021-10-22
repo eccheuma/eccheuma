@@ -136,7 +136,7 @@
 				size: var(--font-size-32);
 			}
 
-			letter-spacing: .25ch;
+			letter-spacing: .15ch;
 			line-height: var(--font-size-32);
 
 		}

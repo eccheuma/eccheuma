@@ -85,7 +85,7 @@
 
 		svg {
 
-			width: 10vw;
+			width: max(10vw, 140px);
 			align-self: end;
 			justify-self: center;
 
@@ -105,7 +105,7 @@
 				size: var(--font-size-24);
 			}
 
-			letter-spacing: .25ch;
+			letter-spacing: .15ch;
 
 		}
 

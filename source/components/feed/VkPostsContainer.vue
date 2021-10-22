@@ -167,7 +167,7 @@
 
       background-color: rgb(var(--color-mono-200));
 
-      gap: 1vw;
+      gap: max(1vw, 10px);
 
       hr {
         height: 66%;
@@ -207,7 +207,7 @@
               size: var(--font-size-32);
             }
     
-            letter-spacing: .25ch;
+            letter-spacing: .15ch;
             line-height: calc(var(--font-size-32) * 1.25);
           }
 
@@ -232,8 +232,22 @@
       p {
         display: -webkit-box;
         overflow: hidden;
-        -webkit-line-clamp: 13;
+
+        @media screen and ( max-width: $mobile-breakpoint ) {
+          padding: 2vh 4vw;
+        }
+
+        font: {
+          size: var(--font-size-21);
+        }
+
         -webkit-box-orient: vertical;
+
+        -webkit-line-clamp: 13;
+        @media screen and ( max-width: $mobile-breakpoint ) {
+          -webkit-line-clamp: unset;
+        }
+
       }
 
     }

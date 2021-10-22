@@ -41,7 +41,11 @@ export default Vue.extend({
 		} as PropOptions<{ duration: number, emit: boolean, contentWatcher: boolean }>
 	},
 	watch: {
-		active: 'collapse',
+		active: {
+			handler(val) {
+				this.$nextTick(() => this.collapse(val))
+			}
+		},
 	},
 	updated() {
 

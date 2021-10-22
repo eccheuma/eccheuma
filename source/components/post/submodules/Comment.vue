@@ -22,9 +22,9 @@
 
 		<section class="post-comment-item-content">
 			<hr v-once>
-			<p>{{ RecivedData.Comment }}</p>
+			<p 	v-once>{{ RecivedData.Comment }}</p>
 			<hr v-once>
-			<template v-if="LoginStatus" v-once>
+			<template v-if="LoginStatus">
 				<common-button v-if="UserState.UserID === Author.UserID" @click.native="RemoveComment">
 					Удалить комментарий
 				</common-button>

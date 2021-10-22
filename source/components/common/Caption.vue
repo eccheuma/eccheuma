@@ -35,7 +35,10 @@
     --caption-card-bg: rgb(var(--color-mono-900));
     --caption-card-color: rgb(var(--color-mono-200));
 
-    display: flex;
+    display: grid;
+    grid-template: {
+      columns: 4vw 1px 1fr;
+    };
 
     padding-right: 15%;
 
@@ -54,10 +57,10 @@
       margin: 0;
     }
 
-    &:last-child {
-      display: block;
-      width: 100%;
-    }
+    // &:last-child {
+    //   display: block;
+    //   width: 100%;
+    // }
 
     &[data-status="error"] {
       --caption-card-bg: var(--color-accent-error);

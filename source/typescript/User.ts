@@ -1,4 +1,4 @@
-import { REQUEST_STATUS, ADDICTION, CATEGOTIES, SERVICE, } from '~/typescript/Services';
+import { REQUEST_STATUS, ADDICTION, CATEGORY, SERVICE, } from '~/typescript/Services';
 
 export interface USER_STATUS {
 	0: 'Администратор'
@@ -18,7 +18,7 @@ export interface USER_STATE {
 
 export interface USER_REQUEST {
 	Addiction: Array<ADDICTION>,
-	Category: CATEGOTIES,
+	Category: CATEGORY,
 	ID: number,
 	Service: SERVICE,
 	Status: number

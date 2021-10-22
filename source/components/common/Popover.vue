@@ -18,7 +18,7 @@
 		transform: translateY(30px);
 		opacity: 0;
 		&-active {
-			transition: all 250ms ease-in-out;			
+			transition: all 500ms ease-in-out;			
 		}
 		&-to {
 			opacity: 1;
@@ -29,7 +29,7 @@
 		transform: translateY(0px);
 		opacity: 1;		
 		&-active {
-			transition: all 250ms ease-in-out;
+			transition: all 500ms ease-in-out;
 		}
 		&-to {
 			opacity: 0;
@@ -74,8 +74,8 @@
 		}
 
 		font: {
-			size: var(--font-size-16);
-			weight: 600;
+			size: var(--font-size-14);
+			weight: 500;
 		}
 
 		text: {
@@ -120,7 +120,7 @@
 			},
 			position: {
 				type: String,
-				default: 'bottom'
+				default: 'top'
 			} as PropOptions<'top' | 'bottom' | undefined>
 		},
 		data() {

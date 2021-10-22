@@ -67,7 +67,7 @@
         weight: 500;
       }
 
-      letter-spacing: .25ch;
+      letter-spacing: .15ch;
       line-height: 2.25vh;
 
     }

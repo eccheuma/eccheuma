@@ -108,7 +108,7 @@
 		watch: {
 			app: {
 				handler() {
-					this.$el.appendChild(this.app.view)
+					this.$el.appendChild(this.app.view);
 				},
 			},
 			resources: {

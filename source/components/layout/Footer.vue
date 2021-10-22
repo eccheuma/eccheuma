@@ -120,7 +120,7 @@
 				family: var(--decor-font);
 			}
 
-			letter-spacing: .25ch;
+			letter-spacing: .15ch;
 
 		}
 
@@ -282,7 +282,7 @@
 
 				&:nth-child(1) {
 					font-weight: 500;
-					letter-spacing: .25ch;
+					letter-spacing: .15ch;
 					font-size: var(--font-size-36);
 					font-family: var(--decor-font);
 					line-height: var(--size-42);
@@ -309,7 +309,7 @@
 			span {
 				align-self: center;
 				color: var(--color-accent-edges-100);
-				letter-spacing: .25ch;
+				letter-spacing: .15ch;
 				font-size: var(--font-size-12);
 				font-weight: 900;
 			}
@@ -351,7 +351,16 @@
 
 				Links: {
 					Social: [
-						{ icon: 'VK', content: 'Группа в ВКонтакте', link: 'http://vk.com/club158755478' },
+						{ 
+							icon: 'VK',
+							content: 'Группа в ВКонтакте', 
+							link: 'https://vk.com/eccheuma' 
+						},
+						{ 
+							icon: 'URL', 	
+							content: 'GitHub Репозиторий', 
+							link: 'https://github.com/Scarlatum' 
+						}
 					],
 					Freelance: [
 					],
