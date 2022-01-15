@@ -370,12 +370,14 @@
 			h4 {
 				font-weight: 900;
 				font-size: var(--font-size-42);
-				width: clamp(min-content, 25ch, 100%);
+				// width: clamp(min-content, 25ch, 100%);
+				width: 25ch;
 			}
 			h6 {
 				font-weight: 600;
 				font-size: var(--font-size-20);
-				width: clamp(min-content, 65ch, 100%);
+				// width: clamp(min-content, 65ch, 100%);
+				width: 65ch;
 			}
 
 		}
@@ -519,7 +521,7 @@
 			display: inline-grid;
 			row-gap: 2vh;
 
-			transform: translateY(calc((#{ $iconSize } - 10vh) - #{ $iconSize / 2 }));
+			transform: translateY(calc((#{ $iconSize } - 10vh) - ($iconSize / 2)));
 
 			justify: {
 				self: end;

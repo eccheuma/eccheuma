@@ -93,7 +93,7 @@
 				
 				return true;
 
-			} catch (e) {
+			} catch (e: any) {
 
 				commit('Auth/Session/ChangeAuthError', e.code, { root: true }); return false;
 

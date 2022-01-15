@@ -23,7 +23,7 @@
             {{ post.body }}
           </p>
           <hr v-once>
-          <common-button :link="post.link" target="_blank">
+          <common-button :link="post.link" target="_blank" type="a">
             Перейти к посту
           </common-button>
         </section>

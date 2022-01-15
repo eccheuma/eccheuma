@@ -120,7 +120,7 @@
 				opacity: .25;
 
 				background: {
-					image: url('~assets/images/Background.png?placeholder=true&size=360');
+					// image: url('~assets/images/Background.png?size=360');
 					size: cover;
 					position: center;
 					repeat: no-repeat;
@@ -174,7 +174,7 @@
 				width: $size;
 				height: $size;
 				color: rgb(var(--color-mono-500));
-				font-size: #{$size / 3};
+				font-size: calc($size / 3);
 				background-color: rgb(var(--color-mono-200));
 				border: 3px solid rgb(var(--color-mono-400));
 				border-radius: 100%;
@@ -374,7 +374,7 @@
 	import Icon 						from '~/components/common/Icon.vue'
 
 // VARIABLES
-	const PLACEHOLDER = require('~/assets/images/Background.png?placeholder=true&size=300').src
+	const PLACEHOLDER = require('~/assets/images/Background.png?size=300')
 
 // MODULE
 	export default Vue.extend({
@@ -414,7 +414,7 @@
 		head: {
 			link: [
 
-				{ rel: 'prefetch', 	href: require('~/static/audio/Holl.ogg').default, as:'fetch', crossorigin: true },
+				// { rel: 'prefetch', 	href: require('~/static/audio/Holl.ogg').default, as:'fetch', crossorigin: true },
 				{ rel: 'prefetch', 	href: PLACEHOLDER },
 
 			]

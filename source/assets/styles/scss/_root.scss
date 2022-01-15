@@ -1,7 +1,5 @@
-@use "sass:math";
-
-$mockup-viewport-vh: (1080 / 100);
-$mockup-viewport-vw: (1980 / 100);
+$mockup-viewport-vh: math.div(1080, 100);
+$mockup-viewport-vw: math.div(1980, 100);
 
 $accent-hsl-rotate: 30;
 
@@ -44,7 +42,7 @@ $accent-hsl-rotate: 30;
 	// Font sizes
 	@each $norm-size in 56,42,36,32,28,24,21,18,16,14,12,11,10 {
 
-		--size-#{ $norm-size }: #{ math.round(($norm-size / $mockup-viewport-vh) * 100) / 100 }vh;
+		--size-#{ $norm-size }: #{ math.div(math.round(math.div($norm-size,$mockup-viewport-vh) * 100), 100) }vh;
 		--font-size-#{ $norm-size }: var(--size-#{ $norm-size });
 		
 	}
