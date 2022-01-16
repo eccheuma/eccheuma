@@ -3,16 +3,16 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "nuxt",
-    "build": "nuxt build",
-    "start": "nuxt start",
-    "generate": "nuxt generate",
-    "generate-deploy": "nuxt generate && firebase deploy --only hosting",
+    "dev": "nuxi dev",
+    "build": "nuxi build",
+    "preview": "nuxt preview",
+    "generate": "nuxi generate",
+    "generate-deploy": "nuxi generate && firebase deploy --only hosting",
     "firebase:serve": "firebase serve",
     "firebase:deploy": "firebase deploy --only hosting",
     "lint:js": "eslint --ext \".ts,.vue\" --ignore-path .gitignore .",
     "lint": "npm run lint:js",
-    "full": "nuxt build && nuxt generate && nuxt start"
+    "full": "nuxi generate && nuxi preview"
   },
   "dependencies": {
     "@eccheuma/crusoris": "^1.0.7",
@@ -31,6 +31,7 @@
   "devDependencies": {
     "@aceforth/nuxt-optimized-images": "^1.4.0",
     "@babel/core": "^7.15.5",
+    "@babel/plugin-transform-runtime": "^7.16.8",
     "@firebase/app-types": "^0.6.3",
     "@firebase/database-types": "^0.7.3",
     "@nuxt/bridge": "npm:@nuxt/bridge-edge@^3.0.0-27369360.33ebb01",

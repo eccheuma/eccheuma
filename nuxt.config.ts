@@ -10,6 +10,9 @@
   import genearateName  from './properties/nameGenerator';
 
 // VARIABLES
+
+  const BRIDGE_USE    = false
+
   const chunkSize     = 1.25;
   const inDevelopment = process.env.NODE_ENV === 'development';
   const hash          = createHash('md5').update(Math.random().toString()).digest('hex').slice(0, 8);
@@ -25,7 +28,11 @@
 
 // CONFIG
   export default defineNuxtConfig({
+
+    bridge: BRIDGE_USE,
+
     srcDir: 'source',
+
     vue: {
       config: {
         performance: inDevelopment
@@ -78,9 +85,22 @@
     },
 
     modules: [
-      '@nuxtjs/style-resources',
-      '@aceforth/nuxt-optimized-images',
-      '@nuxtjs/sitemap',
+
+      '@nuxt/typescript-build',
+
+      ['@nuxtjs/style-resources', {
+        scss: [
+          '~/assets/styles/scss/_uses.scss',
+          '~/assets/styles/scss/_mixins.scss',
+          '~/assets/styles/scss/_variables.scss',
+        ]
+      }],
+
+      ['@nuxtjs/sitemap', {
+        hostname: 'https://escapefrommordorland.web.app',
+        exclude: ['/Admin/*'],
+        trailingSlash: false,
+      }],
 
       // Nuxt types fucked up as always...
       ['@aceforth/nuxt-optimized-images', {
@@ -104,10 +124,23 @@
       parallel: inDevelopment,
       publicPath: 'resources',
 
+      standalone: BRIDGE_USE,
+
       filenames: {
         font:   () => 'fonts/[name].[ext]',
         chunk:  (context: any) => context.isDev ? '[name].js'  : `[name].${ hash }.js`,
         css:    (context: any) => context.isDev ? '[name].css' : `[name].${ hash }.css`,
+      },
+
+      babel: {
+        presets: [
+          ['@babel/preset-env', {
+            useBuiltIns: false,
+          }]
+        ],
+        plugins: [
+          '@babel/plugin-transform-runtime'
+        ]
       },
 
       extractCSS: !inDevelopment,
@@ -119,37 +152,7 @@
         }
       },
 
-      loaders: {
-        file: {
-          esModule: true
-        }
-      },
-
-      styleResources: {
-        scss: [
-          '~/assets/styles/scss/_uses.scss',
-          '~/assets/styles/scss/_mixins.scss',
-          '~/assets/styles/scss/_variables.scss',
-        ],
-      },
-
-      
-
-      // extend({ module }) {
-
-      //   module!.rules.push({
-      //     test: /\.(ogg|wav)$/i,
-      //     loader: 'file-loader',
-      //     options: {
-      //       name: 'sounds/[name].[ext]'
-      //     }
-      //   });
-
-      // }
-
     },
-
-    
 
     plugins: [
       { src: '~/plugins/InitState.ts' },
@@ -167,19 +170,5 @@
       { src: '~/plugins/DragScroll.js',         mode: 'client' },
       { src: '~/plugins/YandexMetrica.js',      mode: 'client' }
     ],
-
-    // sitemap: {
-    //   hostname: 'https://escapefrommordorland.web.app',
-    //   exclude: ['/Admin/*'],
-    //   trailingSlash: false
-    // },
-
-    // styleResources: {
-    //   scss: [
-    //     '~/assets/styles/scss/_uses.scss',
-    //     '~/assets/styles/scss/_mixins.scss',
-    //     '~/assets/styles/scss/_variables.scss',
-    //   ],
-    // },
 
   })
