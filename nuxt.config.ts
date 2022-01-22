@@ -32,7 +32,6 @@
     bridge: BRIDGE_USE,
 
     srcDir: 'source',
-
     vue: {
       config: {
         performance: inDevelopment
@@ -65,9 +64,8 @@
       linkExactActiveClass: 'exact',
     },
 
-    head: {
-      title: 'eccheuma'
-    },
+    head: HEAD_CONFIG,
+    
     generate: {
       dir: 'app',
     },

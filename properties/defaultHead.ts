@@ -1,7 +1,10 @@
-import type { NuxtConfig } from '@nuxt/types'
+import type { MetaInfo } from 'vue-meta';
 
-const HEAD: NuxtConfig['head'] = {
-  title: 'Eccheuma'
+const HEAD: MetaInfo = {
+  title: 'Eccheuma',
+  link: [
+    { rel: 'icon', href: 'icon.svg' }
+  ]
 }
 
 export default HEAD;

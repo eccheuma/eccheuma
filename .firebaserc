@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "escapefrommordorland"
+  },
+  "targets": {
+    "escapefrommordorland": {
+      "hosting": {
+        "eccheuma": [
+          "eccheuma"
+        ]
+      }
+    }
   }
 }
