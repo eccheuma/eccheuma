@@ -1,5 +1,5 @@
 <template>
-  <span id="CanvasContainer" ref="canvas" style="opacity: 0" />
+  <span id="CanvasContainer" ref="canvas" style="opacity: 0"/>
 </template>
 
 <style lang="scss">

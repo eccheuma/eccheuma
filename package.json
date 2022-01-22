@@ -3,16 +3,16 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "nuxt",
-    "build": "nuxt build",
-    "start": "nuxt start",
-    "generate": "nuxt generate",
-    "generate-deploy": "nuxt generate && firebase deploy --only hosting",
+    "dev": "nuxi dev",
+    "build": "nuxi build",
+    "preview": "nuxt preview",
+    "generate": "nuxi generate",
+    "generate-deploy": "nuxi generate && firebase deploy --only hosting",
     "firebase:serve": "firebase serve",
     "firebase:deploy": "firebase deploy --only hosting",
     "lint:js": "eslint --ext \".ts,.vue\" --ignore-path .gitignore .",
     "lint": "npm run lint:js",
-    "full": "nuxt build && nuxt generate && nuxt start"
+    "full": "nuxi generate && nuxi preview"
   },
   "dependencies": {
     "@eccheuma/crusoris": "^1.0.7",
@@ -22,7 +22,7 @@
     "firebase": "^8.10.0",
     "howler": "^2.2.3",
     "mobile-device-detect": "^0.4.3",
-    "nuxt": "^2.15.8",
+    "nuxt-edge": "latest",
     "portal-vue": "^2.1.7",
     "vue-dragscroll": "^2.1.3",
     "vue-yandex-metrika": "^1.8.3",
@@ -31,8 +31,10 @@
   "devDependencies": {
     "@aceforth/nuxt-optimized-images": "^1.4.0",
     "@babel/core": "^7.15.5",
+    "@babel/plugin-transform-runtime": "^7.16.8",
     "@firebase/app-types": "^0.6.3",
     "@firebase/database-types": "^0.7.3",
+    "@nuxt/bridge": "npm:@nuxt/bridge-edge@^3.0.0-27369360.33ebb01",
     "@nuxt/types": "^2.15.8",
     "@nuxt/typescript-build": "^2.1.0",
     "@nuxtjs/eslint-config-typescript": "^5.0.0",
@@ -49,12 +51,13 @@
     "eslint-plugin-vue": "^7.17.0",
     "fibers": "^4.0.3",
     "imagemin-svgo": "^9.0.0",
-    "nuxt-vite": "^0.2.4",
     "pixi.js": "^5.3.10",
     "responsive-loader": "^2.3.0",
     "sass": "^1.32.7",
     "sass-loader": "^10.2.0",
-    "sharp": "^0.27.2",
+    "sharp": "^0.29.3",
+    "typescript": "^4.5.4",
+    "vite-imagetools": "^4.0.3",
     "webp-loader": "^0.6.0"
   }
 }

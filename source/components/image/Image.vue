@@ -7,7 +7,7 @@
 			:path="content.path"
 			:title="content.title" 
 			:description="content.description"
-			@toggle-modal="ToggleModal" 
+			@toggle-modal="() => this.Modal = !this.Modal" 
 		/>
 
 		<div 
@@ -25,10 +25,10 @@
 				</transition>
 			</section>
 
-			<section ref="holder" class="eccheuma-image-picture" :style="`background-image: url(${ Source[ AVIF_SUPPORT ? 'avif' : 'webp' ] })`">
+			<section ref="holder" class="eccheuma-image-picture">
 				<picture>
 					<source v-if="AVIF_SUPPORT" :srcset="Source.avif" type="image/avif">
-					<img class="utils::voided" :src="Source.webp" :alt="content.description">
+					<img :src="Source.webp" :alt="content.description" ref="image">
 				</picture>
 			</section>
 
@@ -54,199 +54,215 @@
 
 <style lang="scss">
 
-.eccheuma-image {
+	.eccheuma-image {
 
-	&-wrapper {
-	
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-
-		gap: 2vh;
-
-		.type\:\:gallery {
-			height: 50vh !important;
-		}
-
-		.type\:\:promo {
-			width: clamp(340px, 100%, 40vw) !important;
-			margin: auto !important;
-			aspect-ratio: 16/9;
-		}
-
-		.type\:\:case {
-			height: 100% !important;
-		}
-
-		.type\:\:default {
-			height: 100%;
-		}
-
-	}
-
-	&-container {
-
-		position: relative;
-		display: grid;
-	
-		grid-template: {
-			columns: 100%;
-			rows: 2fr 8fr;
-		};
-	
-		width: 100%;
+		&-wrapper {
 		
-		padding: 10px;
-	
-		border-radius: var(--border-radius);
-		overflow: hidden;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
 
-	}
+			gap: 2vh;
 
-	&-transitions {
+			.type\:\:gallery {
+				height: 50vh !important;
+			}
 
-		$dur: 500ms;
-		$offset: 10px;
+			.type\:\:promo {
+				width: clamp(340px, 100%, 40vw) !important;
+				margin: auto !important;
+				aspect-ratio: 16/9;
+			}
 
-		&-search {	
+			.type\:\:case {
+				height: 100% !important;
+			}
 
-			&-enter {
+			.type\:\:default {
+				height: 100%;
+			}
 
-				opacity: 0;
-				transform: translateY(-#{ $offset });
+		}
 
-				&-active {
-					transition: all $dur;
+		&-container {
+
+			position: relative;
+			display: grid;
+		
+			grid-template: {
+				columns: 100%;
+				rows: 2fr 8fr;
+			};
+		
+			width: 100%;
+			
+			padding: 10px;
+
+			border: 2px solid var(--color-accent-edges-100);		
+			border-radius: var(--border-radius);
+			overflow: hidden;
+
+			background: rgb(var(--color-mono-300));
+
+		}
+
+		&-transitions {
+
+			$dur: 500ms;
+			$offset: 10px;
+
+			&-search {	
+
+				&-enter {
+
+					opacity: 0;
+					transform: translateY(-#{ $offset });
+
+					&-active {
+						transition: all $dur;
+					}
+
+					&-to {
+						opacity: 1;
+						transform: translateY(0vh);
+					}
+
 				}
 
-				&-to {
+				&-leave {
+
 					opacity: 1;
 					transform: translateY(0vh);
+
+					&-active {
+						transition: all $dur ease-in-out;
+					}
+
+					&-to {
+						opacity: 0;
+						transform: translateY(-#{ $offset });
+					}
+
 				}
 
 			}
 
-			&-leave {
+			&-description {
 
-				opacity: 1;
-				transform: translateY(0vh);
-
-				&-active {
-					transition: all $dur ease-in-out;
-				}
-
-				&-to {
+				&-enter {
 					opacity: 0;
-					transform: translateY(-#{ $offset });
+					transform: translateY($offset);
+
+					&-active {
+						transition: all $dur;
+					}
+
+					&-to {
+						opacity: 1;
+						transform: translateY(0vh);
+					}
 				}
 
+				&-leave {
+					opacity: 1;
+					transform: translateY(0vh);
+
+					&-active {
+						transition: all $dur;
+					}
+
+					&-to {
+						opacity: 0;
+						transform: translateY($offset);
+					}
+				}
+
+			}
+
+		}
+
+		&-search {
+			position: relative;
+			z-index: 1;
+			span {
+				background: rgba(var(--color-mono-200), .75);
+				backdrop-filter: blur(10px);
+				width: fit-content;
+				height: fit-content;
+				padding: 5px;
+				display: block;
+				margin: auto;
+				border-radius: var(--border-radius);
+
+				cursor: pointer;
+
+				i {
+					@include icon-size(24px);
+					fill: transparent;
+					stroke: rgb(var(--color-mono-900));
+				}
+
+
+				transition-duration: 250ms;
+				&:hover {
+					padding: 5px 25px;					
+				}
+
+			}
+		}
+
+		&-picture {
+
+			position: absolute;
+
+			top: 0;
+			left: 0;
+
+			height: 100%;
+			width: 100%;
+
+			background: {
+				size: cover;
+				repeat: no-repeat;
+				position: center;
+			}
+
+			img {
+				width: 100%;
+				height: 100%;
+				object-fit: cover;
 			}
 
 		}
 
 		&-description {
 
-			&-enter {
-				opacity: 0;
-				transform: translateY($offset);
-
-				&-active {
-					transition: all $dur;
-				}
-
-				&-to {
-					opacity: 1;
-					transform: translateY(0vh);
-				}
-			}
-
-			&-leave {
-				opacity: 1;
-				transform: translateY(0vh);
-
-				&-active {
-					transition: all $dur;
-				}
-
-				&-to {
-					opacity: 0;
-					transform: translateY($offset);
-				}
-			}
-
-		}
-
-	}
-
-	&-search {
-		position: relative;
-		z-index: 1;
-		span {
 			background: rgba(var(--color-mono-200), .75);
-			backdrop-filter: blur(10px);
-			width: fit-content;
-			height: fit-content;
-			padding: 5px;
-			display: block;
-			margin: auto;
+			color: rgb(var(--color-mono-900));
+
 			border-radius: var(--border-radius);
 
-			cursor: pointer;
+	    position: relative;
+			z-index: 1;
 
-			i {
-				@include icon-size(24px);
-				fill: transparent;
-				stroke: rgb(var(--color-mono-900));
+	    height: fit-content;
+	    padding: 2vh 1vw;
+			align-self: end;
+
+			span {
+				display: block;
+				&:nth-of-type(1) {
+					font-size: var(--font-size-20);
+					font-weight: 800;
+				}
+				&:nth-of-type(2) {
+					font-size: var(--font-size-14)
+				}
 			}
-		}
-	}
 
-	&-picture {
-
-		position: absolute;
-
-		top: 0;
-		left: 0;
-
-		height: 100%;
-		width: 100%;
-
-		background: {
-			size: cover;
-			repeat: no-repeat;
-			position: center;
 		}
 
 	}
-
-	&-description {
-
-		background: rgba(var(--color-mono-200), .75);
-		color: rgb(var(--color-mono-900));
-
-		border-radius: var(--border-radius);
-
-    position: relative;
-		z-index: 1;
-
-    height: fit-content;
-    padding: 2vh 1vw;
-		align-self: end;
-
-		span {
-			display: block;
-			&:nth-of-type(1) {
-				font-size: var(--font-size-20);
-				font-weight: 800;
-			}
-			&:nth-of-type(2) {
-				font-size: var(--font-size-14)
-			}
-		}
-
-	}
-
-}
 
 </style>
  
@@ -328,11 +344,6 @@
 					}
 				}
 			},
-			// Modal: {
-			// 	handler() {
-			// 		this.playSound(this.Sounds.get('ImageToggleModal'))
-			// 	}
-			// }
 		},
 		created() {
 
@@ -351,13 +362,17 @@
 
 		},
 		async mounted() {
-			if ( this.BROWSER ) {
+			if ( process.client ) {
 
-				this.LocalDate = await this.GetLocalTime(this.content.date)
+				this.LocalDate = await this.GetLocalTime(this.content.date);
 
-				setTimeout(() => {
-					this.$nextTick(() => requestAnimationFrame(this.getImage))
-				}, 1000)
+				const interesection = new IntersectionObserver((entry) => {
+					if ( entry[0].isIntersecting )  {
+						this.$nextTick(() => this.getImage()); interesection.unobserve(this.$el as HTMLElement);
+					}
+				}, { rootMargin: `${ window.innerHeight / 2 }px` })
+
+				interesection.observe(this.$el as HTMLElement);
 
 			}
 		},
@@ -388,37 +403,25 @@
 
 			prepareAnimations(el: Element, url: IMAGE_URL) {
 
-				const ANIMATION = (u_direction: DirectionOptions, cb?: AnimeCallBack ) => {
-					this.$AnimeJS({
-
-						targets: el,
-						opacity: [1, 0],
-						duration: 250,
-						direction: u_direction,
-						easing: 'linear',
-
-						...cb
-
-					})
-				}
-
-				ANIMATION('normal', {
-					complete: () => { 
-
-						this.Source = url;
-
-						this.decodeImage(url).then(() => ANIMATION('reverse'))
-
-					}
+				const animation = el.animate([
+					{ opacity: 1 },
+					{ opacity: 0 }
+				], {
+					duration: 250,
+					fill: 'both',
 				})
 
+				animation.onfinish = () => {
+
+					animation.onfinish = null;
+
+					this.Source = url;
+
+					(this.$refs.image as HTMLImageElement).onload = () => animation.reverse();
+
+				}
+
 			},
-
-			ToggleModal() {
-
-				this.Modal = !this.Modal;
-
-			}
 
 		},
 	})

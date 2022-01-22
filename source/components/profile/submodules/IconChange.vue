@@ -267,9 +267,9 @@
 
 						if ( URL ) { this.NewIcon = URL }
 						
-					} catch ( error ) { 
+					} catch (error: unknown) { 
 
-						this.Warning = error
+						this.Warning = String(error)
 
 					}
 

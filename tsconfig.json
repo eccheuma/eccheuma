@@ -1,12 +1,15 @@
 {
   "compilerOptions": {
-    "target": "ES2020",
-    "module": "ES2020",
+    "target": "ES2018",
+    "module": "ESNext",
     "moduleResolution": "Node",
     "lib": [
+      // "DOM.Iterable",
+      "DOM",
+      // "ES7",
+      // "ES6",
       "ESNext",
-      "ESNext.AsyncIterable",
-      "DOM"
+      "ESNext.AsyncIterable"
     ],
     "esModuleInterop": true,
     "allowJs": true,
@@ -28,7 +31,7 @@
       "vue/types",
       "@nuxt/types",
       "@types/node",
-      "@types/w3c-css-typed-object-model-level-1"
+      "@types/w3c-css-typed-object-model-level-1",
     ]
   },
   "exclude": [

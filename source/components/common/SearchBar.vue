@@ -56,7 +56,7 @@
 		display: inline-flex;
 		align-items: center;
 
-		background: rgb(var(--color-mono-200));
+		background: rgb(var(--color-mono-300));
 		color: rgb(var(--color-mono-900)); 
 		border: 2px solid var(--color-accent-edges-100);
 		border-radius: var(--border-radius);

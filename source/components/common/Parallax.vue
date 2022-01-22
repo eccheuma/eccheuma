@@ -35,6 +35,8 @@
 
 	type POSITION = { Top: number, Bottom: number }
 
+	// type requestIdleCallback = (cb: () => unknown) => unknown
+
 	export default Vue.extend({
 		props: {
 			options: {

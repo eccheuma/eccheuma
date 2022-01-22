@@ -38,7 +38,7 @@
 		left: 0;
 		width: 100vw;
 		height: 100vh;
-		background-image: url('~assets/images/404.png?resize&format=webp&size=500');
+		// background-image: url('~/assets/images/404.png?format=webp&size=500');
 		background-size: cover;
 		background-position: center;
 		filter: saturate(0);

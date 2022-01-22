@@ -56,7 +56,7 @@ import 'firebase/auth'
 					commit('Auth/Session/ChangeLoginStatus', true, { root: true })
 				// }, 1000)
 
-			} catch (e) {
+			} catch (e: any) {
 
 				console.log(e)
 				

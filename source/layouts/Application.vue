@@ -80,7 +80,7 @@ eccheuma-layout {
 		grid-template: {
 			columns: 
 				minmax(min-content, #{ $GLOBAL-AsideColumnsWidth }) 
-				minmax(min-content, 1440px) 
+				1fr
 				$GLOBAL-AsideColumnsWidth; 
 			rows: 1fr;
 		}
