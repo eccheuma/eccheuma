@@ -3,7 +3,7 @@
   import { createHash } from 'crypto';
 
 // TYPES
-  import { defineNuxtConfig } from '@nuxt/bridge';
+  import { NuxtConfig } from '@nuxt/types';
 
 // TEMPLATES
   import HEAD_CONFIG    from './properties/defaultHead';
@@ -15,7 +15,7 @@
 
   const chunkSize     = 1.25;
   const inDevelopment = process.env.NODE_ENV === 'development';
-  const hash          = createHash('md5').update(Math.random().toString()).digest('hex').slice(0, 8);
+  const hash          = createHash('md5').update(Math.random().toString()).digest('hex').slice(-6);
 
 // HTTP CERTIFICATE
 // const certificate: NuxtConfig['server']['https'] = {
@@ -27,19 +27,19 @@
   writeFile('.version', hash, () => console.log(`≏ Hash build: ${ genearateName(4) }:${ hash }`))
 
 // CONFIG
-  export default defineNuxtConfig({
-
-    bridge: BRIDGE_USE,
+  const config: NuxtConfig = {
 
     srcDir: 'source',
+
+    globalName: 'eccheuma',
+    globals: {
+      id: (globalName) => `${ globalName }-app`
+    },
+
     vue: {
       config: {
         performance: inDevelopment
       }
-    },
-
-    alias: {
-      tslib: 'tslib/tslib.es6.js'
     },
 
     env: {
@@ -118,11 +118,21 @@
 
     build: {
 
-      // analyze: !inDevelopment,
+      // extend(config, { isClient }) {
+      //   if ( isClient ) {
+      //     config.entry = {
+      //       pixi: 'pixi.js',
+      //       database: 'firebase/database',
+      //       storage: 'firebase/storage',
+      //       core: 'core-js',
+      //     }
+      //   }
+      // },
+
+      analyze: !inDevelopment,
       parallel: inDevelopment,
       publicPath: 'resources',
-
-      standalone: BRIDGE_USE,
+      hardSource: true,
 
       filenames: {
         font:   () => 'fonts/[name].[ext]',
@@ -136,6 +146,7 @@
             useBuiltIns: false,
           }]
         ],
+        // Some nuxt 3 preparations, but not even sure about about this. 
         plugins: [
           '@babel/plugin-transform-runtime'
         ]
@@ -145,9 +156,6 @@
 
       optimization: {
         minimize: !inDevelopment,
-        splitChunks: {
-          chunks: 'async',
-        }
       },
 
     },
@@ -168,5 +176,7 @@
       { src: '~/plugins/DragScroll.js',         mode: 'client' },
       { src: '~/plugins/YandexMetrica.js',      mode: 'client' }
     ],
+  }
 
-  })
+  export default config;
+

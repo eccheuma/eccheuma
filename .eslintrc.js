@@ -5,13 +5,12 @@ module.exports = {
 		node: true
 	},
 	extends: [
-		// '@nuxtjs/eslint-config-typescript',
-		// 'plugin:nuxt/recommended'
+		'@nuxtjs/eslint-config-typescript',
+		'plugin:nuxt/recommended'
 	],
 	plugins: [
-		// 'vue'
+		'vue'
 	],
-	// add your custom rules here
 	rules: {
 		indent: [0, 'tab'],
 		'no-tabs': 0,

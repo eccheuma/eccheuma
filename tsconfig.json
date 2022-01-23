@@ -4,10 +4,8 @@
     "module": "ESNext",
     "moduleResolution": "Node",
     "lib": [
-      // "DOM.Iterable",
       "DOM",
-      // "ES7",
-      // "ES6",
+      "ES6",
       "ESNext",
       "ESNext.AsyncIterable"
     ],
@@ -29,8 +27,8 @@
     },
     "types": [
       "vue/types",
-      "@nuxt/types",
       "@types/node",
+      "@nuxt/types",
       "@types/w3c-css-typed-object-model-level-1",
     ]
   },
