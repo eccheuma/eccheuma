@@ -489,15 +489,16 @@ $padX: 1vw;
 		import CommonButton	from '~/components/buttons/CommonButton.vue'
 		import Collapse 		from '~/components/common/Collapse.vue'
 		import Tag 					from '~/components/common/Tag.vue'
-import TransitionWrapper from '../functional/TransitionWrapper.vue';
 
+	// FUNCTIONAL COMPONENTS
+		import TransitionWrapper from '../functional/TransitionWrapper.vue';
+
+	// TYPES
 		type MODULES = 'Messages' | 'NameChange' | 'IconChange' | 'Orders';
 
 		type COMPONENT_HEADER = {
-			[K in MODULES]: {
-				Title: string,
-				Sub: String
-			}
+			Title: string,
+			Sub: String
 		}
 
 	// ANIMATION STATES 
@@ -530,11 +531,11 @@ import TransitionWrapper from '../functional/TransitionWrapper.vue';
 			Collapse,
 			Tag,
 			CommonButton,
+			TransitionWrapper,
 			Messages: 		() => import('~/components/profile/submodules/Messages/module.vue'),
 			Orders: 			() => import('~/components/profile/submodules/Orders/module.vue'),
 			NameChange: 	() => import('~/components/profile/submodules/NameChange.vue'),
 			IconChange: 	() => import('~/components/profile/submodules/IconChange.vue'),
-TransitionWrapper,
 		},
 		mixins: [ D_WorkStatus, F_UserStatus ],
 		data() {
@@ -571,7 +572,7 @@ TransitionWrapper,
 				ActiveRequest: 		state => (state as VuexModules).User.WorkRequest.ActiveRequests,
 			}),
 
-			ComponentInfo() {
+			ComponentInfo(): COMPONENT_HEADER {
 
 				switch (this.CurentPreferencesComponent) {
 

@@ -1,13 +1,10 @@
-import firebase from 'firebase/app'
-import 'firebase/storage'
-
 import { ActionTree, MutationTree } from 'vuex'
+
+// SUPABASE
+	import Supabase from '~/plugins/Supabase'
 
 // TYPES
 	import type { FORMATS, IMAGE_URL } from '~/typescript/Image'
-
-// // VARS
-// 	globalThis.XMLHttpRequest = require('xhr2');
 
 // VARIABLES
 	const SIZES = [ 100, 360, 720, 1280, 1440 ]
@@ -84,15 +81,18 @@ import { ActionTree, MutationTree } from 'vuex'
 
 				} 
 
-				// console.log('get urls from firebase')
-
 				const PA = await Promise.all(FORMATS_LIST.map((format) => {
 
 					return new Promise<Partial<IMAGE_URL>>((resolve) => {
-						firebase.storage()
-							.ref(`${ ROOT_REF }/${ _path }/${ format }/${ SIZE }.${ format }`)
-							.getDownloadURL()
-							.then(url => resolve({ [format]: url }))
+
+						const { publicURL, error } = Supabase
+							.storage.from('main')
+							.getPublicUrl(`${ ROOT_REF }/${ _path }/${ format }/${ SIZE }.${ format }`);
+
+						if ( error ) throw error;
+
+						resolve({[format]: publicURL });
+						
 					})
 
 				}))
@@ -104,8 +104,6 @@ import { ActionTree, MutationTree } from 'vuex'
 				return URLS;
 
 			}
-
-			// console.log('get nothing')
 
 			return null
 

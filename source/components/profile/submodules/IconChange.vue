@@ -221,18 +221,20 @@
 
 			async getDefaultIcons() {
 
-				const REFS = await firebase.storage().ref('UserIcons').list().then( res => res.items )
+				const BUCKET = this.$Supabase.storage.from('main');
+				const { data, error } = await BUCKET.list('UserIcons');
 
-				REFS.forEach((item) => {
+				if ( error ) throw error;
 
-					firebase.storage()
-						.ref(`UserIcons/${ item.name }`)
-						.getDownloadURL()
-						.then(( url: string ) => {
-							this.SelectableIcon.push(url)
-						})
+				data?.forEach(file => {
+					if ( file.metadata ) {
 
-				})
+						const { publicURL } = BUCKET.getPublicUrl(`UserIcons/${ file.name }`);
+	
+						if ( publicURL ) this.SelectableIcon.push(publicURL)
+
+					}
+				}) 
 
 			},
 
@@ -243,29 +245,32 @@
 
 				const EL 	= this.$refs.CustomIcon as HTMLInputElement
 
-				const N = EL.value.split( /\\/g ).pop()?.split( /\./g ) as EXTENSIONS
+				const N = EL.value
+					.split( /\\/g )
+					.pop()
+					?.split( /\./g ) as EXTENSIONS
 
 				const PATH	= 'UserIcons/ID'
-				const NAME 	= this.UserState.UserID
+				const ID 		= this.UserState.UserID
 				const EXT 	= N?.[1]; 
 
-				if ( EL.files && NAME && EXT ) {
+				if ( EL.files && ID && EXT ) {
 
-					const FILE = new File([ EL.files[0] ], NAME);
-					const META = { contentType: `image/${ EXT }` };
+					const FILE = new File([ EL.files[0] ], ID);
 
 					try {
 
-						await firebase.storage()
-							.ref(`${ PATH }`)
-							.child(`${ NAME }.${ EXT }`)
-							.put(FILE, META)
+						const DIST = `${ PATH }/${ FILE.name }::${ FILE.size.toString(36).toUpperCase() }.${ EXT }`;
 
-						const URL = await firebase.storage()
-							.ref(`${ PATH }/${ NAME }.${ EXT }`)
-							.getDownloadURL()
+						const BUCKET = this.$Supabase.storage.from('main');
 
-						if ( URL ) { this.NewIcon = URL }
+						const U = await BUCKET.upload(DIST, FILE, { contentType: FILE.type });
+
+						const { publicURL } = BUCKET.getPublicUrl(DIST);
+						
+						console.log(publicURL, U.error, DIST);
+
+						if ( publicURL ) { this.NewIcon = publicURL }
 						
 					} catch (error: unknown) { 
 
