@@ -164,6 +164,7 @@
       { src: '~/plugins/InitState.ts' },
       // Common plugins
       { src: '~/plugins/Firebase.ts' },
+      { src: '~/plugins/Supabase.ts' },
       { src: '~/plugins/VuePortal.js' },
       { src: '~/plugins/MobileDetection.ts' },
       { src: '~/plugins/Anime.ts' },
