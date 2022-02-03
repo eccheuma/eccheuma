@@ -15,7 +15,7 @@
 
 				<picture class="post-header-image">
 					<source :srcset="ImageURL.avif" type="image/avif">
-					<img :src="ImageURL.webp" :alt="payload.description">
+					<img :src="ImageURL.webp" :alt="payload.description" ref="image">
 				</picture>
 
 				<section v-once class="post-header-tags">
@@ -730,9 +730,8 @@
 	// VUELIDATE
 	import { required, minLength, maxLength, helpers } from 'vuelidate/lib/validators'
 
-	// FIREBASE 
-	import firebase from 'firebase/app'
-	import 'firebase/database'
+	// API
+	import { setData, removeData, getData } from '~/api/database';
 
 	// MIXINS
 	import EmitSound 						from '~/assets/mixins/EmitSound'
@@ -970,30 +969,25 @@
 			...mapActions({
 				GetLocalTime: 'GetLocalTime',
 				getImageURL: 	'Images/getImageURL',
-				decodeImage:  'Images/decodeImage',
 			}),
 			
 			getAuthor(): Promise<void> {
 
 				return new Promise((resolve) => {
-
-					firebase.database()
-						.ref(`Users/${ this.payload.authorID }/state`)
-						.on('value', (snapshot) => {
-							this.AuthorInfo = snapshot.val() as USER_STATE; resolve()
-						})
-
+					getData(`Users/${ this.payload.authorID }/state`, response => {
+						this.AuthorInfo = response as USER_STATE; resolve()
+					})
 				})
 
 			},
 
 			listenDataSnapshots(section: SECTIONS) {
 
-				firebase.database()
-					.ref(`Posts/PostID-${ this.payload.ID }/${ section.toLowerCase() }`)
-					.on('value', (data) => {
-						this[section] = data.val(); console.debug(`[Post]: listenDataSnapshots | ${ section }`)
-					})
+				console.debug(`[Post]: listenDataSnapshots | ${ section }`)
+
+				getData(`Posts/PostID-${ this.payload.ID }/${ section.toLowerCase() }`, response => {
+					this[section] = response; 
+				})
 
 			}, 
 
@@ -1034,25 +1028,23 @@
 
 			prepareAnimations(el: Element, url: IMAGE_URL) {
 
-				const animationFn = (_direction: DirectionOptions, callback?: AnimeCallBack ) => {
-					this.$AnimeJS({
-
-						targets: el,
-						opacity: [1, 0],
-						duration: 250,
-						direction: _direction,
-						easing: 'linear',
-
-						...callback
-
-					})
-				}
-
-				animationFn('normal', {
-					complete: () => { 
-						this.ImageURL = url; this.decodeImage(url).then(() => animationFn('reverse'))
-					}
+				const animation = el.animate([
+					{ opacity: 1 },
+					{ opacity: 0 }
+				], {
+					duration: 250,
+					fill: 'both',
 				})
+
+				animation.onfinish = () => {
+					
+					animation.onfinish = null;
+
+					(this.$refs.image as HTMLImageElement).onload = () => animation.reverse();
+
+					this.ImageURL = url;
+
+				}
 
 			},
 
@@ -1070,11 +1062,10 @@
 						Comment : this.Message,
 						UserID: this.StoreUser.UserID,
 					}
-	
-					firebase.database()
-						.ref(`Posts/PostID-${ this.payload.ID }/comments/Hash-${ HASH }`)
-						.set(COMMENT)
-						.then(() => { this.Message = '' })
+
+					setData(`Posts/PostID-${ this.payload.ID }/comments/Hash-${ HASH }`, COMMENT);
+
+					this.Message = String();
 
 				}
 
@@ -1082,19 +1073,13 @@
 
 			sendLike(): void {
 
-				const REFERENCE = firebase.database().ref(`Posts/PostID-${ this.payload.ID }/likes/${ this.StoreUser.UserID }`)
+				if ( this.LoginStatus === false ) return;
 
-				if ( this.userLiked && this.LoginStatus ) {
+				const PATH = `Posts/PostID-${ this.payload.ID }/likes/${ this.StoreUser.UserID }`;
 
-					REFERENCE.remove();
-
-				} else {
-
-					REFERENCE.set({
-						hash: this.HashGenerator()
-					});
-
-				}
+				this.userLiked 
+					? removeData(PATH) 
+					: setData(PATH, { hash: this.HashGenerator() })
 
 			},
 

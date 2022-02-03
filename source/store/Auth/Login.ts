@@ -2,6 +2,9 @@ import firebase from 'firebase/app'
 import 'firebase/database'
 import 'firebase/auth'
 
+// API
+	import { getData } from '~/api/database'
+
 // VUEX
 	import type { ActionTree, MutationTree } from 'vuex'
 
@@ -46,11 +49,9 @@ import 'firebase/auth'
 				commit('Auth/Session/Change_userState', { _uid: uid, email }, { root: true })
 
 				// Загрузка стейта пользователя из Firebase
-				firebase.database().ref(`Users/${ uid }/state`).on('value', (data) => {
-
-					commit('User/State/Change_UserState', data.val(), { root: true })
-
-				});
+				getData(`Users/${ uid }/state`, response => {
+					commit('User/State/Change_UserState', response, { root: true })
+				})
 
 				// setTimeout(() => {
 					commit('Auth/Session/ChangeLoginStatus', true, { root: true })

@@ -490,17 +490,10 @@ $padX: 1vw;
 		import Collapse 		from '~/components/common/Collapse.vue'
 		import Tag 					from '~/components/common/Tag.vue'
 
-<<<<<<< Updated upstream
-	// FUNCTIONAL COMPONENTS
-		import TransitionWrapper from '../functional/TransitionWrapper.vue';
-
-	// TYPES
-=======
 	// FUNCTION COMPONENTS
 		import TransitionWrapper from '../functional/TransitionWrapper.vue';
 
 	// INTERFACE'N'TYPES
->>>>>>> Stashed changes
 		type MODULES = 'Messages' | 'NameChange' | 'IconChange' | 'Orders';
 
 		type COMPONENT_HEADER = {

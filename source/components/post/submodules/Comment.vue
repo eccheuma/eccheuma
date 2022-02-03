@@ -231,9 +231,8 @@
 
 	import Vue, { PropOptions } from 'vue';
 
-	// FIREBASE
-	import firebase from 'firebase/app';
-	import 'firebase/database';
+	// API
+	import { setData, removeData, getData } from '~/api/database';
 
 	// VUEX
 	import { mapActions, mapState } from 'vuex';
@@ -304,17 +303,13 @@
 				])
 			}
 
-			firebase.database()
-				.ref(`Users/${ this.userID }/state`)	
-				.on('value', (data) => {
-					this.Author = data.val()
-				});
+			getData(`Users/${ this.userID }/state`, response => {
+				this.Author = response;
+			})
 
-			firebase.database()
-				.ref(`Posts/PostID-${ this.postID }/comments/Hash-${ this.commentID }`)	
-				.on('value', (data) => {
-					this.RecivedData = data.val();
-				});
+			getData(`Posts/PostID-${ this.postID }/comments/Hash-${ this.commentID }`, response => {
+				this.RecivedData = response;
+			})
 
 			this.DateOfComment = await this.GetLocalTime(this.RecivedData.Date)
 
@@ -325,12 +320,11 @@
 				GetLocalTime: 'GetLocalTime'
 			}),
 
-			RemoveComment() {
+			async RemoveComment() {
 
-				firebase.database()
-					.ref(`Posts/PostID-${ this.postID }/comments/Hash-${ this.commentID }`)
-					.remove()
-					.then(() => this.playSound(this.Sounds.get('Element::Action')))
+				await removeData(`Posts/PostID-${ this.postID }/comments/Hash-${ this.commentID }`);
+
+				this.playSound(this.Sounds.get('Element::Action'));
 
 			}
 
