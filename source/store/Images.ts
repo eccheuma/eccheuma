@@ -1,7 +1,6 @@
 import { ActionTree, MutationTree } from 'vuex'
 
-// SUPABASE
-	import Supabase from '~/plugins/Supabase'
+import { getLink } from '~/api/database';
 
 // TYPES
 	import type { FORMATS, IMAGE_URL } from '~/typescript/Image'
@@ -74,27 +73,13 @@ import { ActionTree, MutationTree } from 'vuex'
 			if ( process.browser ) {
 
 				if ( await store.dispatch('checkCache', LOCAL_ID) ) {
-
-					// console.log('get urls from cache')
-
 					return store.dispatch('getCache', LOCAL_ID) as Promise<IMAGE_URL>;
-
 				} 
 
 				const PA = await Promise.all(FORMATS_LIST.map((format) => {
-
 					return new Promise<Partial<IMAGE_URL>>((resolve) => {
-
-						const { publicURL, error } = Supabase
-							.storage.from('main')
-							.getPublicUrl(`${ ROOT_REF }/${ _path }/${ format }/${ SIZE }.${ format }`);
-
-						if ( error ) throw error;
-
-						resolve({[format]: publicURL });
-						
+						resolve({[format]: getLink(`${ ROOT_REF }/${ _path }/${ format }/${ SIZE }.${ format }`) });
 					})
-
 				}))
 
 				const URLS = PA.reduce((a, b) => Object.assign(a, b)) as IMAGE_URL

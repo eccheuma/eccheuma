@@ -380,7 +380,6 @@
 			
 			...mapActions({
 				getImageURL: 	'Images/getImageURL',
-				decodeImage:  'Images/decodeImage',
 				GetLocalTime: 'GetLocalTime'
 			}),
 

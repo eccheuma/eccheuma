@@ -386,7 +386,7 @@
 				ImagePlaceholder: PLACEHOLDER_L,
 
 				Focus: false,
-				CarouselFocus: null,
+				CarouselFocus: false,
 
 				elementInFocus: undefined,
 
@@ -432,7 +432,6 @@
 			...mapActions({
 				GetFirebaseImageURL: 	'Images/GetImageURL',
 				getImageURL: 					'Images/getImageURL',
-				decodeImage:					'Images/decodeImage',
 				GetLocalTime:					'GetLocalTime',
 			}),
 
