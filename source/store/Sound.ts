@@ -55,9 +55,7 @@
 		},
 
 		setGlobalProperty(state, prop: { type: keyof GLOBAL_PROPERTY, value: GLOBAL_VALUES }) {
-
 			( state.global[prop.type] as number | boolean ) = prop.value
-
 		}
 
 	}
@@ -66,11 +64,12 @@
 	export const actions: ActionTree<CurentState, CurentState> = {
 
 		registerSound(vuex, sound: SoundInstance ): Howl {
-
+			
 			if ( !vuex.state.sounds.has(sound.name) ) {
 				
 				const PREDEFINED_OPTIONS: Partial<HowlOptions> = {
 					preload: true,
+					autoplay: false,
 				}
 	
 				const CURRENT_HOWL: Howl = new Howl({ 
@@ -78,12 +77,10 @@
 					...PREDEFINED_OPTIONS, 
 					...sound.settings,
 	
-					onplayerror: () => {
-						CURRENT_HOWL.once('unlock', () => CURRENT_HOWL.play())
-					}
-	
-				}).on('load', () => {
+				}).once('load', () => {
 					console.debug(`[registerSound]: Load sound element | ${ sound.name }`);
+				}).once('unlock', () => {
+					CURRENT_HOWL.fade(0, sound.settings?.volume!, 1000)
 				})
 
 				vuex.commit('setSound', { name: sound.name, howl: CURRENT_HOWL });

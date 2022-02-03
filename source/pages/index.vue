@@ -120,7 +120,7 @@
 				opacity: .25;
 
 				background: {
-					// image: url('~assets/images/Background.png?size=360');
+					image: url('~assets/images/Background.png?size=360');
 					size: cover;
 					position: center;
 					repeat: no-repeat;
@@ -373,9 +373,6 @@
 	import CanvasComponent	from '~/components/Canvas.vue';
 	import Icon 						from '~/components/common/Icon.vue'
 
-// VARIABLES
-	const PLACEHOLDER = require('~/assets/images/Background.png?size=300')
-
 // MODULE
 	export default Vue.extend({
 		components: {
@@ -410,14 +407,6 @@
 				AnimeInstance: [] as AnimeInstance[],
 				
 			}
-		},
-		head: {
-			link: [
-
-				// { rel: 'prefetch', 	href: require('~/static/audio/Holl.ogg').default, as:'fetch', crossorigin: true },
-				{ rel: 'prefetch', 	href: PLACEHOLDER },
-
-			]
 		},
 		computed: {
 
@@ -487,7 +476,11 @@
 					{
 						file: 'Holl',
 						name: 'Ambient',
-						settings: { rate: .45, volume: 1.25, loop: true },
+						settings: { 
+							rate: .45, 
+							volume: 1.25, 
+							loop: true, 
+						},
 					}
 				])
 			}

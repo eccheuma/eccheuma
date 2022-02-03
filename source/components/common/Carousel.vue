@@ -272,7 +272,7 @@ import Vue, { PropOptions } from 'vue'
 			AutoChange() {
 
 				const cb = () => {
-					if ( !(this.mouseData.isHover && this.mouseData.isDown) ) {
+					if ( !this.mouseData.isHover ) {
 						this.ChangeSlide('NEXT');
 					}
 				}

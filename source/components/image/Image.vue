@@ -370,7 +370,7 @@
 					if ( entry[0].isIntersecting )  {
 						this.$nextTick(() => this.getImage()); interesection.unobserve(this.$el as HTMLElement);
 					}
-				}, { rootMargin: `${ window.innerHeight / 2 }px` })
+				})
 
 				interesection.observe(this.$el as HTMLElement);
 

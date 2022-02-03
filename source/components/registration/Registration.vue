@@ -30,17 +30,22 @@
 				</section>
 
 				<section class="registration-body">
-					<caption-card status="missunderstood">
+
+					<registration-form />
+
+					<!-- <caption-card status="missunderstood">
 						<template #type>
 							Тут сыровато и пахнет плесенью.
 						</template>
 						<template #desc>
 							Регистрация пока не доступна, простите.
 						</template>
-					</caption-card>
+					</caption-card> -->
+
 					<div class="registration-body-stage">
 						<span v-for="i in 3" :key="i" :class="{ active: i === Stage }" />
 					</div>
+
 				</section>
 
 				<section class="registration-footer">
@@ -123,19 +128,15 @@
 		background-color: rgba(var(--color-mono-200));
 		border-radius: var(--border-radius);
 
-		section {
-			display: flex;
-			flex-direction: column;
-			place-content: center;
-			place-items: center;
-			padding: 3vh 2vw;
-		}
-
 	}
 	&-header {
 
 		text-align: center;
 		background-color: rgba(var(--color-mono-300));
+
+		display: flex;
+		flex-direction: column;
+		padding: 2vh 2vw;
 
 		@extend %pattern-lines;
 
@@ -166,6 +167,13 @@
 		display: grid;
 		gap: 2vh;
 
+		padding: 2vh 2vw;
+
+		place-items: center;
+		align-content: space-between;
+
+		grid-template-rows: min-content 6vh;
+
 		&-stage {
 
 			display: flex;
@@ -184,6 +192,14 @@
 		}
 	}
 	&-footer {
+
+		display: flex;
+		flex-direction: column;
+		place-items: center;
+		padding: 2vh 2vw;
+
+		@extend %pattern-lines;
+		background: rgba(var(--color-mono-300));
 
 		gap: 1vh;
 
@@ -213,12 +229,16 @@
 	import CommonButton from '~/components/buttons/CommonButton.vue';
 	import CaptionCard 	from '~/components/common/Caption.vue'
 
+	// SUBMODULES
+	import RegistrationForm from './submodules/Form.vue'
+
 // MODULE
 	export default Vue.extend({
 		components: {
 			CommonButton,
 			CaptionCard,
-			Loader
+			Loader,
+			RegistrationForm,
 		},
 		data() {
 			return {
