@@ -186,7 +186,7 @@
 							]"
 						>
 
-							<template v-if="!sortedComments.length">
+							<template v-if="!sortedComments.length" v-once> 
 								<section class="post-comments-first">
 									<span>" Тут ещё нет комментариев, но это пока... "</span>
 								</section>
@@ -750,8 +750,8 @@
 	import HardwareAccelerationDecorator 	from '~/components/functional/HardwareAcceleration.vue';
 	import IntesectionComponent 					from '~/components/functional/intersectionComponent.vue'
 
-	//	С фильтрами происходит что-то не совсем ясное. 
-	//  Нормально работают в хроме, но лиса отказывается с ними адекватно дружить.
+	// ? С фильтрами происходит что-то не совсем ясное. 
+	// ? Нормально работают в хроме, но лиса отказывается с ними адекватно дружить.
 
 	// FILTERS
 	// import DisplacementFilter		from '~/components/filters/displacement.vue'
@@ -770,7 +770,7 @@
 
 	type SECTIONS = 'Likes' | 'Comments' | 'Content'
 
-	// // IMAGE PLACEHOLDER
+	// IMAGE PLACEHOLDER
 	const PLACEHOLDER: IMAGE_URL = {
 		avif: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=avif').src,
 		webp: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src
@@ -921,8 +921,8 @@
 					this.listenDataSnapshots('Content'); watchPrepareContent();
 				});
 
-				const watchIntersectionAnimation = this.$watch('IntersectionAnimation', () => {
-					this.IntersectionAnimation!.reverse(); watchIntersectionAnimation();
+				const watchIntersection 	= this.$watch('IntersectionAnimation', () => {
+					this.IntersectionAnimation!.reverse(); watchIntersection();
 				})
 
 			}

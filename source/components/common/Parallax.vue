@@ -118,12 +118,10 @@
 			},
 			opacityValue: {
 				handler() { 
-					if ( this.inViewport ) {
-						this.setStyleElement(
-							'Wrapper', 
-							`opacity: ${ this.opacityValue }%`
-						)
-					}
+					this.setStyleElement(
+						'Wrapper', 
+						`opacity: ${ this.opacityValue }%`
+					)
 				}
 			},
 			ScrollPosition: {
@@ -142,9 +140,7 @@
 			}
 		},
 		mounted() {
-
 			this.initElement();
-
 		},
 		methods: {
 
@@ -161,17 +157,13 @@
 			},
 
 			scrollHandler(): void {
-				requestAnimationFrame( () => {
-					if ( this.inViewport && this.ScrollPosition !== window.scrollY) {
-						this.ScrollPosition = window.scrollY;
-					}
+				requestAnimationFrame(() => {
+					this.ScrollPosition = window.scrollY;
 				})
 			},
 
 			setStyleElement(id: string, css: string ) {
-				if ( this.inViewport ) {
-					(this.$refs[id] as Element).setAttribute('style', css ) 
-				}
+				(this.$refs[id] as Element).setAttribute('style', css ) 
 			},
 
 			getElementPosition(el: HTMLElement): Promise<POSITION> {

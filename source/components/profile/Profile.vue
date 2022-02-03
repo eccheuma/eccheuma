@@ -4,13 +4,13 @@
 		class="user_profile-collapse"
 		:active="UserProfileArea" 
 		:options="{ duration: 500, emit: true }"
-		@collapsed="(v) => active = v"
+		@collapsed="(v) => status = v"
 		>
 
 		<section ref="UserProfileContainer" class="user_profile-container">
 
 			<transition name="opacity-transition">
-				<div v-show="active" class="user_profile-info">
+				<div v-show="status" class="user_profile-info">
 
 					<section v-once class="user_profile-info-header">
 						<h6>Профиль</h6>
@@ -74,7 +74,7 @@
 			</transition>
 
 			<transition name="opacity-transition">
-				<div v-show="active"  class="user_profile-content">
+				<div v-show="status"  class="user_profile-content">
 
 					<section class="user_profile-content-header">
 						<h6>{{ ComponentInfo.Title }}</h6>
@@ -93,7 +93,7 @@
 			</transition>
 
 			<transition name="opacity-transition">
-				<div v-show="active" class="user_profile-navigation">
+				<div v-show="status" class="user_profile-navigation">
 
 					<section v-once class="user_profile-navigation-header">
 						<h6>Навигация</h6>
@@ -109,7 +109,7 @@
 							:key="`navigation-button-${ index }`"
 							:indicator="Boolean(item.Component === 'Messages' && NewMessages)"
 							:class="[
-								{ active: CurentPreferencesComponent === item.Component }
+								{ status: CurentPreferencesComponent === item.Component }
 							]"
 							@click.native="AreaToggle( item.Component )"
 							>
@@ -490,16 +490,25 @@ $padX: 1vw;
 		import Collapse 		from '~/components/common/Collapse.vue'
 		import Tag 					from '~/components/common/Tag.vue'
 
+<<<<<<< Updated upstream
 	// FUNCTIONAL COMPONENTS
 		import TransitionWrapper from '../functional/TransitionWrapper.vue';
 
 	// TYPES
+=======
+	// FUNCTION COMPONENTS
+		import TransitionWrapper from '../functional/TransitionWrapper.vue';
+
+	// INTERFACE'N'TYPES
+>>>>>>> Stashed changes
 		type MODULES = 'Messages' | 'NameChange' | 'IconChange' | 'Orders';
 
 		type COMPONENT_HEADER = {
 			Title: string,
 			Sub: String
 		}
+
+		type TEST = () => any
 
 	// ANIMATION STATES 
 
@@ -552,7 +561,7 @@ $padX: 1vw;
 
 				] as Array<{ Component: MODULES, Name: string }>,
 
-				active: true,
+				status: false,
 				
 			}
 		},
@@ -625,7 +634,7 @@ $padX: 1vw;
 				}
 			},
 
-			active: {
+			status: {
 				handler() {
 					this.AnimateUserIcon('init')
 				}

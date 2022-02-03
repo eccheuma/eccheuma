@@ -146,7 +146,6 @@
             useBuiltIns: false,
           }]
         ],
-        // Some nuxt 3 preparations, but not even sure about about this. 
         plugins: [
           '@babel/plugin-transform-runtime'
         ]
