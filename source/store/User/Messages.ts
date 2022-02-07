@@ -1,5 +1,5 @@
-import firebase from 'firebase/app'
-import 'firebase/database'
+// API
+	import { setDatabaseData, getDatabaseData, updateDatabaseData } from '~/api/database';
 
 // VUEX
 	import type { ActionTree, MutationTree } from 'vuex'
@@ -28,67 +28,58 @@ import 'firebase/database'
 
 // MUTATIONS
 	export const mutations: MutationTree<CurentState> = {
+
 		setUnreadedQuanity(state, q: number) {
-
 			state.NewMessagesCount = q
+		},
 
+		setMessages(state, messages: MESSAGE[]) {
+			state.Messages = messages.sort((a, b) => a.Date - b.Date);
 		},
-		setMessages(state, messages: MESSAGE) {
-			state.Messages = Object.values(new Object(messages)).map((item: MESSAGE) => item).sort((a, b) => a.Date - b.Date)
-		},
+		
 	}
 
 // ACTIONS
 	export const actions: ActionTree<CurentState, VuexModules>  = {
 
-		getMessages({ dispatch, commit, rootState }) {
-			try {
+		async getMessages({ dispatch, commit, rootState }) {
 
-				// Получение ID пользователя
-				const uid = rootState.Auth.Session.CurentUser.uid
+			// Получение ID пользователя
+			const { uid } = rootState.Auth.Session.CurentUser;
 
-				// Загрузка стейта пользователя из Firebase
-				firebase.database()
-					.ref(`Users/${uid}/messages`)
-					.on('value', (data) => {
+			getDatabaseData(`Users/${uid}/messages`).then(messages => {
+				commit('setMessages', messages); 
+			})
 
-						commit('setMessages', data.val()); 
-						
-						dispatch('checkUnreaded')
+			dispatch('checkUnreaded');
 
-					});
-
-			} catch (e) { console.log(e) }
 		},
 
 		sendMessage({ rootState }, prop: MESSAGE) {
-			try {
-				
-				// Получение ID пользователя
-				const uid = rootState.Auth.Session.CurentUser.uid
 
-				firebase.database().ref(`Users/${ uid }/messages/Hash_${prop.ID}`).set(prop)
+			// Получение ID пользователя
+			const { uid } = rootState.Auth.Session.CurentUser;
 
-			} catch (e) { console.log(e) }
+			setDatabaseData(`Users/${ uid }/messages/Hash_${prop.ID}`, prop) 
+
 		},
 
 		markAsReaded({ rootState }, ID: MESSAGE['ID']) {
 
-			const uid = rootState.Auth.Session.CurentUser.uid 
+			// Получение ID пользователя
+			const { uid } = rootState.Auth.Session.CurentUser;
 
-			firebase.database()
-				.ref(`Users/${ uid }/messages/Hash_${ ID }`)
-				.update({ Read: true } as MESSAGE)
+			updateDatabaseData(`Users/${ uid }/messages/Hash_${ ID }`, { Read: true } as MESSAGE)
 
 		},
 
 		checkUnreaded({ rootState, commit, state }) {
 
-			const Unreaded = state.Messages.filter(( item: MESSAGE ) => {
-				return !item.Read && item.UserID !== rootState.User.State.UserState.UserID
+			const { length } = state.Messages.filter(({ Read, UserID }) => {
+				return !Read && UserID !== rootState.User.State.UserState.UserID
 			})
 			
-			commit('setUnreadedQuanity', Unreaded.length )
+			commit('setUnreadedQuanity', length)
 
 		},
 		

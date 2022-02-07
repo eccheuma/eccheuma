@@ -86,9 +86,8 @@
 
 import Vue from 'vue'
 
-// FIREBASE
-import firebase from 'firebase/app'
-import 'firebase/database'
+// API
+import { getDatabaseData } from '~/api/database'
 
 // MIXINS
 import EmitSound from '~/assets/mixins/EmitSound'
@@ -130,20 +129,13 @@ export default Vue.extend({
 		},
 		GetCases() {
 
-			this.CasesType.forEach((item) => {
+			this.CasesType.forEach( async item => {
 
-				firebase.database()
-					.ref(`Cases/${ item }`)
-					.limitToFirst(3)
-					.on('value', (data) => {
-
-						const D = Object.values(data.val()) as WORKCASE[]
-
-						this.Works[item] = D; this.Ready = true;
-
-					});
+        this.Works[item] = await getDatabaseData(`Cases/${ item }`, { limit: 3 }).then(data => Object.values(data));
 
 			})
+
+      this.Ready = true;
 
 		}
 	}

@@ -289,12 +289,11 @@
 
   import Vue from 'vue'
 
-  // FIREBASE
-  import firebase from 'firebase/app';
-  import 'firebase/database'
+  // API
+  import { getDatabaseData } from '~/api/database';
 
-  // VUEX
-  import { mapActions } from 'vuex';
+  // UTILS
+  import { utils } from '~/utils'
 
   // DATA
   import POSTS from '~/assets/json/vk_posts.json';
@@ -335,37 +334,32 @@
     },
     created() {
 
-      this.checkPosts();
+      if ( process.browser ) {
+        getDatabaseData<string>('App/Cache/Vk').then((response) => {
+          this.checkPosts(response);
+        })
+      }
 
     },
     methods: {
-      ...mapActions({
-        GetLocalTime: 'GetLocalTime',
-      }),
 
-      async checkPosts() {
+      async checkPosts(SERVER_HASH: string) {
 
-        const SERVER_HASH = await firebase.database().ref('App/Cache/Vk').once('value').then(data => data.val());
+        const LOCAL_HASH = window.localStorage.getItem('VK_HASH');
+        const LOCAL_DATA = window.localStorage.getItem('VK_POSTS');
 
-        if ( process.client ) {
+        if ( LOCAL_HASH && LOCAL_DATA && LOCAL_HASH === SERVER_HASH ) {
 
-          const LOCAL_HASH = window.localStorage.getItem('VK_HASH');
-          const LOCAL_DATA = window.localStorage.getItem('VK_POSTS');
+          this.Posts = JSON.parse(LOCAL_DATA); 
+          // console.log('Get VK posts from cache')
 
-          if ( LOCAL_HASH && LOCAL_DATA && LOCAL_HASH === SERVER_HASH ) {
+        } else {
 
-            this.Posts = JSON.parse(LOCAL_DATA); 
-            // console.log('Get VK posts from cache')
+          this.Posts = await this.getPosts(); 
+          // console.log('Get VK posts from server')
 
-          } else {
-
-            this.Posts = await this.getPosts(); 
-            // console.log('Get VK posts from server')
-
-            window.localStorage.setItem('VK_POSTS', JSON.stringify(this.Posts))
-            window.localStorage.setItem('VK_HASH', SERVER_HASH)
-
-          }
+          window.localStorage.setItem('VK_POSTS', JSON.stringify(this.Posts))
+          window.localStorage.setItem('VK_HASH', SERVER_HASH)
 
         }
 
@@ -375,14 +369,13 @@
 
         return await new Promise<POST[]>((resolve) => {
 
-          firebase.database().ref('VkPosts').on('value', async (data) => {
-  
-            const PROMISES = (Object.values(data.val()) as VK_POST[]).map(async (item: VK_POST): Promise<POST> => {
-  
+          getDatabaseData<utils.asJSONArray<VK_POST>>('VkPosts').then((response) => {
+            resolve(Object.values(response).map(item => {
+
               return {
                 thumb: item.attachments[0].photo.sizes[4].url,
                 body: item.text,
-                date: await this.GetLocalTime(Number(`${ item.date + '000' }`)) as FORMATED_DATE,
+                date: utils.getLocalTime(Number(`${ item.date + '000' }`)),
                 link: `https://vk.com/club${ Math.abs(item.from_id) }?w=wall${ item.from_id }_${ item.id }`,
                 social: {
                   likes: item.likes.count,
@@ -390,12 +383,10 @@
                   reposts: item.reposts.count,
                 }
               }
-  
-            })
-  
-            resolve(await Promise.all(PROMISES))
-  
+
+            }));
           })
+
 
         })
 

@@ -111,18 +111,17 @@
 
   import Vue, { PropOptions } from 'vue'
 
-  import firebase from 'firebase/app';
-  import 'firebase/database';
+  // API
+  import { getDatabaseData } from '~/api/database';
 
-  // VUEX
-  import { mapActions } from 'vuex';
+  // UTILS
+  import { utils } from '~/utils';
 
   // COMPONENTS
   import Icon from '~/components/common/Icon.vue'
 
   // TYPE AND INTERFACES
-  import type { FORMATED_DATE } 	from '~/store';
-  import type { MESSAGE }         from '~/typescript/Message'
+  import type { MESSAGE } from '~/typescript/Message'
 
   // MODULE
   export default Vue.extend({
@@ -138,43 +137,30 @@
     data() {
       return {
 
-        authorName: undefined,
+        authorName: String('Placeholdy'),
 
-        date: { Day: '1 Января 2000 г.', Time: '00:00' } as FORMATED_DATE
+        date: utils.getLocalTime(0)
 
       }
     },
-    async created() {
-
-      this.date = await this.GetLocalTime(this.payload.Date);
-
+    created() {
+      this.date = utils.getLocalTime(this.payload.Date);
     },
-    mounted() {
+    async mounted() {
 
-      if ( this.payload.From ) {
-        firebase.database()
-          .ref(`Users/${ this.payload.UserID }/state/UserName`)
-          .on('value', (snapshot) => {
-            this.authorName = snapshot.val();
-          })
-      }
+      this.authorName = await getDatabaseData<string>(`Users/${ this.payload.UserID }/state/UserName`)
 
     },
     methods: {
-      ...mapActions({
-        GetLocalTime: 'GetLocalTime',
-      }),
 
       getMessageType(ID: string) {
         switch (ID) {
-
           case 'ADMIN': 
             return 'response';
           case 'SUPPORT': 
             return 'notification';
-      
-          default: return 'common';
-
+          default: 
+            return 'common';
         }
       }
 

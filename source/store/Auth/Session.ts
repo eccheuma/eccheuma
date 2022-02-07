@@ -22,8 +22,8 @@
 		LoginStatus: false,
 
 		CurentUser: {
-			email: '',
-			uid: '',
+			email: String(),
+			uid: String(),
 		},
 		
 	})
@@ -46,9 +46,7 @@
 		ChangeAuthError(state, prop) {
 			state.AuthError = prop
 		},
-		Change_userState(state, { _email, _uid }) {
-
-			state.CurentUser = { email: _email, uid: _uid }
-
+		Change_userState(state, user: CurentState['CurentUser']) {
+			state.CurentUser = { email: user.email, uid: user.uid }
 		}
 	}

@@ -16,6 +16,7 @@
   "dependencies": {
     "@eccheuma/crusoris": "^1.0.7",
     "@supabase/supabase-js": "^1.29.4",
+    "@supabase/storage-js": "^1.5.1",
     "animejs": "^3.2.1",
     "bootstrap": "^4.6.0",
     "core-js": "^3.17.2",

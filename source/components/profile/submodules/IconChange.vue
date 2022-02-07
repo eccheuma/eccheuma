@@ -124,9 +124,8 @@
 
 	import Vue from 'vue'
 
-	// FIREBASE
-	import firebase from 'firebase/app'
-	import 'firebase/database'
+	// API
+	import { getStorageList, getStorageLink, uploadStorageFile } from '~/api/storage';
 
 	// IMPORTED TYPES
 	import type { AnimeAnimParams, AnimeInstance } from 'animejs'
@@ -221,20 +220,27 @@
 
 			async getDefaultIcons() {
 
-				const BUCKET = this.$Supabase.storage.from('main');
-				const { data, error } = await BUCKET.list('UserIcons');
+				getStorageList('UserIcons').then(response => {
 
-				if ( error ) throw error;
+					if ( response?.error ) throw response.error;
 
-				data?.forEach(file => {
-					if ( file.metadata ) {
+					if ( response?.data ) {
 
-						const { publicURL } = BUCKET.getPublicUrl(`UserIcons/${ file.name }`);
-	
-						if ( publicURL ) this.SelectableIcon.push(publicURL)
+						response.data.forEach(file => {
+
+							const URL = getStorageLink(`UserIcons/${ file.name }`);
+
+							if ( URL ) {
+								this.SelectableIcon.push(URL);
+							} else { 
+								throw Error(`[getDefaultIcons]: File on relative path "UserIcons/${ file.name }" not exist`) 
+							}
+
+						})
 
 					}
-				}) 
+
+				})
 
 			},
 
@@ -243,12 +249,8 @@
 				this.Pending = true;
 				this.NewIcon = '';
 
-				const EL 	= this.$refs.CustomIcon as HTMLInputElement
-
-				const N = EL.value
-					.split( /\\/g )
-					.pop()
-					?.split( /\./g ) as EXTENSIONS
+				const EL = this.$refs.CustomIcon as HTMLInputElement
+				const N = EL.value.split( /\\/g ).pop()?.split( /\./g ) as EXTENSIONS;
 
 				const PATH	= 'UserIcons/ID'
 				const ID 		= this.UserState.UserID
@@ -257,39 +259,23 @@
 				if ( EL.files && ID && EXT ) {
 
 					const FILE = new File([ EL.files[0] ], ID);
+					const DIST = `${ PATH }/${ FILE.name }::${ FILE.size.toString(36).toUpperCase() }.${ EXT }`;
 
-					try {
+					uploadStorageFile(DIST, FILE, { contentType: FILE.type }).then((data) => {
 
-						const DIST = `${ PATH }/${ FILE.name }::${ FILE.size.toString(36).toUpperCase() }.${ EXT }`;
+						const URL = getStorageLink(DIST);
 
-						const BUCKET = this.$Supabase.storage.from('main');
+						console.log(data.data?.Key, URL);
 
-						const U = await BUCKET.upload(DIST, FILE, { contentType: FILE.type });
+						if ( URL ) { this.NewIcon = URL }
 
-						const { publicURL } = BUCKET.getPublicUrl(DIST);
-						
-						console.log(publicURL, U.error, DIST);
+						(this.$refs.iconPreview as HTMLImageElement).onload = () => {
+							this.Pending = false;
+						}
 
-						if ( publicURL ) { this.NewIcon = publicURL }
-						
-					} catch (error: unknown) { 
+					})
 
-						this.Warning = String(error)
-
-					}
-
-				} else {
-
-					this.Warning = 'File not loaded' 
-					
-				}
-
-				const tempI 		= new Image();
-							tempI.src = this.NewIcon;
-
-				tempI.decode().then(() => {
-					this.Pending = false;
-				})
+				} else { this.Warning = 'File not loaded'; }
 
 			},
 

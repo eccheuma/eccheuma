@@ -1,5 +1,6 @@
 
 import Vue from 'vue';
+
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
   
   const SUPA_URL = 'https://unfruhyobjypfbvnncoc.supabase.co';

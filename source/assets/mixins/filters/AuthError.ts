@@ -1,7 +1,7 @@
 
 import Vue from 'vue';
 
-import type { AUTH_ERRORS } 	from '~/store/Auth/Session';
+import type { AUTH_ERRORS } from '~/store/Auth/Session';
 
 const METHODS = {
 	DefineAuthError(e: AUTH_ERRORS): string {

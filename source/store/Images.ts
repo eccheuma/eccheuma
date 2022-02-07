@@ -1,6 +1,6 @@
 import { ActionTree, MutationTree } from 'vuex'
 
-import { getLink } from '~/api/database';
+import { getStorageLink } from '~/api/storage';
 
 // TYPES
 	import type { FORMATS, IMAGE_URL } from '~/typescript/Image'
@@ -78,7 +78,7 @@ import { getLink } from '~/api/database';
 
 				const PA = await Promise.all(FORMATS_LIST.map((format) => {
 					return new Promise<Partial<IMAGE_URL>>((resolve) => {
-						resolve({[format]: getLink(`${ ROOT_REF }/${ _path }/${ format }/${ SIZE }.${ format }`) });
+						resolve({[format]: getStorageLink(`${ ROOT_REF }/${ _path }/${ format }/${ SIZE }.${ format }`) });
 					})
 				}))
 

@@ -3,13 +3,13 @@ import 'firebase/database'
 import 'firebase/auth'
 
 // API
-	import { getData } from '~/api/database'
+	import { listenDatabaseData } from '~/api/database'
 
 // VUEX
 	import type { ActionTree, MutationTree } from 'vuex'
 
 // TYPES
-	import type { REGISTER_FORM } from './Session'
+	import type { REGISTER_FORM, CurentState as SessionState } from '~/store/Auth/Session'
 	import type { VuexModules } 	from '~/typescript/VuexModules'
 
 // STATE
@@ -28,7 +28,7 @@ import 'firebase/auth'
 	}
 
 // MUTATIONS
-	export const mutations : MutationTree<CurentState> = {
+	export const mutations: MutationTree<CurentState> = {
 		setAction(state, value: boolean) {
 			state.inAction = value
 		}
@@ -42,20 +42,23 @@ import 'firebase/auth'
 
 			try {
 
-				await firebase.auth().signInWithEmailAndPassword(email, password)
+				const { user } = await firebase.auth().signInWithEmailAndPassword(email, password);
 
-				const uid = firebase.auth().currentUser?.uid
+				if ( !user ) return;
+
+				const userData: SessionState['CurentUser'] = {
+					uid: user.uid!,
+					email: user.email || String('email is non defined'),
+				}
 				
-				commit('Auth/Session/Change_userState', { _uid: uid, email }, { root: true })
+				commit('Auth/Session/Change_userState', userData, { root: true })
 
 				// Загрузка стейта пользователя из Firebase
-				getData(`Users/${ uid }/state`, response => {
-					commit('User/State/Change_UserState', response, { root: true })
+				listenDatabaseData(`Users/${ user.uid }/state`, (data) => {
+					commit('User/State/Change_UserState', data, { root: true })
 				})
 
-				// setTimeout(() => {
-					commit('Auth/Session/ChangeLoginStatus', true, { root: true })
-				// }, 1000)
+				commit('Auth/Session/ChangeLoginStatus', true, { root: true })
 
 			} catch (e: any) {
 

@@ -156,9 +156,15 @@
 	// VUELIDATE
 	import { required } from 'vuelidate/lib/validators';
 
-	// FIREBASE
-	import firebase from 'firebase/app';
-	import 'firebase/database';
+	// // FIREBASE
+	// import firebase from 'firebase/app';
+	// import 'firebase/database';
+
+	// API
+	import { getDatabaseData } from '~/api/database'
+
+	// UTILS
+	import { utils } from '~/utils'
 
 	// VUEX
 	import { mapState, mapActions } from 'vuex';
@@ -249,7 +255,6 @@
 		methods: {
 
 			...mapActions({
-				GetLocalTime: 'GetLocalTime',
 				vuex_markAsReaded:	'User/Messages/markAsReaded',
 				vuex_sendMessage:	'User/Messages/sendMessage',
 			}),
@@ -274,7 +279,7 @@
 				if ( this.UserPrevMessage !== this.UserMessage ) {
 
 					const M: MESSAGE = {
-						ID: this.HashGenerator(),
+						ID: utils.hashGenerator(),
 						UserID: this.UserState.UserID,
 						Date: Date.now(),
 						From: this.UserState.UserName,
@@ -300,13 +305,11 @@
 				
 				if ( UserID !== this.UserState.UserID && !Read ) {
 
-					const ICON = await firebase.database().ref(`Users/${ UserID }/state/UserImageID`).once('value');
-
 					// eslint-disable-next-line no-undef
 					const CONTENT: NotificationOptions = {
 						body: `${ From }: ${ Message }`,
 						image: require('~/assets/images/NotificationBadge.png'),
-						icon: ICON.val(),
+						icon: await getDatabaseData<string>(`Users/${ UserID }/state/UserImageID`),
 						silent: true,
 					}
 

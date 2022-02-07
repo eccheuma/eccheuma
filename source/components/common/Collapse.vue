@@ -1,5 +1,5 @@
 <template>
-	<div class="eccheuma-collapse" :class="{ 'utils::dead-GPU': BROWSER && !$PIXI.utils.isWebGLSupported() }">
+	<div class="eccheuma-collapse" :class="{ 'utils::dead-GPU': BROWSER && !$PIXI.utils.isWebGLSupported() }" ref="collapse">
 		<slot />
 	</div>
 </template>
@@ -35,7 +35,7 @@ export default Vue.extend({
 				return {
 					duration: 750,
 					emit: false,
-					contentWatcher: false,
+					contentWatcher: true,
 				}
 			}
 		} as PropOptions<{ duration: number, emit: boolean, contentWatcher: boolean }>
@@ -48,12 +48,17 @@ export default Vue.extend({
 		},
 	},
 	updated() {
-
 		if ( this.options.contentWatcher ) {
-			this.$nextTick(() => {
+			setTimeout(() => {
 				this.collapse(this.active);
-			})
+			}, 500);
 		}
+	},
+	mounted() {
+
+		const mutObserver = new MutationObserver(() => this.collapse(this.active));
+
+		mutObserver.observe(this.$refs.collapse as HTMLElement, { childList: true });
 
 	},
 	methods: {
