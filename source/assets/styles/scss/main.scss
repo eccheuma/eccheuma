@@ -1,0 +1,92 @@
+// @use "sass:math";
+
+@import "_root";
+@import "_variables";
+@import "_utils";
+@import "_transitions";
+@import "_fonts";
+
+::placeholder {
+	color: rgb(var(--color-mono-500));
+}
+
+::selection {
+	background-color: var(--accent);
+	color: rgb(var(--mono-200));
+}
+
+* { 
+
+	@supports (scrollbar-color: red red) and (scrollbar-width: thin) {
+		scrollbar-color: rgb(var(--color-mono-400)) rgb(var(--color-mono-200));
+		scrollbar-width: thin;
+	}
+
+	&::-webkit-scrollbar {
+
+		$w: 1vw;
+		$line-w: 0.1vw;
+		
+		width: $w;
+
+		&-track {
+			background-color: var(--color-accent-edges-100);
+			border-inline: math.div(($w - $line-w),2) solid rgb(var(--color-mono-200));
+		}
+		&-thumb {
+
+			cursor: pointer;
+
+			border-radius: 5px;
+			background-color: var(--color-accent-edges-200);
+			background: linear-gradient(45deg, var(--color-accent-edges-100), var(--color-accent-edges-300), var(--color-accent-edges-200));
+			border: 3px solid rgb(var(--color-mono-200));
+
+		}
+
+	}
+}
+
+input[type="range"] {
+
+	-webkit-appearance: none;
+	background: rgb(var(--color-mono-200));
+	border: 1px solid rgb(var(--color-mono-400));
+	padding: .5vh 1vw;
+	border-radius: var( --border-radius);
+	width: 100%;
+	overflow: hidden;
+	height: 4vh;
+
+	&::-webkit-slider-thumb {
+
+		-webkit-appearance: none;
+
+		height: 2.5vh;
+		aspect-ratio: 1/2;
+		border-radius: 3px;
+		background: rgb(var(--color-mono-800));
+
+	}
+
+}
+
+body {
+
+	// width: 100vw;
+	// height: 100vh;
+	overflow-x: hidden;
+	font-size: var(--font-size-18);
+	color: rgb(var(--color-mono-800));
+	font-family: var(--default-font), sans-serif;
+	background-color: rgb(var(--color-mono-200));
+	
+}
+
+main {
+	background-color: rgb(var(--color-mono-200));
+}
+
+aside {
+	background-color: rgb(var(--color-mono-200));
+}
