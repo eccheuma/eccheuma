@@ -232,10 +232,13 @@
 	import Vue, { PropOptions } from 'vue';
 
 	// API
-	import { setData, removeData, getData } from '~/api/database';
+	import { removeDatabaseData, getDatabaseData } from '~/api/database';
+
+	// UTILS
+	import { utils } from '~/utils';
 
 	// VUEX
-	import { mapActions, mapState } from 'vuex';
+	import { mapState } from 'vuex';
 
 	// MIXINS
 	import EmitSound from '~/assets/mixins/EmitSound';
@@ -245,7 +248,6 @@
 
 	import type { COMMENT, POST } 		from '~/typescript/Post';
 	import type { USER_STATE }				from '~/typescript/User';		
-	import type { FORMATED_DATE } 		from '~/store';
 
 	// COMPONENTS
 	// import Tag from '~/components/common/Tag.vue'
@@ -280,7 +282,7 @@
 		data() {
 			return {
 
-				DateOfComment: { Day: '', Time: '' } as FORMATED_DATE,
+				DateOfComment: utils.getLocalTime(0),
 
 				Author: 	new Object() as USER_STATE,
 				RecivedData: new Object() as COMMENT,
@@ -295,7 +297,7 @@
 			}),
 
 		},
-		async created() {
+		created() {
 
 			if ( process.browser ) {
 				this.setSounds([
@@ -303,26 +305,24 @@
 				])
 			}
 
-			getData(`Users/${ this.userID }/state`, response => {
+			getDatabaseData<USER_STATE>(`Users/${ this.userID }/state`).then(response => {
 				this.Author = response;
 			})
 
-			getData(`Posts/PostID-${ this.postID }/comments/Hash-${ this.commentID }`, response => {
-				this.RecivedData = response;
-			})
+			getDatabaseData<COMMENT>(`Posts/PostID-${ this.postID }/comments/Hash-${ this.commentID }`).then(async response => {
 
-			this.DateOfComment = await this.GetLocalTime(this.RecivedData.Date)
+				this.RecivedData = response;
+
+				this.DateOfComment = utils.getLocalTime(response.Date)
+
+			})
 
 		},
 		methods: {
 
-			...mapActions({
-				GetLocalTime: 'GetLocalTime'
-			}),
-
 			async RemoveComment() {
 
-				await removeData(`Posts/PostID-${ this.postID }/comments/Hash-${ this.commentID }`);
+				await removeDatabaseData(`Posts/PostID-${ this.postID }/comments/Hash-${ this.commentID }`);
 
 				this.playSound(this.Sounds.get('Element::Action'));
 
