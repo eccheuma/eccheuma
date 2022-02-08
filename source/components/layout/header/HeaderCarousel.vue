@@ -49,31 +49,18 @@
 						@dblclick="GoToPost(item.content.ID)"
 						>
 
-							<client-only>
+							<parallax 
+								:options="{ OpacityFade: true, OpacityFadeOffset: 100 }" 
+								:forcedScrollPosition="CommonCarouselScrollPosition"
+								@scroll-position="setScrollPosition"
+								>
 
-								<template v-if="BROWSER && $PIXI.utils.isWebGLSupported() && !$isMobile">
-									<parallax 
-										:options="{ OpacityFade: true, OpacityFadeOffset: 100 }" 
-										:forcedScrollPosition="CommonCarouselScrollPosition"
-										@scroll-position="setScrollPosition"
-										>
+								<picture ref="ImageHolder" class="eccheuma_swiper-image" :class="!CarouselFocus ? `focused` : `unfocused`">
+									<source :srcset="item.image.avif" type="image/avif">
+									<img :src="item.image.webp">
+								</picture>
 
-										<picture ref="ImageHolder" class="eccheuma_swiper-image" :class="!CarouselFocus ? `focused` : `unfocused`">
-											<source :srcset="item.image.avif" type="image/avif">
-											<img :src="item.image.webp">
-										</picture>
-
-									</parallax>
-								</template>
-
-								<template v-else>
-									<picture ref="ImageHolder" class="eccheuma_swiper-image" :class="!CarouselFocus ? `focused` : `unfocused`">
-										<source :srcset="item.image.avif" type="image/avif">
-										<img :src="item.image.webp">
-									</picture>
-								</template>
-
-							</client-only>
+							</parallax>
 
 							<div class="eccheuma_swiper-post" :class="{'content-hidden': index > ( activeIndex + 1 ) || index < ( activeIndex - 1 )}">
 
@@ -121,6 +108,7 @@
 
 	width: $GLOBAL-BodySize;
 	height: 100%; 
+	// width: 100%;
 
 	background: rgb(var(--mono-200)); 
 	color: rgb(var(--mono-800));
@@ -136,6 +124,7 @@
 
 		width: $GLOBAL-BodySize; 
 		height: 100%;
+		// width: 100vw;
 
 		&:after {
 
@@ -149,8 +138,8 @@
 			width: 100%; 
 			height: 100%;
 
-			background-image: url(~assets/images/Stripes.png?format=webp&size=15);
-			opacity: .50;
+			background-image: url(~assets/images/Stripes.png?size=15);
+			opacity: .75;
 		}
 
 	}
@@ -400,6 +389,8 @@
 
 			await this.GetPosts();
 
+			console.log(this.Slides)
+
 		},
 		computed: {
 
@@ -411,8 +402,7 @@
 		methods: {
 
 			...mapActions({
-				GetFirebaseImageURL: 	'Images/GetImageURL',
-				getImageURL: 					'Images/getImageURL',
+				getImageURL: 'Images/getImageURL',
 			}),
 
 			setScrollPosition(scroll: number) {
@@ -426,16 +416,16 @@
 				const formatedSlides = Object
 					.values(POSTS)
 					.map(async ({ title, description, ID, tags, image, date }) => {
+
 						return {
 							content: { title, description, ID, tags },
 							date: utils.getLocalTime(date),
 							image: await this.getImageURL({ 
 								_path: image,
-								_size: this.$isMobile 
-									? ( window.innerWidth * window.devicePixelRatio ) * 1.5
-									: ( window.innerWidth * window.devicePixelRatio )
+								_size: 1440,
 							})
 						} as HeaderSlide
+
 					})
 
 				this.Slides = await Promise.all(formatedSlides)

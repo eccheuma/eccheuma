@@ -293,7 +293,7 @@
   import { getDatabaseData } from '~/api/database';
 
   // UTILS
-  import { utils } from '~/utils'
+  import { utils, FORMATED_DATE } from '~/utils'
 
   // DATA
   import POSTS from '~/assets/json/vk_posts.json';
@@ -301,9 +301,6 @@
   // COMPONENTS
 	import Icon	          from '~/components/common/Icon.vue'
   import CommonButton   from '~/components/buttons/CommonButton.vue'
-
-  // TYPES
-  import type { FORMATED_DATE } from '~/store'
 
   type VK_POST = typeof POSTS.items[0];
 
@@ -351,12 +348,10 @@
         if ( LOCAL_HASH && LOCAL_DATA && LOCAL_HASH === SERVER_HASH ) {
 
           this.Posts = JSON.parse(LOCAL_DATA); 
-          // console.log('Get VK posts from cache')
 
         } else {
 
           this.Posts = await this.getPosts(); 
-          // console.log('Get VK posts from server')
 
           window.localStorage.setItem('VK_POSTS', JSON.stringify(this.Posts))
           window.localStorage.setItem('VK_HASH', SERVER_HASH)

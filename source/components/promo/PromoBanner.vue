@@ -226,9 +226,6 @@
 		},
 		methods: {
 			routeTo(path: string) {
-
-				console.log(path)
-
 				this.$router.push({ path })
 			}
 		}

@@ -47,8 +47,8 @@
 			// Получение ID пользователя
 			const { uid } = rootState.Auth.Session.CurentUser;
 
-			getDatabaseData(`Users/${uid}/messages`).then(messages => {
-				commit('setMessages', messages); 
+			await getDatabaseData(`Users/${uid}/messages`).then(messages => {
+				commit('setMessages', Object.values(messages)); 
 			})
 
 			dispatch('checkUnreaded');

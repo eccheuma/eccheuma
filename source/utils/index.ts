@@ -19,12 +19,12 @@ export namespace utils {
       Time: Intl.DateTimeFormat('ru-RU', Properties.Time).format(n)
     }
 
-    return DATA
+    return DATA;
 
   }
 
   export function hashGenerator(): string {
-    return Math.random().toString(36).substring(-2).toUpperCase()
+    return Math.random().toString(36).slice(-9).toUpperCase()
   }
 
 }
