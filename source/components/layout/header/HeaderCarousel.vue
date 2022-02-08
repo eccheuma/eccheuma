@@ -43,68 +43,43 @@
 
 				<template #default="{ activeIndex }">
 					<section 
-						v-for="(item, index) in PostContent" 
-						:key="item.ID" 
+						v-for="(item, index) in Slides" 
+						:key="item.content.ID" 
 						class="eccheuma_swiper-item"
-						@dblclick="GoToPost(item.ID)"
+						@dblclick="GoToPost(item.content.ID)"
 						>
 
-							<client-only>
+							<parallax 
+								:options="{ OpacityFade: true, OpacityFadeOffset: 100 }" 
+								:forcedScrollPosition="CommonCarouselScrollPosition"
+								@scroll-position="setScrollPosition"
+								>
 
-								<template v-if="BROWSER && $PIXI.utils.isWebGLSupported() && !$isMobile">
-									<parallax 
-										:options="{ OpacityFade: true, OpacityFadeOffset: 100 }" 
-										:forcedScrollPosition="CommonCarouselScrollPosition"
-										@scroll-position="setScrollPosition"
-										>
+								<picture ref="ImageHolder" class="eccheuma_swiper-image" :class="!CarouselFocus ? `focused` : `unfocused`">
+									<source :srcset="item.image.avif" type="image/avif">
+									<img :src="item.image.webp">
+								</picture>
 
-										<picture ref="ImageHolder" class="eccheuma_swiper-image" :class="!CarouselFocus ? `focused` : `unfocused`">
-											<template v-if="PostImages[item.ID]">
-												<source :srcset="PostImages[item.ID].avif" type="image/avif">
-												<img :src="PostImages[item.ID].webp">
-											</template>
-											<template v-else>
-												<img :src="ImagePlaceholder">
-											</template>
-										</picture>
-
-									</parallax>
-								</template>
-
-								<template v-else>
-									<picture ref="ImageHolder" class="eccheuma_swiper-image" :class="!CarouselFocus ? `focused` : `unfocused`">
-										<template v-if="PostImages[item.ID]">
-											<source :srcset="PostImages[item.ID].avif" type="image/avif">
-											<img :src="PostImages[item.ID].webp">
-										</template>
-										<template v-else>
-											<img :src="ImagePlaceholder">
-										</template>
-									</picture>
-								</template>
-
-							</client-only>
+							</parallax>
 
 							<div class="eccheuma_swiper-post" :class="{'content-hidden': index > ( activeIndex + 1 ) || index < ( activeIndex - 1 )}">
 
 								<section class="eccheuma_swiper-tags">
-									<tag v-for="(tag_content, i) in item.tags" :key="i">
+									<tag v-for="(tag_content, i) in item.content.tags" :key="i">
 										#{{ tag_content }}
 									</tag>
 								</section>
 
 								<section class="eccheuma_swiper-caption">
-									<h2>{{ item.title }}</h2>
-									<h6>{{ item.description }}</h6>
-									<span @click="GoToPost(item.ID)">
+									<h2>{{ item.content.title }}</h2>
+									<h6>{{ item.content.description }}</h6>
+									<span @click="GoToPost(item.content.ID)">
 										Перейти к посту
 									</span>
 								</section>
 
 								<section class="eccheuma_swiper-info">
-									<template v-if="PostReliseTime[index]">
-										<tag>{{ PostReliseTime[index].Day }} в {{ PostReliseTime[index].Time }}</tag>
-									</template>
+										<tag>{{ item.date.Day }} в {{ item.date.Time }}</tag>
 								</section>
 
 							</div>
@@ -133,6 +108,7 @@
 
 	width: $GLOBAL-BodySize;
 	height: 100%; 
+	// width: 100%;
 
 	background: rgb(var(--mono-200)); 
 	color: rgb(var(--mono-800));
@@ -148,6 +124,7 @@
 
 		width: $GLOBAL-BodySize; 
 		height: 100%;
+		// width: 100vw;
 
 		&:after {
 
@@ -161,8 +138,8 @@
 			width: 100%; 
 			height: 100%;
 
-			background-image: url(~assets/images/Stripes.png?format=webp&size=15);
-			opacity: .50;
+			background-image: url(~assets/images/Stripes.png?size=15);
+			opacity: .75;
 		}
 
 	}
@@ -342,10 +319,12 @@
 
 	import Vue from 'vue'
 
-	// FIREBASE
-		import firebase from 'firebase/app'
-		import 'firebase/database'
+	// API
+		import { getDatabaseData } from '~/api/database'
 	
+	// UTILS
+		import { utils, FORMATED_DATE } from '~/utils';
+
 	// VUEX
 		import { mapActions, mapState } from 'vuex'
 
@@ -359,14 +338,22 @@
 		import EmitSound from '~/assets/mixins/EmitSound'
 
 	// TYPES
-		import type { FORMATED_DATE } from '~/store'
-		import type { IMAGE_URL } 		from '~/typescript/Image'
-		import type { POST } 					from '~/typescript/Post'
+		import type { IMAGE_URL } 		from '~/typescript/Image';
+		import type { POST } 					from '~/typescript/Post';
 
-		import type { VuexModules } from '~/typescript/VuexModules'
+		import type { VuexModules } from '~/typescript/VuexModules';
+
+		type HeaderSlide = {
+			content: Pick<POST, 'title' | 'description' | 'ID' | 'tags'>
+			date: FORMATED_DATE
+			image: IMAGE_URL
+		}
 
 	// VARS
 		const PLACEHOLDER_L = `${ require('~/assets/images/ImagePlaceholder.png?resize&size=600')}`
+
+	// LOAD POLITIC
+		import { load_ranges } from '~/config/LoadPolitic'
 	
 	// MODULE
 	export default Vue.extend({
@@ -394,15 +381,15 @@
 
 				CommonCarouselScrollPosition: 0,
 
-				PostContent: 		[] as POST[],
-				PostReliseTime: [] as FORMATED_DATE[],
-				PostImages: 		[] as IMAGE_URL[],
+				Slides: new Array<HeaderSlide>(),
 
 			}
 		},
 		async fetch() {
 
 			await this.GetPosts();
+
+			console.log(this.Slides)
 
 		},
 		computed: {
@@ -412,94 +399,63 @@
 			})
 
 		},
-		watch: {
-			PostContent: {
-				handler() {
-
-					this.PostContent.forEach(async (post) => {
-						this.PostReliseTime[post.ID] = await this.GetLocalTime(post.date);
-					})
-
-					this.getImages(this.PostContent).then((data) => {
-						this.PostImages = data.reverse();
-					});
-
-				}
-			}
-		},
 		methods: {
 
 			...mapActions({
-				GetFirebaseImageURL: 	'Images/GetImageURL',
-				getImageURL: 					'Images/getImageURL',
-				GetLocalTime:					'GetLocalTime',
+				getImageURL: 'Images/getImageURL',
 			}),
 
-			getImages(posts: POST[]): Promise<IMAGE_URL[]> {
-
-				const PROMISES = posts.map(async (post): Promise<IMAGE_URL> => {
-					return await this.getImageURL({ 
-						_path: post.image,
-						_size: this.$isMobile 
-							? ( window.innerWidth * window.devicePixelRatio ) * 1.5
-							: ( window.innerWidth * window.devicePixelRatio )
-					})
-				})
-
-				return Promise.all(PROMISES)
-
-			}, 
-
 			setScrollPosition(scroll: number) {
-
 				this.CommonCarouselScrollPosition = scroll;
-				
 			},
 
 			async GetPosts() {
 
-				const REF = firebase.database().ref('Posts');
+				const POSTS: utils.asJSONArray<POST> = await getDatabaseData('Posts', { limit: load_ranges.posts })
 
-				const QUANTITY = await REF
-					.once('value')
-					.then(posts => posts.numChildren());
-			
-				const DATA = await REF
-					.orderByChild('ID')
-					.startAt( QUANTITY - this.PostForRequest )
-					.once('value')
-					.then(posts => Object.values(posts.val()) as POST[])
+				const formatedSlides = Object
+					.values(POSTS)
+					.map(async ({ title, description, ID, tags, image, date }) => {
 
-				this.PostContent = DATA.reverse();
+						return {
+							content: { title, description, ID, tags },
+							date: utils.getLocalTime(date),
+							image: await this.getImageURL({ 
+								_path: image,
+								_size: 1440,
+							})
+						} as HeaderSlide
+
+					})
+
+				this.Slides = await Promise.all(formatedSlides)
 				
 			},
 
 			GoToPost(ID: string | number) {
 
-				const SCROLL_TO_OBJECT = () => {
+				const targetElement = document.getElementById(`PostID-${ ID }`);
 
-					const ELEMENT = document.getElementById(`PostID-${ ID }`)
-	
-					if ( ELEMENT ) {
-	
-						const RECT 	= ELEMENT.getBoundingClientRect()
-						const POS 	= (RECT.top + pageYOffset) - (RECT.height / 2) 
+				if ( !targetElement ) return;
 
-						window.scrollTo({
-							top: Math.trunc(POS),
-							left: 0,
-							behavior: 'smooth'
-						})
-	
-					}
+				const { top, height } = targetElement.getBoundingClientRect();
 
+				const targetPosition = ( top + scrollY ) - ( height / 2 );
+
+				function scrollToTarget() {
+					window.scrollTo({
+						top: targetPosition,
+						behavior: 'smooth'
+					})
 				}
 
-				if ( this.$route.name === 'home' ) {
-					SCROLL_TO_OBJECT(); return;
-				}
+				switch (this.$route.name) {
 
-				this.$router.push({ path: 'home' }, () => this.$nextTick(SCROLL_TO_OBJECT));
+					case 'home': scrollToTarget(); break;
+				
+					default: this.$router.push({ path: 'home' }).then(scrollToTarget); break;
+
+				}
 
 			},
 		},

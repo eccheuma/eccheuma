@@ -246,9 +246,9 @@
 				ElementLoad: true,
 				ElementLoadComplete: true,
 
-				Email: '',
-				Password: '',
-				Name: '',
+				Email: String(),
+				Password: String(),
+				Name: String(),
 
 				Stage: 1,
 

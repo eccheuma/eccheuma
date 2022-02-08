@@ -262,7 +262,7 @@
 		},
 		async fetch() {
 
-			this.Services = await this.getData();
+			this.Services = await this.getDatabaseData();
 
 		},
 		methods: {
@@ -275,7 +275,7 @@
 				this.Modal = value
 			},
 
-			async getData() {
+			async getDatabaseData() {
 
 				const snapshot = firebase.database().ref(`Service/${ this.payload.path }`).once('value');
 

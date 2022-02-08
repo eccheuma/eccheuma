@@ -273,9 +273,10 @@
 	// VUEX
 	import { mapActions, mapState } from 'vuex'
 
+	// UTILS
+  import { utils } from '~/utils'
+
 	// TYPES
-	import type { DirectionOptions, AnimeCallBack } from 'animejs'
-	import type { FORMATED_DATE } 									from '~/store'
 	import type { IMAGE_PROPERTY, IMAGE_URL } 			from '~/typescript/Image'
 
 	// VUEX MAP
@@ -322,7 +323,7 @@
 		data() {
 			return {
 
-				LocalDate: new Object() as FORMATED_DATE,
+				LocalDate: utils.getLocalTime(0),
 
 				Source: PLACEHOLDER as IMAGE_URL,
 
@@ -364,7 +365,7 @@
 		async mounted() {
 			if ( process.client ) {
 
-				this.LocalDate = await this.GetLocalTime(this.content.date);
+				this.LocalDate = utils.getLocalTime(this.content.date)
 
 				const interesection = new IntersectionObserver((entry) => {
 					if ( entry[0].isIntersecting )  {
@@ -380,7 +381,6 @@
 			
 			...mapActions({
 				getImageURL: 	'Images/getImageURL',
-				GetLocalTime: 'GetLocalTime'
 			}),
 
 			async getImage(): Promise<void> {

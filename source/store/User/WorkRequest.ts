@@ -1,7 +1,7 @@
 	import { ActionTree, MutationTree } from 'vuex'
 
-	import firebase from 'firebase/app'
-	import 'firebase/database'
+// API
+	import { getDatabaseData, setDatabaseData, getDatabaseLength } from '~/api/database'
 
 // INTERFACES AND TYPES 
 
@@ -52,23 +52,23 @@
 
 // ACTIONS
 	export const actions: ActionTree<CurentState, VuexModules> = {
-		async SendWorkRequest({ dispatch, commit, rootState, state }, _service: SELECTED_SERVICE) {
+		async SendWorkRequest({ dispatch, commit, rootState, state }, service: SELECTED_SERVICE) {
 
-			const uid 					= rootState.Auth.Session.CurentUser.uid
+			const { uid } 			= rootState.Auth.Session.CurentUser
 			const MessageCount 	= rootState.User.Messages.Messages.length
 
 			const REQUEST: WORK_REQUEST = {
 				ID: state.RequestQuantity,
 				Status: 1,
-				..._service
+				...service
 			}
 
 			const MESSAGE: MESSAGE = {
-				ID: Math.random().toString(36).substr(2).toUpperCase(),
+				ID: Math.random().toString(36).slice(-8).toUpperCase(),
 				UserID: 'SUPPORT',
 				From: 'Eccheuma Informer',
 				Message: 
-				`Благодарю за оформление заявки на заказ: "${ _service.Service.Name }".
+				`Благодарю за оформление заявки на заказ: "${ service.Service.Name }".
 				
 				В скором времени вам напишут, и тогда можно будет обсудить условия заказа, правок, оплаты.
 				В среднем ответа можно ждать в диапозоне до 1 дня. Но время может меняться в зависимости от загруженности.
@@ -89,66 +89,36 @@
 
 				await dispatch('Set_RequestQuantity')
 
-				firebase.database()
-					.ref(`Users/${ uid }/work_requests/WorkID-${ state.RequestQuantity }`)
-					.set(REQUEST)
+				await setDatabaseData(`Users/${ uid }/work_requests/WorkID-${ state.RequestQuantity }`, REQUEST);
+				await setDatabaseData(`Users/${ uid }/messages/Hash_${ MessageCount + 1 }`, MESSAGE);
 
-				firebase.database()
-					.ref(`Users/${ uid }/messages/Hash_${ MessageCount + 1 }`)
-					.set(MESSAGE)
-
-				commit('Loader/Loader_ChangeLoadMessage', 'Готово', { root: true })
 				commit('Notification/Notification_Status', true, { root: true })
-
 				commit('Notification/setNotification', NOTIFICATION_MESSAGE, { root: true })
 
-			} catch (e) {
+			} catch (e) { console.log(e) }
 
-				console.log(e)
-
-				commit('Loader/Loader_ChangeLoadMessage', 'Отмена', { root: true })
-
-			} finally {
-
-				commit('Loader/Loader_ChangeLoadStatus_Counter', 100, { root: true })
-
-				setTimeout( () => {
-					dispatch('Loader/Loader_Reload', null, { root: true })
-				}, 1500);
-				
-			}
 		},
-		Set_RequestContent({ commit, rootState }) {
+		async Set_RequestContent({ commit, rootState }) {
 
-			const uid = rootState.Auth.Session.CurentUser.uid
+			const { uid } = rootState.Auth.Session.CurentUser;
 
-			firebase.database()
-				.ref(`Users/${uid}/work_requests`)
-				.on('value', (data) => { 
-					commit('Change_Requests', data.val() ) 
-				});	
-			
+			commit('Change_Requests', await getDatabaseData(`Users/${ uid }/work_requests`)) 
+
 		},
-		Set_RequestQuantity({ commit, rootState }) {
+		async Set_RequestQuantity({ commit, rootState }) {
 
-			const uid = rootState.Auth.Session.CurentUser.uid
+			const { uid } = rootState.Auth.Session.CurentUser
 
-			firebase.database()
-				.ref(`Users/${uid}/work_requests`)
-				.on('value', (data) => {
-					commit('Change_WorkQuantity', data.numChildren())
-				});
+			commit('Change_WorkQuantity', await getDatabaseLength(`Users/${uid}/work_requests`)) 
 
 		},
 		Set_ActiveRequest({ commit, state }) {
 
-			if ( state.Requests.length ) {
+			if ( !state.Requests.length ) return;
 
-				const R = state.Requests.filter(( item: WORK_REQUEST ) => item.Status > 1 )
-				
-				commit('Change_ActiveRequests', R)
-
-			}
+			const R = state.Requests.filter(( item: WORK_REQUEST ) => item.Status > 1 )
+			
+			commit('Change_ActiveRequests', R)
 
 		},
 	}

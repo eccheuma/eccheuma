@@ -206,15 +206,14 @@
 
   import Vue, { PropOptions } from 'vue';
 
-  // VUEx
-  import { mapActions } from 'vuex'
+  // UTILS
+  import { utils } from '~/utils';
 
   // MIXINS
   import F_WorkStatus from '~/assets/mixins/filters/WorkStatus'
 
   // TYPES
-  import type { FORMATED_DATE } from '~/store'
-  import type { ORDER }         from '~/typescript/Services'
+  import type { ORDER } from '~/typescript/Services'
 
   type WAITING_TIME_FORMAT = {
     days: number
@@ -330,10 +329,6 @@
     },
     methods: {
 
-      ...mapActions({
-				GetLocalTime: 'GetLocalTime',
-			}),
-
       startTicker(dateType: number) {
         this.ticker = setInterval(() => {
           if ( this.visiableStatus ) {
@@ -362,7 +357,7 @@
 
       async getInfo(): Promise<Array<ORDER_INFO_FIELD>> {
 
-        const { Day, Time }: FORMATED_DATE = await this.GetLocalTime(this.payload.Recived);
+        const { Day, Time } = utils.getLocalTime(this.payload.Recived);
 
         return [
           { name: 'Состояние',          value: this.DefineWorkStatus(this.payload.Status) },

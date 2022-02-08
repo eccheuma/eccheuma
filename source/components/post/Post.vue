@@ -193,13 +193,15 @@
 							</template>
 
 							<section class="post-comments-content">
-								<comment-component 
-									v-for="item in sortedComments" 
-									:key="item.Date" 
-									:userID="item.UserID"
-									:postID="payload.ID" 
-									:commentID="item.ID" 
-								/>
+								<transition-group name="opacity-transition">
+									<comment-component 
+										v-for="item in sortedComments" 
+										:key="item.Date" 
+										:userID="item.UserID"
+										:postID="payload.ID" 
+										:commentID="item.ID" 
+									/>
+								</transition-group>
 							</section>
 
 							<section class="post-comments-answer">
@@ -731,7 +733,10 @@
 	import { required, minLength, maxLength, helpers } from 'vuelidate/lib/validators'
 
 	// API
-	import { setData, removeData, getData } from '~/api/database';
+	import { setDatabaseData, removeDatabaseData, getDatabaseData, listenDatabaseData } from '~/api/database';
+
+	// UTILS
+	import { utils } from '~/utils';
 
 	// MIXINS
 	import EmitSound 						from '~/assets/mixins/EmitSound'
@@ -763,9 +768,6 @@
 	import type { POST, POST_CONTENT, COMMENT, LIKE } 	from '~/typescript/Post'
 	import type { USER_STATE } 													from '~/typescript/User'
 	import type { IMAGE_URL } 													from '~/typescript/Image'
-	import type { FORMATED_DATE } 											from '~/store'
-
-	import type { DirectionOptions, AnimeCallBack } from '~/../node_modules/@types/animejs'
 
 	type SECTIONS = 'Likes' | 'Comments' | 'Content'
 
@@ -782,6 +784,7 @@
 
 	// MODULE
 	export default Vue.extend({
+
 		components: {
 			HardwareAccelerationDecorator,
 			IntesectionComponent,
@@ -795,12 +798,14 @@
 			CommentComponent: () => import('~/components/post/submodules/Comment.vue'),
 			ContentComponent: () => import('~/components/post/submodules/Content.vue'),
 		},
+
 		mixins: [ 
 			EmitSound, 
 			HashGenerator, 
 			// IntersectionObserver, 
 			IntersectionCooler 
 		],
+		
 		props: {
 			payload: {
 				type: Object,
@@ -811,6 +816,7 @@
 				default: false
 			},
 		},
+
 		data() {
 			return {
 
@@ -829,7 +835,7 @@
 
 				prepareContent: false,
 
-				PostDate: { Day: '', Time: '' } as FORMATED_DATE,
+				PostDate: utils.getLocalTime(0),
 
 				Content: 	[] as POST_CONTENT[],
 				Comments: {} as {[ID: string]: COMMENT},
@@ -839,19 +845,20 @@
 
 			}
 		},
+
 		async fetch() {
 
-			this.PostDate = await this.GetLocalTime(this.payload.date);
+			this.PostDate = utils.getLocalTime(this.payload.date)
 
 			if ( process.server ) {
 				await this.getAuthor();
 			}
 
 		},
+
 		computed: {
 
 			...mapState({
-				LocalTime:		state => (state as VuexModules).LocalTime,
 				UI:						state => (state as VuexModules).App.UI,
 				LoginStatus: 	state => (state as VuexModules).Auth.Session.LoginStatus,
 				StoreUser:		state => (state as VuexModules).User.State.UserState,
@@ -870,6 +877,7 @@
 			}
 			
 		},
+
 		watch: {
 			'payload.image': {
 				handler() {
@@ -887,6 +895,7 @@
 				}
 			},
 		},
+
 		created() {
 
 			if ( process.browser ) {
@@ -927,6 +936,7 @@
 			}
 
 		},
+
 		mounted() {
 
 			if ( process.browser ) {
@@ -956,6 +966,7 @@
 			}
 
 		},
+
 		validations: {
 			Message: {
 				required, 
@@ -964,30 +975,35 @@
 				maxLength: maxLength(CHAR_LIMIT),
 			}
 		},
+
 		methods: {
 
 			...mapActions({
-				GetLocalTime: 'GetLocalTime',
 				getImageURL: 	'Images/getImageURL',
 			}),
 			
 			getAuthor(): Promise<void> {
 
 				return new Promise((resolve) => {
-					getData(`Users/${ this.payload.authorID }/state`, response => {
+					getDatabaseData(`Users/${ this.payload.authorID }/state`).then( response => {
 						this.AuthorInfo = response as USER_STATE; resolve()
 					})
 				})
 
 			},
 
-			listenDataSnapshots(section: SECTIONS) {
+			async listenDataSnapshots(section: SECTIONS) {
 
 				console.debug(`[Post]: listenDataSnapshots | ${ section }`)
 
-				getData(`Posts/PostID-${ this.payload.ID }/${ section.toLowerCase() }`, response => {
-					this[section] = response; 
-				})
+				const PATH = `Posts/PostID-${ this.payload.ID }/${ section.toLowerCase() }`;
+
+				switch (section) {
+					case 'Content':
+						this[section] = await getDatabaseData(PATH)
+					default:
+						listenDatabaseData(PATH, data => this[section] = data); break;
+				}
 
 			}, 
 
@@ -1054,7 +1070,7 @@
 
 					this.PreviosMessage = this.Message;
 
-					const HASH = this.HashGenerator()
+					const HASH = utils.hashGenerator()
 
 					const COMMENT: COMMENT = {
 						ID: HASH,
@@ -1063,7 +1079,7 @@
 						UserID: this.StoreUser.UserID,
 					}
 
-					setData(`Posts/PostID-${ this.payload.ID }/comments/Hash-${ HASH }`, COMMENT);
+					setDatabaseData(`Posts/PostID-${ this.payload.ID }/comments/Hash-${ HASH }`, COMMENT);
 
 					this.Message = String();
 
@@ -1078,12 +1094,13 @@
 				const PATH = `Posts/PostID-${ this.payload.ID }/likes/${ this.StoreUser.UserID }`;
 
 				this.userLiked 
-					? removeData(PATH) 
-					: setData(PATH, { hash: this.HashGenerator() })
+					? removeDatabaseData(PATH) 
+					: setDatabaseData(PATH, { hash: utils.hashGenerator() })
 
 			},
 
-		}
+		},
+
 	})
 
 </script>

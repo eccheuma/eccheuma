@@ -1,6 +1,6 @@
 import { ActionTree, MutationTree } from 'vuex'
 
-import { getLink } from '~/api/database';
+import { getStorageLink } from '~/api/storage';
 
 // TYPES
 	import type { FORMATS, IMAGE_URL } from '~/typescript/Image'
@@ -70,27 +70,25 @@ import { getLink } from '~/api/database';
 
 			const LOCAL_ID 	= `${ _path }-${ SIZE }`;
 
+			const REQUESTS = await Promise.all(FORMATS_LIST.map((format) => {
+				return new Promise<Partial<IMAGE_URL>>((resolve) => {
+					resolve({[format]: getStorageLink(`${ ROOT_REF }/${ _path }/${ format }/${ SIZE }.${ format }`) });
+				})
+			}))
+
+			const URLS = REQUESTS.reduce((a, b) => Object.assign(a, b)) as IMAGE_URL
+
 			if ( process.browser ) {
 
 				if ( await store.dispatch('checkCache', LOCAL_ID) ) {
 					return store.dispatch('getCache', LOCAL_ID) as Promise<IMAGE_URL>;
 				} 
 
-				const PA = await Promise.all(FORMATS_LIST.map((format) => {
-					return new Promise<Partial<IMAGE_URL>>((resolve) => {
-						resolve({[format]: getLink(`${ ROOT_REF }/${ _path }/${ format }/${ SIZE }.${ format }`) });
-					})
-				}))
-
-				const URLS = PA.reduce((a, b) => Object.assign(a, b)) as IMAGE_URL
-
 				store.dispatch('setCache', { id: LOCAL_ID, urls: URLS })
-
-				return URLS;
 
 			}
 
-			return null
+			return URLS
 
 		},
 

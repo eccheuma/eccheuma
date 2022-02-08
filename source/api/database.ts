@@ -1,29 +1,76 @@
-// SUPABASE
-import Supabase from '~/plugins/Supabase'
-
 // FIREBASE
-import firebase from 'firebase/app'
-import 'firebase/database'
-import 'firebase/auth'
+import firebase from 'firebase/app';
+import 'firebase/database';
 
-export function getLink(path: string): string | null {
+type GetParams = {
+  start: number,
+  end: number,
+  limit: number,
+}
 
-  const { publicURL, error } = Supabase.storage.from('main').getPublicUrl(path);
+function defineQuery(ref: firebase.database.Query, params: Partial<GetParams>): firebase.database.Query | undefined {
 
-  if ( error ) throw error;
+  let QUERY
 
-  return publicURL
+  if ( params?.start ) 
+    QUERY = ref.startAt(params.start);
+  if ( params?.end )
+    QUERY = ref.endAt(params.end);
+  if ( params?.limit )
+      QUERY = ref.limitToFirst(params.limit);
+
+  return QUERY;
 
 }
 
-export function getData(path: string, cb: (data: any) => any): any {
-  firebase.database().ref(path).on('value', (data) => cb(data.val()));
+export function getDatabaseData<T extends object | string>(path: string, params?: Partial<GetParams>): Promise<T> {
+
+  const REF = firebase.database().ref(path);
+
+  let QUERY;
+
+  if ( params ) QUERY = defineQuery(REF, params!)
+
+  return (QUERY || REF).once('value').then(data => data.val());
+
 }
 
-export function removeData(path: string): Promise<any> {
+export function listenDatabaseData(path: string, callback: (value: any) => any, params?: Partial<GetParams>) {
+
+  const REF = firebase.database().ref(path);
+
+  let QUERY;
+
+  if ( params ) QUERY = defineQuery(REF, params!);
+
+  (QUERY || REF).on('value', data => {
+    callback(data.val());
+  })
+
+}
+
+export function getDatabaseLength(path: string): Promise<number> {
+  return firebase.database().ref(path).once('value').then(data => data.numChildren());
+}
+
+export function setDatabaseData(path: string, data: any): Promise<any> {
+
+  console.log('setDatabaseData', path);
+
+  return firebase.database().ref(path).set(data, (response) => {
+    console.log(response);
+  });
+
+}
+
+export function removeDatabaseData(path: string): Promise<any> {
+
+  console.log('removeDatabaseData', path);
+
   return firebase.database().ref(path).remove();
+
 }
 
-export function setData(path: string, data: any): Promise<any> {
-  return firebase.database().ref(path).set(data);
+export function updateDatabaseData(path: string, data: any, callback: any = null): Promise<any> {
+  return firebase.database().ref(path).update(data, callback)
 }

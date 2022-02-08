@@ -1,8 +1,12 @@
 	import firebase from 'firebase/app'
 
-	import 'firebase/storage'
-	import 'firebase/database'
+	// import 'firebase/storage'
+	// import 'firebase/database'
 	import 'firebase/auth'
+
+// API
+	import { setDatabaseData } from '~/api/database';
+	import { getStorageLink } from '~/api/storage';
 
 // VUEX
 	import type { MutationTree, ActionTree } from 'vuex'
@@ -15,9 +19,7 @@
 
 	// STATE
 	export const state = () => ({
-
 		Modal: false
-
 	})
 
 // CURENT STATE
@@ -40,56 +42,41 @@
 // ACTIONS
 	export const actions: ActionTree<CurentState, VuexModules> = {
 
-		async Register({ dispatch, commit }, _form: REGISTER_FORM): Promise<Error | Boolean> {
+		async Register({ dispatch, commit }, form: REGISTER_FORM): Promise<Error | Boolean> {
+
 			try {
 
-				await firebase.auth().createUserWithEmailAndPassword( _form.email, _form.password )
+				const { user } = await firebase.auth().createUserWithEmailAndPassword( form.email, form.password );
 
-				const CU = firebase.auth().currentUser
+				if ( !user ) return new Error();
 
-				if ( !CU ) { const e = new Error(); e.message = 'OPS!'; return e }
+				commit('Auth/Session/Change_userState', { _uid: user.uid, _email: user.email }, { root: true })
 
-				commit('Auth/Session/Change_userState', { _uid: CU.uid, _email: CU.email }, { root: true })
-
-				const DEFAULT_ICON = await firebase.storage().ref('UserIcons/default.webp').getDownloadURL()
-
-				const USER_STATE: USER_STATE = {
-					UserID: 				`${ CU.uid 		 }`,
-					UserEmail: 			`${ CU.email 	 }`,
-					UserName: 			`${ _form.name }`,
-					UserStatus: 		1,
+				await setDatabaseData(`Users/${ user.uid }/state`, {
+					UserID: 				user.uid,
+					UserEmail: 			user.email,
+					UserName: 			form.name,
+					UserStatus: 		2,
 					UserBalance: 		0,
 					UserWorkStatus: 0,
-					UserImageID:		DEFAULT_ICON
-				}
+					UserImageID:		getStorageLink('UserIcons/default.webp')
+				} as USER_STATE)
 
-				const MESSAGE: MESSAGE = {
-					ID: Math.random().toString(36).substr(2).toUpperCase(),
+				await setDatabaseData(`Users/${ user.uid  }/preferences`, {
+					DarkTheme: true,
+					Anotations: true,
+				})
+
+				await setDatabaseData(`Users/${ user.uid  }/messages/Hash_0`, {
+					ID: Math.random().toString(36).slice(-8).toUpperCase(),
 					Date: Date.now(),
 					From: 'Eccheuma',
 					UserID: 'SUPPORT',
 					Message: 'Благодарю вас за регистрацию!',
 					Read: false,
-				}
-
-				const PREFERENCES = {
-					DarkTheme: false,
-					Anotations: true,
-				}
-
-				firebase.database()
-					.ref(`Users/${ CU.uid }/state`)
-					.set(USER_STATE)
+				} as MESSAGE)
 	
-				firebase.database()
-					.ref(`Users/${ CU.uid  }/preferences`)
-					.set(PREFERENCES)
-	
-				firebase.database()
-					.ref(`Users/${ CU.uid  }/messages/Hash_0`)
-					.set(MESSAGE)
-
-				dispatch('Auth/Login/SignIn', _form, { root: true });
+				dispatch('Auth/Login/SignIn', form, { root: true });
 				
 				return true;
 
@@ -98,15 +85,6 @@
 				commit('Auth/Session/ChangeAuthError', e.code, { root: true }); return false;
 
 			}
-
-		},
-
-		Init_LocalLoader({ dispatch, commit }) {
-
-			dispatch('Loader/Loader_Load', null, { root: true })
-				
-			commit('Loader/Loader_ChangeLoadStatus_Counter', 35, { root: true })	
-			commit('Loader/Loader_ChangeLoadMessage', 'Регистрация учётной записи', { root: true })
 
 		},
 

@@ -2,7 +2,8 @@
 	
 	<section 
 		ref="swiperContainer" 
-		class="swiper-container" 
+		class="swiper-container"
+		:style="`--q: ${ Quantity }`" 
 		@mousedown.prevent="MouseDown" 
 		@mouseup.prevent="MouseUp"
 		@mouseleave="mouseData.isHover = false" 
@@ -20,16 +21,7 @@
 			</template>
 		</div>
 
-		<!-- <carousel-content 
-			ref="swiperContent" 
-			:activeIndex="ActiveIndex" 
-			class="swiper-content" 
-			:style="`width: ${ ContainerWidth * Quantity }vw`"
-		>
-			<slot :activeIndex="0" />
-		</carousel-content> -->
-
-		<div ref="swiperContent" class="swiper-content" :style="`width: ${ ContainerWidth * Quantity }vw`">
+		<div ref="swiperContent" class="swiper-content">
 			<slot :activeIndex="ActiveIndex" />
 		</div>
 
@@ -53,7 +45,11 @@
 		}
 	}
 	&-content {
-		height: 100%; will-change: transform; display: flex;
+		position: relative;
+		height: 100%; 
+		width: min-content !important;
+		will-change: transform; 
+		display: flex;
 		transition: {
 			timing-function: ease-in-out;
 			property: transform;
@@ -210,14 +206,12 @@ import Vue, { PropOptions } from 'vue'
 						new CSSTranslate(CSS.vw(-Y), CSS.px(0), CSS.px(0))
 					])
 
-					contentNode.attributeStyleMap.set('width', CSS.vw( this.ContainerWidth * this.Quantity ))
 					contentNode.attributeStyleMap.set('transform', TRANSFORM)
 					contentNode.attributeStyleMap.set('transition-duration', CSS.ms( MD.isDown ? 0 : DURATION ))
 
 				} else {
 
 					contentNode.setAttribute('style', `
-						width: ${ contentNode.style.width };
 						transition-duration: ${ MD.isDown ? 0 : DURATION }ms;
 						transform: translate3D( -${ (this.ContainerWidth * this.ActiveIndex) + SHIFT }vw, 0px, 0px );
 					`)
@@ -225,23 +219,15 @@ import Vue, { PropOptions } from 'vue'
 				}
 
 			},
-			setContainerWidth(el: HTMLElement): Promise<number> {
-				return new Promise((resolve) => {
-
-					const F = () => el.getBoundingClientRect().width;
-
-					F() === 0 ? this.$nextTick(F) : resolve(F());
-
-				})
-
-			},
 			async Init() {
 
 				const containerNode = this.$refs.swiperContainer 	as HTMLElement;
 				const contentNode 	= this.$refs.swiperContent 		as HTMLElement;
 
+				const { width } = containerNode.getBoundingClientRect();
+
 				this.Quantity 			= contentNode.children.length;
-				this.ContainerWidth = this.getRelativeWindowSize(await this.setContainerWidth(containerNode))
+				this.ContainerWidth = this.getRelativeWindowSize(width);
 
 				Object.values( contentNode.children ).forEach((el) => {
 

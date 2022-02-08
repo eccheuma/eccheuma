@@ -1,7 +1,13 @@
 import Vue from 'vue'
 
-import firebase from 'firebase/app'; 
-import 'firebase/database'
+// import firebase from 'firebase/app'; 
+// import 'firebase/database'
+
+// API
+import { getDatabaseData } from '~/api/database';
+
+// CONTRACTS
+import { DatabaseContract } from '~/typescript/FirebaseDatabase'
 
 import type { Context } from '@nuxt/types';
 
@@ -14,8 +20,8 @@ export default ({ env, isDev }: Context) => {
 	Vue.prototype.SSR 								= process.server;
 	Vue.prototype.DEVELOPMENT 				= isDev;
 
-	firebase.database().ref('/App').once('value').then((data) => {
-		Vue.prototype.__SELF_KEY__  = data.val().__SELF_KEY__
+	getDatabaseData<DatabaseContract['App']>('App').then(response => {
+		Vue.prototype.__SELF_KEY__  = response.__SELF_KEY__
 	})
 
 	if ( isDev && process.browser ) {

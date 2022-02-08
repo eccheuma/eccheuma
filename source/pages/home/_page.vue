@@ -95,7 +95,7 @@
 		async fetch() {
 
 			// if ( !process.browser ) {
-				await this.GetData();
+				await this.getDatabaseData();
 			// }
 
 		},
@@ -115,7 +115,7 @@
 
 			// Fix fetching on diferrent routes for some reasons...
 			if ( process.browser && this.$router.currentRoute.name === 'home' ) {
-				this.GetData();
+				this.getDatabaseData();
 			}
 
 		},
@@ -131,7 +131,7 @@
 				ChangePage: 'PageSelector/ChangePage'
 			}),
 
-			async GetData() {
+			async getDatabaseData() {
 
 				const DATA = await firebase.database().ref('Posts').once('value')
 

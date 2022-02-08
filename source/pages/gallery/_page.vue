@@ -130,7 +130,7 @@
 		async fetch() {
 
 			// if ( process.server && !this.BROWSER ) {
-			await this.GetData();
+			await this.getDatabaseData();
 			// }
 			
 		},
@@ -159,7 +159,7 @@
 			this.ChangePage(this.Page);
 
 			if ( process.browser && this.$router.currentRoute.name === 'gallery' ) {
-				this.GetData();
+				this.getDatabaseData();
 			}
 
 		},
@@ -172,7 +172,7 @@
 				ChangePage: 'PageSelector/ChangePage'
 			}),
 
-			async GetData() {
+			async getDatabaseData() {
 
 				const DATA = await firebase.database().ref('Gallery').once('value')
 

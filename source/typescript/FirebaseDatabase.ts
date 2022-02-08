@@ -12,7 +12,7 @@ import { POST }           from '~/typescript/Post'
   type SERVICE_TYPE = CATEGORY;
 
 // MODULE
-  export type FirebaseDatabaseContract = {
+  export type DatabaseContract = {
     App: {
       BuildTime: HASH_LIKE,
       Cache: {
