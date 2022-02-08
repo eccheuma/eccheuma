@@ -212,9 +212,8 @@
 
 	import Vue, { PropOptions } from 'vue'
 
-	// FIREBASE
-	import firebase from 'firebase/app'
-	import 'firebase/database'
+	// API
+	import { database } from '~/api/database';
 
 	// VUEX
 	import { mapState, mapMutations } from 'vuex'
@@ -275,11 +274,11 @@
 				this.Modal = value
 			},
 
-			async getDatabaseData() {
+			async getDatabaseData(): Promise<Array<SERVICE>> {
 
-				const snapshot = firebase.database().ref(`Service/${ this.payload.path }`).once('value');
-
-				return Object.values((await snapshot).val()) as SERVICE[]
+				return await database
+					.get(`Service/${ this.payload.path }`)
+					.then(data => Object.values(data));
 
 			}
 

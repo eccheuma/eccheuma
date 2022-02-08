@@ -1,7 +1,7 @@
-import firebase from 'firebase/app'
-import 'firebase/database'
-
 import { ActionTree, MutationTree } from 'vuex'
+
+// API
+	import { database } from '~/api/database'
 
 // INTERFACES & TYPES
 
@@ -67,8 +67,8 @@ import { ActionTree, MutationTree } from 'vuex'
 			const HASH_KEY 					= `${ _payload.REF.toUpperCase() }_DATA_HASH`
 			const LOAD_PROPERTY_KEY = `${ _payload.LOAD_PROPERTY.LoadPoint }_${ _payload.LOAD_PROPERTY.LoadRange }`
 
-			const SERVER_HASH = await firebase.database().ref(`App/Cache/${ _payload.REF }`).once('value').then(data => data.val())
-			const LOCAL_HASH 	= window.localStorage.getItem(HASH_KEY) 
+			const SERVER_HASH: string = await database.get(`App/Cache/${ _payload.REF }`)
+			const LOCAL_HASH = window.localStorage.getItem(HASH_KEY) 
 
 			const CACHE_KEY = `${ SERVER_HASH }_${ _payload.REF.toUpperCase() }_${ LOAD_PROPERTY_KEY }`
 
@@ -82,13 +82,7 @@ import { ActionTree, MutationTree } from 'vuex'
 
 			} else {
 
-				const DATA = await firebase.database()
-					.ref(_payload.REF)
-					.orderByChild('ID')
-					.limitToFirst(_payload.LOAD_PROPERTY.LoadRange || 1)
-					.startAt(_payload.LOAD_PROPERTY.LoadPoint || 0)
-					.once('value')
-					.then( data => Object.values(data.val() || {}) )
+				const DATA = await database.get(_payload.REF, { limit: _payload.LOAD_PROPERTY.LoadRange })
 
 				commit('setContent', { data: DATA, from: 'firebase', to: _payload.REF });
 
@@ -107,14 +101,9 @@ import { ActionTree, MutationTree } from 'vuex'
 				
 			} else {
 
-				const DATA = await firebase.database()
-					.ref(_payload.REF)
-					.orderByChild('ID')
-					.limitToFirst(_payload.LOAD_PROPERTY.LoadRange || 1)
-					.startAt(_payload.LOAD_PROPERTY.LoadPoint || 0)
-					.once('value')
+				const DATA = await database.get(_payload.REF, { limit: _payload.LOAD_PROPERTY.LoadRange })
 
-				commit('setContent', { data: Object.values(DATA.val()), from: 'server', to: _payload.REF });			
+				commit('setContent', { data: Object.values(DATA), from: 'server', to: _payload.REF });			
 
 			} 
 

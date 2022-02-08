@@ -1,7 +1,7 @@
 	import { ActionTree, MutationTree } from 'vuex'
 
 // API
-	import { getDatabaseData, setDatabaseData, getDatabaseLength } from '~/api/database'
+	import { database } from '~/api/database'
 
 // INTERFACES AND TYPES 
 
@@ -89,8 +89,8 @@
 
 				await dispatch('Set_RequestQuantity')
 
-				await setDatabaseData(`Users/${ uid }/work_requests/WorkID-${ state.RequestQuantity }`, REQUEST);
-				await setDatabaseData(`Users/${ uid }/messages/Hash_${ MessageCount + 1 }`, MESSAGE);
+				await database.set(`Users/${ uid }/work_requests/WorkID-${ state.RequestQuantity }`, REQUEST);
+				await database.set(`Users/${ uid }/messages/Hash_${ MessageCount + 1 }`, MESSAGE);
 
 				commit('Notification/Notification_Status', true, { root: true })
 				commit('Notification/setNotification', NOTIFICATION_MESSAGE, { root: true })
@@ -102,14 +102,14 @@
 
 			const { uid } = rootState.Auth.Session.CurentUser;
 
-			commit('Change_Requests', await getDatabaseData(`Users/${ uid }/work_requests`)) 
+			commit('Change_Requests', await database.get(`Users/${ uid }/work_requests`)) 
 
 		},
 		async Set_RequestQuantity({ commit, rootState }) {
 
 			const { uid } = rootState.Auth.Session.CurentUser
 
-			commit('Change_WorkQuantity', await getDatabaseLength(`Users/${uid}/work_requests`)) 
+			commit('Change_WorkQuantity', await database.getLength(`Users/${uid}/work_requests`)) 
 
 		},
 		Set_ActiveRequest({ commit, state }) {

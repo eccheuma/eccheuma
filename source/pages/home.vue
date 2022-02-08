@@ -69,10 +69,11 @@ main {
 
 	import Vue from 'vue'
 
+// VUEX
 	import { mapMutations, mapState } from 'vuex'
 
-	import firebase from 'firebase/app'
-	import 'firebase/database'
+// API
+	import { database } from '~/api/database'
 
 // MIXINS
 	import TransitionSound 		from '~/assets/mixins/TransitionSound'
@@ -136,7 +137,7 @@ main {
 		},
 		async fetch() {
 
-			const PostsQuantity: number = await firebase.database().ref('Posts').once('value').then( data => data.numChildren() );
+			const PostsQuantity: number = await database.getLength('Posts');
 
 			this.ChangePageQuantity( Math.ceil( PostsQuantity / this.LoadRange ) );
 

@@ -232,7 +232,7 @@
 	import Vue, { PropOptions } from 'vue';
 
 	// API
-	import { removeDatabaseData, getDatabaseData } from '~/api/database';
+	import { database } from '~/api/database';
 
 	// UTILS
 	import { utils } from '~/utils';
@@ -305,11 +305,11 @@
 				])
 			}
 
-			getDatabaseData<USER_STATE>(`Users/${ this.userID }/state`).then(response => {
+			database.get<USER_STATE>(`Users/${ this.userID }/state`).then(response => {
 				this.Author = response;
 			})
 
-			getDatabaseData<COMMENT>(`Posts/PostID-${ this.postID }/comments/Hash-${ this.commentID }`).then(async response => {
+			database.get<COMMENT>(`Posts/PostID-${ this.postID }/comments/Hash-${ this.commentID }`).then(async response => {
 
 				this.RecivedData = response;
 
@@ -322,7 +322,7 @@
 
 			async RemoveComment() {
 
-				await removeDatabaseData(`Posts/PostID-${ this.postID }/comments/Hash-${ this.commentID }`);
+				await database.remove(`Posts/PostID-${ this.postID }/comments/Hash-${ this.commentID }`);
 
 				this.playSound(this.Sounds.get('Element::Action'));
 

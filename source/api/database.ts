@@ -23,54 +23,59 @@ function defineQuery(ref: firebase.database.Query, params: Partial<GetParams>): 
 
 }
 
-export function getDatabaseData<T extends object | string>(path: string, params?: Partial<GetParams>): Promise<T> {
+export namespace database {
 
-  const REF = firebase.database().ref(path);
+  export function get<T extends object | string>(path: string, params?: Partial<GetParams>): Promise<T> {
 
-  let QUERY;
-
-  if ( params ) QUERY = defineQuery(REF, params!)
-
-  return (QUERY || REF).once('value').then(data => data.val());
+    const REF = firebase.database().ref(path);
+  
+    let QUERY;
+  
+    if ( params ) QUERY = defineQuery(REF, params!)
+  
+    return (QUERY || REF).once('value').then(data => data.val());
+  
+  }
+  
+  export function listen(path: string, callback: (value: any) => any, params?: Partial<GetParams>) {
+  
+    const REF = firebase.database().ref(path);
+  
+    let QUERY;
+  
+    if ( params ) QUERY = defineQuery(REF, params!);
+  
+    (QUERY || REF).on('value', data => {
+      callback(data.val());
+    })
+  
+  }
+  
+  export function getLength(path: string): Promise<number> {
+    return firebase.database().ref(path).once('value').then(data => data.numChildren());
+  }
+  
+  export function set(path: string, data: any): Promise<any> {
+  
+    console.log('setDatabaseData', path);
+  
+    return firebase.database().ref(path).set(data, (response) => {
+      console.log(response);
+    });
+  
+  }
+  
+  export function remove(path: string): Promise<any> {
+  
+    console.log('removeDatabaseData', path);
+  
+    return firebase.database().ref(path).remove();
+  
+  }
+  
+  export function update(path: string, data: any, callback: any = null): Promise<any> {
+    return firebase.database().ref(path).update(data, callback)
+  }
 
 }
 
-export function listenDatabaseData(path: string, callback: (value: any) => any, params?: Partial<GetParams>) {
-
-  const REF = firebase.database().ref(path);
-
-  let QUERY;
-
-  if ( params ) QUERY = defineQuery(REF, params!);
-
-  (QUERY || REF).on('value', data => {
-    callback(data.val());
-  })
-
-}
-
-export function getDatabaseLength(path: string): Promise<number> {
-  return firebase.database().ref(path).once('value').then(data => data.numChildren());
-}
-
-export function setDatabaseData(path: string, data: any): Promise<any> {
-
-  console.log('setDatabaseData', path);
-
-  return firebase.database().ref(path).set(data, (response) => {
-    console.log(response);
-  });
-
-}
-
-export function removeDatabaseData(path: string): Promise<any> {
-
-  console.log('removeDatabaseData', path);
-
-  return firebase.database().ref(path).remove();
-
-}
-
-export function updateDatabaseData(path: string, data: any, callback: any = null): Promise<any> {
-  return firebase.database().ref(path).update(data, callback)
-}

@@ -87,7 +87,7 @@
 import Vue from 'vue'
 
 // API
-import { getDatabaseData } from '~/api/database'
+import { database } from '~/api/database'
 
 // MIXINS
 import EmitSound from '~/assets/mixins/EmitSound'
@@ -129,10 +129,8 @@ export default Vue.extend({
 		},
 		GetCases() {
 
-			this.CasesType.forEach( async item => {
-
-        this.Works[item] = await getDatabaseData(`Cases/${ item }`, { limit: 3 }).then(data => Object.values(data));
-
+			this.CasesType.forEach( async section => {
+        this.Works[section] = Object.values(await database.get(`Cases/${ section }`, { limit: 3 }))
 			})
 
       this.Ready = true;

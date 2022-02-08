@@ -1,10 +1,5 @@
-import firebase from 'firebase/app'
-import 'firebase/database'
-
 // VUEX
-	import type { ActionTree, MutationTree } from 'vuex'
-
-	import type { VuexModules } from '~/typescript/VuexModules'
+	import type { MutationTree } from 'vuex'
 
 // TYPES
 	import { USER_STATE } from '~/typescript/User'
@@ -35,25 +30,5 @@ import 'firebase/database'
 		},
 		Toggle_UserProfileArea(state) {
 			state.UserProfileArea = !state.UserProfileArea
-		}
-	}
-
-// ACTIONS
-	export const actions: ActionTree<CurentState, VuexModules> = {
-		async FireBaseChange({ rootState }, { prop, entity }: {prop: any, entity: keyof USER_STATE}) {
-			try {
-
-				const uid = rootState.Auth.Session.CurentUser.uid
-
-				await firebase.database().ref(`Users/${ uid }/state`).update({
-					[entity]: prop
-				})
-
-			} catch (e) { 
-
-				console.log(e) 
-
-			}
-			
 		}
 	}

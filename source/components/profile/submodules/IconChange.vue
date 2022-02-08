@@ -14,6 +14,7 @@
 			<common-button type="label" for="CustomImage">
 				Загрузить своё
 			</common-button>
+			<span v-if="Warning.length">{{ Warning }}</span>
 		</div>
 		<hr v-once>
 		<div class="user_profile-component-picture-predefined">
@@ -125,7 +126,8 @@
 	import Vue from 'vue'
 
 	// API
-	import { getStorageList, getStorageLink, uploadStorageFile } from '~/api/storage';
+	import { storage } from '~/api/storage';
+	import { database } from '~/api/database';
 
 	// IMPORTED TYPES
 	import type { AnimeAnimParams, AnimeInstance } from 'animejs'
@@ -160,14 +162,14 @@
 
 				Animations: new Map() as Map<string, AnimeInstance>,
 
-				Warning: '',
+				Warning: String(),
 				Mode: undefined as MODE,
 				Pending: false,
 
-				CustomIconName: '' as string,
-				NewIcon: '' as string,
+				CustomIconName: String(),
+				NewIcon: String(),
 
-				SelectableIcon: [] as string[]
+				SelectableIcon: Array<string>(),
 
 			}
 		},
@@ -214,21 +216,19 @@
 		},
 		methods: {
 
-			...mapActions({
-				FireBaseChange: 'User/State/FireBaseChange'
-			}),
-
 			async getDefaultIcons() {
 
-				getStorageList('UserIcons').then(response => {
+				storage.getStorageList('UserIcons').then(response => {
 
 					if ( response?.error ) throw response.error;
 
-					if ( response?.data ) {
+					if ( response?.data === null ) throw Error('response error');
 
-						response.data.forEach(file => {
+					response.data.forEach(file => {
 
-							const URL = getStorageLink(`UserIcons/${ file.name }`);
+						if ( file.metadata ) {
+
+							const URL = storage.getStorageLink(`UserIcons/${ file.name }`);
 
 							if ( URL ) {
 								this.SelectableIcon.push(URL);
@@ -236,9 +236,9 @@
 								throw Error(`[getDefaultIcons]: File on relative path "UserIcons/${ file.name }" not exist`) 
 							}
 
-						})
+						}
 
-					}
+					})
 
 				})
 
@@ -261,32 +261,30 @@
 					const FILE = new File([ EL.files[0] ], ID);
 					const DIST = `${ PATH }/${ FILE.name }::${ FILE.size.toString(36).toUpperCase() }.${ EXT }`;
 
-					uploadStorageFile(DIST, FILE, { contentType: FILE.type }).then((data) => {
+					if ( FILE.size >= 15e5 ) {
 
-						const URL = getStorageLink(DIST);
+						this.Warning = `File size limit is 1.5MB. Your is: ${ parseFloat(Number(FILE.size / 10e5).toPrecision(3)) }MB`; 
+						this.Pending = false;
 
-						console.log(data.data?.Key, URL);
+						return;
 
-						if ( URL ) { this.NewIcon = URL }
+					}
 
-						(this.$refs.iconPreview as HTMLImageElement).onload = () => {
-							this.Pending = false;
-						}
+					await storage.uploadStorageFile(DIST, FILE, { contentType: FILE.type })
 
-					})
+					const URL = storage.getStorageLink(DIST);
 
-				} else { this.Warning = 'File not loaded'; }
+					this.Pending = false;
+
+					if ( URL ) { this.NewIcon = URL }
+
+				} else { this.Warning = 'File not loaded'; this.Pending = false }
 
 			},
 
 			updateIcon() {
 
-				const Property = {
-					prop: this.NewIcon,
-					entity: 'UserImageID' 
-				}
-
-				this.FireBaseChange(Property)
+				database.update(`Users/${ this.UserState.UserID }/state`, { UserImageID: this.NewIcon });
 
 			},
 

@@ -1,10 +1,7 @@
 import Vue from 'vue'
 
-// import firebase from 'firebase/app'; 
-// import 'firebase/database'
-
 // API
-import { getDatabaseData } from '~/api/database';
+import { database } from '~/api/database';
 
 // CONTRACTS
 import { DatabaseContract } from '~/typescript/FirebaseDatabase'
@@ -20,7 +17,7 @@ export default ({ env, isDev }: Context) => {
 	Vue.prototype.SSR 								= process.server;
 	Vue.prototype.DEVELOPMENT 				= isDev;
 
-	getDatabaseData<DatabaseContract['App']>('App').then(response => {
+	database.get<DatabaseContract['App']>('App').then(response => {
 		Vue.prototype.__SELF_KEY__  = response.__SELF_KEY__
 	})
 
@@ -37,6 +34,6 @@ declare module 'vue/types/vue' {
 		BROWSER: boolean
 		SSR: boolean
 		DEVELOPMENT: boolean
-		__SELF_KEY__: string
+		__SELF_KEY__: DatabaseContract['App']['__SELF_KEY__']
 	}
 }

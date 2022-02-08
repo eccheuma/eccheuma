@@ -290,7 +290,7 @@
   import Vue from 'vue'
 
   // API
-  import { getDatabaseData } from '~/api/database';
+  import { database } from '~/api/database';
 
   // UTILS
   import { utils, FORMATED_DATE } from '~/utils'
@@ -332,7 +332,7 @@
     created() {
 
       if ( process.browser ) {
-        getDatabaseData<string>('App/Cache/Vk').then((response) => {
+        database.get<string>('App/Cache/Vk').then((response) => {
           this.checkPosts(response);
         })
       }
@@ -364,7 +364,7 @@
 
         return await new Promise<POST[]>((resolve) => {
 
-          getDatabaseData<utils.asJSONArray<VK_POST>>('VkPosts').then((response) => {
+          database.get<utils.asJSONArray<VK_POST>>('VkPosts').then((response) => {
             resolve(Object.values(response).map(item => {
 
               return {

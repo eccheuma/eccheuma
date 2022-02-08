@@ -1,9 +1,8 @@
 import firebase from 'firebase/app'
-import 'firebase/database'
 import 'firebase/auth'
 
 // API
-	import { listenDatabaseData } from '~/api/database'
+	import { database } from '~/api/database'
 
 // VUEX
 	import type { ActionTree, MutationTree } from 'vuex'
@@ -54,7 +53,7 @@ import 'firebase/auth'
 				commit('Auth/Session/Change_userState', userData, { root: true })
 
 				// Загрузка стейта пользователя из Firebase
-				listenDatabaseData(`Users/${ user.uid }/state`, (data) => {
+				database.listen(`Users/${ user.uid }/state`, (data) => {
 					commit('User/State/Change_UserState', data, { root: true })
 				})
 

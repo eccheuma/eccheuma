@@ -733,7 +733,7 @@
 	import { required, minLength, maxLength, helpers } from 'vuelidate/lib/validators'
 
 	// API
-	import { setDatabaseData, removeDatabaseData, getDatabaseData, listenDatabaseData } from '~/api/database';
+	import { database } from '~/api/database';
 
 	// UTILS
 	import { utils } from '~/utils';
@@ -985,7 +985,7 @@
 			getAuthor(): Promise<void> {
 
 				return new Promise((resolve) => {
-					getDatabaseData(`Users/${ this.payload.authorID }/state`).then( response => {
+					database.get(`Users/${ this.payload.authorID }/state`).then( response => {
 						this.AuthorInfo = response as USER_STATE; resolve()
 					})
 				})
@@ -1000,9 +1000,9 @@
 
 				switch (section) {
 					case 'Content':
-						this[section] = await getDatabaseData(PATH)
+						this[section] = await database.get(PATH)
 					default:
-						listenDatabaseData(PATH, data => this[section] = data); break;
+						database.listen(PATH, data => this[section] = data); break;
 				}
 
 			}, 
@@ -1079,7 +1079,7 @@
 						UserID: this.StoreUser.UserID,
 					}
 
-					setDatabaseData(`Posts/PostID-${ this.payload.ID }/comments/Hash-${ HASH }`, COMMENT);
+					database.set(`Posts/PostID-${ this.payload.ID }/comments/Hash-${ HASH }`, COMMENT);
 
 					this.Message = String();
 
@@ -1094,8 +1094,8 @@
 				const PATH = `Posts/PostID-${ this.payload.ID }/likes/${ this.StoreUser.UserID }`;
 
 				this.userLiked 
-					? removeDatabaseData(PATH) 
-					: setDatabaseData(PATH, { hash: utils.hashGenerator() })
+					? database.remove(PATH) 
+					: database.set(PATH, { hash: utils.hashGenerator() })
 
 			},
 

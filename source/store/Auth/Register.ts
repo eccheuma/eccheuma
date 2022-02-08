@@ -1,12 +1,9 @@
 	import firebase from 'firebase/app'
-
-	// import 'firebase/storage'
-	// import 'firebase/database'
 	import 'firebase/auth'
 
 // API
-	import { setDatabaseData } from '~/api/database';
-	import { getStorageLink } from '~/api/storage';
+	import { database } from '~/api/database';
+	import { storage } from '~/api/storage';
 
 // VUEX
 	import type { MutationTree, ActionTree } from 'vuex'
@@ -52,22 +49,22 @@
 
 				commit('Auth/Session/Change_userState', { _uid: user.uid, _email: user.email }, { root: true })
 
-				await setDatabaseData(`Users/${ user.uid }/state`, {
+				await database.set(`Users/${ user.uid }/state`, {
 					UserID: 				user.uid,
 					UserEmail: 			user.email,
 					UserName: 			form.name,
 					UserStatus: 		2,
 					UserBalance: 		0,
 					UserWorkStatus: 0,
-					UserImageID:		getStorageLink('UserIcons/default.webp')
+					UserImageID:		storage.getStorageLink('UserIcons/default.webp')
 				} as USER_STATE)
 
-				await setDatabaseData(`Users/${ user.uid  }/preferences`, {
+				await database.set(`Users/${ user.uid  }/preferences`, {
 					DarkTheme: true,
 					Anotations: true,
 				})
 
-				await setDatabaseData(`Users/${ user.uid  }/messages/Hash_0`, {
+				await database.set(`Users/${ user.uid  }/messages/Hash_0`, {
 					ID: Math.random().toString(36).slice(-8).toUpperCase(),
 					Date: Date.now(),
 					From: 'Eccheuma',

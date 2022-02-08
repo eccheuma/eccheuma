@@ -320,7 +320,7 @@
 	import Vue from 'vue'
 
 	// API
-		import { getDatabaseData } from '~/api/database'
+		import { database } from '~/api/database'
 	
 	// UTILS
 		import { utils, FORMATED_DATE } from '~/utils';
@@ -411,7 +411,7 @@
 
 			async GetPosts() {
 
-				const POSTS: utils.asJSONArray<POST> = await getDatabaseData('Posts', { limit: load_ranges.posts })
+				const POSTS: utils.asJSONArray<POST> = await database.get('Posts', { limit: load_ranges.posts })
 
 				const formatedSlides = Object
 					.values(POSTS)

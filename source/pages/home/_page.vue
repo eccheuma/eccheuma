@@ -26,12 +26,11 @@
 
 	import Vue from 'vue';
 
+	// API
+	import { database } from '~/api/database';
+
 	// VUEX
 	import { mapActions, mapMutations, mapState } from 'vuex';
-
-	// FIREBASE
-	import firebase from 'firebase/app';
-	import 'firebase/database';
 
 	// VUEX MODULE TYPE MAP
 	import type { VuexModules } from '~/typescript/VuexModules';
@@ -60,7 +59,7 @@
 
 			const PAGE 			= Number( params.page.slice(-1) ) // page_1 => 1
 			const LOADRANGE = Number( query.range || load_ranges.posts );
-			const QUANTITY 	= await firebase.database().ref('Posts').once('value').then( data => data.numChildren() )
+			const QUANTITY 	= await database.getLength('Posts');
 
 			const OutRange = QUANTITY + LOADRANGE < PAGE * LOADRANGE 
 
@@ -133,9 +132,9 @@
 
 			async getDatabaseData() {
 
-				const DATA = await firebase.database().ref('Posts').once('value')
+				const QUANTITY = await database.getLength('Posts');
 
-				const REM: number = DATA.numChildren() - ( this.LOAD_RANGE * this.PAGE )
+				const REM: number = QUANTITY - ( this.LOAD_RANGE * this.PAGE )
 
 				const PAYLOAD: PAYLOAD = {
 					REF: 'Posts',

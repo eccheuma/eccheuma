@@ -319,8 +319,11 @@
 
 	import Vue from 'vue'
 
-	import firebase from 'firebase/app';
-	import 'firebase/database'
+// API
+	import { database } from '~/api/database'
+
+// UTILS
+	import { utils } from '~/utils'
 
 // TYPES
 	import type { CATEGORY, SERVICE, ADDICTION } from '~/typescript/Services'
@@ -380,42 +383,24 @@
 				}
 			},
 			'form.type': {
-				handler(category) {
+				async handler(category) {
 
 					this.form.service = undefined;
 
-					if ( category ) {
+					type Response = utils.asJSONArray<SERVICE>;
 
-						firebase.database()
-							.ref(`Service/${ category }`)
-							.once('value')
-							.then((snapshot) => {
-	
-								this.services = Object.values(snapshot.val()) as Array<SERVICE>;
-	
-							});
-
-					}
+					this.services = await database.get<Response>(`Service/${ category }`).then(data => Object.values(data));
 
 				}
 			},
 			'form.service': {
-				handler(service) {
+				async handler(service) {
 
 					this.form.addictions = [];
 
-					if ( service ) {
+					type Response = utils.asJSONArray<ADDICTION>;
 
-						firebase.database()
-							.ref(`Service/Addictions/${ service.Type }`)
-							.once('value')
-							.then((snapshot) => {
-	
-								this.additions = Object.values(snapshot.val() || {}) as Array<ADDICTION>;
-	
-							});
-
-					}
+					this.additions = await database.get<Response>(`Service/Addictions/${ service.Type }`).then(data => Object.values(data));
 
 				}
 			},

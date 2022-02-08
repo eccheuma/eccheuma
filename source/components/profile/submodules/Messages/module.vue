@@ -156,12 +156,8 @@
 	// VUELIDATE
 	import { required } from 'vuelidate/lib/validators';
 
-	// // FIREBASE
-	// import firebase from 'firebase/app';
-	// import 'firebase/database';
-
 	// API
-	import { getDatabaseData } from '~/api/database'
+	import { database } from '~/api/database'
 
 	// UTILS
 	import { utils } from '~/utils'
@@ -309,7 +305,7 @@
 					const CONTENT: NotificationOptions = {
 						body: `${ From }: ${ Message }`,
 						image: require('~/assets/images/NotificationBadge.png'),
-						icon: await getDatabaseData<string>(`Users/${ UserID }/state/UserImageID`),
+						icon: await database.get<string>(`Users/${ UserID }/state/UserImageID`),
 						silent: true,
 					}
 

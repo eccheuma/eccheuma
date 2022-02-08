@@ -52,12 +52,11 @@
 
 	import Vue from 'vue'
 
+	// API
+		import { database } from '~/api/database';
+
 	// VUEX
 		import { mapActions, mapMutations, mapState } from 'vuex'
-
-	// FIREBASE
-		import firebase from  'firebase/app'
-		import 'firebase/database'
 
 	// VUEX MODULE TYPE MAP
 		import type { VuexModules } from '~/typescript/VuexModules';
@@ -101,7 +100,7 @@
 			const PAGE 			= Number( params.page.slice(-1) ) // Parse page_1: str => 1: int
 			const LOADRANGE = Number( query.range ) || 6
 			
-			const QUANTITY 	= await firebase.database().ref('Gallery').once('value').then( data => data.numChildren() )
+			const QUANTITY 	= await database.getLength('Gallery')
 
 			const OutRange = QUANTITY + LOADRANGE < PAGE * LOADRANGE 
 
@@ -156,6 +155,7 @@
 			},
 		},
 		created() {
+			
 			this.ChangePage(this.Page);
 
 			if ( process.browser && this.$router.currentRoute.name === 'gallery' ) {
@@ -174,9 +174,9 @@
 
 			async getDatabaseData() {
 
-				const DATA = await firebase.database().ref('Gallery').once('value')
+				const QUANTITY = await database.getLength('Gallery')
 
-				const REM: number = DATA.numChildren() - ( this.LoadRange * this.Page )
+				const REM: number = QUANTITY - ( this.LoadRange * this.Page )
 
 				const PAYLOAD: PAYLOAD = {
 					REF: 'Gallery',

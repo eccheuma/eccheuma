@@ -8,7 +8,7 @@
 				v-model="NewName" 
 				type="text" 
 				:placeholder="`Текущее имя: ${ UserState.UserName }`"
-				@keypress.shift.enter="SetNewUserName"
+				@keypress.shift.enter="setUsername"
 			>
 
 		</div>
@@ -53,6 +53,9 @@
 
 	import Vue from 'vue'
 
+	// API
+	import { database } from '~/api/database';
+
 	// VUEX
 		import { mapState, mapActions } from 'vuex'
 
@@ -81,19 +84,9 @@
 			NewName: { minLength: minLength(1), required },
 		},
 		methods: {
-			...mapActions({
-				FirebaseChange: 'User/State/FireBaseChange'
-			}),
-			SetNewUserName() {
-
-				const Property: {prop: string, entity: keyof USER_STATE} = {
-					prop: this.NewName,
-					entity: 'UserName' 
-				}
-
-				if ( !this.$v.NewName.$invalid ) {
-					this.FirebaseChange(Property)
-				}
+			setUsername() {
+				
+				database.update(`Users/${ this.UserState.UserID }/state`, { UserName: this.NewName })
 
 			},
 		}

@@ -24,11 +24,13 @@
 
 	import Vue from 'vue'
 
-	import firebase from 'firebase/app'
-	import 'firebase/database'
+	// API
+	import { database } from '~/api/database';
 
+	// TYPES
 	import type { WORKCASE } from '~/typescript/WorkCase'
 
+	// MODULE
 	export default Vue.extend({
 		components: {
 			WorkCase: () => import('~/components/WorkCase.vue')
@@ -44,23 +46,22 @@
 
 			}
 		},
-		mounted() {
+		async mounted() {
 
-			this.GetCases()
+			this.Case = await this.GetCases()
 
 		},
 		methods: {
-			GetCases() {
+			async GetCases(): Promise<Array<WORKCASE>> {
+
+				//! Refactor this piece of shit as soon as posible
+				//@ That path defenition is a mess
 
 				const T = this.$route.params.type.split('')
 
-				const PATH = [T[0].toUpperCase(), ...T.slice(1)].join('')
+				const PATH = [T[0].toUpperCase(), ...T.slice(1)].join('');
 
-				firebase.database()
-					.ref(`Cases/${ PATH }`)
-					.on( 'value', (data) => {
-						this.Case = Object.values( data.val() )
-					})
+				return await database.get(`Cases/${ PATH }`).then(data => Object.values(data))
 
 			},
 		}

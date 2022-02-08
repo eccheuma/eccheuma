@@ -112,7 +112,7 @@
   import Vue, { PropOptions } from 'vue'
 
   // API
-  import { getDatabaseData } from '~/api/database';
+  import { database } from '~/api/database';
 
   // UTILS
   import { utils } from '~/utils';
@@ -148,7 +148,7 @@
     },
     async mounted() {
 
-      this.authorName = await getDatabaseData<string>(`Users/${ this.payload.UserID }/state/UserName`)
+      this.authorName = await database.get(`Users/${ this.payload.UserID }/state/UserName`)
 
     },
     methods: {

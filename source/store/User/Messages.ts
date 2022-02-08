@@ -1,5 +1,5 @@
 // API
-	import { setDatabaseData, getDatabaseData, updateDatabaseData } from '~/api/database';
+	import { database } from '~/api/database';
 
 // VUEX
 	import type { ActionTree, MutationTree } from 'vuex'
@@ -47,7 +47,7 @@
 			// Получение ID пользователя
 			const { uid } = rootState.Auth.Session.CurentUser;
 
-			await getDatabaseData(`Users/${uid}/messages`).then(messages => {
+			await database.get(`Users/${uid}/messages`).then(messages => {
 				commit('setMessages', Object.values(messages)); 
 			})
 
@@ -60,7 +60,7 @@
 			// Получение ID пользователя
 			const { uid } = rootState.Auth.Session.CurentUser;
 
-			setDatabaseData(`Users/${ uid }/messages/Hash_${prop.ID}`, prop) 
+			database.set(`Users/${ uid }/messages/Hash_${prop.ID}`, prop) 
 
 		},
 
@@ -69,7 +69,7 @@
 			// Получение ID пользователя
 			const { uid } = rootState.Auth.Session.CurentUser;
 
-			updateDatabaseData(`Users/${ uid }/messages/Hash_${ ID }`, { Read: true } as MESSAGE)
+			database.update(`Users/${ uid }/messages/Hash_${ ID }`, { Read: true } as MESSAGE)
 
 		},
 

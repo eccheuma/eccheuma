@@ -1,6 +1,6 @@
 import { ActionTree, MutationTree } from 'vuex'
 
-import { getStorageLink } from '~/api/storage';
+import { storage } from '~/api/storage';
 
 // TYPES
 	import type { FORMATS, IMAGE_URL } from '~/typescript/Image'
@@ -38,9 +38,7 @@ import { getStorageLink } from '~/api/storage';
 		},
 
 		setAVIF( state, status: boolean ) {
-
 			state.AVIF_SUPPORT = status;
-
 		}
 
 	}
@@ -72,7 +70,7 @@ import { getStorageLink } from '~/api/storage';
 
 			const REQUESTS = await Promise.all(FORMATS_LIST.map((format) => {
 				return new Promise<Partial<IMAGE_URL>>((resolve) => {
-					resolve({[format]: getStorageLink(`${ ROOT_REF }/${ _path }/${ format }/${ SIZE }.${ format }`) });
+					resolve({[format]: storage.getStorageLink(`${ ROOT_REF }/${ _path }/${ format }/${ SIZE }.${ format }`) });
 				})
 			}))
 
@@ -89,51 +87,6 @@ import { getStorageLink } from '~/api/storage';
 			}
 
 			return URLS
-
-		},
-
-		decodeImage(store, urls: IMAGE_URL): Promise<null> {
-
-			const DECODE_STATUS: STATUS = {
-				avif: false,
-				webp: false
-			}
-
-			const PROMISES = Object.values(urls).map((inner_url, i) => {
-
-				const FORMAT = Object.keys(urls)[i] as FORMATS;
-
-				return new Promise<void>((resolve) => {
-
-					const IMAGE = new Image(); IMAGE.src = inner_url
-
-					IMAGE.decode()
-						.then(() => {
-
-							// DECODE_STATUS[FORMAT] = true;
-
-							// store.commit('setAVIF', true)
-
-							resolve(); 
-
-						})
-						.catch((error) => {
-
-							console.warn(`[eccheuma] ${ error } | Your browser, probably, can't decode avif image format. `)
-
-							DECODE_STATUS[FORMAT] = false;
-
-							store.commit('setAVIF', false)
-
-							resolve(); 
-
-						})
-
-				})
-
-			})
-
-			return Promise.all(PROMISES).then(() => null)
 
 		}
 

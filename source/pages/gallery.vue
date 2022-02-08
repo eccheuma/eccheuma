@@ -134,9 +134,8 @@
 
 	import Vue from 'vue'
 
-// FIREBASE
-	import firebase from 'firebase/app'; 
-	import 'firebase/database';
+// API
+	import { database } from '~/api/database'
 	
 // VUEX
 	import { mapMutations } from 'vuex'
@@ -192,7 +191,7 @@
 		},
 		async fetch() {
 
-			const GalleryQuantity: number = await firebase.database().ref('Gallery').once('value').then( data => data.numChildren() )
+			const GalleryQuantity = await database.getLength('Gallery')
 
 			this.ChangePageQuantity( Math.ceil(GalleryQuantity / this.LoadRange) )
 
