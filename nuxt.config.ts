@@ -10,10 +10,6 @@
   import genearateName  from './properties/nameGenerator';
 
 // VARIABLES
-
-  const BRIDGE_USE    = false
-
-  const chunkSize     = 1.25;
   const inDevelopment = process.env.NODE_ENV === 'development';
   const hash          = createHash('md5').update(Math.random().toString()).digest('hex').slice(-6);
 
@@ -33,7 +29,7 @@
 
     globalName: 'eccheuma',
     globals: {
-      id: (globalName) => `${ globalName }-app`
+      id: globalName => `${ globalName }-app`
     },
 
     vue: {
@@ -179,4 +175,3 @@
   }
 
   export default config;
-

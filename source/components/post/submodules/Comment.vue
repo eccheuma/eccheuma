@@ -22,7 +22,9 @@
 
 		<section class="post-comment-item-content">
 			<hr v-once>
-			<p 	v-once>{{ RecivedData.Comment }}</p>
+			<p v-once>
+				{{ RecivedData.Comment }}
+			</p>
 			<hr v-once>
 			<template v-if="LoginStatus">
 				<common-button v-if="UserState.UserID === Author.UserID" @click.native="RemoveComment">
@@ -231,14 +233,14 @@
 
 	import Vue, { PropOptions } from 'vue';
 
+	// VUEX
+	import { mapState } from 'vuex';
+
 	// API
 	import { database } from '~/api/database';
 
 	// UTILS
 	import { utils } from '~/utils';
-
-	// VUEX
-	import { mapState } from 'vuex';
 
 	// MIXINS
 	import EmitSound from '~/assets/mixins/EmitSound';
@@ -309,7 +311,7 @@
 				this.Author = response;
 			})
 
-			database.get<COMMENT>(`Posts/PostID-${ this.postID }/comments/Hash-${ this.commentID }`).then(async response => {
+			database.get<COMMENT>(`Posts/PostID-${ this.postID }/comments/Hash-${ this.commentID }`).then(response => {
 
 				this.RecivedData = response;
 

@@ -125,16 +125,16 @@
 
 	import Vue from 'vue'
 
-	// API
-	import { storage } from '~/api/storage';
-	import { database } from '~/api/database';
-
 	// IMPORTED TYPES
 	import type { AnimeAnimParams, AnimeInstance } from 'animejs'
 
 	// VUEX
-	import { mapState, mapActions } from 'vuex'
+	import { mapState } from 'vuex'
 	import type { VuexModules } from '~/typescript/VuexModules'
+
+	// API
+	import { storage } from '~/api/storage';
+	import { database } from '~/api/database';
 
 	// COMPONENT
 	import CommonButton from '~/components/buttons/CommonButton.vue'
@@ -216,24 +216,24 @@
 		},
 		methods: {
 
-			async getDefaultIcons() {
+			getDefaultIcons() {
 
-				storage.getStorageList('UserIcons').then(response => {
+				storage.list('UserIcons').then(response => {
 
 					if ( response?.error ) throw response.error;
 
-					if ( response?.data === null ) throw Error('response error');
+					if ( response?.data === null ) throw new Error('response error');
 
 					response.data.forEach(file => {
 
 						if ( file.metadata ) {
 
-							const URL = storage.getStorageLink(`UserIcons/${ file.name }`);
+							const URL = storage.reference(`UserIcons/${ file.name }`);
 
 							if ( URL ) {
 								this.SelectableIcon.push(URL);
 							} else { 
-								throw Error(`[getDefaultIcons]: File on relative path "UserIcons/${ file.name }" not exist`) 
+								throw new Error(`[getDefaultIcons]: File on relative path "UserIcons/${ file.name }" not exist`) 
 							}
 
 						}
@@ -270,9 +270,9 @@
 
 					}
 
-					await storage.uploadStorageFile(DIST, FILE, { contentType: FILE.type })
+					await storage.upload(DIST, FILE, { contentType: FILE.type })
 
-					const URL = storage.getStorageLink(DIST);
+					const URL = storage.reference(DIST);
 
 					this.Pending = false;
 

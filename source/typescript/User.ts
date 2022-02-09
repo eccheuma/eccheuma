@@ -1,18 +1,25 @@
-import { REQUEST_STATUS, ADDICTION, CATEGORY, SERVICE, } from '~/typescript/Services';
 
-export interface USER_STATUS {
-	0: 'Администратор'
-	1: 'Модератор'
-	2: 'Пользователь'
+// TYPES
+import type { ADDICTION, CATEGORY, SERVICE, } from '~/typescript/Services';
+
+// ENUMS
+import { RequestStatus } from '~/typescript/Services';
+
+export enum UserStatus {
+	Admin,
+	Moderator,
+	Support,
+	User,
 }
 
+// INTERFACES
 export interface USER_STATE {
 	UserID: string
 	UserEmail: string
 	UserName: string
-	UserStatus: keyof USER_STATUS
+	UserStatus: UserStatus
 	UserBalance: number
-	UserWorkStatus: keyof REQUEST_STATUS
+	UserWorkStatus: RequestStatus
 	UserImageID: string
 }
 

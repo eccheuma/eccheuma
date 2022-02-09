@@ -25,7 +25,7 @@
 							<tag :light="true">
 								{{ UserState.UserName }}
 							</tag>
-							<span>{{ DefineUserStatus(UserState.UserStatus) }}</span>
+							<span>{{ defineStatus(UserState.UserStatus) }}</span>
 						</div>
 					</section>
 
@@ -74,7 +74,7 @@
 			</transition>
 
 			<transition name="opacity-transition">
-				<div v-show="status"  class="user_profile-content">
+				<div v-show="status" class="user_profile-content">
 
 					<section class="user_profile-content-header">
 						<h6>{{ ComponentInfo.Title }}</h6>
@@ -137,336 +137,336 @@
 
 <style lang="scss">
 
-$padY: 2vh;
-$padX: 1vw;
+	$padY: 2vh;
+	$padX: 1vw;
 
-@mixin section-header {
+	@mixin section-header {
 
-	text-align: center;
+		text-align: center;
 
-	place-content: center;
-	display: flex;
-	flex-direction: column;
+		place-content: center;
+		display: flex;
+		flex-direction: column;
 
-	height: 6vh;
+		height: 6vh;
 
-	h6 {
+		h6 {
 
-		display: block;
-		color: rgb(var(--color-mono-1000));
-		font: {
-			size: var(--font-size-36);
-			family: var(--decor-font);
-			// weight: 700;
+			display: block;
+			color: rgb(var(--color-mono-1000));
+			font: {
+				size: var(--font-size-36);
+				family: var(--decor-font);
+				// weight: 700;
+			}
+
+			letter-spacing: .15ch;
+			line-height: var(--size-36);
+
 		}
 
-		letter-spacing: .15ch;
-		line-height: var(--size-36);
+		span {
+			display: block;
+			color: rgb(var(--color-mono-500));
+			font-size: var(--font-size-16);
+			font-weight: 800;
+		}
 
 	}
 
-	span {
-		display: block;
-		color: rgb(var(--color-mono-500));
-		font-size: var(--font-size-16);
-		font-weight: 800;
+	.user_profile-collapse {
+		position: absolute; 
+		z-index: 1020;
+		top: $padY;
+		left: $padX;
+		width: calc(100% - #{ $padX * 2 } - #{ $GLOBAL-ScrollWidth });
+
+		border-radius: var(--border-radius);
+
 	}
 
-}
-
-.user_profile-collapse {
-	position: absolute; 
-	z-index: 1020;
-	top: $padY;
-	left: $padX;
-	width: calc(100% - #{ $padX * 2 } - #{ $GLOBAL-ScrollWidth });
-
-	border-radius: var(--border-radius);
-
-}
-
-.UserProfileComponentTransition {
-	&-enter {
-		transform: translateY(-2vh);
-		opacity: 0;
-		&-active {
-			transition: all 500ms ease-in-out;
+	.UserProfileComponentTransition {
+		&-enter {
+			transform: translateY(-2vh);
+			opacity: 0;
+			&-active {
+				transition: all 500ms ease-in-out;
+			}
+			&-to {
+				transform: translateY(0px);
+				opacity: 1;
+			}
 		}
-		&-to {
+		&-leave {
 			transform: translateY(0px);
 			opacity: 1;
+			&-active {
+				transition: all 500ms ease-in-out;
+			}
+			&-to {
+				transform: translateY(2vh);
+				opacity: 0;
+			}
 		}
 	}
-	&-leave {
-		transform: translateY(0px);
-		opacity: 1;
-		&-active {
-			transition: all 500ms ease-in-out;
-		}
-		&-to {
-			transform: translateY(2vh);
-			opacity: 0;
-		}
-	}
-}
 
-.UserProfileTransition {
-	&-enter {
-		transform: translate3D(0, -100px, 0);
-		opacity: 0;
-		&-active {
-			transition: all 500ms ease-in-out;
-		}
-		&-to {
-			transform: translate3D(0, 0, 0);
-			opacity: 1;
-		}
-	}
-	&-leave {
-		transform: translate3D(0, 0, 0);
-		opacity: 1;
-		&-active {
-			transition: all 500ms ease-in-out;
-		}
-		&-to {
+	.UserProfileTransition {
+		&-enter {
 			transform: translate3D(0, -100px, 0);
 			opacity: 0;
-		}
-	}
-}
-
-.user_profile {
-
-	&-container {
-
-		position: relative;
-		width: 100%;
-		height: calc(75vh - #{ $padY * 2 });
-
-		overflow: hidden;
-
-		backdrop-filter: blur(12px);
-		background-color: rgba(var(--color-mono-200),.9);
-
-		z-index: 1010;
-
-		display: grid; 
-		grid-template: {
-			columns: 3fr 7fr 3fr;
-			areas: 'info content nav'
-		}
-
-		border: {
-			radius: inherit;
-			color: var(--color-accent-edges-100);
-			width: 1px;
-			style: solid;
-		}
-
-		@media screen and ( max-width: $mobile-breakpoint ) {
-			grid-template: {
-				columns: 1fr;
-				rows: auto auto auto;
+			&-active {
+				transition: all 500ms ease-in-out;
+			}
+			&-to {
+				transform: translate3D(0, 0, 0);
+				opacity: 1;
 			}
 		}
+		&-leave {
+			transform: translate3D(0, 0, 0);
+			opacity: 1;
+			&-active {
+				transition: all 500ms ease-in-out;
+			}
+			&-to {
+				transform: translate3D(0, -100px, 0);
+				opacity: 0;
+			}
+		}
+	}
 
-		hr {
+	.user_profile {
+
+		&-container {
+
+			position: relative;
 			width: 100%;
-			background-color: rgb(var(--color-mono-400));
-			margin: 0;
-		}
+			height: calc(75vh - #{ $padY * 2 });
 
-	}
+			overflow: hidden;
 
-	&-info {
+			backdrop-filter: blur(12px);
+			background-color: rgba(var(--color-mono-200),.9);
 
-		grid-area: info;
+			z-index: 1010;
 
-		display: grid;
-		grid-template: {
-			rows: auto 1px 1fr 1px min-content;
-		}
-
-		row-gap: 2vh;
-		padding: 2vh 1vw;
-
-		border: {
-			right: 1px solid rgb(var(--color-mono-400));
-		} 
-
-		&-header {
-
-			@include section-header;
-
-		}
-
-		&-body {
-
-			display: flex;
-			place-items: center;
-			place-content: center;
-			flex-direction: column;
-
-			row-gap: 2vh;
-
-			i {
-				display: block;
-				height: clamp(100px,15vh,100%); 
-				aspect-ratio: 1/1;
-				border-radius: 100%;
-				border: 5px solid var(--color-accent-edges-100);
-				background-position: center center;
-				background-size: cover;
-				background-color: rgb(var(--color-mono-900));
+			display: grid; 
+			grid-template: {
+				columns: 3fr 7fr 3fr;
+				areas: 'info content nav'
 			}
 
-			&-name {
-				span {
-					&:last-child {
-						display: block;
-						margin-top: 1vh;
-						color: rgb(var(--color-mono-800));
-						font-size: var(--font-size-16);
-						font-weight: 800;
-					}
+			border: {
+				radius: inherit;
+				color: var(--color-accent-edges-100);
+				width: 1px;
+				style: solid;
+			}
+
+			@media screen and ( max-width: $mobile-breakpoint ) {
+				grid-template: {
+					columns: 1fr;
+					rows: auto auto auto;
 				}
-			}
-
-		}
-
-		&-footer {
-
-			@include gradient-border;
-
-			background-color: rgb(var(--color-mono-300));
-			border-radius: var(--border-radius);
-			padding: 3vh 1.5vw;
-
-			height: min-content;
-			display: grid;
-			row-gap: 1vh;
-
-			place-content: center;
-
-			@extend %pattern-lines;
-
-			h6 {
-				display: block;
-				color: rgb(var(--color-mono-1000));
-				font-size: var(--font-size-36);
-				font-family: var(--decor-font);
-				letter-spacing: .15ch;
-				margin-bottom: 1vh;
 			}
 
 			hr {
-				margin-block: .5vh;
-			}
-
-			span {
-				display: inline-grid;
-				grid-template-columns: 1fr auto;
-				margin: { bottom: 1.5vh };
-				text-align: left;
 				width: 100%;
-				font: {
-					weight: 500;
-					size: .65rem;
-				}
-				color: rgba(var(--color-mono-900),.75);
-				line-height: 10px;
-				strong {
-					color: rgb(var(--color-mono-900));
-					font-weight: 700;
-					text-align: right;
-				}
+				background-color: rgb(var(--color-mono-400));
+				margin: 0;
 			}
 
 		}
 
-	}
+		&-info {
 
-	&-content {
+			grid-area: info;
 
-		grid-area: content;
-		display: grid;
-		grid-template: {
-			rows: auto 1px 1fr;
+			display: grid;
+			grid-template: {
+				rows: auto 1px 1fr 1px min-content;
+			}
+
+			row-gap: 2vh;
+			padding: 2vh 1vw;
+
+			border: {
+				right: 1px solid rgb(var(--color-mono-400));
+			} 
+
+			&-header {
+
+				@include section-header;
+
+			}
+
+			&-body {
+
+				display: flex;
+				place-items: center;
+				place-content: center;
+				flex-direction: column;
+
+				row-gap: 2vh;
+
+				i {
+					display: block;
+					height: clamp(100px,15vh,100%); 
+					aspect-ratio: 1/1;
+					border-radius: 100%;
+					border: 5px solid var(--color-accent-edges-100);
+					background-position: center center;
+					background-size: cover;
+					background-color: rgb(var(--color-mono-900));
+				}
+
+				&-name {
+					span {
+						&:last-child {
+							display: block;
+							margin-top: 1vh;
+							color: rgb(var(--color-mono-800));
+							font-size: var(--font-size-16);
+							font-weight: 800;
+						}
+					}
+				}
+
+			}
+
+			&-footer {
+
+				@include gradient-border;
+
+				background-color: rgb(var(--color-mono-300));
+				border-radius: var(--border-radius);
+				padding: 3vh 1.5vw;
+
+				height: min-content;
+				display: grid;
+				row-gap: 1vh;
+
+				place-content: center;
+
+				@extend %pattern-lines;
+
+				h6 {
+					display: block;
+					color: rgb(var(--color-mono-1000));
+					font-size: var(--font-size-36);
+					font-family: var(--decor-font);
+					letter-spacing: .15ch;
+					margin-bottom: 1vh;
+				}
+
+				hr {
+					margin-block: .5vh;
+				}
+
+				span {
+					display: inline-grid;
+					grid-template-columns: 1fr auto;
+					margin: { bottom: 1.5vh };
+					text-align: left;
+					width: 100%;
+					font: {
+						weight: 500;
+						size: .65rem;
+					}
+					color: rgba(var(--color-mono-900),.75);
+					line-height: 10px;
+					strong {
+						color: rgb(var(--color-mono-900));
+						font-weight: 700;
+						text-align: right;
+					}
+				}
+
+			}
+
 		}
 
-		gap: 2vh;
-		padding: 2vh 1vw;
+		&-content {
 
-		// height: 70vh;
-		overflow: hidden;
+			grid-area: content;
+			display: grid;
+			grid-template: {
+				rows: auto 1px 1fr;
+			}
 
-		&-header {
+			gap: 2vh;
+			padding: 2vh 1vw;
 
-			@include section-header;
+			// height: 70vh;
+			overflow: hidden;
 
-		}
+			&-header {
 
-	}
+				@include section-header;
 
-	&-navigation {
-
-		grid-area: nav;
-
-		display: grid;
-		gap: 2vh;
-
-		grid-template: {
-			rows: auto 1px 1fr 1px min-content;
-		}
-
-		padding: 2vh 1vw;
-
-		border: {
-			left: 1px solid rgb(var(--color-mono-400));
-		} 
-
-		hr {
-			width: 100%;
-			background-color: rgb(var(--color-mono-400));
-			margin: 0;
-		}
-
-		&-header {
-			
-			@include section-header;
+			}
 
 		}
 
-		&-body {
+		&-navigation {
 
-			display: flex;
-			flex-direction: column;
-			place-content: center;
-			row-gap: 1vh;
+			grid-area: nav;
 
-			align-items: center;
+			display: grid;
+			gap: 2vh;
 
-			button {
+			grid-template: {
+				rows: auto 1px 1fr 1px min-content;
+			}
+
+			padding: 2vh 1vw;
+
+			border: {
+				left: 1px solid rgb(var(--color-mono-400));
+			} 
+
+			hr {
 				width: 100%;
+				background-color: rgb(var(--color-mono-400));
+				margin: 0;
 			}
 
-			.active {
-				width: 75%;
+			&-header {
+				
+				@include section-header;
+
 			}
 
-		}
+			&-body {
 
-		&-footer {
+				display: flex;
+				flex-direction: column;
+				place-content: center;
+				row-gap: 1vh;
 
-			display: flex;
-			flex-direction: column;
-			width: 100%;
+				align-items: center;
+
+				button {
+					width: 100%;
+				}
+
+				.active {
+					width: 75%;
+				}
+
+			}
+
+			&-footer {
+
+				display: flex;
+				flex-direction: column;
+				width: 100%;
+
+			}
 
 		}
 
 	}
-
-}
 
 </style>
 
@@ -479,11 +479,13 @@ $padX: 1vw;
 
 	// TYPES
 		import type { AnimeAnimParams } from 'animejs';
-		import type { VuexModules } 		from '~/typescript/VuexModules'
+		import type { VuexModules } 		from '~/typescript/VuexModules';
 
-	// MIXINS
-		import D_WorkStatus from '~/assets/mixins/filters/WorkStatus'
-		import F_UserStatus from '~/assets/mixins/filters/UserStatus'
+	// UTILS
+		import { user } from '~/utils/status'
+
+	// ENUMS
+		import { UserStatus } from '~/typescript/User'
 
 	// COMPONENTS
 		import CommonButton	from '~/components/buttons/CommonButton.vue'
@@ -491,7 +493,7 @@ $padX: 1vw;
 		import Tag 					from '~/components/common/Tag.vue'
 
 	// FUNCTION COMPONENTS
-		import TransitionWrapper from '../functional/TransitionWrapper.vue';
+		import TransitionWrapper from '~/components/functional/TransitionWrapper.vue';
 
 	// INTERFACE'N'TYPES
 		type MODULES = 'Messages' | 'NameChange' | 'IconChange' | 'Orders';
@@ -501,7 +503,18 @@ $padX: 1vw;
 			Sub: String
 		}
 
-		type TEST = () => any
+		const enum Title {
+			messages 	= 'Сообщения',
+			name			= 'Смена имени пользователя',
+			icon 			= 'Смена иконки профиля',
+			orders		= 'Статус заказа'
+		}
+
+		const enum Notation {
+			send 		= 'Подсказка: Нажмите "Ctrl + Enter" для отправки сообщения.',
+			confirm = 'Подсказка: Нажмите "Ctrl + Enter" для подтверждения.',
+			avail 	= 'Данная сводка полезна для проверки. В случае чего',
+		}
 
 	// ANIMATION STATES 
 
@@ -529,6 +542,7 @@ $padX: 1vw;
 
 	// MODULE
 	export default Vue.extend({
+		
 		components: {
 			Collapse,
 			Tag,
@@ -539,7 +553,7 @@ $padX: 1vw;
 			NameChange: 	() => import('~/components/profile/submodules/NameChange.vue'),
 			IconChange: 	() => import('~/components/profile/submodules/IconChange.vue'),
 		},
-		mixins: [ D_WorkStatus, F_UserStatus ],
+
 		data() {
 			return {
 
@@ -558,6 +572,7 @@ $padX: 1vw;
 				
 			}
 		},
+
 		computed: {
 
 			...mapState({
@@ -574,45 +589,43 @@ $padX: 1vw;
 				ActiveRequest: 		state => (state as VuexModules).User.WorkRequest.ActiveRequests,
 			}),
 
+			// COMPONENT_HEADER
+
 			ComponentInfo(): COMPONENT_HEADER {
 
 				switch (this.CurentPreferencesComponent) {
 
-					case 'Messages': 
-						return {
-							Title: 'Сообщения',
-							Sub: 'Подсказка: Нажмите "Ctrl + Enter" для отправки сообщения.',
-						}
+					case 'Messages': return {
+						Title: Title.messages,
+						Sub: Notation.send,
+					}
 
-					case 'NameChange': 
-						return {
-							Title: 'Смена имени пользователя',
-							Sub: 'Подсказка: Нажмите "Ctrl + Enter" для подтверждения.',
-						}
+					case 'NameChange': return {
+						Title: Title.name,
+						Sub: Notation.confirm,
+					}
 
-					case 'IconChange': 
-						return {
-							Title: 'Смена иконки профиля',
-							Sub: 'Подсказка: Нажмите "Ctrl + Enter" для подтверждения.',
-						}
+					case 'IconChange': return {
+						Title: Title.icon,
+						Sub: Notation.confirm,
+					}
 
-					case 'Orders': 
-						return {
-							Title: 'Статус заказа',
-							Sub: 'Данная сводка полезна для проверки. В случае чего'
-						}
+					case 'Orders': return {
+						Title: Title.orders,
+						Sub: Notation.avail,
+					}
 
-					default:
-						return {
-							Title: 'Название для компонента',
-							Sub: 'Явно что-то пошло не так...'
-						}
+					default: return {
+						Title: 'Название для компонента',
+						Sub: 'Явно что-то пошло не так...'
+					}
 
 				}
 
 			},
 
 		},
+
 		watch: {
 
 			'UserState.UserImageID': {
@@ -623,7 +636,7 @@ $padX: 1vw;
 
 			GetRequestsQuantity: {
 				handler() {
-					this.$store.dispatch('User/WorkRequest/Set_ActiveRequest')
+					this.$store.dispatch('User/WorkRequest/setActiveRequest')
 				}
 			},
 
@@ -634,19 +647,22 @@ $padX: 1vw;
 			},
 
 		},
+
 		created() {
 
-			this.Set_RequestQuantity(); 
-			this.Set_RequestContent(); 
+			this.setRequestQuantity(); 
+			this.setRequestContent(); 
 
 			this.getMessages();
 
 		},
+
 		mounted() {
 
 			this.checkUnreaded();
 			
 		},
+
 		methods: {
 
 			...mapActions({
@@ -656,12 +672,12 @@ $padX: 1vw;
 				getMessages: 					'User/Messages/getMessages',
 				checkUnreaded: 				'User/Messages/checkUnreaded',
 				// WORK REQUESTS
-				Set_RequestQuantity: 	'User/WorkRequest/Set_RequestQuantity',
-				Set_RequestContent: 	'User/WorkRequest/Set_RequestContent',
+				setRequestQuantity: 	'User/WorkRequest/setRequestQuantity',
+				setRequestContent: 		'User/WorkRequest/setRequestContent',
 			}),
 
-			AreaToggle( _component: MODULES ) {
-				this.CurentPreferencesComponent = _component;
+			AreaToggle(component: MODULES) {
+				this.CurentPreferencesComponent = component;
 			},
 
 			AnimateUserIcon(type: ICON_ANIMATION_STATES) {
@@ -676,7 +692,12 @@ $padX: 1vw;
 
 			},
 
+			defineStatus(status: UserStatus) {
+				return user.defineStatus(status)
+			},
+
 		},
+
 	})
 
 </script>

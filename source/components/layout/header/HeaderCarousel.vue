@@ -320,25 +320,28 @@
 	import Vue from 'vue'
 
 	// API
+		import { mapActions, mapState } from 'vuex'
 		import { database } from '~/api/database'
+
+	// VUEX
 	
 	// UTILS
 		import { utils, FORMATED_DATE } from '~/utils';
 
-	// VUEX
-		import { mapActions, mapState } from 'vuex'
-
 	// COMPONENTS
-		import Parallax 							from '~/components/common/Parallax.vue';
-		import Carousel 							from '~/components/common/Carousel.vue';
-		import Icon 									from '~/components/common/Icon.vue';
-		import Tag 										from '~/components/common/Tag.vue';
+		import Parallax from '~/components/common/Parallax.vue';
+		import Carousel from '~/components/common/Carousel.vue';
+		import Icon 		from '~/components/common/Icon.vue';
+		import Tag 			from '~/components/common/Tag.vue';
 	
 	// MIXINS
 		import EmitSound from '~/assets/mixins/EmitSound'
 
+	// LOAD POLITIC
+		import { load_ranges } from '~/config/LoadPolitic'
+
 	// TYPES
-		import type { IMAGE_URL } 		from '~/typescript/Image';
+		import type { ImageStruct } 		from '~/typescript/Image';
 		import type { POST } 					from '~/typescript/Post';
 
 		import type { VuexModules } from '~/typescript/VuexModules';
@@ -346,14 +349,11 @@
 		type HeaderSlide = {
 			content: Pick<POST, 'title' | 'description' | 'ID' | 'tags'>
 			date: FORMATED_DATE
-			image: IMAGE_URL
+			image: ImageStruct
 		}
 
 	// VARS
 		const PLACEHOLDER_L = `${ require('~/assets/images/ImagePlaceholder.png?resize&size=600')}`
-
-	// LOAD POLITIC
-		import { load_ranges } from '~/config/LoadPolitic'
 	
 	// MODULE
 	export default Vue.extend({
@@ -381,7 +381,7 @@
 
 				CommonCarouselScrollPosition: 0,
 
-				Slides: new Array<HeaderSlide>(),
+				Slides: Array<HeaderSlide>(0),
 
 			}
 		},
@@ -421,8 +421,8 @@
 							content: { title, description, ID, tags },
 							date: utils.getLocalTime(date),
 							image: await this.getImageURL({ 
-								_path: image,
-								_size: 1440,
+								path: image,
+								size: 1440,
 							})
 						} as HeaderSlide
 

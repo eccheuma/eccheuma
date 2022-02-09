@@ -2,10 +2,10 @@
 	<intesection-component :ignite="!$isMobile" :rootMargin="15" @isIntersecting="animateIntersection">
 		<section
 			:id="`PostID-${ payload.ID }`" 
+			ref="post"
 			class="post-container"
 			:data-hash="HashGenerator(12)"
 			@keydown.ctrl.enter="sendComment"
-			ref="post"
 			> 
 
 			<div 
@@ -15,7 +15,7 @@
 
 				<picture class="post-header-image">
 					<source :srcset="ImageURL.avif" type="image/avif">
-					<img :src="ImageURL.webp" :alt="payload.description" ref="image">
+					<img ref="image" :src="ImageURL.webp" :alt="payload.description">
 				</picture>
 
 				<section v-once class="post-header-tags">
@@ -186,7 +186,7 @@
 							]"
 						>
 
-							<template v-if="!sortedComments.length" v-once> 
+							<template v-if="!sortedComments.length"> 
 								<section class="post-comments-first">
 									<span>" Тут ещё нет комментариев, но это пока... "</span>
 								</section>
@@ -224,8 +224,8 @@
 
 								</template>
 
-								<template v-else v-once>
-									<icon name="Info" />
+								<template v-else>
+									<icon v-once name="Info" />
 									<h5>Для комментирования необходима авторизация</h5>
 									<p>Это не так уж и сложно, да и получите сверху ещё больше функионала.</p>
 								</template>
@@ -767,12 +767,12 @@
 	// TYPES & INTERFACES
 	import type { POST, POST_CONTENT, COMMENT, LIKE } 	from '~/typescript/Post'
 	import type { USER_STATE } 													from '~/typescript/User'
-	import type { IMAGE_URL } 													from '~/typescript/Image'
+	import type { ImageStruct } 													from '~/typescript/Image'
 
 	type SECTIONS = 'Likes' | 'Comments' | 'Content'
 
 	// IMAGE PLACEHOLDER
-	const PLACEHOLDER: IMAGE_URL = {
+	const PLACEHOLDER: ImageStruct = {
 		avif: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=avif').src,
 		webp: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src
 	}
@@ -951,7 +951,7 @@
 				], {
 					easing: 'ease-in-out',
 					duration: 1000,
-					fill: "both",
+					fill: 'both',
 				})
 
 				this.setSounds([
@@ -1000,9 +1000,9 @@
 
 				switch (section) {
 					case 'Content':
-						this[section] = await database.get(PATH)
+						this[section] = await database.get(PATH); break;
 					default:
-						database.listen(PATH, data => this[section] = data); break;
+						database.listen(PATH, data => { this[section] = data }); break;
 				}
 
 			}, 
@@ -1019,9 +1019,9 @@
 
 				const IMAGE_CONTAINER = this.$refs.ImageHolder as HTMLElement
 
-				const URL: IMAGE_URL = await this.getImageURL({ 
-					_path: this.payload.image,
-					_size: width || IMAGE_CONTAINER.offsetWidth * window.devicePixelRatio
+				const URL: ImageStruct = await this.getImageURL({ 
+					path: this.payload.image,
+					size: width || IMAGE_CONTAINER.offsetWidth * window.devicePixelRatio
 				})
 
 				if ( this.BROWSER && this.$PIXI.utils.isWebGLSupported() ) {
@@ -1042,7 +1042,7 @@
 				}
 			},
 
-			prepareAnimations(el: Element, url: IMAGE_URL) {
+			prepareAnimations(el: Element, url: ImageStruct) {
 
 				const animation = el.animate([
 					{ opacity: 1 },

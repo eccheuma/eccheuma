@@ -1,12 +1,12 @@
 <template>
 	<div :id="`search-${ hash }`" class="search-wrap" @mouseenter.once="preparedInteraction = true">
 
-		<div class="search-container" :class="{ process: inProcess }" @click.self="$refs.input.focus()">
+		<div class="search-container" :class="{ process: inProcess }">
 			<input 
+				ref="input"
 				v-model="userRequest" 
 				type="text" 
 				placeholder="Поиск по сайту" 
-				ref="input"
 				@input="inputSound" 
 				@change="searchData"
 			>
@@ -14,7 +14,7 @@
 		</div>
 
 		<transition name="verticalSlide-transition">
-			<div class="search-results" v-if="preparedInteraction && userRequest && result">
+			<div v-if="preparedInteraction && userRequest && result" class="search-results">
 				<h6>Результаты</h6>
 				<hr>
 				<span>
@@ -160,13 +160,12 @@
 	import EmitSound from '~/assets/mixins/EmitSound'
 
 	// COMPONENTS
-	import Popover 	from '~/components/common/Popover.vue'
 	import Icon			from '~/components/common/Icon.vue'
 
 	// MODULE
 	export default Vue.extend({
 		components: {
-			Icon, Popover
+			Icon, 
 		},
 		mixins: [ EmitSound ],
 		data() {
@@ -175,7 +174,7 @@
 				inProcess: false,
 
 				preparedInteraction: false,
-				userRequest: new String() as string,
+				userRequest: String() as string,
 
 				result: null as any,
 
@@ -185,7 +184,7 @@
 		},
 		watch: {
 			userRequest: {
-				handler(n: string, o: string) {
+				handler() {
 					this.result = null;
 				}
 			},

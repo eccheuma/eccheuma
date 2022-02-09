@@ -7,7 +7,7 @@
 				<tag :light="true">
 					{{ UserState.UserName }}
 				</tag>
-				<span>{{ DefineUserStatus(UserState.UserStatus) }}</span>
+				<span>{{ defineStatus(UserState.UserStatus) }}</span>
 			</div>
 		</section>
 
@@ -245,6 +245,9 @@
 // VUEX
 	import { mapState, mapActions } from 'vuex'
 
+// UTILS
+	import { user } from '~/utils/status'
+
 // COMPONENTS
 	import EccheumaButton from '~/components/buttons/CommonButton.vue';
 	// import Popover 				from '~/components/common/Popover.vue';
@@ -258,6 +261,9 @@
 // TYPES
 	import type { VuexModules } from '~/typescript/VuexModules'
 	import type { USER_STATE 	} from '~/typescript/User' 
+
+// ENUMS
+	import { UserStatus } from '~/typescript/User'
 
 	type PROFILE_AREA = {
 		title: string
@@ -316,6 +322,10 @@
 			...mapActions({
 				logout: 'Auth/Logout/Logout'
 			}),
+
+			defineStatus(status: UserStatus) {
+				return user.defineStatus(status);
+			}
 
 		}
 	})

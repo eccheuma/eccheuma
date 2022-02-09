@@ -5,21 +5,21 @@
       <label for="RegistrationFormMail">
         <span>Электронная почта: </span>
       </label>
-      <input type="email" name="ertert" id="RegistrationFormMail">
+      <input id="RegistrationFormMail" type="email" name="ertert">
     </section>
 
     <section>
       <label for="RegistrationFormPass">
         <span>Пароль: </span>
       </label>
-      <input type="password" name="ertertert" id="RegistrationFormPass">
+      <input id="RegistrationFormPass" type="password" name="ertertert">
     </section>
 
     <section>
       <label for="RegistrationFormName">
         <span>Ваше имя: </span>
       </label>
-      <input type="name" name="ertertert" id="RegistrationFormName" @input="sendForm">
+      <input id="RegistrationFormName" type="name" name="ertertert" @input="sendForm">
     </section>
 
     <eccheuma-button @click.prevent="sendForm">
@@ -82,6 +82,8 @@
 
 <script lang="ts">
 
+  // TODO | first prior component
+
   import Vue from 'vue'
 
   // COMPONENTS
@@ -98,6 +100,7 @@
       }
     },
     methods: {
+      // ! Remove placeholder methods
       sendForm() {
         console.log(this.test);
       }

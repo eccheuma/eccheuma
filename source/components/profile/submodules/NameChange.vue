@@ -51,22 +51,19 @@
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from 'vue';
+
+	// VALIDATORS
+	import { required, minLength } from 'vuelidate/lib/validators'
+
+	// VUEX
+	import { mapState } from 'vuex'
 
 	// API
 	import { database } from '~/api/database';
 
-	// VUEX
-		import { mapState, mapActions } from 'vuex'
-
 	// VUEX MODULE TYPE MAP
-		import 			{ required, minLength } from 'vuelidate/lib/validators'
-		import type { VuexModules } 				from '~/typescript/VuexModules'
-
-	// TYPES
-		import { USER_STATE } from '~/typescript/User'
-
-	// VUELIDATE
+	import type { VuexModules } 				from '~/typescript/VuexModules'
 
 	// MODULE
 	export default Vue.extend({

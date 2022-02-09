@@ -3,6 +3,9 @@ import { ActionTree, MutationTree } from 'vuex'
 // API
 	import { database } from '~/api/database'
 
+// UTILS
+	import { cache } from '~/utils/cache';
+
 // INTERFACES & TYPES
 
 	import type { POST } 						from '~/typescript/Post'
@@ -24,12 +27,10 @@ import { ActionTree, MutationTree } from 'vuex'
 
 // STORE
 	export const state = () => ({
-
 		Content: {
 			Gallery: [],
 			Posts: []
 		} as CONTENT
-		
 	})
 
 // CURENT STATE
@@ -46,13 +47,7 @@ import { ActionTree, MutationTree } from 'vuex'
 	export const mutations: MutationTree<CurentState> = {
 
 		setContent(state, { data, from, to }: { data: any[], from: string, to: REFS }) {
-
 			state.Content[to] = data; 
-			
-			if ( process.server ) {
-				console.log(`recive ${ from } data:`, data);
-			}
-
 		},
 
 	}
@@ -60,50 +55,50 @@ import { ActionTree, MutationTree } from 'vuex'
 // ACTIONS
 	export const actions: ActionTree<CurentState, CurentState> = {
 		
-		async checkCachedData({ commit }, _payload: PAYLOAD) {
+		async checkCachedData({ commit }, payload: PAYLOAD) {
 
-			const STORAGE	= window.localStorage
+			const HASH_KEY 					= `${ payload.REF.toUpperCase() }_DATA_HASH`
+			const LOAD_PROPERTY_KEY = `${ payload.LOAD_PROPERTY.LoadPoint }_${ payload.LOAD_PROPERTY.LoadRange }`
 
-			const HASH_KEY 					= `${ _payload.REF.toUpperCase() }_DATA_HASH`
-			const LOAD_PROPERTY_KEY = `${ _payload.LOAD_PROPERTY.LoadPoint }_${ _payload.LOAD_PROPERTY.LoadRange }`
+			const Hashes = {
+				server: await database.get(`App/Cache/${ payload.REF }`),
+				cashed: cache.get(HASH_KEY)
+			}
 
-			const SERVER_HASH: string = await database.get(`App/Cache/${ _payload.REF }`)
-			const LOCAL_HASH = window.localStorage.getItem(HASH_KEY) 
-
-			const CACHE_KEY = `${ SERVER_HASH }_${ _payload.REF.toUpperCase() }_${ LOAD_PROPERTY_KEY }`
+			const CACHE_KEY = `${ Hashes.server }_${ payload.REF.toUpperCase() }_${ LOAD_PROPERTY_KEY }`
 
 			// --------------------------------
 
-			const CACHED_DATA = STORAGE.getItem(CACHE_KEY);
+			const CACHED_DATA = cache.get(CACHE_KEY);
 
-			if ( CACHED_DATA && LOCAL_HASH && LOCAL_HASH === SERVER_HASH  ) {
+			if ( CACHED_DATA && Hashes.cashed && Hashes.cashed === Hashes.server ) {
 
-				commit('setContent', { data: JSON.parse(CACHED_DATA), from: 'cache', to: _payload.REF  })
+				commit('setContent', { data: JSON.parse(CACHED_DATA), from: 'cache', to: payload.REF  })
 
 			} else {
 
-				const DATA = await database.get(_payload.REF, { limit: _payload.LOAD_PROPERTY.LoadRange })
+				const DATA = await database.get(payload.REF, { limit: payload.LOAD_PROPERTY.LoadRange })
 
-				commit('setContent', { data: DATA, from: 'firebase', to: _payload.REF });
+				commit('setContent', { data: DATA, from: 'firebase', to: payload.REF });
 
-				STORAGE.setItem(CACHE_KEY, JSON.stringify(DATA))
-				STORAGE.setItem(HASH_KEY,  SERVER_HASH.toString())
+				cache.set(CACHE_KEY, DATA);
+				cache.set(HASH_KEY, Hashes.server);
 
 			}
 
 		},
 
-		async GetContent({ commit, dispatch }, _payload: PAYLOAD) {
+		async GetContent({ commit, dispatch }, payload: PAYLOAD) {
 
-			if ( process.browser )  {
+			if ( process.browser ) {
 
-				await dispatch('checkCachedData', _payload);	
+				await dispatch('checkCachedData', payload);	
 				
 			} else {
 
-				const DATA = await database.get(_payload.REF, { limit: _payload.LOAD_PROPERTY.LoadRange })
+				const DATA = await database.get(payload.REF, { limit: payload.LOAD_PROPERTY.LoadRange })
 
-				commit('setContent', { data: Object.values(DATA), from: 'server', to: _payload.REF });			
+				commit('setContent', { data: Object.values(DATA), from: 'server', to: payload.REF });			
 
 			} 
 

@@ -2,10 +2,10 @@ import firebase from 'firebase/app'
 import 'firebase/auth'
 
 // API
+	import type { ActionTree, MutationTree } from 'vuex'
 	import { database } from '~/api/database'
 
 // VUEX
-	import type { ActionTree, MutationTree } from 'vuex'
 
 // TYPES
 	import type { REGISTER_FORM, CurentState as SessionState } from '~/store/Auth/Session'

@@ -2,19 +2,23 @@
 	import 'firebase/auth'
 
 // API
+	import type { MutationTree, ActionTree } from 'vuex'
 	import { database } from '~/api/database';
 	import { storage } from '~/api/storage';
 
 // VUEX
-	import type { MutationTree, ActionTree } from 'vuex'
 
 	import type { VuexModules } from '~/typescript/VuexModules'
 
 	import type { REGISTER_FORM } from '~/store/Auth/Session'
 	import type { MESSAGE } 			from '~/typescript/Message'
-	import type { USER_STATE }		from '~/typescript/User'
+	import type { USER_STATE } from '~/typescript/User'
 
-	// STATE
+// ENUMS
+	import { UserStatus } from '~/typescript/User'
+	import { RequestStatus } from '~/typescript/Services';
+
+// STATE
 	export const state = () => ({
 		Modal: false
 	})
@@ -53,10 +57,10 @@
 					UserID: 				user.uid,
 					UserEmail: 			user.email,
 					UserName: 			form.name,
-					UserStatus: 		2,
+					UserStatus: 		UserStatus.User,
 					UserBalance: 		0,
-					UserWorkStatus: 0,
-					UserImageID:		storage.getStorageLink('UserIcons/default.webp')
+					UserWorkStatus: RequestStatus.None,
+					UserImageID:		storage.reference('UserIcons/default.webp')
 				} as USER_STATE)
 
 				await database.set(`Users/${ user.uid  }/preferences`, {

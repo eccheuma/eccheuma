@@ -7,7 +7,7 @@
 			:path="content.path"
 			:title="content.title" 
 			:description="content.description"
-			@toggle-modal="() => this.Modal = !this.Modal" 
+			@toggle-modal="() => Modal = !Modal" 
 		/>
 
 		<div 
@@ -28,7 +28,7 @@
 			<section ref="holder" class="eccheuma-image-picture">
 				<picture>
 					<source v-if="AVIF_SUPPORT" :srcset="Source.avif" type="image/avif">
-					<img :src="Source.webp" :alt="content.description" ref="image">
+					<img ref="image" :src="Source.webp" :alt="content.description">
 				</picture>
 			</section>
 
@@ -202,7 +202,6 @@
 					stroke: rgb(var(--color-mono-900));
 				}
 
-
 				transition-duration: 250ms;
 				&:hover {
 					padding: 5px 25px;					
@@ -242,11 +241,11 @@
 
 			border-radius: var(--border-radius);
 
-	    position: relative;
+			position: relative;
 			z-index: 1;
 
-	    height: fit-content;
-	    padding: 2vh 1vw;
+			height: fit-content;
+			padding: 2vh 1vw;
 			align-self: end;
 
 			span {
@@ -274,10 +273,10 @@
 	import { mapActions, mapState } from 'vuex'
 
 	// UTILS
-  import { utils } from '~/utils'
+	import { utils } from '~/utils'
 
 	// TYPES
-	import type { IMAGE_PROPERTY, IMAGE_URL } 			from '~/typescript/Image'
+	import type { IMAGE_PROPERTY, ImageStruct } 			from '~/typescript/Image'
 
 	// VUEX MAP
 	import type { VuexModules } from '~/typescript/VuexModules'
@@ -290,7 +289,7 @@
 	import EmitSound from '~/assets/mixins/EmitSound'
 
 	// VARS
-	const PLACEHOLDER: IMAGE_URL = {
+	const PLACEHOLDER: ImageStruct = {
 		avif: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src,
 		webp: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src
 	}
@@ -323,49 +322,33 @@
 		data() {
 			return {
 
-				LocalDate: utils.getLocalTime(0),
+				LocalDate: utils.getLocalTime(this.content.date),
 
-				Source: PLACEHOLDER as IMAGE_URL,
+				Source: PLACEHOLDER as ImageStruct,
 
 				Modal: false,
 				ImageFocus: false,
 
 			}
 		},
+
 		computed: {
 			...mapState({
 				AVIF_SUPPORT: state => (state as VuexModules).Images.AVIF_SUPPORT
 			})
 		},
+
 		watch: {
 			'content.path': {
 				handler() {
-					if ( this.BROWSER ) {
-						this.$nextTick(() => requestAnimationFrame(this.getImage))
-					}
+					this.$nextTick(() => requestAnimationFrame(this.getImage))
 				}
 			},
 		},
-		created() {
 
-			// this.setSounds([
-			// 	{
-			// 		file: 'On',
-			// 		name: 'ImageSearchIcon',
-			// 		settings: { rate: .5, volume: .25 }
-			// 	},
-			// 	{
-			// 		file: 'Tap',
-			// 		name: 'ImageToggleModal',
-			// 		settings: { rate: 1.25 }
-			// 	}
-			// ])
+		mounted() {
 
-		},
-		async mounted() {
-			if ( process.client ) {
-
-				this.LocalDate = utils.getLocalTime(this.content.date)
+			if ( process.browser ) {
 
 				const interesection = new IntersectionObserver((entry) => {
 					if ( entry[0].isIntersecting )  {
@@ -377,6 +360,7 @@
 
 			}
 		},
+
 		methods: {
 			
 			...mapActions({
@@ -387,9 +371,9 @@
 
 				const IMAGE_CONTAINER = this.$refs.holder as Element
 
-				const URL: IMAGE_URL = await this.getImageURL({ 
-					_path: this.content.path,
-					_size: IMAGE_CONTAINER?.getBoundingClientRect().width * window.devicePixelRatio || 720
+				const URL: ImageStruct = await this.getImageURL({ 
+					path: this.content.path,
+					size: IMAGE_CONTAINER?.getBoundingClientRect().width * window.devicePixelRatio || 720
 				})
 
 				if ( this.BROWSER && this.$PIXI.utils.isWebGLSupported() ) {
@@ -400,7 +384,7 @@
 
 			},
 
-			prepareAnimations(el: Element, url: IMAGE_URL) {
+			prepareAnimations(el: Element, url: ImageStruct) {
 
 				const animation = el.animate([
 					{ opacity: 1 },
@@ -423,6 +407,7 @@
 			},
 
 		},
+
 	})
 
 </script>

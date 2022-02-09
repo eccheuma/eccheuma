@@ -10,10 +10,8 @@
         default: true,
       }
     },
-    render(h) {
-      
+    render() {
       return this.$slots.default![0];
-
     }    
   })
 

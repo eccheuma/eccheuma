@@ -3,18 +3,21 @@
 // API
 	import { database } from '~/api/database'
 
+// ENUMS
+	import { RequestStatus } from '~/typescript/Services'
+
 // INTERFACES AND TYPES 
 
 	import { VuexModules } from '~/typescript/VuexModules'
 
-	import type { SELECTED_SERVICE, REQUEST_STATUS } 	from '~/typescript/Services'
+	import type { SELECTED_SERVICE } 	from '~/typescript/Services'
 	import type { MESSAGE } from '~/typescript/Message'
 
 	import type { NOTIFICATION_CONTENT } from '~/typescript/Notification'
 
 	interface WORK_REQUEST extends SELECTED_SERVICE {
 		ID: number
-		Status: keyof REQUEST_STATUS
+		Status: RequestStatus
 	}
 	
 // STATE
@@ -52,13 +55,14 @@
 
 // ACTIONS
 	export const actions: ActionTree<CurentState, VuexModules> = {
-		async SendWorkRequest({ dispatch, commit, rootState, state }, service: SELECTED_SERVICE) {
 
-			const { uid } 			= rootState.Auth.Session.CurentUser
-			const MessageCount 	= rootState.User.Messages.Messages.length
+		async SendWorkRequest(vuex, service: SELECTED_SERVICE) {
+
+			const { uid } 			= vuex.rootState.Auth.Session.CurentUser
+			const MessageCount 	= vuex.rootState.User.Messages.Messages.length
 
 			const REQUEST: WORK_REQUEST = {
-				ID: state.RequestQuantity,
+				ID: vuex.state.RequestQuantity,
 				Status: 1,
 				...service
 			}
@@ -85,40 +89,44 @@
 
 			try {
 
-				commit('Loader/Loader_ChangeLoadStatus_Counter', 28, { root: true })
+				await vuex.dispatch('setRequestQuantity')
 
-				await dispatch('Set_RequestQuantity')
-
-				await database.set(`Users/${ uid }/work_requests/WorkID-${ state.RequestQuantity }`, REQUEST);
+				await database.set(`Users/${ uid }/work_requests/WorkID-${ vuex.state.RequestQuantity }`, REQUEST);
 				await database.set(`Users/${ uid }/messages/Hash_${ MessageCount + 1 }`, MESSAGE);
 
-				commit('Notification/Notification_Status', true, { root: true })
-				commit('Notification/setNotification', NOTIFICATION_MESSAGE, { root: true })
+				vuex.commit('Notification/Notification_Status', true, { root: true })
+				vuex.commit('Notification/setNotification', NOTIFICATION_MESSAGE, { root: true })
 
-			} catch (e) { console.log(e) }
-
-		},
-		async Set_RequestContent({ commit, rootState }) {
-
-			const { uid } = rootState.Auth.Session.CurentUser;
-
-			commit('Change_Requests', await database.get(`Users/${ uid }/work_requests`)) 
+			} catch (e) {
+ console.log(e) 
+}
 
 		},
-		async Set_RequestQuantity({ commit, rootState }) {
+		
+		async setRequestContent(vuex) {
 
-			const { uid } = rootState.Auth.Session.CurentUser
+			const { uid } = vuex.rootState.Auth.Session.CurentUser;
 
-			commit('Change_WorkQuantity', await database.getLength(`Users/${uid}/work_requests`)) 
+			vuex.commit('Change_Requests', await database.get(`Users/${ uid }/work_requests`)) 
 
 		},
-		Set_ActiveRequest({ commit, state }) {
 
-			if ( !state.Requests.length ) return;
+		async setRequestQuantity(vuex) {
 
-			const R = state.Requests.filter(( item: WORK_REQUEST ) => item.Status > 1 )
+			const { uid } = vuex.rootState.Auth.Session.CurentUser
+
+			vuex.commit('Change_WorkQuantity', await database.getLength(`Users/${uid}/work_requests`)) 
+
+		},
+
+		setActiveRequest(vuex) {
+
+			if ( !vuex.state.Requests.length ) return;
+
+			const R = vuex.state.Requests.filter( item => item.Status === RequestStatus.Process )
 			
-			commit('Change_ActiveRequests', R)
+			vuex.commit('Change_ActiveRequests', R)
 
 		},
+
 	}

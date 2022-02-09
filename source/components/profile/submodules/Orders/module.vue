@@ -85,6 +85,7 @@
 
 	// COMPONENTS
 	import CommonButton	from '~/components/buttons/CommonButton.vue';
+	// eslint-disable-next-line import/order
 	import Order 				from './submodules/Order.vue'
 
 	// DEFAULT ORDER SAMPLE 
@@ -137,11 +138,11 @@
 
 		},
 		mounted() {
-			this.Set_RequestContent()
+			this.setRequestContent()
 		},
 		methods: {
 			...mapActions({
-				Set_RequestContent: 'User/WorkRequest/Set_RequestContent'
+				setRequestContent: 'User/WorkRequest/setRequestContent'
 			}),
 		},
 	})

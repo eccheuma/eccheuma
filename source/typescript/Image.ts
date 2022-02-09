@@ -1,3 +1,11 @@
+export const enum Sizes {
+	placehoder 	= 100,
+	small				= 360,
+	medium 			= 720,
+	large				= 1280,
+	full				= 1440,
+}
+
 export type IMAGE_PROPERTY = {
 	ID: number,
 	content: {
@@ -18,9 +26,9 @@ export type IMAGE_PROPERTY = {
 	}
 }
 
-export type IMAGE_URL = {
+export type ImageStruct = {
 	avif: string
 	webp: string
 }
 
-export type FORMATS = 'webp' | 'avif';
+export type AllowedFormats = 'webp' | 'avif';

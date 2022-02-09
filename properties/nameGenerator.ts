@@ -1,3 +1,3 @@
-export default function(length: number) {
+export default function(_length: number) {
   return 'eccheuma'
 }

@@ -1,13 +1,16 @@
+/* eslint-disable import/no-named-as-default-member */
+
 // FIREBASE
 import firebase from 'firebase/app';
-import 'firebase/database';
 
+// TYPES
 type GetParams = {
   start: number,
   end: number,
   limit: number,
 }
 
+// INNER FUNCTIONS
 function defineQuery(ref: firebase.database.Query, params: Partial<GetParams>): firebase.database.Query | undefined {
 
   let QUERY
@@ -17,12 +20,13 @@ function defineQuery(ref: firebase.database.Query, params: Partial<GetParams>): 
   if ( params?.end )
     QUERY = ref.endAt(params.end);
   if ( params?.limit )
-      QUERY = ref.limitToFirst(params.limit);
+    QUERY = ref.limitToFirst(params.limit);
 
   return QUERY;
 
 }
 
+// MODULE NAMESPACE
 export namespace database {
 
   export function get<T extends object | string>(path: string, params?: Partial<GetParams>): Promise<T> {
@@ -78,4 +82,3 @@ export namespace database {
   }
 
 }
-

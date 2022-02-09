@@ -1,10 +1,12 @@
+// TYPES
+import type { FileOptions } from '@supabase/storage-js/src/lib/types'
+
 // SUPABASE
 import Supabase from '~/plugins/Supabase';
 
-import type { FileOptions } from '@supabase/storage-js/src/lib/types'
-
+// MODULE NAMESPACE
 export namespace storage {
-  export function getStorageLink(path: string): string | null {
+  export function reference(path: string): string | null {
 
     const { publicURL, error } = Supabase.storage.from('main').getPublicUrl(path);
   
@@ -14,12 +16,12 @@ export namespace storage {
   
   }
   
-  export function getStorageList(path: string = '/') {
+  export function list(path: string = '/') {
     return Supabase.storage.from('main').list(path)
   }
   
-  export function uploadStorageFile(path: string, data: any, meta?: any) {
-    return Supabase.storage.from('main').upload(path, data, { upsert: true })
+  export function upload(path: string, data: any, meta?: FileOptions) {
+    return Supabase.storage.from('main').upload(path, data, { upsert: true, ...meta })
   }
 
   export function remove(path: string) {

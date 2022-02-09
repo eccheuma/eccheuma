@@ -15,9 +15,13 @@
 					<span>Тип услуги</span>
 					<hr>
 					<select v-model="form.type" name="type">
-						<option value="">Тип услуги не выбран</option>
+						<option value="">
+							Тип услуги не выбран
+						</option>
 						<template v-for="( item, index ) in serviceTypes">
-							<option :key="index" :value="index">{{ item.title }}</option>
+							<option :key="index" :value="index">
+								{{ item.title }}
+							</option>
 						</template>
 					</select>
 				</div>
@@ -28,9 +32,13 @@
 						<span>Услуга</span>
 						<hr>
 						<select v-model="form.service" name="service">
-							<option value="">Услуга не выбрана</option>
+							<option value="">
+								Услуга не выбрана
+							</option>
 							<template v-for="item in services">
-								<option :key="item.Type" :value="item">{{ item.Name }}</option>
+								<option :key="item.Type" :value="item">
+									{{ item.Name }}
+								</option>
 							</template>
 						</select>
 					</div>
@@ -43,11 +51,15 @@
 						<hr>
 						<template v-if="form.addictions">
 							<template v-for="index in 3">
-								<div class="calculator-main-input-options-item" :key="index" v-if="form.addictions && (index - 1) <= form.addictions.length ">
+								<div v-if="form.addictions && (index - 1) <= form.addictions.length " :key="index" class="calculator-main-input-options-item">
 									<select v-model="form.addictions[index - 1]" name="service">
-										<option value="">Услуга не выбрана</option>
+										<option value="">
+											Услуга не выбрана
+										</option>
 										<template v-for="item in additions">
-											<option :key="item.Type" :value="item">{{ item.Title }}</option>
+											<option :key="item.Type" :value="item">
+												{{ item.Title }}
+											</option>
 										</template>
 									</select>
 									<!-- <span v-if="form.addictions[0]">
@@ -62,7 +74,7 @@
 
 			</section>
 
-			<section class="calculator-main-description" v-if="form.service">
+			<section v-if="form.service" class="calculator-main-description">
 				<big>Описание услуги</big>
 				<hr>
 				<span>
@@ -96,7 +108,7 @@
 
 				</ul>
 				<template v-else>
-					Список пуст
+					Список пуст 
 				</template>
 			</section>
 
@@ -328,6 +340,9 @@
 // TYPES
 	import type { CATEGORY, SERVICE, ADDICTION } from '~/typescript/Services'
 
+// COMPONENTS 
+	import CaptionCard from '~/components/common/Caption.vue'
+
 	type SERVICE_TYPE_SELECT = {
 		[K in CATEGORY]: {
 			title: string
@@ -340,9 +355,6 @@
 		quantity: number,
 		addictions: Array<ADDICTION>
 	};
-
-// COMPONENTS 
-	import CaptionCard from '~/components/common/Caption.vue'
 
 	export default Vue.extend({
 		components: {
@@ -367,6 +379,40 @@
 				cost: 0,
 
 			}
+		},
+		computed: {
+
+			serviceTypes(): Readonly<SERVICE_TYPE_SELECT> {
+				return {
+
+					WebApplications: {
+						title: 'Готовые решения'
+					},
+
+					GraphicalDesign: {
+						title: 'Графический дизайн'
+					},
+
+					HTMLcode: {
+						title: 'Вёрстка'
+					}
+
+				}
+			},
+
+			_cost(): Readonly<number> {
+				
+				const AdditionsCost = this.form.addictions?.map(add => add.Cost).reduce((prev, cur) => prev + cur, 0) || 0;
+				const ServiceCost		= this.form.service?.Cost || 0
+
+				return (( AdditionsCost + ServiceCost ) * this.quantity ) * this.tax;
+
+			},
+
+			_delivery(): Readonly<number>  {
+				return Math.round( this._cost / 300 )
+			}
+
 		},
 		watch: {
 			_cost: {
@@ -404,40 +450,6 @@
 
 				}
 			},
-		},
-		computed: {
-
-			serviceTypes(): Readonly<SERVICE_TYPE_SELECT> {
-				return {
-
-					WebApplications: {
-						title: 'Готовые решения'
-					},
-
-					GraphicalDesign: {
-						title: 'Графический дизайн'
-					},
-
-					HTMLcode: {
-						title: 'Вёрстка'
-					}
-
-				}
-			},
-
-			_cost(): Readonly<number> {
-				
-				const AdditionsCost = this.form.addictions?.map(add => add.Cost).reduce((prev, cur) => prev + cur, 0) || 0;
-				const ServiceCost		= this.form.service?.Cost || 0
-
-				return (( AdditionsCost + ServiceCost ) * this.quantity ) * this.tax;
-
-			},
-
-			_delivery(): Readonly<number>  {
-				return Math.round( this._cost / 300 )
-			}
-
 		},
 		methods: {
 			locateCost(n: number): string {

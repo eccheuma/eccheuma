@@ -1,8 +1,8 @@
 // API
+	import type { ActionTree, MutationTree } from 'vuex'
 	import { database } from '~/api/database';
 
 // VUEX
-	import type { ActionTree, MutationTree } from 'vuex'
 
 	import type { VuexModules } from '~/typescript/VuexModules'
 	import type { MESSAGE } 		from '~/typescript/Message'

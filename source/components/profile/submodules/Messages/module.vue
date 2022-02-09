@@ -156,15 +156,15 @@
 	// VUELIDATE
 	import { required } from 'vuelidate/lib/validators';
 
+	// VUEX
+	import { mapState, mapActions } from 'vuex';
+	import type { VuexModules } from '~/typescript/VuexModules';
+
 	// API
 	import { database } from '~/api/database'
 
 	// UTILS
 	import { utils } from '~/utils'
-
-	// VUEX
-	import { mapState, mapActions } from 'vuex';
-	import type { VuexModules } from '~/typescript/VuexModules';
 
 	// MIXINS
 	import HashGenerator 	from '~/assets/mixins/HashGenerator';

@@ -1,23 +1,30 @@
 import { ActionTree, MutationTree } from 'vuex'
 
-import { storage } from '~/api/storage';
+// API
+	import { storage } from '~/api/storage';
 
 // TYPES
-	import type { FORMATS, IMAGE_URL } from '~/typescript/Image'
+	import { AllowedFormats, ImageStruct, Sizes } from '~/typescript/Image';
+
+// UTILS
+	import { cache } from '~/utils/cache';
 
 // VARIABLES
-	const SIZES = [ 100, 360, 720, 1280, 1440 ]
-
-	type STATUS = {
-		[K in FORMATS]: boolean
-	}
+	const SIZES = [ 
+		Sizes.placehoder,
+		Sizes.small,
+		Sizes.medium,
+		Sizes.large,
+		Sizes.full 
+	];
 
 // STATE
 	export const state = () => ({
 
 		AVIF_SUPPORT: false,
 
-		ImageURLs: new Map() as Map<string, IMAGE_URL>
+		ImageURLs: new Map<string, ImageStruct>(),
+
 	})
 
 // CURENT STATE
@@ -33,7 +40,7 @@ import { storage } from '~/api/storage';
 // MUTATIONS
 	export const mutations: MutationTree<CurentState> = {
 
-		mapURL(state, { _ref, _urls }: { _ref: string, _urls: IMAGE_URL }) {
+		mapURL(state, { _ref, _urls }: { _ref: string, _urls: ImageStruct }) {
 			state.ImageURLs.set(_ref, _urls)
 		},
 
@@ -46,47 +53,33 @@ import { storage } from '~/api/storage';
 // ACTIONS
 	export const actions: ActionTree<CurentState, CurentState> = {
 
-		setCache(_store, payload: { id: string, urls: IMAGE_URL }) {
-			window.localStorage.setItem(payload.id, JSON.stringify(payload.urls))
-		},
+		getImageURL(_vuex, params: { path: string, size: number }): Partial<ImageStruct> | null {
 
-		getCache(_store, id: string): IMAGE_URL {
-			return JSON.parse(window.localStorage.getItem(id)!) as IMAGE_URL
-		},
-
-		checkCache(_store, id: string): boolean {
-			return Boolean(window.localStorage.getItem(id))
-		},
-
-		// name format: image.jpg
-		async getImageURL(store, { _path, _size }: { _path: string, _size: number }): Promise<IMAGE_URL | null> {
-
-			const FORMATS_LIST: FORMATS[] = ['avif', 'webp'];
+			const AllowedFormats: Array<AllowedFormats> = ['avif', 'webp'];
 	
-			const ROOT_REF 	= 'images';
-			const SIZE			= SIZES.find(value => value >= _size) || SIZES.pop();
+			const ROOT_REF 	 = 'images';
+			const MATCH_SIZE = SIZES.find(value => value >= params.size) || SIZES.pop();
+			const LOCAL_KEY  = `${ params.path }-${ MATCH_SIZE }`;
 
-			const LOCAL_ID 	= `${ _path }-${ SIZE }`;
+			const IMAGE_STRUCT = AllowedFormats.map((format) => {
+				return {
+					[format]: storage.reference(`${ ROOT_REF }/${ params.path }/${ format }/${ MATCH_SIZE }.${ format }`)
+				} as Partial<ImageStruct>
+			})
 
-			const REQUESTS = await Promise.all(FORMATS_LIST.map((format) => {
-				return new Promise<Partial<IMAGE_URL>>((resolve) => {
-					resolve({[format]: storage.getStorageLink(`${ ROOT_REF }/${ _path }/${ format }/${ SIZE }.${ format }`) });
-				})
-			}))
-
-			const URLS = REQUESTS.reduce((a, b) => Object.assign(a, b)) as IMAGE_URL
+			const ImageStruct = IMAGE_STRUCT.reduce((a, b) => Object.assign(a, b));
 
 			if ( process.browser ) {
 
-				if ( await store.dispatch('checkCache', LOCAL_ID) ) {
-					return store.dispatch('getCache', LOCAL_ID) as Promise<IMAGE_URL>;
-				} 
+				if ( cache.check(LOCAL_KEY) ) {
+					return cache.get(LOCAL_KEY) as ImageStruct
+				}
 
-				store.dispatch('setCache', { id: LOCAL_ID, urls: URLS })
+				cache.set(LOCAL_KEY, ImageStruct);
 
 			}
 
-			return URLS
+			return ImageStruct;
 
 		}
 

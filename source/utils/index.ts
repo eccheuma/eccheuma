@@ -7,7 +7,8 @@ export namespace utils {
 
   export type asJSONArray<T> = { [index: string]: T };
 
-  export function getLocalTime(n: number = 0): FORMATED_DATE {
+  export function getLocalTime(n: number = 0): FORMATED_DATE 
+  {
 
     const Properties: {[T in keyof FORMATED_DATE]: Intl.DateTimeFormatOptions } = {
       Day: { year: 'numeric', month: 'long', day: 'numeric' },
@@ -23,7 +24,8 @@ export namespace utils {
 
   }
 
-  export function hashGenerator(): string {
+  export function hashGenerator(): string 
+  {
     return Math.random().toString(36).slice(-9).toUpperCase()
   }
 

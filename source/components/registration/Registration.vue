@@ -227,16 +227,15 @@
 // COMPONENTS
 	import Loader 			from '~/components/common/Loader.vue'
 	import CommonButton from '~/components/buttons/CommonButton.vue';
-	import CaptionCard 	from '~/components/common/Caption.vue'
 
 	// SUBMODULES
+	// eslint-disable-next-line import/order
 	import RegistrationForm from './submodules/Form.vue'
 
 // MODULE
 	export default Vue.extend({
 		components: {
 			CommonButton,
-			CaptionCard,
 			Loader,
 			RegistrationForm,
 		},
@@ -270,13 +269,9 @@
 		computed: {
 
 			...mapState({
-
-				LoginStatus: 				state => (state as VuexModules).Auth.Session.LoginStatus,
-
+				LoginStatus: 				state => ( state as VuexModules ).Auth.Session.LoginStatus,
 				RegistrationModal: 	state => ( state as VuexModules ).Auth.Register.Modal,
 				AuthError: 					state => ( state as VuexModules ).Auth.Session.AuthError,
-				// LoaderMessage: 			state => ( state as VuexModules ).Loader.Message,
-				// LoaderStatus: 			state => ( state as VuexModules ).Loader.Status,
 			}),
 
 			крайняяСтадия(): number {
@@ -303,6 +298,7 @@
 				Register: 'Auth/Register/Register',
 			}),
 
+			// TODO | Relocate enum on separated module.
 			DefineError(e: AUTH_ERRORS): string {
 
 				enum ERROR {
@@ -331,6 +327,7 @@
 
 			},
 
+			// ! Delete placeholder method
 			STEP_IMMITATION() {
 
 				this.LoaderStage 			= 0;

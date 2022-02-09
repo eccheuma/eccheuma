@@ -1,12 +1,11 @@
 import Vue from 'vue'
 
 // API
+import type { Context } from '@nuxt/types';
 import { database } from '~/api/database';
 
 // CONTRACTS
 import { DatabaseContract } from '~/typescript/FirebaseDatabase'
-
-import type { Context } from '@nuxt/types';
 
 export default ({ env, isDev }: Context) => {
 

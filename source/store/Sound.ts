@@ -8,7 +8,7 @@
 	import type { ActionTree, MutationTree } from 'vuex'
 
 	import animeJS from 'animejs'
-	import type { SoundInstance, FILE_NAME, SOUND_NAME } from '~/assets/mixins/EmitSound';
+	import type { SoundInstance } from '~/assets/mixins/EmitSound';
 
 // TYPES 
 	interface GLOBAL_PROPERTY {

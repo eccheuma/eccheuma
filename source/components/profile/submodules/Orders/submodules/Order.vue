@@ -6,7 +6,7 @@
       :style="randomCirclePosition"
       :data-status="payload.Status"
       >
-      <section class="order-header" v-once>
+      <section v-once class="order-header">
         Информация о заказе <br> «{{ payload.Name }}»
       </section>
       <hr>
@@ -23,15 +23,15 @@
         
         <big ref="deliveryTimer" style="opacity: 0">
           <template v-if="waintingTime.days">
-            {{ waintingTime.days }} {{ formatSuffix(waintingTime.days, ['день', 'дня', 'дней']) }}
+            {{ waintingTime.days }} {{ AllowedFormatsuffix(waintingTime.days, ['день', 'дня', 'дней']) }}
           </template>
-            {{ waintingTime.hours }} {{ formatSuffix(waintingTime.hours, ['час', 'часа', 'часов']) }}
-            {{ waintingTime.minutes }} {{ formatSuffix(waintingTime.minutes, ['минута', 'минуты', 'минут']) }}
+            {{ waintingTime.hours }} {{ AllowedFormatsuffix(waintingTime.hours, ['час', 'часа', 'часов']) }}
+            {{ waintingTime.minutes }} {{ AllowedFormatsuffix(waintingTime.minutes, ['минута', 'минуты', 'минут']) }}
         </big>
 
       </section>
       <hr>
-      <section class="order-decline" v-once>
+      <section v-once class="order-decline">
         <common-button>
           Отозвать заказ
         </common-button>
@@ -212,6 +212,14 @@
   // MIXINS
   import F_WorkStatus from '~/assets/mixins/filters/WorkStatus'
 
+  // FUNCTIONAL
+    import IntesectionComponent from '~/components/functional/intersectionComponent.vue'
+
+  // COMPONENTS
+    import CommonButton	from '~/components/buttons/CommonButton.vue';
+    // import Tag 					from '~/components/common/Tag.vue'
+    // import CaptionCard 	from '~/components/common/Caption.vue'
+
   // TYPES
   import type { ORDER } from '~/typescript/Services'
 
@@ -223,33 +231,26 @@
 
   type ORDER_INFO_FIELD = { name: string, value: string, type?: string };
 
-  // COMPONENTS
-  import CommonButton	from '~/components/buttons/CommonButton.vue';
-  import Tag 					from '~/components/common/Tag.vue'
-  import CaptionCard 	from '~/components/common/Caption.vue'
-
-  // FUNCTIONAL
-  import IntesectionComponent from '~/components/functional/intersectionComponent.vue'
-
   // MODULE
   export default Vue.extend({
-    props: {
-      payload: {
-        Type: Object,
-        required: true,
-      } as PropOptions<ORDER>
-    },
-    mixins: [ F_WorkStatus ],
+      
     components: { 
       
       // UI COMMON
       CommonButton, 
-      CaptionCard, 
-      Tag,
+      // CaptionCard, 
+      // Tag,
 
       // FUNCTIONAL
       IntesectionComponent
 
+    },
+    mixins: [ F_WorkStatus ],
+    props: {
+      payload: {
+        type: Object,
+        required: true,
+      } as PropOptions<ORDER>
     },
     data() {
       return {
@@ -267,8 +268,8 @@
         infoList: [] as Array<ORDER_INFO_FIELD>,
 
         randomCirclePosition: {
-          ['--t']: `${ Math.trunc(Math.random() * 100) }%`,
-          ['--l']: `${ Math.trunc(Math.random() * 100) }%`,
+          '--t': `${ Math.trunc(Math.random() * 100) }%`,
+          '--l': `${ Math.trunc(Math.random() * 100) }%`,
         }
 
       }
@@ -292,7 +293,7 @@
   
           this.$AnimeJS({
             targets: this.$refs.deliveryTimer,
-            opacity: [0,1],
+            opacity: [0, 1],
             duration: 750,
             easing: 'easeInOutQuad',
             complete: timerWatcher
@@ -303,9 +304,9 @@
       }
 
     },
-    async mounted() {
+    mounted() {
 
-      this.infoList = await this.getInfo();
+      this.infoList = this.getInfo();
 
       switch (this.payload.Status) {
 
@@ -355,21 +356,22 @@
         this.visiableStatus = status
       },
 
-      async getInfo(): Promise<Array<ORDER_INFO_FIELD>> {
+      // TODO | Refactor keys with enums
+      getInfo(): Array<ORDER_INFO_FIELD> {
 
         const { Day, Time } = utils.getLocalTime(this.payload.Recived);
 
         return [
           { name: 'Состояние',          value: this.DefineWorkStatus(this.payload.Status) },
           { name: 'Цена',               value: `${ this.payload.Cost } ₽` },
-          { name: 'Дата заказа',        value: `${ Day } в ${ Time }`},
+          { name: 'Дата заказа',        value: `${ Day } в ${ Time }` },
           { name: 'Тип Заказа',         value: this.payload.Type },
           { name: 'Индификатор заказа', value: this.payload.ID, type: 'id' },
         ]
 
       },
 
-      formatSuffix(n: number, variants: Array<string>): string {
+      AllowedFormatsuffix(n: number, variants: Array<string>): string {
 
         const Remainder: number = n % 20;
 

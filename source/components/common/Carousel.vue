@@ -219,7 +219,7 @@ import Vue, { PropOptions } from 'vue'
 				}
 
 			},
-			async Init() {
+			Init() {
 
 				const containerNode = this.$refs.swiperContainer 	as HTMLElement;
 				const contentNode 	= this.$refs.swiperContent 		as HTMLElement;

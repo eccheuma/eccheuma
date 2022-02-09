@@ -42,16 +42,19 @@ export type SERVICES_CARD = {
 	description: string
 }
 
-export type REQUEST_STATUS = {
-	0: 'Отправлен на рассмотрение',
-	1: 'Поставлен в очередь'
-	2: 'В процессе выполнения'
-	3: 'Ожидает проверку'
+export const enum RequestStatus {
+	None,
+	Review,
+	Queue,
+	Process,
+	Ready,
+	Done,
+	Denied,
 }
 
 export interface ORDER extends SERVICE, ServiceTiming {
 	ID: string,
-	Status: keyof REQUEST_STATUS
+	Status: RequestStatus
 	Accepted: number
 	Recived: number
 	Declined: boolean
