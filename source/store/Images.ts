@@ -4,18 +4,18 @@ import { ActionTree, MutationTree } from 'vuex'
 	import { storage } from '~/api/storage';
 
 // TYPES
-	import { AllowedFormats, ImageStruct, Sizes } from '~/typescript/Image';
+	import { Image } from '~/typescript/Image';
 
 // UTILS
 	import { cache } from '~/utils/cache';
 
 // VARIABLES
-	const SIZES = [ 
-		Sizes.placehoder,
-		Sizes.small,
-		Sizes.medium,
-		Sizes.large,
-		Sizes.full 
+	const Sizes = [ 
+		Image.sizes.placehoder,
+		Image.sizes.small,
+		Image.sizes.medium,
+		Image.sizes.large,
+		Image.sizes.full 
 	];
 
 // STATE
@@ -23,7 +23,7 @@ import { ActionTree, MutationTree } from 'vuex'
 
 		AVIF_SUPPORT: false,
 
-		ImageURLs: new Map<string, ImageStruct>(),
+		ImageURLs: new Map<string, Image.formats>(),
 
 	})
 
@@ -31,8 +31,8 @@ import { ActionTree, MutationTree } from 'vuex'
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/typescript/VuexModules' {
-		interface VuexModules {
+	declare module '~/typescript/VuexMap' {
+		interface VuexMap {
 			Images: CurentState
 		}
 	}
@@ -40,7 +40,7 @@ import { ActionTree, MutationTree } from 'vuex'
 // MUTATIONS
 	export const mutations: MutationTree<CurentState> = {
 
-		mapURL(state, { _ref, _urls }: { _ref: string, _urls: ImageStruct }) {
+		mapURL(state, { _ref, _urls }: { _ref: string, _urls: Image.formats }) {
 			state.ImageURLs.set(_ref, _urls)
 		},
 
@@ -53,33 +53,33 @@ import { ActionTree, MutationTree } from 'vuex'
 // ACTIONS
 	export const actions: ActionTree<CurentState, CurentState> = {
 
-		getImageURL(_vuex, params: { path: string, size: number }): Partial<ImageStruct> | null {
+		getImageURL(_vuex, params: { path: string, size: number }): Partial<Image.formats> | null {
 
-			const AllowedFormats: Array<AllowedFormats> = ['avif', 'webp'];
+			const AllowedFormats: Array<Image.allowedFormats> = ['avif', 'webp'];
 	
 			const ROOT_REF 	 = 'images';
-			const MATCH_SIZE = SIZES.find(value => value >= params.size) || SIZES.pop();
+			const MATCH_SIZE = Sizes.find(value => value >= params.size) || Sizes.pop();
 			const LOCAL_KEY  = `${ params.path }-${ MATCH_SIZE }`;
 
 			const IMAGE_STRUCT = AllowedFormats.map((format) => {
 				return {
 					[format]: storage.reference(`${ ROOT_REF }/${ params.path }/${ format }/${ MATCH_SIZE }.${ format }`)
-				} as Partial<ImageStruct>
+				} as Partial<Image.formats>
 			})
 
-			const ImageStruct = IMAGE_STRUCT.reduce((a, b) => Object.assign(a, b));
+			const Image = IMAGE_STRUCT.reduce((a, b) => Object.assign(a, b));
 
 			if ( process.browser ) {
 
 				if ( cache.check(LOCAL_KEY) ) {
-					return cache.get(LOCAL_KEY) as ImageStruct
+					return cache.get(LOCAL_KEY) as Image.formats
 				}
 
-				cache.set(LOCAL_KEY, ImageStruct);
+				cache.set(LOCAL_KEY, Image);
 
 			}
 
-			return ImageStruct;
+			return Image;
 
 		}
 

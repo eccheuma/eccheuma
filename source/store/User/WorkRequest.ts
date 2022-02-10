@@ -3,30 +3,22 @@
 // API
 	import { database } from '~/api/database'
 
-// ENUMS
-	import { RequestStatus } from '~/typescript/Services'
-
 // INTERFACES AND TYPES 
 
-	import { VuexModules } from '~/typescript/VuexModules'
+	import { VuexMap } from '~/typescript/VuexMap'
 
-	import type { SELECTED_SERVICE } 	from '~/typescript/Services'
-	import type { MESSAGE } from '~/typescript/Message'
+	import { Purchase } 	from '~/typescript/Services'
+	import { Message } from '~/typescript/Message'
 
 	import type { NOTIFICATION_CONTENT } from '~/typescript/Notification'
-
-	interface WORK_REQUEST extends SELECTED_SERVICE {
-		ID: number
-		Status: RequestStatus
-	}
 	
 // STATE
 	export const state = () => ({
 
-		ActiveRequests: [] as WORK_REQUEST[],
+		ActiveOrders: new Array<Purchase.order<any>>(0),
 
 		RequestQuantity: 0,
-		Requests: [] as WORK_REQUEST[],
+		Orders: new Array<Purchase.order<any>>(0),
 		
 	})
 
@@ -34,7 +26,7 @@
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/typescript/VuexModules' {
+	declare module '~/typescript/VuexMap' {
 		interface User {
 			WorkRequest: CurentState
 		}
@@ -45,44 +37,38 @@
 		Change_WorkQuantity(state, prop) {
 			state.RequestQuantity = prop;
 		},
-		Change_Requests(state, prop) {
-			state.Requests = prop
+		setOrders(state, prop) {
+			state.Orders = prop
 		},
 		Change_ActiveRequests(state, prop) {
-			state.ActiveRequests = prop
+			state.ActiveOrders = prop
 		}
 	}
 
 // ACTIONS
-	export const actions: ActionTree<CurentState, VuexModules> = {
+	export const actions: ActionTree<CurentState, VuexMap> = {
 
-		async SendWorkRequest(vuex, service: SELECTED_SERVICE) {
+		async SendWorkRequest(vuex, order: Purchase.order<any>) {
 
 			const { uid } 			= vuex.rootState.Auth.Session.CurentUser
 			const MessageCount 	= vuex.rootState.User.Messages.Messages.length
 
-			const REQUEST: WORK_REQUEST = {
-				ID: vuex.state.RequestQuantity,
-				Status: 1,
-				...service
-			}
-
-			const MESSAGE: MESSAGE = {
+			const Message: Message.struct = {
 				ID: Math.random().toString(36).slice(-8).toUpperCase(),
-				UserID: 'SUPPORT',
-				From: 'Eccheuma Informer',
-				Message: 
-				`Благодарю за оформление заявки на заказ: "${ service.Service.Name }".
+				userID: 'SUPPORT',
+				from: 'Eccheuma Informer',
+				message: 
+				`Благодарю за оформление заявки на заказ: "${ order.Name }".
 				
 				В скором времени вам напишут, и тогда можно будет обсудить условия заказа, правок, оплаты.
 				В среднем ответа можно ждать в диапозоне до 1 дня. Но время может меняться в зависимости от загруженности.
 				
 				Текущие заказы можно посмотреть в разделе "запросы".`,
-				Read: false,
-				Date: Date.now(),
+				readed: false,
+				date: Date.now(),
 			}
 
-			const NOTIFICATION_MESSAGE: NOTIFICATION_CONTENT = {
+			const NOTIFICATION_Message: NOTIFICATION_CONTENT = {
 				message: 'Ваша заявка пошла на рассмотрение',
 				description: 'Информацию о стаусе заказа, вы можете посмотреть в личном кабинете, что находиться вверху приложения.',
 			}
@@ -91,41 +77,33 @@
 
 				await vuex.dispatch('setRequestQuantity')
 
-				await database.set(`Users/${ uid }/work_requests/WorkID-${ vuex.state.RequestQuantity }`, REQUEST);
-				await database.set(`Users/${ uid }/messages/Hash_${ MessageCount + 1 }`, MESSAGE);
+				await database.set(`Users/${ uid }/work_requests/WorkID-${ vuex.state.RequestQuantity }`, order);
+				await database.set(`Users/${ uid }/messages/Hash_${ MessageCount + 1 }`, Message);
 
 				vuex.commit('Notification/Notification_Status', true, { root: true })
-				vuex.commit('Notification/setNotification', NOTIFICATION_MESSAGE, { root: true })
+				vuex.commit('Notification/setNotification', NOTIFICATION_Message, { root: true })
 
 			} catch (e) {
- console.log(e) 
-}
+				console.log(e) 
+			}
 
 		},
 		
-		async setRequestContent(vuex) {
-
-			const { uid } = vuex.rootState.Auth.Session.CurentUser;
-
+		async setRequestContent(vuex, uid: string) {
 			vuex.commit('Change_Requests', await database.get(`Users/${ uid }/work_requests`)) 
-
 		},
 
-		async setRequestQuantity(vuex) {
-
-			const { uid } = vuex.rootState.Auth.Session.CurentUser
-
+		async setRequestQuantity(vuex, uid: string) {
 			vuex.commit('Change_WorkQuantity', await database.getLength(`Users/${uid}/work_requests`)) 
-
 		},
 
 		setActiveRequest(vuex) {
 
-			if ( !vuex.state.Requests.length ) return;
+			if ( !vuex.state.Orders.length ) return;
 
-			const R = vuex.state.Requests.filter( item => item.Status === RequestStatus.Process )
-			
-			vuex.commit('Change_ActiveRequests', R)
+			vuex.commit('Change_ActiveRequests', vuex.state.Orders.filter((order) => {
+				return order.Status === Purchase.status.Process
+			}))
 
 		},
 

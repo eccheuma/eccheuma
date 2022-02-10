@@ -63,7 +63,7 @@
 	import { database } from '~/api/database';
 
 	// VUEX MODULE TYPE MAP
-	import type { VuexModules } 				from '~/typescript/VuexModules'
+	import type { VuexMap } 				from '~/typescript/VuexMap'
 
 	// MODULE
 	export default Vue.extend({
@@ -74,7 +74,7 @@
 		},
 		computed: {
 			...mapState({
-				UserState: state => (state as VuexModules).User.State.UserState,
+				UserState: state => (state as VuexMap).User.State.UserState,
 			}),
 		},
 		validations: {

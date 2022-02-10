@@ -246,7 +246,7 @@
 	import { mapState, mapActions } from 'vuex'
 
 // UTILS
-	import { user } from '~/utils/status'
+	import { user, work } from '~/utils/status'
 
 // COMPONENTS
 	import EccheumaButton from '~/components/buttons/CommonButton.vue';
@@ -254,16 +254,11 @@
 	import Tag 						from '~/components/common/Tag.vue';
 	import Icon						from '~/components/common/Icon.vue'
 
-// MIXINS 
-	import F_UserStatus from '~/assets/mixins/filters/UserStatus'
-	import F_WorkStatus from '~/assets/mixins/filters/WorkStatus'
-
 // TYPES
-	import type { VuexModules } from '~/typescript/VuexModules'
-	import type { USER_STATE 	} from '~/typescript/User' 
+	import type { VuexMap } from '~/typescript/VuexMap'
 
-// ENUMS
-	import { UserStatus } from '~/typescript/User'
+// NAMESPACE
+	import { User } from '~/typescript/User'
 
 	type PROFILE_AREA = {
 		title: string
@@ -280,17 +275,16 @@
 			Tag,
 			EccheumaButton,
 		},
-		mixins: [ F_UserStatus, F_WorkStatus ],
 		computed: {
 			...mapState({
 
-				UserState: 			state => ( state as VuexModules ).User.State.UserState,
-				NewMessages:		state => ( state as VuexModules ).User.Messages.NewMessagesCount,
-				Messages: 			state => ( state as VuexModules ).User.Messages.Messages
+				UserState: 			state => ( state as VuexMap ).User.State.UserState,
+				NewMessages:		state => ( state as VuexMap ).User.Messages.NewMessagesCount,
+				Messages: 			state => ( state as VuexMap ).User.Messages.Messages
 
 			}),
 
-			profileAreas(): { [K in keyof USER_STATE]?: PROFILE_AREA } | { Messages: PROFILE_AREA } {
+			profileAreas(): { [ K in keyof User.state ]?: PROFILE_AREA } | { Messages: PROFILE_AREA } {
 
 				const LastMessage = this.Messages.length ? [ ...this.Messages ].pop()?.Message : ''
 
@@ -303,7 +297,7 @@
 					},
 					UserWorkStatus: {
 						title: 'Статус заказа',
-						value: this.DefineWorkStatus(this.UserState.UserWorkStatus),
+						value: work.defineStatus(this.UserState.UserWorkStatus),
 						info: 'Текущий статус последнего заказа заказа',
 						icon: 'Fire',
 					},
@@ -323,7 +317,7 @@
 				logout: 'Auth/Logout/Logout'
 			}),
 
-			defineStatus(status: UserStatus) {
+			defineStatus(status: User.status) {
 				return user.defineStatus(status);
 			}
 

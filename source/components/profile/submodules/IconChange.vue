@@ -130,7 +130,7 @@
 
 	// VUEX
 	import { mapState } from 'vuex'
-	import type { VuexModules } from '~/typescript/VuexModules'
+	import type { VuexMap } from '~/typescript/VuexMap'
 
 	// API
 	import { storage } from '~/api/storage';
@@ -176,7 +176,7 @@
 		computed: {
 			...mapState({
 
-				UserState: state	=> (state as VuexModules).User.State.UserState,
+				UserState: state	=> (state as VuexMap).User.State.UserState,
 
 			}),
 		},
@@ -299,8 +299,6 @@
 			},
 
 			animatePredefinedIcons() {
-
-				console.log('TEST');
 
 				this.$AnimeJS({
 					targets: this.$refs.icons,

@@ -1,34 +1,25 @@
 // TYPES
-  import { RequestStatus }  from '~/typescript/Services';
-  import { UserStatus }     from '~/typescript/User';
+  import { Purchase } from '~/typescript/Services';
+  import { User }     from '~/typescript/User';
 
 // TRANSLATES
-  import { russian } from '~/lang';
+  import { languages, getLocale } from '~/lang';
 
-  const LANG = 'RU';
-
-  function getLocale<T, S extends number>(locale: T, key: S) {
-    switch (LANG) {
-      case 'RU':
-        return Object.values(locale)[key]
-      default:
-        return Object.values(locale)[key]
-    }
-  }
-
+  const applicationLang = languages.Russian;
+  
 // NAMESPACES
 export namespace work {
 
-  export function defineStatus(status: RequestStatus): string {
-		return getLocale(russian.requestStatus, status)
+  export function defineStatus(status: Purchase.status): string {
+		return Object.values(getLocale(applicationLang).PurchaseStatus)[status]
 	}
 
 }
 
 export namespace user {
 
-  export function defineStatus(status: UserStatus): string {
-		return getLocale(russian.requestStatus, status)
+  export function defineStatus(status: User.status): string {
+		return Object.values(getLocale(applicationLang).userStatus)[status]
 	}
 
 }

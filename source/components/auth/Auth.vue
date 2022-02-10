@@ -48,7 +48,7 @@
 	import AuthProfile 		from '~/components/auth/submodules/Profile.vue'
 
 	// TYPES
-	import type { VuexModules } from '~/typescript/VuexModules'
+	import type { VuexMap } from '~/typescript/VuexMap'
 
 	// MODULE
 	export default Vue.extend({
@@ -71,9 +71,9 @@
 		computed: {
 
 			...mapState({
-				AuthError: 		state => ( state as VuexModules ).Auth.Session.AuthError,
-				LoginStatus: 	state => ( state as VuexModules ).Auth.Session.LoginStatus,
-				LoginAction:	state => ( state as VuexModules ).Auth.Login.inAction,
+				AuthError: 		state => ( state as VuexMap ).Auth.Session.AuthError,
+				LoginStatus: 	state => ( state as VuexMap ).Auth.Session.LoginStatus,
+				LoginAction:	state => ( state as VuexMap ).Auth.Login.inAction,
 			}),
 
 			inProcess(): boolean {

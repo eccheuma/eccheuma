@@ -5,7 +5,7 @@ import Vue from 'vue';
 import 			{ mapActions, mapState } 	from 'vuex'
 import type { Howl, HowlOptions } from 'howler'
 
-import type { VuexModules } from '~/typescript/VuexModules'
+import type { VuexMap } from '~/typescript/VuexMap'
 
 // TYPES
 export type FILE_NAME = 'Holl' 
@@ -45,7 +45,7 @@ export default Vue.extend({
 	computed: {
 
 		...mapState({
-			Sounds: state => (state as VuexModules).Sound.sounds
+			Sounds: state => (state as VuexMap).Sound.sounds
 		})
 
 	},

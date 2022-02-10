@@ -48,8 +48,6 @@
 						:class="[
 							{ onEdge }, { 'utils::glassy': BROWSER && !$isMobile && $PIXI.utils.isWebGLSupported() }
 						]"
-						@mouseenter="CarouselFocus = true" 
-						@mouseleave="CarouselFocus = false"
 						>
 						<icon name="Arrow" style="transform: rotate(0deg)" />
 					</button>
@@ -62,8 +60,6 @@
 						:class="[
 							{ onEdge }, { 'utils::glassy': BROWSER && !$isMobile && $PIXI.utils.isWebGLSupported() }
 						]"
-						@mouseenter="CarouselFocus = true" 
-						@mouseleave="CarouselFocus = false"
 						>
 						<icon name="Arrow" style="transform: rotate(180deg)" />
 					</button>
@@ -416,15 +412,10 @@
 	import { mapState } from 'vuex';
 
 	// TYPES
-	import type { AnimeAnimParams } 	from 'animejs';
 	import type { WORKCASE, CONTENT } from '~/typescript/WorkCase';
 
 	// VUEX MODULE TYPE MAP
-	import type { VuexModules } from '~/typescript/VuexModules';
-
-	// FILTERS
-	// import DisplacementFilter		from '~/components/filters/displacement.vue'
-	// import NoiseFilter					from '~/components/filters/noise.vue'
+	import type { VuexMap } from '~/typescript/VuexMap';
 
 	// COMPONENTS
 	import EccheumaSwiper from '~/components/common/Carousel.vue';
@@ -442,9 +433,9 @@
 		},
 		mixins: [ IntersectionObserver ],
 		props: {
-			content: 		{ type: Object, required: true  } as PropOptions< CONTENT >,
-			properties: { type: Object, required: true  } as PropOptions< WORKCASE['properties'] >,
-			rating: 		{ type: Number, default: 8.5    } as PropOptions< WORKCASE['rating'] >
+			content: 		{ type: Object, required: true  } as PropOptions<CONTENT >,
+			properties: { type: Object, required: true  } as PropOptions<WORKCASE['properties'] >,
+			rating: 		{ type: Number, default: 8.5    } as PropOptions<WORKCASE['rating'] >
 		},
 		data() {
 			return {
@@ -453,42 +444,11 @@
 		},
 		computed: {
 			...mapState({
-				UI: state => (state as VuexModules).App.UI,
+				UI: state => (state as VuexMap).App.UI,
 			}),
 
 		},
-		mounted() {
-			
-			// if ( !this.$isMobile || this.$PIXI.utils.isWebGLSupported() ) {
-
-			// 	this.setObserver(this.$refs.case as Element) 
-
-			// }
-
-		},
 		methods: {
-
-			setObserver(elements: Vue | Vue[] | Element | Element[]) {
-
-				const ANIMATION: {[key in 'in' | 'out']: AnimeAnimParams} = {
-					in: {
-						opacity: [0, 1],
-						translateY: [100, 0],
-						delay: 750,
-					},
-					out: {
-						opacity: [1, 0],
-						translateY: [0, 100]
-					}
-				}
-
-				const SET = (el: Element) => this.initIntersectionObserver({ el, animation: ANIMATION, _options: { animation_target: el.firstElementChild! } })
-
-				Array.isArray(elements) 
-					? elements.forEach((node: Element | Vue) => SET((node as Vue).$el  || node)) 
-					: SET((elements as Vue).$el || elements )
-
-			},
 
 			setCurentIndex(index: number) {
 				this.CarouselIndex = index;

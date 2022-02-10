@@ -9,12 +9,14 @@
 		</Loader> -->
 
 		<section class="service_modal-user">
-			<i :style="`background-image: url(${ UserState.UserImageID })`" />
-			<span>{{ UserState.UserName }}</span>
-			<span>{{ UserState.UserBalance }} ₽</span>
+			<template v-if="LoginStatus">
+				<i :style="`background-image: url(${ UserState.UserImageID })`" />
+				<span>{{ UserState.UserName }}</span>
+				<span>{{ UserState.UserBalance }} ₽</span>
+			</template>
 		</section>
 		<section class="service_modal-calc">
-			<cost-calc :default-category="serviceType" :category-defined="true" @curent-service="SetSelectedService" />
+			<calculator :default-category="serviceType" :category-defined="true" @curent-service="SetSelectedService" />
 		</section>
 		<section class="service_modal-footer">
 			<button @click="SendRequest">
@@ -34,6 +36,7 @@
 	&-container {
 
 		position: fixed; top: 0; left: 0; z-index: 9999;
+		scroll-behavior: unset;
 
 		padding: 5vh 3vw;
 
@@ -47,7 +50,8 @@
 
 		column-gap: 2vw;
 
-		width: $GLOBAL-BodySize; height: 100vh;
+		width: $GLOBAL-BodySize; 
+		height: 100vh;
 
 		background: {
 			color: rgba(var(--color-mono-200), .95);
@@ -102,6 +106,7 @@
 		}
 	}
 	&-calc {
+		overflow-y: scroll;
 		color: rgb(var(--color-mono-1000));
 	}
 	&-footer {
@@ -131,14 +136,14 @@
 	import Vue, { PropOptions } from 'vue'
 
 // VUEX
-	import { mapState, mapActions, mapMutations } from 'vuex'
+	import { mapState, mapActions } from 'vuex'
 
 // COMPONENTS
 	import Calculator from '~/components/service/Calculator.vue'
 	// import Loader 	from '~/components/common/Loader.vue'
 
 // TYPES
-	import type { VuexModules } from '~/typescript/VuexModules'
+	import type { VuexMap } from '~/typescript/VuexMap'
 
 	import type { SELECTED_SERVICE, CATEGORY } from '~/typescript/Services'
 
@@ -164,19 +169,14 @@
 		computed: {
 			...mapState({
 
-				LoginStatus: 		state => ( state as VuexModules ).Auth.Session.LoginStatus,
-				UserState: 			state => ( state as VuexModules ).User.State.UserState,
+				LoginStatus: 		state => ( state as VuexMap ).Auth.Session.LoginStatus,
+				UserState: 			state => ( state as VuexMap ).User.State.UserState,
 
 			}),
 		},
 		methods: {
 
-			...mapMutations({
-				Loader_ChangeLoadMessage: 'Loader/Loader_ChangeLoadMessage',
-			}),
-
 			...mapActions({
-				Loader_Load: 'Loader/Loader_Load',
 				SendWorkRequest: 'User/WorkRequest/SendWorkRequest'
 			}),
 
@@ -192,7 +192,7 @@
 
 			SendRequest() {
 
-				this.Loader_ChangeLoadMessage('Отправка запроса'); this.Loader_Load(); this.CloseModal()
+				this.CloseModal();
 
 				this.SendWorkRequest(this.SelectedService)
 

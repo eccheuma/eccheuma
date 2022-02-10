@@ -54,8 +54,8 @@
 		methods: {
 			async GetCases(): Promise<Array<WORKCASE>> {
 
-				//! Refactor this piece of shit as soon as posible
-				//@ That path defenition is a mess
+				// ! Refactor this piece of shit as soon as posible
+				// @ That path defenition is a mess
 
 				const T = this.$route.params.type.split('')
 

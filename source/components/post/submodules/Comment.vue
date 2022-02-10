@@ -1,6 +1,6 @@
 <template>
 	<div 
-		v-if="Object.keys(RecivedData).length " 
+		v-if="comment.data.length" 
 		:id="`HASH-${ commentID }`" 
 		class="post-comment-item" 
 		:style="`
@@ -10,27 +10,25 @@
 		>
 
 		<section class="post-comment-item-icon">
-			<i class="post_comment-icon" :style="`background-image: url(${ Author.UserImageID })`" />
+			<i class="post_comment-icon" :style="`background-image: url(${ author.UserImageID })`" />
 		</section>
 
 		<section class="post-comment-item-author">
-			<span>{{ Author.UserName }}</span>
+			<span>{{ author.UserName }}</span>
 			<span>
-				{{ DateOfComment.Day }} в {{ DateOfComment.Time }}
+				{{ date.Day }} в {{ date.Time }}
 			</span>
 		</section>
 
 		<section class="post-comment-item-content">
 			<hr v-once>
 			<p v-once>
-				{{ RecivedData.Comment }}
+				{{ comment.data }}
 			</p>
 			<hr v-once>
-			<template v-if="LoginStatus">
-				<common-button v-if="UserState.UserID === Author.UserID" @click.native="RemoveComment">
-					Удалить комментарий
-				</common-button>
-			</template>
+			<common-button v-if="LoginStatus && canDelete" @click.native="RemoveComment">
+				Удалить комментарий
+			</common-button>
 		</section>
 
 	</div>
@@ -245,15 +243,14 @@
 	// MIXINS
 	import EmitSound from '~/assets/mixins/EmitSound';
 
-	// TYPES
-	import type { VuexModules } 			from '~/typescript/VuexModules';
+	// NAMESPACES
+	import { Post } from '~/typescript/Post';
+	import { User }	from '~/typescript/User';	
 
-	import type { COMMENT, POST } 		from '~/typescript/Post';
-	import type { USER_STATE }				from '~/typescript/User';		
+	// TYPES
+	import type { VuexMap } 			from '~/typescript/VuexMap';
 
 	// COMPONENTS
-	// import Tag from '~/components/common/Tag.vue'
-	// import EccheumaButton 	from '~/components/common/EccheumaButton.vue'
 	import CommonButton 			from '~/components/buttons/CommonButton.vue'
 
 	// MODULE
@@ -266,11 +263,11 @@
 			postID: {
 				type: Number,
 				required: true,
-			} as PropOptions<POST['ID']>,
+			} as PropOptions<Post.struct['ID']>,
 			userID: {
 				type: String,
 				required: true,
-			} as PropOptions<USER_STATE['UserID']>,
+			} as PropOptions<User.state['UserID']>,
 			commentID: {
 				type: String,
 				required: true,
@@ -284,19 +281,34 @@
 		data() {
 			return {
 
-				DateOfComment: utils.getLocalTime(0),
+				date: utils.getLocalTime(0),
 
-				Author: 	new Object() as USER_STATE,
-				RecivedData: new Object() as COMMENT,
+				author: new Object() as User.state,
+				comment: new Object() as Post.comment,
 
 			}
 		},
 		computed: {
 
 			...mapState({
-				LoginStatus:	state => (state as VuexModules).Auth.Session.LoginStatus,
-				UserState: 		state => (state as VuexModules).User.State.UserState 
+				LoginStatus:	state => (state as VuexMap).Auth.Session.LoginStatus,
+				UserState: 		state => (state as VuexMap).User.State.UserState 
 			}),
+
+			canDelete(): boolean {
+
+				switch (this.author.UserStatus) {
+
+					case User.status.Admin: 
+						return true;
+					case User.status.Moderator: 
+						return true;
+					default:
+						return this.author.UserID === this.comment.userID;
+
+				}
+
+			}
 
 		},
 		created() {
@@ -306,18 +318,15 @@
 					{ file: 'Tap', name: 'Element::Action', settings: { rate: 0.50 } }
 				])
 			}
+			
+		},
+		async mounted() {
 
-			database.get<USER_STATE>(`Users/${ this.userID }/state`).then(response => {
-				this.Author = response;
-			})
+			this.author = await database.get(`Users/${ this.userID }/state`);
 
-			database.get<COMMENT>(`Posts/PostID-${ this.postID }/comments/Hash-${ this.commentID }`).then(response => {
+			this.comment = await database.get(`Posts/PostID-${ this.postID }/comments/Hash-${ this.commentID }`)
 
-				this.RecivedData = response;
-
-				this.DateOfComment = utils.getLocalTime(response.Date)
-
-			})
+			this.date = utils.getLocalTime(this.comment.date)
 
 		},
 		methods: {

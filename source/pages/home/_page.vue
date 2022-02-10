@@ -2,7 +2,7 @@
 	<section class="home-page">
 
 		<template v-for="( item, index ) in Posts">
-			<post :key="item.date"  :style="`order: ${ Posts.length - index }`" :payload="item" />
+			<post :key="item.date" :style="`order: ${ Posts.length - index }`" :payload="item" />
 		</template>
 		
 		<promo-banner
@@ -26,14 +26,14 @@
 
 	import Vue from 'vue';
 
-	// API
-	import { database } from '~/api/database';
-
 	// VUEX
 	import { mapActions, mapMutations, mapState } from 'vuex';
 
+	// API
+	import { database } from '~/api/database';
+
 	// VUEX MODULE TYPE MAP
-	import type { VuexModules } from '~/typescript/VuexModules';
+	import type { VuexMap } from '~/typescript/VuexMap';
 
 	// MIXINS
 	import PageTransitionProperty 	from '~/assets/mixins/PageTransitionProperty'
@@ -105,7 +105,7 @@
 		},
 		computed: {
 			...mapState({
-				Posts: state => (state as VuexModules).PageContent.Content.Posts
+				Posts: state => (state as VuexMap).PageContent.Content.Posts
 			}),
 		},
 		created() {

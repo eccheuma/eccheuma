@@ -1,34 +1,36 @@
-export const enum Sizes {
-	placehoder 	= 100,
-	small				= 360,
-	medium 			= 720,
-	large				= 1280,
-	full				= 1440,
-}
+export namespace Image {
 
-export type IMAGE_PROPERTY = {
-	ID: number,
-	content: {
-		path: string
-		date?: number
-		title?: string
-		description?: string
+	export const enum sizes {
+		placehoder 	= 100,
+		small				= 360,
+		medium 			= 720,
+		large				= 1280,
+		full				= 1440,
 	}
-	property?: {
-		fit: 'contain' | 'cover'
-		type: 'promo' | 'gallery'
-		collumn: number | 'auto'
+	
+	export type struct = {
+		ID: number,
+		content: {
+			path: string
+			date?: number
+			title?: string
+			description?: string
+		}
+		property?: {
+			fit: 'contain' | 'cover'
+			type: 'promo' | 'gallery'
+		}
+		sections?: {
+			date: boolean
+			description: boolean
+			zoom: boolean
+		}
 	}
-	sections?: {
-		date: boolean
-		description: boolean
-		zoom: boolean
-	}
-}
 
-export type ImageStruct = {
-	avif: string
-	webp: string
-}
+	export type allowedFormats = 'webp' | 'avif';
+	
+	export type formats = {
+		[Format in allowedFormats]: string
+	}
 
-export type AllowedFormats = 'webp' | 'avif';
+}

@@ -289,7 +289,7 @@
 	import Icon									from '~/components/common/Icon.vue'
 
 // TYPES
-	import type { VuexModules } from '~/typescript/VuexModules'
+	import type { VuexMap } from '~/typescript/VuexMap'
 	import type { APP_THEME } 	from '~/typescript/App'
 
 // MIXINS
@@ -309,11 +309,11 @@
 		computed: {
 
 			...mapState({
-				UI: 						state => (state as VuexModules).App.UI,
-				LoginStatus: 		state => (state as VuexModules).Auth.Session.LoginStatus,
-				Messages: 			state => (state as VuexModules).User.Messages.Messages,
-				NewMessages: 		state => (state as VuexModules).User.Messages.NewMessagesCount,
-				GlobalHowler: 	state => (state as VuexModules).Sound.global,
+				UI: 						state => (state as VuexMap).App.UI,
+				LoginStatus: 		state => (state as VuexMap).Auth.Session.LoginStatus,
+				Messages: 			state => (state as VuexMap).User.Messages.Messages,
+				NewMessages: 		state => (state as VuexMap).User.Messages.NewMessagesCount,
+				GlobalHowler: 	state => (state as VuexMap).Sound.global,
 			}),
 
 		},

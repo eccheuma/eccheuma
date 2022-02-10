@@ -160,16 +160,15 @@
 
 	// VUEX
 	import { mapActions } from 'vuex'
-	import { ImageStruct } from '~/typescript/Image'
-
-	// VUEX MODULE TYPE MAP
-	// import type { VuexModules } from '~/typescript/VuexModules'
+	
+	// NAMESPACES
+	import { Image } from '~/typescript/Image'
 
 	// TYPES
 	type PREVIEW_MODE = 'cover' | 'contain' | 'zoom'
 
 	// VARIABLES
-	const PLACEHOLDER: ImageStruct = {
+	const PLACEHOLDER: Image.formats = {
 		avif: require('~/assets/images/ImagePlaceholder.png?resize&size=1000&format=avif').src,
 		webp: require('~/assets/images/ImagePlaceholder.png?resize&size=1000&format=webp').src,
 	}
@@ -183,21 +182,21 @@
 				type: Boolean,
 				required: true, 
 				default: false 
-			} as PropOptions< boolean >,
+			} as PropOptions<boolean>,
 			path: { 
 				type: String,
 				required: true 
-			} as PropOptions< string >,
+			} as PropOptions<string>,
 			title: {
 				type: String,
 				default: '',
 				required: false,
-			} as PropOptions< string >,
+			} as PropOptions<string>,
 			description: {
 				type: String,
 				default: '',
 				required: false,
-			} as PropOptions< string >,
+			} as PropOptions<string>,
 		},
 		data() {
 			return {
@@ -228,7 +227,7 @@
 				this.URL = await this.getImageURL({ 
 					path: this.path,
 					size: 1440,
-				}) as ImageStruct
+				}) as Image.formats
 			}
 		},
 		methods: {

@@ -1,32 +1,28 @@
 
 // TYPES
-import type { ADDICTION, CATEGORY, SERVICE, } from '~/typescript/Services';
+import type {  } from '~/typescript/Services';
 
 // ENUMS
-import { RequestStatus } from '~/typescript/Services';
+import { Purchase } from '~/typescript/Services';
 
-export enum UserStatus {
-	Admin,
-	Moderator,
-	Support,
-	User,
-}
+export namespace User {
 
-// INTERFACES
-export interface USER_STATE {
-	UserID: string
-	UserEmail: string
-	UserName: string
-	UserStatus: UserStatus
-	UserBalance: number
-	UserWorkStatus: RequestStatus
-	UserImageID: string
-}
-
-export interface USER_REQUEST {
-	Addiction: Array<ADDICTION>,
-	Category: CATEGORY,
-	ID: number,
-	Service: SERVICE,
-	Status: number
+	export enum status {
+		Admin,
+		Moderator,
+		Support,
+		User,
+	}
+	
+	// INTERFACES
+	export interface state {
+		UserID: string
+		UserEmail: string
+		UserName: string
+		UserStatus: status
+		UserBalance: number
+		UserWorkStatus: Purchase.status
+		UserImageID: string
+	}
+	
 }

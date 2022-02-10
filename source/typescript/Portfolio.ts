@@ -1,1 +1,9 @@
-export type PORTFOLIO_SECTION = 'Logo' | 'Landings' | 'Banners';
+export namespace Portfolio {
+
+  export const enum sections {
+    logo    = 'Logo',
+    landing = 'Landings',
+    mockups = 'Banners',
+  }
+
+}

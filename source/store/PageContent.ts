@@ -8,8 +8,8 @@ import { ActionTree, MutationTree } from 'vuex'
 
 // INTERFACES & TYPES
 
-	import type { POST } 						from '~/typescript/Post'
-	import type { IMAGE_PROPERTY } 	from '~/typescript/Image'
+	import type { Post } 	from '~/typescript/Post'
+	import type { Image } from '~/typescript/Image'
 
 	type REFS = 'Posts' | 'Gallery';
 
@@ -19,8 +19,8 @@ import { ActionTree, MutationTree } from 'vuex'
 	}
 
 	type CONTENT = {
-		Posts: POST[]
-		Gallery: IMAGE_PROPERTY[]
+		Posts: Array<Post.struct>
+		Gallery: Image.struct[]
 	}
 
 	export type PAYLOAD = { REF: REFS, LOAD_PROPERTY: LOAD_PROPERTY }
@@ -37,8 +37,8 @@ import { ActionTree, MutationTree } from 'vuex'
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/typescript/VuexModules' {
-		interface VuexModules {
+	declare module '~/typescript/VuexMap' {
+		interface VuexMap {
 			PageContent: CurentState
 		}
 	}
@@ -46,7 +46,7 @@ import { ActionTree, MutationTree } from 'vuex'
 // MUTATIONS
 	export const mutations: MutationTree<CurentState> = {
 
-		setContent(state, { data, from, to }: { data: any[], from: string, to: REFS }) {
+		setContent(state, { data, to }: { data: any[], from: string, to: REFS }) {
 			state.Content[to] = data; 
 		},
 

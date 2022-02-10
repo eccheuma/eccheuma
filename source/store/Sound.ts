@@ -1,5 +1,3 @@
-	import Vue from 'vue';
-
 // LIBS
 	import 			{ Howler, Howl } 	from 'howler'
 	import type { HowlOptions } 	from 'howler';
@@ -37,8 +35,8 @@
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/typescript/VuexModules' {
-		interface VuexModules {
+	declare module '~/typescript/VuexMap' {
+		interface VuexMap {
 			Sound: CurentState
 		}
 	}

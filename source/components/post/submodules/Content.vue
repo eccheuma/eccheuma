@@ -127,7 +127,7 @@
 	import Vue, { PropOptions } from 'vue'
 
 	// TYPES
-	import type { POST_CONTENT } from '~/typescript/Post'
+	import type { Post } from '~/typescript/Post'
 
 	// MODULE
   export default Vue.extend({
@@ -138,7 +138,7 @@
 			source: {
 				type: Array,
 				required: true
-			} as PropOptions<POST_CONTENT[]>,
+			} as PropOptions<Array<Post.content>>,
 			editorMode: {
 				required: false,
 				type: Boolean,

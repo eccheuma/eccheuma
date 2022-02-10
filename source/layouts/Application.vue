@@ -87,14 +87,13 @@ eccheuma-layout {
 
 		column-gap: 1vw;
 
-		width: $GLOBAL-BodySize;
 		min-height: 100vh;
 		justify-content: space-between;
 		
 	}
 	&-container {
 
-		width: auto;
+		width: 100%;
 		margin: 0 auto;
 
 		border: {
@@ -176,7 +175,7 @@ eccheuma-layout {
 	// TYPES
 	import type { NOTIFICATION_CONTENT } from '~/typescript/Notification'
 
-	import type { VuexModules } from '~/typescript/VuexModules'
+	import type { VuexMap } from '~/typescript/VuexMap'
 	
 	Vue.component('TransitionWrapper', TransitionWrapper)
 
@@ -225,8 +224,8 @@ eccheuma-layout {
 		computed: {
 
 			...mapState({
-				UI:						state => (state as VuexModules).App.UI,
-				LoginStatus:	state => (state as VuexModules).Auth.Session.LoginStatus,
+				UI:						state => (state as VuexMap).App.UI,
+				LoginStatus:	state => (state as VuexMap).Auth.Session.LoginStatus,
 			}),
 
 		},

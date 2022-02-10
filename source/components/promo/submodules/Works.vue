@@ -92,9 +92,9 @@ import { database } from '~/api/database'
 // MIXINS
 import EmitSound from '~/assets/mixins/EmitSound'
 
-// TYPES
-import type { PORTFOLIO_SECTION } from '~/typescript/Portfolio'
-import type { WORKCASE } 					from '~/typescript/WorkCase'
+// Namespaces
+import { Portfolio } from '~/typescript/Portfolio'
+import { Workcase  } from '~/typescript/WorkCase'
 
 export default Vue.extend({
 	components: {
@@ -110,9 +110,11 @@ export default Vue.extend({
 			SwipeNotification: true,
 
 			// CASE DATA
-			CasesType: ['Landings'] as Array<Partial<PORTFOLIO_SECTION>>,
+			CasesType: [
+        Portfolio.sections.landing
+      ] as Array<Portfolio.sections>,
 
-			Works: new Object() as {[i in PORTFOLIO_SECTION]: WORKCASE[]},
+			Works: new Object() as {[ KEY in Portfolio.sections ]: Array<Workcase.struct> },
 
 		}
 	},

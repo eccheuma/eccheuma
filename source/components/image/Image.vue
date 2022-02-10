@@ -98,7 +98,7 @@
 			
 			padding: 10px;
 
-			border: 2px solid var(--color-accent-edges-100);		
+			border: 1px solid var(--color-accent-edges-100);		
 			border-radius: var(--border-radius);
 			overflow: hidden;
 
@@ -276,10 +276,10 @@
 	import { utils } from '~/utils'
 
 	// TYPES
-	import type { IMAGE_PROPERTY, ImageStruct } 			from '~/typescript/Image'
+	import { Image } from '~/typescript/Image'
 
 	// VUEX MAP
-	import type { VuexModules } from '~/typescript/VuexModules'
+	import type { VuexMap } from '~/typescript/VuexMap'
 
 	// COMPONENTS
 	import Icon 			from '~/components/common/Icon.vue';
@@ -289,21 +289,20 @@
 	import EmitSound from '~/assets/mixins/EmitSound'
 
 	// VARS
-	const PLACEHOLDER: ImageStruct = {
+	const PLACEHOLDER: Image.formats = {
 		avif: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src,
 		webp: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src
 	}
 
-	const defaultSections: IMAGE_PROPERTY['sections'] = {
+	const defaultSections: Image.struct['sections'] = {
 		date: false,
 		description: false,
 		zoom: true,
 	}
 
-	const defaultProperty: IMAGE_PROPERTY['property'] = {
+	const defaultProperty: Image.struct['property'] = {
 		fit: 'cover',
 		type: 'gallery',
-		collumn: 'auto',
 	}
 
 	// MODULE
@@ -315,16 +314,16 @@
 		},
 		mixins: [ EmitSound ],
 		props: {
-			content: 	{ type: Object, required: true  } as PropOptions<IMAGE_PROPERTY['content']>,
-			property: { type: Object, required: false, default() { return defaultProperty } } as PropOptions<IMAGE_PROPERTY['property']>,
-			sections: { type: Object, required: false, default() { return defaultSections } } as PropOptions<IMAGE_PROPERTY['sections']>,
+			content: 	{ type: Object, required: true  } as PropOptions<Image.struct['content']>,
+			property: { type: Object, required: false, default() { return defaultProperty } } as PropOptions<Image.struct['property']>,
+			sections: { type: Object, required: false, default() { return defaultSections } } as PropOptions<Image.struct['sections']>,
 		},
 		data() {
 			return {
 
 				LocalDate: utils.getLocalTime(this.content.date),
 
-				Source: PLACEHOLDER as ImageStruct,
+				Source: PLACEHOLDER as Image.formats,
 
 				Modal: false,
 				ImageFocus: false,
@@ -334,14 +333,14 @@
 
 		computed: {
 			...mapState({
-				AVIF_SUPPORT: state => (state as VuexModules).Images.AVIF_SUPPORT
+				AVIF_SUPPORT: state => (state as VuexMap).Images.AVIF_SUPPORT
 			})
 		},
 
 		watch: {
 			'content.path': {
 				handler() {
-					this.$nextTick(() => requestAnimationFrame(this.getImage))
+					this.$nextTick(this.getImage)
 				}
 			},
 		},
@@ -352,7 +351,11 @@
 
 				const interesection = new IntersectionObserver((entry) => {
 					if ( entry[0].isIntersecting )  {
-						this.$nextTick(() => this.getImage()); interesection.unobserve(this.$el as HTMLElement);
+
+						setTimeout(this.getImage, 250);
+						
+						interesection.unobserve(this.$el as HTMLElement);
+						
 					}
 				})
 
@@ -370,10 +373,11 @@
 			async getImage(): Promise<void> {
 
 				const IMAGE_CONTAINER = this.$refs.holder as Element
+				const { width } = IMAGE_CONTAINER?.getBoundingClientRect();
 
-				const URL: ImageStruct = await this.getImageURL({ 
+				const URL: Image.formats = await this.getImageURL({ 
 					path: this.content.path,
-					size: IMAGE_CONTAINER?.getBoundingClientRect().width * window.devicePixelRatio || 720
+					size: width * window.devicePixelRatio
 				})
 
 				if ( this.BROWSER && this.$PIXI.utils.isWebGLSupported() ) {
@@ -384,7 +388,7 @@
 
 			},
 
-			prepareAnimations(el: Element, url: ImageStruct) {
+			prepareAnimations(el: Element, url: Image.formats) {
 
 				const animation = el.animate([
 					{ opacity: 1 },

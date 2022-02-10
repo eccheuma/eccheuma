@@ -2,6 +2,7 @@
 
 // FIREBASE
 import firebase from 'firebase/app';
+import 'firebase/database';
 
 // TYPES
 type GetParams = {

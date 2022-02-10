@@ -56,7 +56,7 @@
 										<option value="">
 											Услуга не выбрана
 										</option>
-										<template v-for="item in additions">
+										<template v-for="item in PurchaseAdditions">
 											<option :key="item.Type" :value="item">
 												{{ item.Title }}
 											</option>
@@ -374,7 +374,7 @@
 				tax: 1.21,
 
 				services: 	[] as Array<SERVICE>,
-				additions: 	[] as Array<ADDICTION>,
+				PurchaseAdditions: 	[] as Array<ADDICTION>,
 
 				cost: 0,
 
@@ -402,10 +402,10 @@
 
 			_cost(): Readonly<number> {
 				
-				const AdditionsCost = this.form.addictions?.map(add => add.Cost).reduce((prev, cur) => prev + cur, 0) || 0;
+				const PurchaseAdditionsCost = this.form.addictions?.map(add => add.Cost).reduce((prev, cur) => prev + cur, 0) || 0;
 				const ServiceCost		= this.form.service?.Cost || 0
 
-				return (( AdditionsCost + ServiceCost ) * this.quantity ) * this.tax;
+				return (( PurchaseAdditionsCost + ServiceCost ) * this.quantity ) * this.tax;
 
 			},
 
@@ -446,7 +446,7 @@
 
 					type Response = utils.asJSONArray<ADDICTION>;
 
-					this.additions = await database.get<Response>(`Service/Addictions/${ service.Type }`).then(data => Object.values(data));
+					this.PurchaseAdditions = await database.get<Response>(`Service/Addictions/${ service.Type }`).then(data => Object.values(data));
 
 				}
 			},

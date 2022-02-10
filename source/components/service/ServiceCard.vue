@@ -1,5 +1,10 @@
 <template>
 	<div class="service-card" :class="{ 'service-widecard': wide }">
+
+		<portal v-if="Modal" to="Modal">
+			<service-modal @close-modal="() => Modal = false" />
+		</portal>
+
 		<section class="service-card-header">
 			<span>{{ payload.title }}</span>
 			<span>{{ payload.subTitle }}</span>
@@ -48,7 +53,7 @@
 			</template>
 		</caption-card>
 		<section class="service-card-footer">
-			<common-button>
+			<common-button @click.native="() => Modal = true">
 				Заказать
 			</common-button>
 		</section>
@@ -212,11 +217,11 @@
 
 	import Vue, { PropOptions } from 'vue'
 
-	// API
-	import { database } from '~/api/database';
-
 	// VUEX
 	import { mapState, mapMutations } from 'vuex'
+
+	// API
+	import { database } from '~/api/database';
 
 	// COMPONENTS
 	import ServiceModal from '~/components/service/ServiceModal.vue'
@@ -224,7 +229,7 @@
 
 	// TYPES 
 	import type { SERVICE, SERVICES_CARD } 	from '~/typescript/Services'
-	import type { VuexModules } 						from '~/typescript/VuexModules'
+	import type { VuexMap } 						from '~/typescript/VuexMap'
 
 	// MODULE
 	export default Vue.extend({
@@ -254,16 +259,17 @@
 
 			}
 		},
+
+		async fetch() {
+			this.Services = await this.getDatabaseData();
+		},
+
 		computed: {
 			...mapState({
-				LoginStatus: state => (state as VuexModules).Auth.Session.LoginStatus
+				LoginStatus: state => (state as VuexMap).Auth.Session.LoginStatus
 			})
 		},
-		async fetch() {
-
-			this.Services = await this.getDatabaseData();
-
-		},
+		
 		methods: {
 
 			...mapMutations({

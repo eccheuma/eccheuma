@@ -1,10 +1,14 @@
-import { USER_STATE } from '~/typescript/User'
+import { User } from '~/typescript/User'
 
-export type MESSAGE = {
-  ID: string
-  UserID: USER_STATE['UserID']
-  From: USER_STATE['UserName'],
-  Date: number
-  Message: string
-  Read: boolean
+export namespace Message {
+
+  export type struct = {
+    ID: string
+    userID: User.state['UserID']
+    from: User.state['UserName']
+    date: number
+    message: string
+    readed: boolean
+  }
+
 }

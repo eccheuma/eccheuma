@@ -134,12 +134,12 @@
 
 	import Vue from 'vue'
 
-// API
-	import { database } from '~/api/database'
-	
 // VUEX
 	import { mapMutations } from 'vuex'
 
+// API
+	import { database } from '~/api/database'
+	
 // MIXINS
 	import TransitionSound from '~/assets/mixins/TransitionSound'
 
@@ -177,6 +177,13 @@
 
 			}
 		},
+		async fetch() {
+
+			const GalleryQuantity = await database.getLength('Gallery')
+
+			this.ChangePageQuantity( Math.ceil(GalleryQuantity / this.LoadRange) )
+
+		},
 		head () {
 			return {
 				title: 'Eccheuma | Галерея',
@@ -188,13 +195,6 @@
 					}
 				]
 			}
-		},
-		async fetch() {
-
-			const GalleryQuantity = await database.getLength('Gallery')
-
-			this.ChangePageQuantity( Math.ceil(GalleryQuantity / this.LoadRange) )
-
 		},
 		methods: {
 			...mapMutations({

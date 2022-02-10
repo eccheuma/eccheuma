@@ -20,7 +20,7 @@
           <img :src="post.thumb" alt="">
           <hr v-once>
           <p>
-            {{ post.body }}
+            {{ Post.struct }}
           </p>
           <hr v-once>
           <common-button :link="post.link" target="_blank" type="a">
@@ -293,7 +293,7 @@
   import { database } from '~/api/database';
 
   // UTILS
-  import { utils, FORMATED_DATE } from '~/utils'
+  import { utils, LocaleDate } from '~/utils'
 
   // DATA
   import POSTS from '~/assets/json/vk_posts.json';
@@ -307,7 +307,7 @@
   type POST = {
     thumb: string,
     body: string,
-    date: FORMATED_DATE,
+    date: LocaleDate,
     link: string
     social: {
       likes: number,
@@ -368,7 +368,7 @@
             resolve(Object.values(response).map(item => {
 
               return {
-                thumb: item.attachments[0].photo.sizes[4].url,
+                thumb: item.attachments[0].photo.Image.sizes[4].url,
                 body: item.text,
                 date: utils.getLocalTime(Number(`${ item.date + '000' }`)),
                 link: `https://vk.com/club${ Math.abs(item.from_id) }?w=wall${ item.from_id }_${ item.id }`,

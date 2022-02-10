@@ -52,7 +52,6 @@
   import Vue from 'vue'
 
 // COMPONETS
-	import Popover 							from '~/components/common/Popover.vue'
 	import Icon									from '~/components/common/Icon.vue'
 
 // MODULE

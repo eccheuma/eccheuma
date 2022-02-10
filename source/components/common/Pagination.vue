@@ -107,7 +107,7 @@ $h: 10vh;
 
 	import { mapState } from 'vuex'
 
-	import type { VuexModules } from '~/typescript/VuexModules'
+	import type { VuexMap } from '~/typescript/VuexMap'
 
 	type PageSelectorProperty = {
 		section: string
@@ -123,7 +123,7 @@ $h: 10vh;
 		},
 		computed: {
 			...mapState({
-				PageSelector: (state: any) => ( state as VuexModules).PageSelector
+				PageSelector: (state: any) => ( state as VuexMap).PageSelector
 			}),
 		},
 		methods: {

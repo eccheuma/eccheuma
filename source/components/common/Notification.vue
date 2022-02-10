@@ -168,7 +168,7 @@
 
 	import { mapMutations, mapState } from 'vuex'
 
-	import type { VuexModules } from '~/typescript/VuexModules'
+	import type { VuexMap } from '~/typescript/VuexMap'
 
 	// COMPONENTS 
 	import Icon 									from '~/components/common/Icon.vue';
@@ -180,7 +180,7 @@
 		},
 		computed: {
 			...mapState({
-				Notification: ( state: any ) => ( state as VuexModules ).Notification
+				Notification: ( state: any ) => ( state as VuexMap ).Notification
 			}),
 		},
 		methods: {

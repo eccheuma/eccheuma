@@ -363,7 +363,7 @@
 
 // TYPES
 	import type { AnimeInstance, AnimeAnimParams } 	from 'animejs'
-	import type { VuexModules } 										from '~/typescript/VuexModules'
+	import type { VuexMap } 										from '~/typescript/VuexMap'
 
 // MIXINS
 	import EmitSound from '~/assets/mixins/EmitSound'
@@ -411,7 +411,7 @@
 		computed: {
 
 			...mapState({
-				mute: ( state: any ) => (state as VuexModules).Sound.global.mute,
+				mute: ( state: any ) => (state as VuexMap).Sound.global.mute,
 			}),
 
 		},

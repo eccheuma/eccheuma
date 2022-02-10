@@ -16,8 +16,8 @@ import { ActionTree, MutationTree } from 'vuex'
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/typescript/VuexModules' {
-		interface VuexModules {
+	declare module '~/typescript/VuexMap' {
+		interface VuexMap {
 			Notification: CurentState
 		}
 	}

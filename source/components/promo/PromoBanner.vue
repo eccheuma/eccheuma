@@ -154,10 +154,10 @@
 	// MODULE
 	export default Vue.extend({
 		components: {
-			Works: 			() => import('~/components/promo/submodules/Works.vue'),
-			Style: 			() => import('~/components/promo/submodules/Style.vue'),
-			Gallery: 		() => import('~/components/promo/submodules/Gallery.vue'),
-			Adaptation: () => import('~/components/promo/submodules/Adaptation.vue'),
+			Works: 			() => import('./submodules/Works.vue'),
+			Style: 			() => import('./submodules/Style.vue'),
+			Gallery: 		() => import('./submodules/Gallery.vue'),
+			Adaptation: () => import('./submodules/Adaptation.vue'),
 			// OTHERS 
 			CommonButton: () => import('~/components/buttons/CommonButton.vue')
 		},

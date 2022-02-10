@@ -1,23 +1,27 @@
 
-import type { IMAGE_PROPERTY } from './Image'
-import type { PORTFOLIO_SECTION } from './Portfolio'
+import { Image } from './Image';
+import { Portfolio } from './Portfolio';
 
-export type CONTENT = {
-	name: string
-	time: string
-	theme: string
-	tech_request: string
-	link: string
-	cost: number
-	description: string
-	images: IMAGE_PROPERTY[]
-}
+export namespace Workcase {
 
-export type WORKCASE = {
-	ID: number
-	content: CONTENT
-	properties: {
-		type: PORTFOLIO_SECTION
+	export type content = {
+		name					: string
+		time					: string
+		theme					: string
+		tech_request	: string
+		link					: string
+		cost					: number
+		description		: string
+		images				: Array<Image.struct>
 	}
-	rating: number
+	
+	export type struct = {
+		ID: number
+		content: content
+		properties: {
+			type: Portfolio.sections
+		}
+		rating: number
+	}
+
 }

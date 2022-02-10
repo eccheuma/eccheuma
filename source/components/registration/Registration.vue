@@ -219,7 +219,7 @@
 // VUEX
 	import { mapState, mapMutations, mapActions } from 'vuex'
 	import { email, required, minLength, alphaNum } from 'vuelidate/lib/validators'
-	import type { VuexModules } from '~/typescript/VuexModules'
+	import type { VuexMap } from '~/typescript/VuexMap'
 
 // TYPES & INTERFACES & ENUMS
 	import type { REGISTER_FORM, AUTH_ERRORS } from '~/store/Auth/Session'
@@ -269,9 +269,9 @@
 		computed: {
 
 			...mapState({
-				LoginStatus: 				state => ( state as VuexModules ).Auth.Session.LoginStatus,
-				RegistrationModal: 	state => ( state as VuexModules ).Auth.Register.Modal,
-				AuthError: 					state => ( state as VuexModules ).Auth.Session.AuthError,
+				LoginStatus: 				state => ( state as VuexMap ).Auth.Session.LoginStatus,
+				RegistrationModal: 	state => ( state as VuexMap ).Auth.Register.Modal,
+				AuthError: 					state => ( state as VuexMap ).Auth.Session.AuthError,
 			}),
 
 			крайняяСтадия(): number {

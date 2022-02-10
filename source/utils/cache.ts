@@ -7,7 +7,15 @@ export namespace cache {
   }
 
   export function get(key: string) {
-    return JSON.parse(window.localStorage.getItem(key)!)
+
+    const item = window.localStorage.getItem(key);
+
+    if ( item?.charAt(0) === '{' ) {
+      return JSON.parse(item);
+    }
+
+    return item;
+
   }
 
   export function check(key: string): boolean {

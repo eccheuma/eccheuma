@@ -41,7 +41,7 @@
 // VUEX MODULE TYPE MAP
 	import type { Application, Container, Sprite, Texture, Graphics, TilingSprite } from 'pixi.js'
 	import type { AnimeInstance } 																									from 'animejs'
-	import type { VuexModules } 																										from '~/typescript/VuexModules'
+	import type { VuexMap } 																										from '~/typescript/VuexMap'
 
 // FILES
 	const ASSETS = [
@@ -97,7 +97,7 @@
 		},
 		computed: {
 			...mapState({
-				isDesktop: state => (state as VuexModules).isDesktop,
+				isDesktop: state => (state as VuexMap).isDesktop,
 			}),
 
 			ViewOrientation(): 'width' | 'height' {

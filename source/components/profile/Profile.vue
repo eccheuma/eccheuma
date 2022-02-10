@@ -324,10 +324,11 @@
 					span {
 						&:last-child {
 							display: block;
+							text-align: center;
 							margin-top: 1vh;
-							color: rgb(var(--color-mono-800));
+							color: rgb(var(--color-mono-600));
 							font-size: var(--font-size-16);
-							font-weight: 800;
+							font-weight: 600;
 						}
 					}
 				}
@@ -475,70 +476,70 @@
 	import Vue from 'vue'
 
 	// VUEX
-		import { mapState, mapActions } from 'vuex'
+	import { mapState, mapActions } from 'vuex'
 
 	// TYPES
-		import type { AnimeAnimParams } from 'animejs';
-		import type { VuexModules } 		from '~/typescript/VuexModules';
+	import type { AnimeAnimParams } from 'animejs';
+	import type { VuexMap } 				from '~/typescript/VuexMap';
 
 	// UTILS
-		import { user } from '~/utils/status'
+	import { user } from '~/utils/status'
 
 	// ENUMS
-		import { UserStatus } from '~/typescript/User'
+	import { User } from '~/typescript/User'
 
 	// COMPONENTS
-		import CommonButton	from '~/components/buttons/CommonButton.vue'
-		import Collapse 		from '~/components/common/Collapse.vue'
-		import Tag 					from '~/components/common/Tag.vue'
+	import CommonButton	from '~/components/buttons/CommonButton.vue'
+	import Collapse 		from '~/components/common/Collapse.vue'
+	import Tag 					from '~/components/common/Tag.vue'
 
 	// FUNCTION COMPONENTS
-		import TransitionWrapper from '~/components/functional/TransitionWrapper.vue';
+	import TransitionWrapper from '~/components/functional/TransitionWrapper.vue';
 
 	// INTERFACE'N'TYPES
-		type MODULES = 'Messages' | 'NameChange' | 'IconChange' | 'Orders';
+	type MODULES = 'Messages' | 'NameChange' | 'IconChange' | 'Orders';
 
-		type COMPONENT_HEADER = {
-			Title: string,
-			Sub: String
-		}
+	type COMPONENT_HEADER = {
+		Title: string,
+		Sub: String
+	}
 
-		const enum Title {
-			messages 	= 'Сообщения',
-			name			= 'Смена имени пользователя',
-			icon 			= 'Смена иконки профиля',
-			orders		= 'Статус заказа'
-		}
+	const enum Title {
+		messages 	= 'Сообщения',
+		name			= 'Смена имени пользователя',
+		icon 			= 'Смена иконки профиля',
+		orders		= 'Статус заказа'
+	}
 
-		const enum Notation {
-			send 		= 'Подсказка: Нажмите "Ctrl + Enter" для отправки сообщения.',
-			confirm = 'Подсказка: Нажмите "Ctrl + Enter" для подтверждения.',
-			avail 	= 'Данная сводка полезна для проверки. В случае чего',
-		}
+	const enum Notation {
+		send 		= 'Подсказка: Нажмите "Ctrl + Enter" для отправки сообщения.',
+		confirm = 'Подсказка: Нажмите "Ctrl + Enter" для подтверждения.',
+		avail 	= 'Данная сводка полезна для проверки. В случае чего',
+	}
 
 	// ANIMATION STATES 
 
-		type ICON_ANIMATION_STATES = 'init' | 'update' | 'close'
+	type ICON_ANIMATION_STATES = 'init' | 'update' | 'close'
 
-		const ANIMATION_VARIATIONS: {[K in ICON_ANIMATION_STATES]: AnimeAnimParams } = {
-			'init': {
-				scale: [0, 1],
-				delay: 500,
-				duration: 250,
-				easing: 'easeInOutCubic',
-			},
-			'update': {
-				scale: [1, 0],
-				direction: 'alternate',
-				duration: 500,
-				easing: 'easeInOutCubic',
-			},
-			'close': {
-				scale: [1, 0],
-				duration: 250,
-				easing: 'easeInOutCubic',
-			}
+	const ANIMATION_VARIATIONS: {[K in ICON_ANIMATION_STATES]: AnimeAnimParams } = {
+		'init': {
+			scale: [0, 1],
+			delay: 500,
+			duration: 250,
+			easing: 'easeInOutCubic',
+		},
+		'update': {
+			scale: [1, 0],
+			direction: 'alternate',
+			duration: 500,
+			easing: 'easeInOutCubic',
+		},
+		'close': {
+			scale: [1, 0],
+			duration: 250,
+			easing: 'easeInOutCubic',
 		}
+	}
 
 	// MODULE
 	export default Vue.extend({
@@ -577,16 +578,16 @@
 
 			...mapState({
 				// AUTH
-				LoginStatus:	 		state => (state as VuexModules).Auth.Session.LoginStatus,
+				LoginStatus:	 		state => (state as VuexMap).Auth.Session.LoginStatus,
 				// USER STATE
-				UserProfileArea: 	state => (state as VuexModules).User.State.UserProfileArea,
-				UserState:			 	state	=> (state as VuexModules).User.State.UserState,
-				// MESSAGES
-				MessagesCount: 		state => (state as VuexModules).User.Messages.Messages.length,
-				NewMessages: 			state => (state as VuexModules).User.Messages.NewMessagesCount,
+				UserProfileArea: 	state => (state as VuexMap).User.State.UserProfileArea,
+				UserState:			 	state	=> (state as VuexMap).User.State.UserState,
+				// MessageS
+				MessagesCount: 		state => (state as VuexMap).User.Messages.Messages.length,
+				NewMessages: 			state => (state as VuexMap).User.Messages.NewMessagesCount,
 				// WORK REQUESTS
-				RequestsQuantity: state => (state as VuexModules).User.WorkRequest.RequestQuantity,
-				ActiveRequest: 		state => (state as VuexModules).User.WorkRequest.ActiveRequests,
+				RequestsQuantity: state => (state as VuexMap).User.WorkRequest.RequestQuantity,
+				ActiveRequest: 		state => (state as VuexMap).User.WorkRequest.ActiveOrders,
 			}),
 
 			// COMPONENT_HEADER
@@ -651,7 +652,7 @@
 		created() {
 
 			this.setRequestQuantity(); 
-			this.setRequestContent(); 
+			this.setRequestContent(this.UserState.UserID); 
 
 			this.getMessages();
 
@@ -668,7 +669,7 @@
 			...mapActions({
 				// AUTH
 				Logout: 							'Auth/Logout',
-				// MESSAGES
+				// MessageS
 				getMessages: 					'User/Messages/getMessages',
 				checkUnreaded: 				'User/Messages/checkUnreaded',
 				// WORK REQUESTS
@@ -692,7 +693,7 @@
 
 			},
 
-			defineStatus(status: UserStatus) {
+			defineStatus(status: User.status) {
 				return user.defineStatus(status)
 			},
 

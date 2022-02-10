@@ -317,7 +317,7 @@ import Vue from 'vue'
 // TYPES 
 
 	// VUEX MODULE TYPE MAP
-	import type { VuexModules } from '~/typescript/VuexModules'
+	import type { VuexMap } from '~/typescript/VuexMap'
 
 	// OTHER TYPES
 	import type { REGISTER_FORM } from '~/store/Auth/Session'
@@ -356,8 +356,8 @@ import Vue from 'vue'
 		computed: {
 
 			...mapState({
-				LoginStatus: 	state => (state as VuexModules).Auth.Session.LoginStatus,
-				AuthError: 		state => (state as VuexModules).Auth.Session.AuthError,
+				LoginStatus: 	state => (state as VuexMap).Auth.Session.LoginStatus,
+				AuthError: 		state => (state as VuexMap).Auth.Session.AuthError,
 			})
 
 		},

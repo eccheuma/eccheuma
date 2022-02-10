@@ -84,7 +84,7 @@ main {
 	import Auth 						from '~/components/auth/Auth.vue'
 
 // TYPES
-	import type { VuexModules } from '~/typescript/VuexModules'
+	import type { VuexMap } from '~/typescript/VuexMap'
 
 // LOAD POLITIC
 	import { load_ranges } from '~/config/LoadPolitic'
@@ -107,6 +107,13 @@ main {
 				LoadRange: load_ranges.posts,
 
 			}
+		},
+		async fetch() {
+
+			const PostsQuantity: number = await database.getLength('Posts');
+
+			this.ChangePageQuantity( Math.ceil( PostsQuantity / this.LoadRange ) );
+
 		},
 		head () {
 			return {
@@ -132,15 +139,8 @@ main {
 		},
 		computed: {
 			...mapState({
-				LoginStatus: state => (state as VuexModules).Auth.Session.LoginStatus
+				LoginStatus: state => (state as VuexMap).Auth.Session.LoginStatus
 			})
-		},
-		async fetch() {
-
-			const PostsQuantity: number = await database.getLength('Posts');
-
-			this.ChangePageQuantity( Math.ceil( PostsQuantity / this.LoadRange ) );
-
 		},
 		methods: {
 			...mapMutations({

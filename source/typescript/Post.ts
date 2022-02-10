@@ -1,33 +1,33 @@
-export type POST_IMAGE = {
-	path: string,
-	title: string,
-	description: string,
-}
 
-export type POST_CONTENT = { 
-	type: string, value: any
-}
+export namespace Post {
 
-export type LIKE = {
-	hash: string
-}
+	export type content = { 
+		type	: string, 
+		value	: any
+	}
+	
+	export type like = {
+		hash:	string
+	}
+	
+	export type comment = {
+		id			: string
+		date		: number
+		userID	: string
+		data		: string
+	}
+	
+	export type struct = {
+		ID					: number
+		authorID		: string
+		description	: string
+		comment			: Array<comment>
+		content			: Array<content>
+		likes				: Array<like>
+		image				: string
+		tags				: Array<string>
+		date				: number
+		title				: string
+	}
 
-export type COMMENT = {
-	ID: string
-	Date: number
-	UserID: string
-	Comment: string
-}
-
-export type POST = {
-	ID: number,
-	authorID: string
-	description: string,
-	comment: COMMENT[],
-	content: POST_CONTENT[],
-	likes?: Array< LIKE >
-	image: string,
-	tags: string[],
-	date: number,
-	title: string
 }

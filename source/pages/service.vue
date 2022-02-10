@@ -106,7 +106,14 @@
 	import PromoBanner      from '~/components/promo/PromoBanner.vue'
 
 	// TYPES 
-	import type { CATEGORY, SERVICES_CARD } from '~/typescript/Services'
+	import type { Categories } from '~/typescript/Services'
+
+	type CardStruct = {
+		description		: string,
+		category			: Categories,
+		title					: string,
+		about					: string
+	}
 
 	// MODULE
 	export default Vue.extend({
@@ -125,26 +132,27 @@
 
 				Products: [
 					{ 
-						path: 'WebApplications',
+						category: 'Application',
 						title: 'Готовые решения',
-						subTitle: 'Лэндинги, сайты, CMS, web приложения',
-						description: 'Включает в себя полный цикл создания приложения / сайта / лэндинга. Начиная от создания графического макета, с его последующей вёрсткой, и созданием бизнес логики на платформе \'Vue & Firebase\'.'
+						description: 'Лэндинги, сайты, CMS, web приложения',
+						about: 'Включает в себя полный цикл создания приложения / сайта / лэндинга. Начиная от создания графического макета, с его последующей вёрсткой, и созданием бизнес логики на платформе "Vue & Firebase".'
 					},
 					{
-						path: 'GraphicalDesign',
+						category: 'Graphic',
 						title: 'Графический Дизайн',
-						subTitle: 'Логотипы, баннера, визитки',
-						description: 'В данном бандле есть всё, начиная от оформления заказа на визитки, логотипы, и прочие услуги по графическому макетированию. Так же работа с вектором, если она необходима.'
+						description: 'Логотипы, баннера, визитки',
+						about: 'В данном бандле есть всё, начиная от оформления заказа на визитки, логотипы, и прочие услуги по графическому макетированию. Так же работа с вектором, если она необходима.'
 					},
 					{
-						path: 'HTMLcode',
+						category: 'FrontEnd',
 						title: 'Вёрстка',
-						subTitle: 'Вёрстка графических макетов',
-						description: 'Создание HTML и CSS(Sass) разметки на основе готового графического макета, для дальнейшей работы Front-End разработчика и переноса полученной разметки на нужную для вас платформу.'
+						description: 'Вёрстка графических макетов',
+						about: 'Создание HTML и CSS(Sass) разметки на основе готового графического макета, для дальнейшей работы Front-End разработчика и переноса полученной разметки на нужную для вас платформу.'
 					}
-				] as SERVICES_CARD[],
+				] as Array<CardStruct>,
 
-				Categories: ['WebApplications', 'GraphicalDesign', 'HTMLcode'] as CATEGORY[]
+				Categories: ['Application', 'Graphic', 'FrontEnd'] as Array<Categories>,
+
 			}
 		},
 		head () {

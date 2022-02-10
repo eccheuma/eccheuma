@@ -1,61 +1,77 @@
 
-// COST CALC TYPES
-export type CATEGORY = 'WebApplications' | 'GraphicalDesign' | 'HTMLcode'
+export namespace Product {
 
-export type WebApplications		= 'Landing' | 'VueApplication'
-export type GraphicalDesign 	= 'MockupBlock' | 'MockupPage' | 'Logo' | 'Vector' | 'BusinessСard'
-export type HTMLcode					= 'HTMLMockupPage' | 'HTMLMockupSection' | 'Letter'  
+	export enum Application {
+		Landing,
+		Multipage,
+	}
 
-export type PRODUCTS = WebApplications | GraphicalDesign | HTMLcode
+	export enum Graphic {
+		MockupBlock,
+		MockupPage,
+		Logo,
+		Vector,
+		BusinessСard,
+	}
 
-interface ServiceTiming {
-	Delivery: number
-};
+	export enum FrontEnd {
+		Page,
+		Section,
+		Letter,
+	}
 
-export interface SERVICE extends ServiceTiming {
-	Type: PRODUCTS
-	Cost: number
-	Name: string
-	Delivery: number
-	Description?: string
 }
 
-export interface ADDICTION extends ServiceTiming {
-	Cost: number
-	Type: string
-	Title: string
-	Quantity: number
-	Descriprion?: string
+export type Categories 	= keyof typeof Product;
+export type Products 		= Product.Application | Product.FrontEnd | Product.Graphic;
+
+interface Timing { Delivery: number };
+
+// That TS mess on Type field, should return keys of Product enums. 
+// As is TS namespaces can't be used as types, "We have what we have". I gonna to leave it as it is, until I found a better approach...
+export interface Service<C extends Categories> extends Timing {
+	Category		: typeof Product[C]
+	Type				: typeof Product[C][keyof typeof Product[C]]
+	Cost				: number
+	Name				: string
+	Delivery		: number
+	Description	: string
 }
 
-export type SELECTED_SERVICE = {
-	Quantity: number
-	Category: CATEGORY
-	Service: SERVICE
-	Addiction: ADDICTION
-}
+export namespace Purchase {
 
-export type SERVICES_CARD = {
-	path: CATEGORY
-	title: string
-	subTitle: string
-	description: string
-}
+	export interface Addition extends Timing {
+		Cost: number
+		Type: string
+		Title: string
+		Quantity: number
+		Descriprion?: string
+	}
+	
+	export const enum status {
+		None,
+		Review,
+		Queue,
+		Process,
+		Ready,
+		Done,
+		Denied,
+	}
+	
+	export interface order<C extends Categories> extends Timing, Service<C> {
+		ID				: string,
+		Status		: status
+		Accepted	: number
+		Recived		: number
+		Declined	: boolean
+	}
 
-export const enum RequestStatus {
-	None,
-	Review,
-	Queue,
-	Process,
-	Ready,
-	Done,
-	Denied,
-}
+	export interface struct {
+		cost				: number
+		type				: string
+		title				: string
+		description : string
+		single			: boolean
+	}
 
-export interface ORDER extends SERVICE, ServiceTiming {
-	ID: string,
-	Status: RequestStatus
-	Accepted: number
-	Recived: number
-	Declined: boolean
 }

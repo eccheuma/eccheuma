@@ -44,20 +44,13 @@
 		},
 		async mounted() {
 
-			this.Case = await this.GetCases();
+			this.Case = await this.GetCases()
 
 		},
 		methods: {
-			async GetCases(): Promise<Array<WORKCASE>> {
+			async GetCases() {
 
-				//! Refactor this piece of shit as soon as posible
-				//@ That path defenition is a mess
-
-				const T = this.$route.params.type.split('')
-
-				const PATH = [T[0].toUpperCase(), ...T.slice(1)].join('');
-
-				return await database.get(`Cases/${ PATH }`).then(data => Object.values(data))
+				return await database.get('Cases/Landings').then(data => Object.values(data))
 
 			},
 		}

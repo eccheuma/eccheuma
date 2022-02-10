@@ -8,15 +8,14 @@
 
 // VUEX
 
-	import type { VuexModules } from '~/typescript/VuexModules'
+	import type { VuexMap } from '~/typescript/VuexMap'
 
 	import type { REGISTER_FORM } from '~/store/Auth/Session'
-	import type { MESSAGE } 			from '~/typescript/Message'
-	import type { USER_STATE } from '~/typescript/User'
+	import type { Message } 			from '~/typescript/Message'
 
-// ENUMS
-	import { UserStatus } from '~/typescript/User'
-	import { RequestStatus } from '~/typescript/Services';
+// NAMESPACES
+	import { User } from '~/typescript/User'
+	import { Purchase } from '~/typescript/Services';
 
 // STATE
 	export const state = () => ({
@@ -27,7 +26,7 @@
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/typescript/VuexModules' {
+	declare module '~/typescript/VuexMap' {
 		interface Auth {
 			Register: CurentState
 		}
@@ -41,15 +40,16 @@
 	}
 
 // ACTIONS
-	export const actions: ActionTree<CurentState, VuexModules> = {
+	export const actions: ActionTree<CurentState, VuexMap> = {
 
 		async Register({ dispatch, commit }, form: REGISTER_FORM): Promise<Error | Boolean> {
 
 			try {
 
+				// eslint-disable-next-line import/no-named-as-default-member
 				const { user } = await firebase.auth().createUserWithEmailAndPassword( form.email, form.password );
 
-				if ( !user ) return new Error();
+				if ( !user ) return new Error('sdf');
 
 				commit('Auth/Session/Change_userState', { _uid: user.uid, _email: user.email }, { root: true })
 
@@ -57,11 +57,11 @@
 					UserID: 				user.uid,
 					UserEmail: 			user.email,
 					UserName: 			form.name,
-					UserStatus: 		UserStatus.User,
+					UserStatus: 		User.status.User,
 					UserBalance: 		0,
-					UserWorkStatus: RequestStatus.None,
+					UserWorkStatus: Purchase.status.None,
 					UserImageID:		storage.reference('UserIcons/default.webp')
-				} as USER_STATE)
+				} as User.state)
 
 				await database.set(`Users/${ user.uid  }/preferences`, {
 					DarkTheme: true,
@@ -70,12 +70,12 @@
 
 				await database.set(`Users/${ user.uid  }/messages/Hash_0`, {
 					ID: Math.random().toString(36).slice(-8).toUpperCase(),
-					Date: Date.now(),
-					From: 'Eccheuma',
-					UserID: 'SUPPORT',
-					Message: 'Благодарю вас за регистрацию!',
-					Read: false,
-				} as MESSAGE)
+					date: Date.now(),
+					from: 'Eccheuma',
+					userID: 'SUPPORT',
+					message: 'Благодарю вас за регистрацию!',
+					readed: false,
+				} as Message.struct)
 	
 				dispatch('Auth/Login/SignIn', form, { root: true });
 				

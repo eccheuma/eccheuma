@@ -23,10 +23,10 @@
         
         <big ref="deliveryTimer" style="opacity: 0">
           <template v-if="waintingTime.days">
-            {{ waintingTime.days }} {{ AllowedFormatsuffix(waintingTime.days, ['день', 'дня', 'дней']) }}
+            {{ waintingTime.days }} {{ formatSuffix(waintingTime.days, ['день', 'дня', 'дней']) }}
           </template>
-            {{ waintingTime.hours }} {{ AllowedFormatsuffix(waintingTime.hours, ['час', 'часа', 'часов']) }}
-            {{ waintingTime.minutes }} {{ AllowedFormatsuffix(waintingTime.minutes, ['минута', 'минуты', 'минут']) }}
+            {{ waintingTime.hours }} {{ formatSuffix(waintingTime.hours, ['час', 'часа', 'часов']) }}
+            {{ waintingTime.minutes }} {{ formatSuffix(waintingTime.minutes, ['минута', 'минуты', 'минут']) }}
         </big>
 
       </section>
@@ -208,20 +208,16 @@
 
   // UTILS
   import { utils } from '~/utils';
-
-  // MIXINS
-  import F_WorkStatus from '~/assets/mixins/filters/WorkStatus'
+  import { work } from '~/utils/status';
 
   // FUNCTIONAL
-    import IntesectionComponent from '~/components/functional/intersectionComponent.vue'
+    import IntesectionComponent from '~/components/functional/intersectionComponent.vue';
 
   // COMPONENTS
     import CommonButton	from '~/components/buttons/CommonButton.vue';
-    // import Tag 					from '~/components/common/Tag.vue'
-    // import CaptionCard 	from '~/components/common/Caption.vue'
 
   // TYPES
-  import type { ORDER } from '~/typescript/Services'
+  import type { Purchase } from '~/typescript/Services'
 
   type WAITING_TIME_FORMAT = {
     days: number
@@ -235,22 +231,15 @@
   export default Vue.extend({
       
     components: { 
-      
-      // UI COMMON
       CommonButton, 
-      // CaptionCard, 
-      // Tag,
-
       // FUNCTIONAL
       IntesectionComponent
-
     },
-    mixins: [ F_WorkStatus ],
     props: {
       payload: {
         type: Object,
         required: true,
-      } as PropOptions<ORDER>
+      } as PropOptions<Purchase.order<any>>
     },
     data() {
       return {
@@ -362,7 +351,7 @@
         const { Day, Time } = utils.getLocalTime(this.payload.Recived);
 
         return [
-          { name: 'Состояние',          value: this.DefineWorkStatus(this.payload.Status) },
+          { name: 'Состояние',          value: work.defineStatus(this.payload.Status) },
           { name: 'Цена',               value: `${ this.payload.Cost } ₽` },
           { name: 'Дата заказа',        value: `${ Day } в ${ Time }` },
           { name: 'Тип Заказа',         value: this.payload.Type },
@@ -371,7 +360,7 @@
 
       },
 
-      AllowedFormatsuffix(n: number, variants: Array<string>): string {
+      formatSuffix(n: number, variants: Array<string>): string {
 
         const Remainder: number = n % 20;
 

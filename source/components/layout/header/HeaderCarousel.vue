@@ -56,8 +56,8 @@
 								>
 
 								<picture ref="ImageHolder" class="eccheuma_swiper-image" :class="!CarouselFocus ? `focused` : `unfocused`">
-									<source :srcset="item.image.avif" type="image/avif">
-									<img :src="item.image.webp">
+									<source :srcset="item.formats.avif" type="image/avif">
+									<img :src="item.formats.webp">
 								</picture>
 
 							</parallax>
@@ -326,7 +326,7 @@
 	// VUEX
 	
 	// UTILS
-		import { utils, FORMATED_DATE } from '~/utils';
+		import { utils, LocaleDate } from '~/utils';
 
 	// COMPONENTS
 		import Parallax from '~/components/common/Parallax.vue';
@@ -341,15 +341,15 @@
 		import { load_ranges } from '~/config/LoadPolitic'
 
 	// TYPES
-		import type { ImageStruct } 		from '~/typescript/Image';
-		import type { POST } 					from '~/typescript/Post';
+		import type { Image } from '~/typescript/Image';
+		import type { Post } 	from '~/typescript/Post';
 
-		import type { VuexModules } from '~/typescript/VuexModules';
+		import type { VuexMap } from '~/typescript/VuexMap';
 
 		type HeaderSlide = {
-			content: Pick<POST, 'title' | 'description' | 'ID' | 'tags'>
-			date: FORMATED_DATE
-			image: ImageStruct
+			content: Pick<Post.struct, 'title' | 'description' | 'ID' | 'tags'>
+			date: LocaleDate
+			formats: Image.formats
 		}
 
 	// VARS
@@ -395,7 +395,7 @@
 		computed: {
 
 			...mapState({
-				LoginStatus:	state => (state as VuexModules).Auth.Session.LoginStatus,
+				LoginStatus:	state => (state as VuexMap).Auth.Session.LoginStatus,
 			})
 
 		},
@@ -411,7 +411,7 @@
 
 			async GetPosts() {
 
-				const POSTS: utils.asJSONArray<POST> = await database.get('Posts', { limit: load_ranges.posts })
+				const POSTS: utils.asJSONArray<Post.struct> = await database.get('Posts', { limit: load_ranges.posts })
 
 				const formatedSlides = Object
 					.values(POSTS)
@@ -420,7 +420,7 @@
 						return {
 							content: { title, description, ID, tags },
 							date: utils.getLocalTime(date),
-							image: await this.getImageURL({ 
+							formats: await this.getImageURL({ 
 								path: image,
 								size: 1440,
 							})

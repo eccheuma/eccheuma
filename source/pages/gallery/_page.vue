@@ -52,14 +52,14 @@
 
 	import Vue from 'vue'
 
-	// API
-		import { database } from '~/api/database';
-
 	// VUEX
 		import { mapActions, mapMutations, mapState } from 'vuex'
 
+	// API
+		import { database } from '~/api/database';
+
 	// VUEX MODULE TYPE MAP
-		import type { VuexModules } from '~/typescript/VuexModules';
+		import type { VuexMap } from '~/typescript/VuexMap';
 
 	// MIXINS
 		import PageTransitionProperty 	from '~/assets/mixins/PageTransitionProperty'
@@ -141,7 +141,7 @@
 		computed: {
 
 			...mapState({
-				Images: state => (state as VuexModules).PageContent.Content.Gallery
+				Images: state => (state as VuexMap).PageContent.Content.Gallery
 			}),
 
 		},

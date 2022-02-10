@@ -2,14 +2,14 @@
 	import type { MutationTree } from 'vuex'
 
 // TYPES
-	import { USER_STATE } from '~/typescript/User'
+	import { User } from '~/typescript/User'
 
 // STATE
 	export const state = () => ({
 
 		UserProfileArea: false,
 
-		UserState: new Object() as USER_STATE
+		UserState: new Object() as User.state
 
 	})
 
@@ -17,7 +17,7 @@
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/typescript/VuexModules' {
+	declare module '~/typescript/VuexMap' {
 		interface User {
 			State: CurentState
 		}
@@ -25,7 +25,7 @@
 
 // MUTATIONS
 	export const mutations: MutationTree<CurentState> = {
-		Change_UserState(state, newUserState: USER_STATE) {
+		Change_UserState(state, newUserState: User.state) {
 			state.UserState = newUserState
 		},
 		Toggle_UserProfileArea(state) {

@@ -22,7 +22,7 @@
 
 	import { mapMutations } from 'vuex'
 
-	import type { VuexModules } from '~/typescript/VuexModules'
+	import type { VuexMap } from '~/typescript/VuexMap'
 
 	import UserProfile from '~/components/profile/Profile.vue'
 	
@@ -32,7 +32,7 @@
 		},
 		validate({ store, query }) {
 			
-			return ( store.state as VuexModules ).User.State.UserState.UserID === query.uid
+			return ( store.state as VuexMap ).User.State.UserState.UserID === query.uid
 
 		},
 		mounted() {

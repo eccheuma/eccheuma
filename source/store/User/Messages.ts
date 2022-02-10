@@ -4,13 +4,13 @@
 
 // VUEX
 
-	import type { VuexModules } from '~/typescript/VuexModules'
-	import type { MESSAGE } 		from '~/typescript/Message'
+	import type { VuexMap } from '~/typescript/VuexMap'
+	import type { Message } from '~/typescript/Message'
 
 // STATE
 	export const state = () => ({
 
-		Messages: [] as MESSAGE[],     
+		Messages: new Array<Message.struct>(0),     
 
 		NewMessagesCount: 0
 		
@@ -20,7 +20,7 @@
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/typescript/VuexModules' {
+	declare module '~/typescript/VuexMap' {
 		interface User {
 			Messages: CurentState
 		}
@@ -33,14 +33,14 @@
 			state.NewMessagesCount = q
 		},
 
-		setMessages(state, messages: MESSAGE[]) {
-			state.Messages = messages.sort((a, b) => a.Date - b.Date);
+		setMessages(state, messages: Array<Message.struct>) {
+			state.Messages = messages.sort((a, b) => a.date - b.date);
 		},
 		
 	}
 
 // ACTIONS
-	export const actions: ActionTree<CurentState, VuexModules>  = {
+	export const actions: ActionTree<CurentState, VuexMap>  = {
 
 		async getMessages({ dispatch, commit, rootState }) {
 
@@ -55,7 +55,7 @@
 
 		},
 
-		sendMessage({ rootState }, prop: MESSAGE) {
+		sendMessage({ rootState }, prop: Message.struct) {
 
 			// Получение ID пользователя
 			const { uid } = rootState.Auth.Session.CurentUser;
@@ -64,19 +64,19 @@
 
 		},
 
-		markAsReaded({ rootState }, ID: MESSAGE['ID']) {
+		markAsReaded({ rootState }, ID: Message.struct['ID']) {
 
 			// Получение ID пользователя
 			const { uid } = rootState.Auth.Session.CurentUser;
 
-			database.update(`Users/${ uid }/messages/Hash_${ ID }`, { Read: true } as MESSAGE)
+			database.update(`Users/${ uid }/messages/Hash_${ ID }`, { readed: true } as Partial<Message.struct>)
 
 		},
 
 		checkUnreaded({ rootState, commit, state }) {
 
-			const { length } = state.Messages.filter(({ Read, UserID }) => {
-				return !Read && UserID !== rootState.User.State.UserState.UserID
+			const { length } = state.Messages.filter(({ readed, userID }) => {
+				return userID !== rootState.User.State.UserState.UserID && readed === false
 			})
 			
 			commit('setUnreadedQuanity', length)

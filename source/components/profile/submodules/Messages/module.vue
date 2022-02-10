@@ -11,7 +11,7 @@
 					:ignite="false"
 					@isIntersecting.once="observeIntesection(message)"
 					>
-					<message :payload="message" />
+					<message-component :payload="message" />
 				</intesection-component>
 			</template>
 
@@ -158,7 +158,7 @@
 
 	// VUEX
 	import { mapState, mapActions } from 'vuex';
-	import type { VuexModules } from '~/typescript/VuexModules';
+	import type { VuexMap } from '~/typescript/VuexMap';
 
 	// API
 	import { database } from '~/api/database'
@@ -172,18 +172,19 @@
 
 	// COMPONENTS
 	import EccheumaButton		from '~/components/buttons/CommonButton.vue'
-	import Message 					from '~/components/profile/submodules/Messages/submodules/Message.vue'
+	// eslint-disable-next-line import/order
+	import MessageComponent from './submodules/Message.vue'
 
 	import IntesectionComponent from '~/components/functional/intersectionComponent.vue'
 
 	// TYPES
-	import type { MESSAGE } from '~/typescript/Message';
+	import type { Message as MessageNamespace } from '~/typescript/Message';
 
 	// MODULE
 	export default Vue.extend({
 		components: {
 			EccheumaButton, 
-			Message,
+			MessageComponent,
 			IntesectionComponent
 		},
 		mixins: [ EmitSound, HashGenerator ],
@@ -206,9 +207,9 @@
 		computed: {
 
 			...mapState({
-				UserState: 							state	=> ( state as VuexModules ).User.State.UserState,
-				Messages:								state => ( state as VuexModules ).User.Messages.Messages,
-				GetRequestsQuantity:		state => ( state as VuexModules ).User.WorkRequest.RequestQuantity
+				UserState: 							state	=> ( state as VuexMap ).User.State.UserState,
+				Messages:								state => ( state as VuexMap ).User.Messages.Messages,
+				GetRequestsQuantity:		state => ( state as VuexMap ).User.WorkRequest.RequestQuantity
 			}),
 
 		},
@@ -255,17 +256,17 @@
 				vuex_sendMessage:	'User/Messages/sendMessage',
 			}),
 
-			observeIntesection(message: MESSAGE) {
+			observeIntesection(message: MessageNamespace.struct) {
 
 				this.checkMessage(message);
 
 			},
 
-			checkMessage({ ID, Read, UserID }: MESSAGE) {
+			checkMessage({ ID, readed, userID }: MessageNamespace.struct) {
 
 				console.log('check message initiate')
 
-				if ( UserID !== this.UserState.UserID && !Read ) { 
+				if ( userID !== this.UserState.UserID && readed === false ) { 
 					this.vuex_markAsReaded(ID);
 				}
 
@@ -274,13 +275,13 @@
 			sendMessage() {
 				if ( this.UserPrevMessage !== this.UserMessage ) {
 
-					const M: MESSAGE = {
-						ID: utils.hashGenerator(),
-						UserID: this.UserState.UserID,
-						Date: Date.now(),
-						From: this.UserState.UserName,
-						Message: this.UserMessage,
-						Read: false
+					const M: MessageNamespace.struct = {
+						ID				: utils.hashGenerator(),
+						userID		: this.UserState.UserID,
+						date			: Date.now(),
+						from			: this.UserState.UserName,
+						message		: this.UserMessage,
+						readed		: false
 					}
 	
 					this.vuex_sendMessage(M)
@@ -297,15 +298,15 @@
 				})
 			},
 
-			async sendNotification({ Message, UserID, From, Read }: MESSAGE ) {
+			async sendNotification({ message, userID, from, readed }: MessageNamespace.struct ) {
 				
-				if ( UserID !== this.UserState.UserID && !Read ) {
+				if ( userID !== this.UserState.UserID && readed === false ) {
 
 					// eslint-disable-next-line no-undef
 					const CONTENT: NotificationOptions = {
-						body: `${ From }: ${ Message }`,
+						body: `${ from }: ${ message }`,
 						image: require('~/assets/images/NotificationBadge.png'),
-						icon: await database.get<string>(`Users/${ UserID }/state/UserImageID`),
+						icon: await database.get<string>(`Users/${ userID }/state/UserImageID`),
 						silent: true,
 					}
 

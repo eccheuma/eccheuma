@@ -196,10 +196,10 @@
 								<transition-group name="opacity-transition">
 									<comment-component 
 										v-for="item in sortedComments" 
-										:key="item.Date" 
-										:userID="item.UserID"
+										:key="item.date" 
+										:userID="item.userID"
 										:postID="payload.ID" 
-										:commentID="item.ID" 
+										:commentID="item.id" 
 									/>
 								</transition-group>
 							</section>
@@ -762,17 +762,19 @@
 	// import NoiseFilter					from '~/components/filters/noise.vue'
 
 	// VUEX MODULE TYPE MAP
-	import type { VuexModules } from '~/typescript/VuexModules'
+	import type { VuexMap } from '~/typescript/VuexMap'
+
+	// NAMESPACES
+	import { Post } from '~/typescript/Post'
+	import { User } from '~/typescript/User'
 
 	// TYPES & INTERFACES
-	import type { POST, POST_CONTENT, COMMENT, LIKE } 	from '~/typescript/Post'
-	import type { USER_STATE } 													from '~/typescript/User'
-	import type { ImageStruct } 													from '~/typescript/Image'
+	import type { Image } from '~/typescript/Image'
 
 	type SECTIONS = 'Likes' | 'Comments' | 'Content'
 
 	// IMAGE PLACEHOLDER
-	const PLACEHOLDER: ImageStruct = {
+	const PLACEHOLDER: Image.formats = {
 		avif: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=avif').src,
 		webp: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src
 	}
@@ -810,7 +812,7 @@
 			payload: {
 				type: Object,
 				required: true
-			} as PropOptions<POST>,
+			} as PropOptions<Post.struct>,
 			editContent: {
 				type: Boolean,
 				default: false
@@ -824,10 +826,10 @@
 
 				ImageURL: PLACEHOLDER,
 
-				AuthorInfo: new Object() as USER_STATE | null,
+				AuthorInfo: new Object() as User.state,
 
 				Message: '',
-				PreviosMessage: '',
+				PrevMessage: '',
 				CharLimit: CHAR_LIMIT,
 
 				ContentSection: false,
@@ -837,9 +839,9 @@
 
 				PostDate: utils.getLocalTime(0),
 
-				Content: 	[] as POST_CONTENT[],
-				Comments: {} as {[ID: string]: COMMENT},
-				Likes: 		{} as {[ID: string]: LIKE},
+				Content: 	new Array<Post.content>(0),
+				Comments: new Object() as utils.asJSONArray<Post.comment>,
+				Likes: 		new Object() as utils.asJSONArray<Post.like>,
 
 				IntersectionAnimation: undefined as Animation | undefined
 
@@ -859,9 +861,9 @@
 		computed: {
 
 			...mapState({
-				UI:						state => (state as VuexModules).App.UI,
-				LoginStatus: 	state => (state as VuexModules).Auth.Session.LoginStatus,
-				StoreUser:		state => (state as VuexModules).User.State.UserState,
+				UI:						state => (state as VuexMap).App.UI,
+				LoginStatus: 	state => (state as VuexMap).Auth.Session.LoginStatus,
+				StoreUser:		state => (state as VuexMap).User.State.UserState,
 			}),
 
 			charLimit(): number {
@@ -872,8 +874,8 @@
 				return Reflect.has(this.Likes, this.StoreUser.UserID);
 			},
 
-			sortedComments(): COMMENT[] {
-				return Object.values(this.Comments || {}).sort((a, b) => a.Date - b.Date)
+			sortedComments(): Array<Post.comment> {
+				return Object.values(this.Comments || {}).sort((a, b) => a.date - b.date)
 			}
 			
 		},
@@ -986,7 +988,7 @@
 
 				return new Promise((resolve) => {
 					database.get(`Users/${ this.payload.authorID }/state`).then( response => {
-						this.AuthorInfo = response as USER_STATE; resolve()
+						this.AuthorInfo = response as User.state; resolve()
 					})
 				})
 
@@ -1019,7 +1021,7 @@
 
 				const IMAGE_CONTAINER = this.$refs.ImageHolder as HTMLElement
 
-				const URL: ImageStruct = await this.getImageURL({ 
+				const URL: Image.formats = await this.getImageURL({ 
 					path: this.payload.image,
 					size: width || IMAGE_CONTAINER.offsetWidth * window.devicePixelRatio
 				})
@@ -1042,7 +1044,7 @@
 				}
 			},
 
-			prepareAnimations(el: Element, url: ImageStruct) {
+			prepareAnimations(el: Element, url: Image.formats) {
 
 				const animation = el.animate([
 					{ opacity: 1 },
@@ -1066,17 +1068,17 @@
 
 			sendComment(): void {
 
-				if ( !this.$v.Message.$anyError && this.LoginStatus && this.PreviosMessage !== this.Message ) {
+				if ( !this.$v.Message.$anyError && this.LoginStatus && this.PrevMessage !== this.Message ) {
 
-					this.PreviosMessage = this.Message;
+					this.PrevMessage = this.Message;
 
 					const HASH = utils.hashGenerator()
 
-					const COMMENT: COMMENT = {
-						ID: HASH,
-						Date: Date.now(),
-						Comment : this.Message,
-						UserID: this.StoreUser.UserID,
+					const COMMENT: Post.comment = {
+						id: HASH,
+						date: Date.now(),
+						data: this.Message,
+						userID: this.StoreUser.UserID,
 					}
 
 					database.set(`Posts/PostID-${ this.payload.ID }/comments/Hash-${ HASH }`, COMMENT);

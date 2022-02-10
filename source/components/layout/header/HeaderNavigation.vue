@@ -314,7 +314,6 @@ $TransitionDuration: 250ms;
 	// MODULE
 	export default Vue.extend({
 		components: {
-
 			Popover,
 			Icon,
 			// ASYNC COMPONENTS

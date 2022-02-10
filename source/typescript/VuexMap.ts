@@ -14,6 +14,6 @@ import type { RootState } from '~/store'
 	}
 
 // MODULES
-export interface VuexModules extends RootState, Folders {
+export interface VuexMap extends RootState, Folders {
 
 }

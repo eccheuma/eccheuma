@@ -1,3 +1,8 @@
+export const enum languages {
+  Russian,
+  English,
+}
+
 export namespace russian {
 
   export const userStatus = {
@@ -6,7 +11,7 @@ export namespace russian {
     User      : 'Пользователь'
   }
 
-  export const requestStatus = {
+  export const PurchaseStatus = {
     None    : 'Отсутствует',
     Review  : 'Отправлен на рассмотрение',
     Queue   : 'Поставлен в очередь',
@@ -16,4 +21,18 @@ export namespace russian {
     Denied  : 'Отменён'
   }
 
+  export const Application = {
+		Landing   : 'Лэндинг',
+		Multipage : 'Многостраничник',
+	}
+
+}
+
+export function getLocale(lang: languages) {
+  switch (lang) {
+    case languages.Russian: 
+      return russian
+    default: 
+      return russian
+  }
 }

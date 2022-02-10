@@ -1,3 +1,4 @@
+/* eslint-disable import/no-named-as-default-member */
 import firebase from 'firebase/app'
 import 'firebase/auth'
 
@@ -9,7 +10,7 @@ import 'firebase/auth'
 
 // TYPES
 	import type { REGISTER_FORM, CurentState as SessionState } from '~/store/Auth/Session'
-	import type { VuexModules } 	from '~/typescript/VuexModules'
+	import type { VuexMap } 	from '~/typescript/VuexMap'
 
 // STATE
 	export const state = () => ({
@@ -20,7 +21,7 @@ import 'firebase/auth'
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/typescript/VuexModules' {
+	declare module '~/typescript/VuexMap' {
 		interface Auth {
 			Login: CurentState,
 		}
@@ -34,7 +35,7 @@ import 'firebase/auth'
 	}
 
 // ACTIONS
-	export const actions: ActionTree<CurentState, VuexModules> = {
+	export const actions: ActionTree<CurentState, VuexMap> = {
 		async SignIn({ commit }, { email, password }: REGISTER_FORM) {
 
 			commit('setAction', true)
@@ -47,7 +48,7 @@ import 'firebase/auth'
 
 				const userData: SessionState['CurentUser'] = {
 					uid: user.uid!,
-					email: user.email || String('email is non defined'),
+					email: user.email || String('email is not defined'),
 				}
 				
 				commit('Auth/Session/Change_userState', userData, { root: true })
