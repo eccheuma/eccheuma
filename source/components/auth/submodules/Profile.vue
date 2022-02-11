@@ -286,7 +286,9 @@
 
 			profileAreas(): { [ K in keyof User.state ]?: PROFILE_AREA } | { Messages: PROFILE_AREA } {
 
-				const LastMessage = this.Messages.length ? [ ...this.Messages ].pop()?.Message : ''
+				// ! Refactor target.
+
+				const LastMessage = this.Messages.length ? [ ...this.Messages ].pop()?.message : ''
 
 				return {
 					UserBalance: {

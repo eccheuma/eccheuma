@@ -1,15 +1,12 @@
-import { WebApplications, HTMLcode, GraphicalDesign, CATEGORY, SERVICE, ADDICTION } from '~/typescript/Services';
-import { USER_STATE, USER_REQUEST } from '~/typescript/User';
-import { IMAGE_PROPERTY } from '~/typescript/Image' 
-import { WORKCASE }       from '~/typescript/WorkCase'
-import { MESSAGE }        from '~/typescript/Message'
-import { POST }           from '~/typescript/Post'
+import { Product, Purchase } from '~/typescript/Services';
+import { User } from '~/typescript/User';
+import { Image } from '~/typescript/Image' 
+import { Workcase } from '~/typescript/WorkCase'
+import { Message } from '~/typescript/Message'
+import { Post } from '~/typescript/Post'
 
 // TYPES
   type HASH_LIKE = string;
-
-  type CASE_TYPE    = WebApplications | HTMLcode | GraphicalDesign;
-  type SERVICE_TYPE = CATEGORY;
 
 // MODULE
   export type DatabaseContract = {
@@ -21,32 +18,27 @@ import { POST }           from '~/typescript/Post'
         Vk: HASH_LIKE
       },
       Version: HASH_LIKE,
-      __SELF_KEY__: USER_STATE['UserID']
+      __SELF_KEY__: User.state['UserID']
     },
     Cases: {
-      [ k in CASE_TYPE ]: {
-        [index: string]: WORKCASE
+      [ K in keyof typeof Product ]: {
+        [index: `CaseID-${ number }`]: Workcase.struct
       }
     },
     Gallery: {
-      [index: string]: IMAGE_PROPERTY
+      [index: `PostID-${ number }`]: Image.struct
     },
     Posts: {
-      [index: string]: POST
+      [index: `PostID-${ number }`]: Post.struct
     },
     Service: {
-      Addictions: {
-        [k in CATEGORY]: Array<ADDICTION>
-      },
-      Products: {
-        [k in SERVICE_TYPE]: Array<SERVICE>
-      }
+      [ K in keyof typeof Product ]: Array<Purchase.struct<K>>
     },
     Users: {
       [index: string]: {
-        requests: Array<USER_REQUEST>,
-        messages: Array<MESSAGE>,
-        state: USER_STATE,
+        requests: Array<Purchase.order<any>>,
+        messages: Array<Message.struct>,
+        state: User.state,
       }
     }
   }

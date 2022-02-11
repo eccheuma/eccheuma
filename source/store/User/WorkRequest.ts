@@ -3,6 +3,9 @@
 // API
 	import { database } from '~/api/database'
 
+// UTILS
+	import { utils } from '~/utils';
+
 // INTERFACES AND TYPES 
 
 	import { VuexMap } from '~/typescript/VuexMap'
@@ -54,11 +57,11 @@
 			const MessageCount 	= vuex.rootState.User.Messages.Messages.length
 
 			const Message: Message.struct = {
-				ID: Math.random().toString(36).slice(-8).toUpperCase(),
+				ID: utils.hashGenerator(),
 				userID: 'SUPPORT',
 				from: 'Eccheuma Informer',
 				message: 
-				`Благодарю за оформление заявки на заказ: "${ order.Name }".
+				`Благодарю за оформление заявки на заказ: "${ order.name }".
 				
 				В скором времени вам напишут, и тогда можно будет обсудить условия заказа, правок, оплаты.
 				В среднем ответа можно ждать в диапозоне до 1 дня. Но время может меняться в зависимости от загруженности.
@@ -102,7 +105,7 @@
 			if ( !vuex.state.Orders.length ) return;
 
 			vuex.commit('Change_ActiveRequests', vuex.state.Orders.filter((order) => {
-				return order.Status === Purchase.status.Process
+				return order.status === Purchase.status.Process
 			}))
 
 		},

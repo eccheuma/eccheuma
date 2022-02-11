@@ -1,11 +1,10 @@
 <template>
 	<section class="user_profile-component">
 
-		<div class="user_profile-component-body">
-
+		<transition-group name="opacity-transition" class="user_profile-component-body">
 			<template v-for="(message, index) in Messages">
 				<intesection-component 
-					:key="message.Date" 
+					:key="message.date" 
 					:style="`order: ${ Messages.length - index }`" 
 					:ready="ReadyToRead"
 					:ignite="false"
@@ -14,8 +13,7 @@
 					<message-component :payload="message" />
 				</intesection-component>
 			</template>
-
-		</div>
+		</transition-group>
 
 		<div class="user_profile-component-textarea">
 

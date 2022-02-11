@@ -4,10 +4,10 @@
     <div 
       class="order-container"
       :style="randomCirclePosition"
-      :data-status="payload.Status"
+      :data-status="payload.status"
       >
       <section v-once class="order-header">
-        Информация о заказе <br> «{{ payload.Name }}»
+        Информация о заказе <br> «{{ payload.name }}»
       </section>
       <hr>
       <section class="order-info">
@@ -18,8 +18,10 @@
       <hr>
       <section class="order-time">
 
-        <span v-if="payload.Status === 0">Ориентировочное рассмотрения заявки составит</span>
-        <span v-if="payload.Status === 2">Ориентировочное время сдачи заказа</span>
+        <!-- // ! Refactor status templating -->
+
+        <span v-if="payload.status === 2">Ориентировочное рассмотрения заявки составит</span>
+        <span v-if="payload.status === 3">Ориентировочное время сдачи заказа</span>
         
         <big ref="deliveryTimer" style="opacity: 0">
           <template v-if="waintingTime.days">
@@ -58,11 +60,11 @@
       @extend %pattern-lines;
 
       &[ data-status = "0" ] {
-        border: 1px solid var(--color-accent-edges-200);
+        border: 1px solid transparent;
       }
 
       &[ data-status = "1" ] {
-        border: 1px solid var(--color-accent-warning);
+        border: 1px solid rgb(var(--color-mono-600));
       }
 
       &[ data-status = "2" ] {
@@ -70,7 +72,19 @@
       }
 
       &[ data-status = "3" ] {
+        border: 1px solid var(--color-accent-warning);
+      }
+
+      &[ data-status = "4" ] {
         border: 1px solid var(--color-accent-pass);
+      }
+
+      &[ data-status = "5" ] {
+        border: 1px solid var(--color-accent-edges-100);
+      }
+
+      &[ data-status = "6" ] {
+        border: 1px solid var(--color-accent-error);
       }
 
       &::after {
@@ -216,8 +230,8 @@
   // COMPONENTS
     import CommonButton	from '~/components/buttons/CommonButton.vue';
 
-  // TYPES
-  import type { Purchase } from '~/typescript/Services'
+  // Namespace
+  import { Purchase } from '~/typescript/Services'
 
   type WAITING_TIME_FORMAT = {
     days: number
@@ -227,9 +241,10 @@
 
   type ORDER_INFO_FIELD = { name: string, value: string, type?: string };
 
+  const QUEUE_TIME = 259_200_000;
+
   // MODULE
   export default Vue.extend({
-      
     components: { 
       CommonButton, 
       // FUNCTIONAL
@@ -266,11 +281,11 @@
     computed: {
 
       releaseDate(): number {
-        return this.payload.Accepted + this.payload.Delivery;
+        return this.payload.accepted + this.payload.delivery;
       },
 
       acceptDate(): number {
-        return this.payload.Recived + 259_200_000
+        return this.payload.recived + QUEUE_TIME
       }
 
     },
@@ -295,17 +310,17 @@
     },
     mounted() {
 
+      console.log(this.getOrderType(2));
+
       this.infoList = this.getInfo();
 
-      switch (this.payload.Status) {
+      switch (this.payload.status) {
 
-        case 0: 
-          this.startTicker(this.acceptDate); 
-          break;
+        case Purchase.status.Queue: 
+          this.startTicker(this.acceptDate); break;
 
-        case 2: 
-          this.startTicker(this.releaseDate);
-          break;
+        case Purchase.status.Process: 
+          this.startTicker(this.releaseDate); break;
 
       }
 
@@ -348,13 +363,13 @@
       // TODO | Refactor keys with enums
       getInfo(): Array<ORDER_INFO_FIELD> {
 
-        const { Day, Time } = utils.getLocalTime(this.payload.Recived);
+        const { Day, Time } = utils.getLocalTime(this.payload.recived);
 
         return [
-          { name: 'Состояние',          value: work.defineStatus(this.payload.Status) },
-          { name: 'Цена',               value: `${ this.payload.Cost } ₽` },
+          { name: 'Состояние',          value: work.defineStatus(this.payload.status) },
+          { name: 'Цена',               value: `${ this.payload.cost } ₽` },
           { name: 'Дата заказа',        value: `${ Day } в ${ Time }` },
-          { name: 'Тип Заказа',         value: this.payload.Type },
+          { name: 'Тип Заказа',         value: this.getOrderType(this.payload.type) },
           { name: 'Индификатор заказа', value: this.payload.ID, type: 'id' },
         ]
 
@@ -375,6 +390,10 @@
 
         }
 
+      },
+
+      getOrderType(type: number): string {
+        return this.payload.category[type];
       }
 
     }

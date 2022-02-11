@@ -1,11 +1,10 @@
 <template>
 	<div 
-		v-if="comment.data.length" 
 		:id="`HASH-${ commentID }`" 
 		class="post-comment-item" 
 		:style="`
 			--t: ${ Math.trunc(Math.random() * 100) }%; 
-			--l:${ Math.trunc(Math.random() * 100) }%;
+			--l: ${ Math.trunc(Math.random() * 100) }%;
 		`.trim()"
 		>
 
@@ -16,13 +15,13 @@
 		<section class="post-comment-item-author">
 			<span>{{ author.UserName }}</span>
 			<span>
-				{{ date.Day }} в {{ date.Time }}
+				{{ localeDate.Day }} в {{ localeDate.Time }}
 			</span>
 		</section>
 
 		<section class="post-comment-item-content">
 			<hr v-once>
-			<p v-once>
+			<p>
 				{{ comment.data }}
 			</p>
 			<hr v-once>
@@ -281,7 +280,7 @@
 		data() {
 			return {
 
-				date: utils.getLocalTime(0),
+				localeDate: utils.getLocalTime(0),
 
 				author: new Object() as User.state,
 				comment: new Object() as Post.comment,
@@ -297,14 +296,16 @@
 
 			canDelete(): boolean {
 
-				switch (this.author.UserStatus) {
+				if ( !this.LoginStatus ) return false;
+
+				switch (this.UserState.UserStatus) {
 
 					case User.status.Admin: 
 						return true;
 					case User.status.Moderator: 
 						return true;
 					default:
-						return this.author.UserID === this.comment.userID;
+						return this.UserState.UserID === this.comment.userID;
 
 				}
 
@@ -326,7 +327,7 @@
 
 			this.comment = await database.get(`Posts/PostID-${ this.postID }/comments/Hash-${ this.commentID }`)
 
-			this.date = utils.getLocalTime(this.comment.date)
+			this.localeDate = utils.getLocalTime(this.comment.date)
 
 		},
 		methods: {

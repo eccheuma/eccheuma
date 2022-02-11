@@ -8,10 +8,12 @@
       <span class="message-header-date">
         {{ date.Day }} в {{ date.Time }}
       </span>
-      <hr v-once>
-      <span v-if="payload.read" class="message-header-read">
-        <icon name="Okay" /> Прочитанно
-      </span>
+      <template v-if="payload.readed">
+        <hr>
+        <span class="message-header-read">
+          <icon name="Okay" /> Прочитанно
+        </span>
+      </template>
     </span>
     <hr v-once>
     <span v-once class="message-body">{{ payload.message }}</span>
@@ -24,15 +26,15 @@
 
     --border-color: rgb(var(--color-mono-400));
 
-    &[data-status = 0] {
+    &[data-status="0"] {
       --border-color: var(--color-accent-pass) !important;
     }
 
-    &[data-status = 1] {
+    &[data-status="1"] {
       --border-color: var(--color-accent-warning) !important;
     }
 
-    &[data-status = 2] {
+    &[data-status="2"] {
       --border-color: var(--color-accent-notice) !important;
     }
 

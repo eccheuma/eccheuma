@@ -36,8 +36,8 @@
 								Услуга не выбрана
 							</option>
 							<template v-for="item in services">
-								<option :key="item.Type" :value="item">
-									{{ item.Name }}
+								<option :key="item.type" :value="item">
+									{{ item.name }}
 								</option>
 							</template>
 						</select>
@@ -57,8 +57,8 @@
 											Услуга не выбрана
 										</option>
 										<template v-for="item in PurchaseAdditions">
-											<option :key="item.Type" :value="item">
-												{{ item.Title }}
+											<option :key="item.name" :value="item">
+												{{ item.name }}
 											</option>
 										</template>
 									</select>
@@ -78,7 +78,7 @@
 				<big>Описание услуги</big>
 				<hr>
 				<span>
-					{{ form.service.Description }}
+					{{ form.service.about }}
 				</span>
 			</section>
 
@@ -97,12 +97,12 @@
 				<ul v-if="_cost !== 0">
 
 					<template v-if="form.service">
-						<li>{{ form.service.Name }}: <strong> {{ locateCost(form.service.Cost) }} ₽ ( {{ quantity }} шт. )</strong></li>	
+						<li>{{ form.service.name }}: <strong> {{ locateCost(form.service.cost) }} ₽ ( {{ quantity }} шт. )</strong></li>	
 					</template>
 
 					<template v-if="form.addictions && form.addictions.length">
 						<li v-for="(item, index) in form.addictions" :key="index">
-							{{ item.Title }}: <strong>{{ locateCost(item.Cost) }} ₽ - {{ quantity }} шт.</strong>
+							{{ item.name }}: <strong>{{ locateCost(item.cost) }} ₽ - {{ quantity }} шт.</strong>
 						</li>	
 					</template>
 
@@ -334,26 +334,23 @@
 // API
 	import { database } from '~/api/database'
 
-// UTILS
-	import { utils } from '~/utils'
-
 // TYPES
-	import type { CATEGORY, SERVICE, ADDICTION } from '~/typescript/Services'
+	import type { Categories, Purchase } from '~/typescript/Services'
 
 // COMPONENTS 
 	import CaptionCard from '~/components/common/Caption.vue'
 
 	type SERVICE_TYPE_SELECT = {
-		[K in CATEGORY]: {
+		[C in Categories]: {
 			title: string
 		}
 	};
 
 	type FORM = {
-		type: CATEGORY
-		service: SERVICE
-		quantity: number,
-		addictions: Array<ADDICTION>
+		type: Categories
+		service: Purchase.struct<any>
+		quantity: number
+		addictions: Array<Purchase.struct<any>>
 	};
 
 	export default Vue.extend({
@@ -373,8 +370,8 @@
 
 				tax: 1.21,
 
-				services: 	[] as Array<SERVICE>,
-				PurchaseAdditions: 	[] as Array<ADDICTION>,
+				services: 	[] as Array<Purchase.struct<any>>,
+				PurchaseAdditions: 	[] as Array<Purchase.struct<any>>,
 
 				cost: 0,
 
@@ -385,15 +382,15 @@
 			serviceTypes(): Readonly<SERVICE_TYPE_SELECT> {
 				return {
 
-					WebApplications: {
+					Application: {
 						title: 'Готовые решения'
 					},
 
-					GraphicalDesign: {
+					Graphic: {
 						title: 'Графический дизайн'
 					},
 
-					HTMLcode: {
+					FrontEnd: {
 						title: 'Вёрстка'
 					}
 
@@ -402,8 +399,8 @@
 
 			_cost(): Readonly<number> {
 				
-				const PurchaseAdditionsCost = this.form.addictions?.map(add => add.Cost).reduce((prev, cur) => prev + cur, 0) || 0;
-				const ServiceCost		= this.form.service?.Cost || 0
+				const PurchaseAdditionsCost = this.form.addictions?.map(add => add.cost).reduce((prev, cur) => prev + cur, 0) || 0;
+				const ServiceCost		= this.form.service?.cost || 0
 
 				return (( PurchaseAdditionsCost + ServiceCost ) * this.quantity ) * this.tax;
 
@@ -433,9 +430,7 @@
 
 					this.form.service = undefined;
 
-					type Response = utils.asJSONArray<SERVICE>;
-
-					this.services = await database.get<Response>(`Service/${ category }`).then(data => Object.values(data));
+					this.services = await database.get(`Service/${ category }`).then(data => Object.values(data));
 
 				}
 			},
@@ -444,9 +439,7 @@
 
 					this.form.addictions = [];
 
-					type Response = utils.asJSONArray<ADDICTION>;
-
-					this.PurchaseAdditions = await database.get<Response>(`Service/Addictions/${ service.Type }`).then(data => Object.values(data));
+					this.PurchaseAdditions = await database.get(`Service/Addictions/${ service.Type }`).then(data => Object.values(data));
 
 				}
 			},

@@ -1,9 +1,13 @@
-// API
+// VUEX
 	import type { ActionTree, MutationTree } from 'vuex'
+
+// UTILS
+	import { utils } from '~/utils';
+
+// API
 	import { database } from '~/api/database';
 
-// VUEX
-
+// TYPES
 	import type { VuexMap } from '~/typescript/VuexMap'
 	import type { Message } from '~/typescript/Message'
 
@@ -34,7 +38,7 @@
 		},
 
 		setMessages(state, messages: Array<Message.struct>) {
-			state.Messages = messages.sort((a, b) => a.date - b.date);
+			state.Messages = messages.sort((a, b) => b.date - a.date);
 		},
 		
 	}
@@ -42,16 +46,18 @@
 // ACTIONS
 	export const actions: ActionTree<CurentState, VuexMap>  = {
 
-		async getMessages({ dispatch, commit, rootState }) {
+		getMessages({ dispatch, commit, rootState }) {
 
 			// Получение ID пользователя
 			const { uid } = rootState.Auth.Session.CurentUser;
 
-			await database.get(`Users/${uid}/messages`).then(messages => {
+			database.listen<utils.asJSONArray<Message.struct>>(`Users/${uid}/messages`, messages => {
+				
 				commit('setMessages', Object.values(messages)); 
-			})
 
-			dispatch('checkUnreaded');
+				dispatch('checkUnreaded');
+
+			})
 
 		},
 

@@ -6,13 +6,13 @@
 		</portal>
 
 		<section class="service-card-header">
-			<span>{{ payload.title }}</span>
-			<span>{{ payload.subTitle }}</span>
+			<span>{{ payload.name }}</span>
+			<span>{{ payload.description }}</span>
 		</section>
 		<section class="service-card-description">
 			<h6>Описание</h6>
 			<hr v-once>
-			<span>{{ payload.description }}</span>
+			<span>{{ payload.about }}</span>
 		</section>
 		<section class="service-card-price">
 			<h6>Цены</h6>
@@ -24,8 +24,8 @@
 					:class="{ active: ActiveSection === i }" 
 					@click="ActiveSection = i"
 				>
-					<span>{{ item.Name }}</span>
-					<span>от {{ item.Cost }} ₽</span>
+					<span>{{ item.name }}</span>
+					<span>от {{ item.cost }} ₽</span>
 				</div>
 			</template>
 		</section>
@@ -39,8 +39,8 @@
 					:class="{ active: ActiveSection === i }" 
 					@click="ActiveSection = i"
 				>
-					<span>{{ item.Name }}</span>
-					<span>от {{ item.Time }}</span>
+					<span>{{ item.name }}</span>
+					<span>от {{ item.time }}</span>
 				</div>
 			</template>
 		</section>
@@ -228,8 +228,8 @@
 	import CaptionCard 	from '~/components/common/Caption.vue'
 
 	// TYPES 
-	import type { SERVICE, SERVICES_CARD } 	from '~/typescript/Services'
-	import type { VuexMap } 						from '~/typescript/VuexMap'
+	import type { Purchase } from '~/typescript/Services'
+	import type { VuexMap } from '~/typescript/VuexMap'
 
 	// MODULE
 	export default Vue.extend({
@@ -242,7 +242,7 @@
 			payload: {
 				type: Object,
 				required: true
-			} as PropOptions<SERVICES_CARD>,
+			} as PropOptions<Purchase.struct<any>>,
 			wide: {
 				type: Boolean,
 				default: false,
@@ -253,7 +253,7 @@
 
 				ActiveSection: 0,
 
-				Services: [] as SERVICE[],
+				Services: new Array<Purchase.struct<any>>(0),
 
 				Modal: false,
 
@@ -280,10 +280,10 @@
 				this.Modal = value
 			},
 
-			async getDatabaseData(): Promise<Array<SERVICE>> {
+			async getDatabaseData(): Promise<Array<Purchase.struct<any>>> {
 
 				return await database
-					.get(`Service/${ this.payload.path }`)
+					.get(`Service/${ this.payload.category }`)
 					.then(data => Object.values(data));
 
 			}

@@ -27,7 +27,7 @@
 	import { database } from '~/api/database';
 
 	// TYPES
-	import type { WORKCASE } from '~/typescript/WorkCase'
+	import type { Workcase } from '~/typescript/WorkCase'
 
 	// MODULE
 	export default Vue.extend({
@@ -38,7 +38,7 @@
 		data() {
 			return {
 
-				Case: [] as WORKCASE[],
+				Case: new Array() as Array<Workcase.struct>,
 
 			}
 		},

@@ -412,7 +412,7 @@
 	import { mapState } from 'vuex';
 
 	// TYPES
-	import type { WORKCASE, CONTENT } from '~/typescript/WorkCase';
+	import type { Workcase } from '~/typescript/WorkCase';
 
 	// VUEX MODULE TYPE MAP
 	import type { VuexMap } from '~/typescript/VuexMap';
@@ -433,9 +433,9 @@
 		},
 		mixins: [ IntersectionObserver ],
 		props: {
-			content: 		{ type: Object, required: true  } as PropOptions<CONTENT >,
-			properties: { type: Object, required: true  } as PropOptions<WORKCASE['properties'] >,
-			rating: 		{ type: Number, default: 8.5    } as PropOptions<WORKCASE['rating'] >
+			content: 		{ type: Object, required: true  } as PropOptions<Workcase.content>,
+			properties: { type: Object, required: true  } as PropOptions<Workcase.struct['properties']>,
+			rating: 		{ type: Number, default: 8.5    } as PropOptions<Workcase.struct['rating'] >
 		},
 		data() {
 			return {

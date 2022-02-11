@@ -20,7 +20,7 @@
           <img :src="post.thumb" alt="">
           <hr v-once>
           <p>
-            {{ Post.struct }}
+            {{ post.body }}
           </p>
           <hr v-once>
           <common-button :link="post.link" target="_blank" type="a">
@@ -368,7 +368,7 @@
             resolve(Object.values(response).map(item => {
 
               return {
-                thumb: item.attachments[0].photo.Image.sizes[4].url,
+                thumb: item.attachments[0].photo.sizes[4].url,
                 body: item.text,
                 date: utils.getLocalTime(Number(`${ item.date + '000' }`)),
                 link: `https://vk.com/club${ Math.abs(item.from_id) }?w=wall${ item.from_id }_${ item.id }`,

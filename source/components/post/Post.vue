@@ -199,7 +199,7 @@
 										:key="item.date" 
 										:userID="item.userID"
 										:postID="payload.ID" 
-										:commentID="item.id" 
+										:commentID="item.ID" 
 									/>
 								</transition-group>
 							</section>
@@ -1004,7 +1004,8 @@
 					case 'Content':
 						this[section] = await database.get(PATH); break;
 					default:
-						database.listen(PATH, data => { this[section] = data }); break;
+						// ! Need to do something with database API typing.  
+						database.listen(PATH, (data: any) => { this[section] = data }); break;
 				}
 
 			}, 
@@ -1075,7 +1076,7 @@
 					const HASH = utils.hashGenerator()
 
 					const COMMENT: Post.comment = {
-						id: HASH,
+						ID: HASH,
 						date: Date.now(),
 						data: this.Message,
 						userID: this.StoreUser.UserID,

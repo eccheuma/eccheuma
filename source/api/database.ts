@@ -42,7 +42,7 @@ export namespace database {
   
   }
   
-  export function listen(path: string, callback: (value: any) => any, params?: Partial<GetParams>) {
+  export function listen<C extends object | any>(path: string, callback: (value: C) => any, params?: Partial<GetParams>) {
   
     const REF = firebase.database().ref(path);
   
@@ -62,7 +62,7 @@ export namespace database {
   
   export function set(path: string, data: any): Promise<any> {
   
-    console.log('setDatabaseData', path);
+    console.log('setDatabaseData', path, data);
   
     return firebase.database().ref(path).set(data, (response) => {
       console.log(response);

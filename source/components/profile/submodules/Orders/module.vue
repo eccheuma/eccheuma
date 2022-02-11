@@ -3,12 +3,12 @@
 
 		<portal v-if="orderModal" to="Modal">
 			<div class="user_profile-component-modal" @click.self="orderModal = false">
-				<order v-for="item in Orders" :key="item.Accepted" :payload="item" />
+				<order v-for="item in Orders" :key="item.accepted" :payload="item" />
 			</div>
 		</portal>
 
 		<div class="user_profile-component-orders">
-			<order v-for="item in Orders" :key="item.Accepted" :payload="item" />
+			<order v-for="item in Orders" :key="item.accepted" :payload="item" />
 		</div>
 
 		<hr>
@@ -91,30 +91,34 @@
 	// DEFAULT ORDER SAMPLE 
 	const DEFAULT_ORDER: Purchase.order<'Application'> = {
 		ID					: utils.hashGenerator(),
-		Status			: Purchase.status.Review,
-		Accepted		: 1_632_096_000_000,
-		Recived			: 1_631_664_000_000,
-		Delivery		: 432_000_000,
-		Declined		: false,
-		Cost				: 21_000,
-		Category		: Product.Application,
-		Type				: Product.Application.Multipage,
-		Name				: 'Приложение на vue.js',
-		Description	: 'Тестовое приложение',
+		status			: Purchase.status.Process,
+		accepted		: 1_645_096_000_000,
+		recived			: 1_644_664_000_000,
+		delivery		: 432_000_000,
+		declined		: false,
+		cost				: 21_000,
+		category		: Product.Application,
+		type				: Product.Application.Multipage,
+		name				: 'Приложение на vue.js',
+		about				: 'Тестовое приложение',
+		single			: true,
+		quantity		: 1,
 	} 
 
 	const LOGO_ORDER: Purchase.order<'Graphic'> = {
 		ID					: utils.hashGenerator(),
-		Status			: Purchase.status.Queue,
-		Accepted		: 0,
-		Recived			: Date.now(),
-		Delivery		: 64_800_000,
-		Declined		: false,
-		Cost				: 5_000,
-		Category		: Product.Graphic,
-		Type				: Product.Graphic.Logo,
-		Name				: 'Логотип для "Рога и копыта"',
-		Description	: 'Лого',
+		status			: Purchase.status.Queue,
+		accepted		: 0,
+		recived			: Date.now(),
+		delivery		: 64_800_000,
+		declined		: false,
+		cost				: 5_000,
+		category		: Product.Graphic,
+		type				: Product.Graphic.Logo,
+		name				: 'Логотип для "Рога и копыта"',
+		about				: 'Лого',
+		single			: true,
+		quantity		: 1,
 	} 
 
 	export default Vue.extend({
@@ -137,7 +141,7 @@
 		},
 		created() {
 			// ! This is default orders. Not for production release
-			this.setOrders([DEFAULT_ORDER, LOGO_ORDER])
+			this.setOrders([LOGO_ORDER, DEFAULT_ORDER])
 		},
 		mounted() {
 			this.setRequestContent(this.UserState.UserID)

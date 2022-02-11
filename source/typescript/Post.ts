@@ -11,7 +11,7 @@ export namespace Post {
 	}
 	
 	export type comment = {
-		id			: string
+		ID			: string
 		date		: number
 		userID	: string
 		data		: string

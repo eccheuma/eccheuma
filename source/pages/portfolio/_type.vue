@@ -24,11 +24,14 @@
 
 	import Vue from 'vue'
 
+	// // UTILS
+	// import { utils } from '~/utils';
+
 	// API
 	import { database } from '~/api/database';
 
 	// TYPES
-	import type { WORKCASE } from '~/typescript/WorkCase'
+	import type { Workcase } from '~/typescript/WorkCase'
 
 	// MODULE
 	export default Vue.extend({
@@ -42,7 +45,7 @@
 		data() {
 			return {
 
-				Case: [] as WORKCASE[],
+				Case: new Array() as Array<Workcase.struct>,
 
 			}
 		},
@@ -52,7 +55,7 @@
 
 		},
 		methods: {
-			async GetCases(): Promise<Array<WORKCASE>> {
+			async GetCases(): Promise<Array<Workcase.struct>> {
 
 				// ! Refactor this piece of shit as soon as posible
 				// @ That path defenition is a mess

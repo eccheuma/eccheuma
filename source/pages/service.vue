@@ -18,7 +18,8 @@
 
 		</section>
 
-		<section class="service-calculator">
+		<!-- // ! Refactor calc  -->
+		<!-- <section class="service-calculator">
 
 			<section-header>
 				<template #header>	
@@ -31,7 +32,7 @@
 
 			<calculator />
 
-		</section>
+		</section> -->
 
 		<section class="service-products">
 
@@ -102,26 +103,23 @@
 	// COMPONENTS
 	import SectionHeader 		from '~/components/common/SectionHeader.vue'
 	import ServiceCard 			from '~/components/service/ServiceCard.vue'
-	import Calculator				from '~/components/service/Calculator.vue'
 	import PromoBanner      from '~/components/promo/PromoBanner.vue'
+	// import Calculator				from '~/components/service/Calculator.vue'
 
 	// TYPES 
-	import type { Categories } from '~/typescript/Services'
+	import type { Categories, Purchase } from '~/typescript/Services'
 
-	type CardStruct = {
-		description		: string,
-		category			: Categories,
-		title					: string,
-		about					: string
+	interface CardStruct extends Purchase.Description {
+		category : Categories,
 	}
 
 	// MODULE
 	export default Vue.extend({
 		components: {
-			ServiceCard,
 			SectionHeader,
+			ServiceCard,
 			PromoBanner,
-			Calculator,
+			// Calculator,
 		}, 
 		mixins: [ TransitionSound ],
 		layout: 'Application',
@@ -133,19 +131,19 @@
 				Products: [
 					{ 
 						category: 'Application',
-						title: 'Готовые решения',
+						name: 'Готовые решения',
 						description: 'Лэндинги, сайты, CMS, web приложения',
 						about: 'Включает в себя полный цикл создания приложения / сайта / лэндинга. Начиная от создания графического макета, с его последующей вёрсткой, и созданием бизнес логики на платформе "Vue & Firebase".'
 					},
 					{
 						category: 'Graphic',
-						title: 'Графический Дизайн',
+						name: 'Графический Дизайн',
 						description: 'Логотипы, баннера, визитки',
 						about: 'В данном бандле есть всё, начиная от оформления заказа на визитки, логотипы, и прочие услуги по графическому макетированию. Так же работа с вектором, если она необходима.'
 					},
 					{
 						category: 'FrontEnd',
-						title: 'Вёрстка',
+						name: 'Вёрстка',
 						description: 'Вёрстка графических макетов',
 						about: 'Создание HTML и CSS(Sass) разметки на основе готового графического макета, для дальнейшей работы Front-End разработчика и переноса полученной разметки на нужную для вас платформу.'
 					}

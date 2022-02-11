@@ -1,7 +1,3 @@
-
-// TYPES
-import type {  } from '~/typescript/Services';
-
 // ENUMS
 import { Purchase } from '~/typescript/Services';
 

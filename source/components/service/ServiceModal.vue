@@ -145,7 +145,7 @@
 // TYPES
 	import type { VuexMap } from '~/typescript/VuexMap'
 
-	import type { SELECTED_SERVICE, CATEGORY } from '~/typescript/Services'
+	import type { Purchase, Categories } from '~/typescript/Services'
 
 // MODULE
 	export default Vue.extend({
@@ -157,12 +157,12 @@
 			serviceType: {
 				type: String,
 				required: true
-			} as PropOptions<CATEGORY>
+			} as PropOptions<Categories>
 		},
 		data() {
 			return {
 
-				SelectedService: {} as SELECTED_SERVICE
+				selectedPurchase: {} as Purchase.struct<any>
 
 			}
 		},
@@ -180,8 +180,8 @@
 				SendWorkRequest: 'User/WorkRequest/SendWorkRequest'
 			}),
 
-			SetSelectedService(_service: SELECTED_SERVICE) {
-				this.SelectedService = _service 
+			SetSelectedService(purchase: Purchase.struct<any>) {
+				this.selectedPurchase = purchase 
 			},
 
 			CloseModal() {
@@ -194,7 +194,7 @@
 
 				this.CloseModal();
 
-				this.SendWorkRequest(this.SelectedService)
+				this.SendWorkRequest(this.selectedPurchase)
 
 			}
 			

@@ -6,6 +6,9 @@
 	import { database } from '~/api/database';
 	import { storage } from '~/api/storage';
 
+// UTILS
+	import { utils } from '~/utils';
+
 // VUEX
 
 	import type { VuexMap } from '~/typescript/VuexMap'
@@ -14,7 +17,7 @@
 	import type { Message } 			from '~/typescript/Message'
 
 // NAMESPACES
-	import { User } from '~/typescript/User'
+	import { User } 		from '~/typescript/User'
 	import { Purchase } from '~/typescript/Services';
 
 // STATE
@@ -69,7 +72,7 @@
 				})
 
 				await database.set(`Users/${ user.uid  }/messages/Hash_0`, {
-					ID: Math.random().toString(36).slice(-8).toUpperCase(),
+					ID: utils.hashGenerator(),
 					date: Date.now(),
 					from: 'Eccheuma',
 					userID: 'SUPPORT',

@@ -25,27 +25,27 @@ export namespace Product {
 export type Categories 	= keyof typeof Product;
 export type Products 		= Product.Application | Product.FrontEnd | Product.Graphic;
 
-interface Timing { Delivery: number };
-
-// That TS mess on Type field, should return keys of Product enums. 
-// As is TS namespaces can't be used as types, "We have what we have". I gonna to leave it as it is, until I found a better approach...
-export interface Service<C extends Categories> extends Timing {
-	Category		: typeof Product[C]
-	Type				: typeof Product[C][keyof typeof Product[C]]
-	Cost				: number
-	Name				: string
-	Delivery		: number
-	Description	: string
-}
-
 export namespace Purchase {
 
-	export interface Addition extends Timing {
-		Cost: number
-		Type: string
-		Title: string
-		Quantity: number
-		Descriprion?: string
+	interface Timing {
+		delivery : number
+	}
+
+	export interface Description {
+		about				: string
+		description	: string
+		name				: string
+		time				: string
+	}
+
+	// That TS mess on Type field, should return keys of Product enums. 
+	// As is TS namespaces can't be used as types, "We have what we have". I gonna to leave it as it is, until I found a better approach...
+	export interface struct<C extends Categories | 'Application'> extends Timing, Partial<Description> {
+		category		: typeof Product[Categories]
+		type				: typeof Product[C][keyof typeof Product[C]]
+		single			: boolean
+		cost				: number
+		quantity		: number
 	}
 	
 	export const enum status {
@@ -58,20 +58,13 @@ export namespace Purchase {
 		Denied,
 	}
 	
-	export interface order<C extends Categories> extends Timing, Service<C> {
+	export interface order<C extends Categories> extends Purchase.struct<C> {
 		ID				: string,
-		Status		: status
-		Accepted	: number
-		Recived		: number
-		Declined	: boolean
-	}
-
-	export interface struct {
-		cost				: number
-		type				: string
-		title				: string
-		description : string
-		single			: boolean
+		status		: status
+		delivery	: number
+		accepted	: number
+		recived		: number
+		declined	: boolean
 	}
 
 }
