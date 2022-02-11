@@ -114,21 +114,18 @@
 
     build: {
 
-      // extend(config, { isClient }) {
-      //   if ( isClient ) {
-      //     config.entry = {
-      //       pixi: 'pixi.js',
-      //       database: 'firebase/database',
-      //       storage: 'firebase/storage',
-      //       core: 'core-js',
-      //     }
-      //   }
-      // },
+      extend(config, { isClient }) {
+        if ( isClient ) {
+          config.entry = {
+            pixi: 'pixi.js',
+            fireDB: 'firebase/database',
+          }
+        }
+      },
 
       analyze: !inDevelopment,
       parallel: inDevelopment,
       publicPath: 'resources',
-      hardSource: true,
 
       filenames: {
         font:   () => 'fonts/[name].[ext]',
@@ -151,6 +148,9 @@
 
       optimization: {
         minimize: !inDevelopment,
+        splitChunks: {
+          maxSize: 524_288
+        }
       },
 
     },
