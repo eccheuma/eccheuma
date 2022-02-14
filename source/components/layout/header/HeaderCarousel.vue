@@ -56,8 +56,8 @@
 								>
 
 								<picture ref="ImageHolder" class="eccheuma_swiper-image" :class="!CarouselFocus ? `focused` : `unfocused`">
-									<source :srcset="item.formats.avif" type="image/avif">
-									<img :src="item.formats.webp">
+									<source :srcset="item.formatsStruct.avif" type="image/avif">
+									<img :src="item.formatsStruct.webp">
 								</picture>
 
 							</parallax>
@@ -349,7 +349,7 @@
 		type HeaderSlide = {
 			content: Pick<Post.struct, 'title' | 'description' | 'ID' | 'tags'>
 			date: LocaleDate
-			formats: Image.formats
+			formatsStruct: Image.formatsStruct
 		}
 
 	// VARS
@@ -420,7 +420,7 @@
 						return {
 							content: { title, description, ID, tags },
 							date: utils.getLocalTime(date),
-							formats: await this.getImageURL({ 
+							formatsStruct: await this.getImageURL({ 
 								path: image,
 								size: 1440,
 							})

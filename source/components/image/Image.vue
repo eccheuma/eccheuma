@@ -289,7 +289,7 @@
 	import EmitSound from '~/assets/mixins/EmitSound'
 
 	// VARS
-	const PLACEHOLDER: Image.formats = {
+	const PLACEHOLDER: Image.formatsStruct = {
 		avif: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src,
 		webp: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src
 	}
@@ -323,7 +323,7 @@
 
 				LocalDate: utils.getLocalTime(this.content.date),
 
-				Source: PLACEHOLDER as Image.formats,
+				Source: PLACEHOLDER as Image.formatsStruct,
 
 				Modal: false,
 				ImageFocus: false,
@@ -375,7 +375,7 @@
 				const IMAGE_CONTAINER = this.$refs.holder as Element
 				const { width } = IMAGE_CONTAINER?.getBoundingClientRect();
 
-				const URL: Image.formats = await this.getImageURL({ 
+				const URL: Image.formatsStruct = await this.getImageURL({ 
 					path: this.content.path,
 					size: width * window.devicePixelRatio
 				})
@@ -388,7 +388,7 @@
 
 			},
 
-			prepareAnimations(el: Element, url: Image.formats) {
+			prepareAnimations(el: Element, url: Image.formatsStruct) {
 
 				const animation = el.animate([
 					{ opacity: 1 },

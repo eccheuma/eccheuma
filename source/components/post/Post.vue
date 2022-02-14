@@ -304,7 +304,7 @@
 
 			// Desktop
 			@media screen and ( min-width: $mobile-breakpoint ) {
-				background-image: url(~assets/images/Stripes.png?format=webp&size=20);
+				background-image: url(~assets/images/Stripes.png?size=15);
 			}
 
 		}
@@ -774,7 +774,7 @@
 	type SECTIONS = 'Likes' | 'Comments' | 'Content'
 
 	// IMAGE PLACEHOLDER
-	const PLACEHOLDER: Image.formats = {
+	const PLACEHOLDER: Image.formatsStruct = {
 		avif: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=avif').src,
 		webp: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src
 	}
@@ -1022,7 +1022,7 @@
 
 				const IMAGE_CONTAINER = this.$refs.ImageHolder as HTMLElement
 
-				const URL: Image.formats = await this.getImageURL({ 
+				const URL: Image.formatsStruct = await this.getImageURL({ 
 					path: this.payload.image,
 					size: width || IMAGE_CONTAINER.offsetWidth * window.devicePixelRatio
 				})
@@ -1045,7 +1045,7 @@
 				}
 			},
 
-			prepareAnimations(el: Element, url: Image.formats) {
+			prepareAnimations(el: Element, url: Image.formatsStruct) {
 
 				const animation = el.animate([
 					{ opacity: 1 },

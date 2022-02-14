@@ -224,12 +224,12 @@
 
 				this.idle = false;
 
-				const StageDur = () => Math.trunc(300 - (150 * Math.random()));
+				const StageDur = () => Math.trunc(1000 - (500 * Math.random()));
 
-				this.animateText({ direction: 'normal' }).then(() => {
+				this.animateText({ direction: 'normal', duration: StageDur(), delay: this.curentStage ? 0 : 250 }).then(() => {
 
 					const animations = [
-						this.animateText({ direction: 'reverse', endDelay: StageDur() }),
+						this.animateText({ direction: 'reverse', duration: 150 }),
 						this.animateLogo({ direction: 'normal',  duration: StageDur() }),
 					]
 	
@@ -276,8 +276,6 @@
 					const ANIMATION = this.$AnimeJS({
 						targets: this.$refs.stage,	
 						easing: 'easeInOutQuad',
-						duration: 250,
-						endDelay: 50,
 						round: 100, 
 						opacity: [0, 1],
 						autoplay: false,

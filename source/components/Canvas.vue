@@ -51,7 +51,7 @@
 		},
 		{
 			name: 'Pattern',
-			path: require('~/assets/images/__PATTERN__.png?format=webp&size=480').src
+			path: require('~/assets/images/Pattern.png?format=webp&size=480').src
 		},
 		{
 			name: 'Stripes',

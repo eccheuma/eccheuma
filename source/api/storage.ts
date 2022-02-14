@@ -4,6 +4,10 @@ import type { FileOptions } from '@supabase/storage-js/src/lib/types'
 // SUPABASE
 import Supabase from '~/plugins/Supabase';
 
+export namespace references {
+  export const images = 'images'
+}
+
 // MODULE NAMESPACE
 export namespace storage {
   export function reference(path: string): string | null {

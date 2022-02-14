@@ -7,6 +7,11 @@ export namespace Image {
 		large				= 1280,
 		full				= 1440,
 	}
+
+	export enum allowedFormats {
+		avif,
+		webp,
+	}
 	
 	export type struct = {
 		ID: number,
@@ -26,11 +31,9 @@ export namespace Image {
 			zoom: boolean
 		}
 	}
-
-	export type allowedFormats = 'webp' | 'avif';
 	
-	export type formats = {
-		[Format in allowedFormats]: string
+	export type formatsStruct = {
+		[F in Partial<keyof typeof allowedFormats>]: string
 	}
 
 }

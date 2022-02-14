@@ -118,7 +118,7 @@
         if ( isClient ) {
           config.entry = {
             pixi: 'pixi.js',
-            fireDB: 'firebase/database',
+            firebase: 'firebase/database',
           }
         }
       },

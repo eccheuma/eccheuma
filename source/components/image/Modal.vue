@@ -168,7 +168,7 @@
 	type PREVIEW_MODE = 'cover' | 'contain' | 'zoom'
 
 	// VARIABLES
-	const PLACEHOLDER: Image.formats = {
+	const PLACEHOLDER: Image.formatsStruct = {
 		avif: require('~/assets/images/ImagePlaceholder.png?resize&size=1000&format=avif').src,
 		webp: require('~/assets/images/ImagePlaceholder.png?resize&size=1000&format=webp').src,
 	}
@@ -227,7 +227,7 @@
 				this.URL = await this.getImageURL({ 
 					path: this.path,
 					size: 1440,
-				}) as Image.formats
+				}) as Image.formatsStruct
 			}
 		},
 		methods: {

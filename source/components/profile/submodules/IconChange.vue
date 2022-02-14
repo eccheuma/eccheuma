@@ -11,6 +11,7 @@
 				accept=".png, .jpg, .webp" 
 				@change="uploadIcon"
 				>
+			<span>{{ CustomIconName }}</span>
 			<common-button type="label" for="CustomImage">
 				Загрузить своё
 			</common-button>
@@ -140,8 +141,7 @@
 	import CommonButton from '~/components/buttons/CommonButton.vue'
 
 	// TYPES 
-	type EXTENSIONS = [ string, 'png' | 'jpg' | 'jpeg' | 'webp' ];
-	type MODE				= 'custom' | 'predefined' | undefined;
+	type MODE = 'custom' | 'predefined' | undefined;
 
 	// VARIABLES 
 	const DefaultIconAnimation: AnimeAnimParams = {
@@ -181,7 +181,6 @@
 			}),
 		},
 		watch: {
-			Mode: 'animatePredefinedIcons',
 			Pending: {
 				handler(value) {
 
@@ -247,19 +246,21 @@
 			async uploadIcon() {
 
 				this.Pending = true;
-				this.NewIcon = '';
+				this.NewIcon = String();
 
-				const EL = this.$refs.CustomIcon as HTMLInputElement
-				const N = EL.value.split( /\\/g ).pop()?.split( /\./g ) as EXTENSIONS;
+				const INPUT = this.$refs.CustomIcon as HTMLInputElement
+				
+				const PATH			= 'UserIcons/ID'
+				const ID 				= this.UserState.UserID
+				// eslint-disable-next-line prefer-regex-literals
+				const FILENAME 	= new RegExp('.*(avif|png|jpe?g|webp)').exec(INPUT.value)!; 
 
-				const PATH	= 'UserIcons/ID'
-				const ID 		= this.UserState.UserID
-				const EXT 	= N?.[1]; 
+				this.CustomIconName = FILENAME[0].replace(FILENAME[1], '');
 
-				if ( EL.files && ID && EXT ) {
+				if ( INPUT.files && ID ) {
 
-					const FILE = new File([ EL.files[0] ], ID);
-					const DIST = `${ PATH }/${ FILE.name }::${ FILE.size.toString(36).toUpperCase() }.${ EXT }`;
+					const FILE = new File([ INPUT.files[0] ], ID);
+					const DIST = `${ PATH }/${ FILE.name }::${ FILE.size.toString(36).toUpperCase() }.${ FILENAME[1] }`;
 
 					if ( FILE.size >= 15e5 ) {
 
@@ -287,34 +288,6 @@
 				database.update(`Users/${ this.UserState.UserID }/state`, { UserImageID: this.NewIcon });
 
 			},
-
-			updatePreviewImage( element: any ) {
-
-				const N = element.value.split( /\\/g ).pop().split( /\./g ) as EXTENSIONS
-
-				this.CustomIconName = `${ N[0] }.${ N[1] }`;
-
-				this.updateIcon()
-
-			},
-
-			animatePredefinedIcons() {
-
-				this.$AnimeJS({
-					targets: this.$refs.icons,
-					duration: 1000,
-					easing: 'easeInOutQuad',
-					delay: this.$AnimeJS.stagger(100),
-					translateY: [40, 0],
-					opacity: [0, 1],
-				})
-			},
-
-			changeMode(mode: MODE) {
-
-				this.Mode = mode;
-
-			}
 			
 		},
 	})

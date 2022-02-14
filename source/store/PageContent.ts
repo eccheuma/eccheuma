@@ -47,7 +47,7 @@ import { ActionTree, MutationTree } from 'vuex'
 	export const mutations: MutationTree<CurentState> = {
 
 		setContent(state, { data, to }: { data: any[], from: string, to: REFS }) {
-			state.Content[to] = data; 
+			state.Content[to] = Object.values(data); 
 		},
 
 	}

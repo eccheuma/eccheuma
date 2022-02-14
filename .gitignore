@@ -2,6 +2,7 @@
 .firebase
 .output
 .nuxt
+.env
 
 #
 app

@@ -1,7 +1,7 @@
 import { ActionTree, MutationTree } from 'vuex'
 
 // API
-	import { storage } from '~/api/storage';
+	import { storage, references } from '~/api/storage';
 
 // TYPES
 	import { Image } from '~/typescript/Image';
@@ -20,11 +20,7 @@ import { ActionTree, MutationTree } from 'vuex'
 
 // STATE
 	export const state = () => ({
-
 		AVIF_SUPPORT: false,
-
-		ImageURLs: new Map<string, Image.formats>(),
-
 	})
 
 // CURENT STATE
@@ -39,47 +35,42 @@ import { ActionTree, MutationTree } from 'vuex'
 
 // MUTATIONS
 	export const mutations: MutationTree<CurentState> = {
-
-		mapURL(state, { _ref, _urls }: { _ref: string, _urls: Image.formats }) {
-			state.ImageURLs.set(_ref, _urls)
-		},
-
 		setAVIF( state, status: boolean ) {
 			state.AVIF_SUPPORT = status;
 		}
-
 	}
 
 // ACTIONS
 	export const actions: ActionTree<CurentState, CurentState> = {
 
-		getImageURL(_vuex, params: { path: string, size: number }): Partial<Image.formats> | null {
+		getImageURL(_vuex, params: { path: string, size: number }): Image.formatsStruct {
 
-			const AllowedFormats: Array<Image.allowedFormats> = ['avif', 'webp'];
+			const imageFormats: Array<keyof typeof Image.allowedFormats> = ['webp', 'avif'];
 	
-			const ROOT_REF 	 = 'images';
-			const MATCH_SIZE = Sizes.find(value => value >= params.size) || Sizes.pop();
-			const LOCAL_KEY  = `${ params.path }-${ MATCH_SIZE }`;
+			const matchedSize = Sizes.find(x => Math.max(x, params.size) === x)
+			
+			const imageStruct: Image.formatsStruct = {
+				avif: String(),
+				webp: String()
+			};
 
-			const IMAGE_STRUCT = AllowedFormats.map((format) => {
-				return {
-					[format]: storage.reference(`${ ROOT_REF }/${ params.path }/${ format }/${ MATCH_SIZE }.${ format }`)
-				} as Partial<Image.formats>
+			imageFormats.forEach(format => {
+				imageStruct[format] = storage.reference(`${ references.images }/${ params.path }/${ format }/${ matchedSize }.${ format }`)!
 			})
-
-			const Image = IMAGE_STRUCT.reduce((a, b) => Object.assign(a, b));
 
 			if ( process.browser ) {
 
-				if ( cache.check(LOCAL_KEY) ) {
-					return cache.get(LOCAL_KEY) as Image.formats
+				const cacheKey = `${ params.path }-${ matchedSize }`;
+
+				if ( cache.check(cacheKey) ) {
+					return cache.get(cacheKey) as Image.formatsStruct
 				}
 
-				cache.set(LOCAL_KEY, Image);
+				cache.set(cacheKey, imageStruct);
 
 			}
 
-			return Image;
+			return imageStruct;
 
 		}
 

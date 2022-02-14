@@ -1,5 +1,3 @@
-// @use "sass:math";
-
 @import "_root";
 @import "_variables";
 @import "_utils";
@@ -13,6 +11,11 @@
 ::selection {
 	background-color: var(--accent);
 	color: rgb(var(--mono-200));
+}
+
+hr {
+	border: 0;
+	border-color: var(--color-accent-edges-200);
 }
 
 * { 
