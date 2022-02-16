@@ -9,7 +9,7 @@
 
 		UserProfileArea: false,
 
-		UserState: new Object() as User.state
+		State: new Object() as User.state
 
 	})
 
@@ -26,7 +26,7 @@
 // MUTATIONS
 	export const mutations: MutationTree<CurentState> = {
 		Change_UserState(state, newUserState: User.state) {
-			state.UserState = newUserState
+			state.State = newUserState
 		},
 		Toggle_UserProfileArea(state) {
 			state.UserProfileArea = !state.UserProfileArea

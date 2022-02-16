@@ -2,7 +2,8 @@
 import { MutationTree } from 'vuex'
 
 // UTILS
-	import { cache } from '~/utils/cache'
+	import { cache } from '~/utils/cache';
+	import { languages } from '~/lang';
 
 // TYPES
 	import type { APP_THEME } from '~/typescript/App'
@@ -10,6 +11,7 @@ import { MutationTree } from 'vuex'
 // STATE
 	export const state = () => ({
 		UI: 'dark' as APP_THEME,
+		Lang: languages.Russian,
 	})
 
 // CURENT STATE

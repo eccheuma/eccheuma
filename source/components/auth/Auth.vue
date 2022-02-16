@@ -4,9 +4,8 @@
 		<loader
 			:stages="authLoadStages" 
 			:ignite="false"
-			:forcedStage="loaderStage"
-			:error="AuthError"
-			:controllable="true" 
+			:forcedStage="actualStage"
+			:controllable="true"
 			style="position: absolute" 
 			/>
 
@@ -60,7 +59,8 @@
 		data() {
 			return {
 
-				loaderStage: -1,
+				actualStage: -1,
+
 				authLoadStages: [
 					{ LoadPoint: 0, 	Message: 'Отправка формы' },
 					{ LoadPoint: 100, Message: 'Вход' },
@@ -76,27 +76,24 @@
 				LoginAction:	state => ( state as VuexMap ).Auth.Login.inAction,
 			}),
 
-			inProcess(): boolean {
-				return !(!this.LoginAction || this.LoginStatus)
-			}
-
 		},
 		watch: {
 			LoginAction: {
 				handler(value) {
-					if ( value ) {
-						this.loaderStage = 0;
+					if (value) {
+						this.actualStage = 0;
 					}
 				}
 			},
 			LoginStatus: {
 				handler(value) {
-					if ( value ) {
-						this.loaderStage = 1;
+					if (value) {
+						this.actualStage = 1;
 					}
 				}
 			}
-		}
+		},
+
 	})
 	
 </script>

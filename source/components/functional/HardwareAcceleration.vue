@@ -19,7 +19,7 @@
     mounted() {
 
       if ( !this.GPU ) {
-        this.$el.classList.add('utils::dead-GPU')
+        (this.$el as Element).classList.add('utils::dead-GPU')
       }
 
     },

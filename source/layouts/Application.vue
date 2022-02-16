@@ -155,8 +155,7 @@ eccheuma-layout {
 	⠄⠄⠄⠄⠈⠛⢿⣿⣿⣿⠁⠞⢿⣿⣿⡄⢿⣿⡇⣸⣿⣿⠿⠛⠁⠄⠄⠄⠄⠄ 
 	⠄⠄⠄⠄⠄⠄⠄⠉⠻⣿⣿⣾⣦⡙⠻⣷⣾⣿⠃⠿⠋⠁⠄⠄⠄⠄⠄⢀⣠⣴ 
 	⣿⣿⣿⣶⣶⣮⣥⣒⠲⢮⣝⡿⣿⣿⡆⣿⡿⠃⠄⠄⠄⠄⠄⠄⠄⣠⣴⣿⣿⣿
-
-	/* global process */
+*/
 
 	import Vue from 'vue'
 
@@ -173,7 +172,7 @@ eccheuma-layout {
 	import TransitionWrapper 							from '~/components/functional/TransitionWrapper.vue'
 
 	// TYPES
-	import type { NOTIFICATION_CONTENT } from '~/typescript/Notification'
+	import type { Notification } from '~/typescript/Notification'
 
 	import type { VuexMap } from '~/typescript/VuexMap'
 	
@@ -229,6 +228,11 @@ eccheuma-layout {
 			}),
 
 		},
+		mounted() {
+
+			setTimeout(this.setRegNotification, 120_000)
+
+		},
 		methods: {
 
 			...mapMutations({
@@ -242,14 +246,15 @@ eccheuma-layout {
 
 			setRegNotification() {
 
-				const C: NOTIFICATION_CONTENT = {
-					message: 'Если вы ещё не зарегистрированны - То сейчас самое лучшее время!',
-					description: 'Благодаря регистрации на сайте, вы получите личный кабинет с возможностью мониторинга состояния заказа, просмотр заявок, и возможность коментиривания и оценки контента.',
-					link: '',
-				}
-
 				if ( !this.LoginStatus ) {
-					this.setNotification(C)
+
+					const C: Notification.struct = {
+						message: 'Если вы ещё не зарегистрированны - То сейчас самое лучшее время!',
+						description: 'Благодаря регистрации на сайте, вы получите личный кабинет с возможностью мониторинга состояния заказа, просмотр заявок, и возможность коментиривания и оценки контента.',
+					}
+				
+					this.setNotification(C);
+
 				}
 
 			}

@@ -134,15 +134,15 @@
 	import EmitSound from '~/assets/mixins/EmitSound'
 
 	// TYPES
-	import type { ROUTES } from '~/typescript/Navigation'
+	import type { navigation } from '~/typescript/Navigation'
 
 	type NAV_ITEM = {
-		ID: number 
-		disabled: boolean
-		route: ROUTES
-		name: string
-		icon: string
-		discription: string
+		ID					: number 
+		disabled		: boolean
+		route				:	navigation.routes
+		name				: string
+		icon				: string
+		discription	: string
 	}
 
 	// MODULE
@@ -158,8 +158,8 @@
 			} as PropOptions< NAV_ITEM[] >,
 		},
 		computed: {
-			CurentRoute(): ROUTES {
-				return this.$route.path as ROUTES
+			CurentRoute(): navigation.routes {
+				return this.$route.path as navigation.routes
 			},
 		},
 		created() {
@@ -181,7 +181,7 @@
 
 		},
 		methods: {
-			GoRouterTo(path: ROUTES) {
+			GoRouterTo(path: navigation.routes) {
 
 				if ( this.$route.path !== path ) {
 					this.$router.push({ path })

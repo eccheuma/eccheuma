@@ -220,6 +220,10 @@
 
   import Vue, { PropOptions } from 'vue';
 
+  // VUEX
+	import { mapState, mapMutations, mapActions } from 'vuex'
+	import type { VuexMap } from '~/typescript/VuexMap'
+
   // UTILS
   import { utils } from '~/utils';
   import { work } from '~/utils/status';
@@ -279,6 +283,10 @@
       }
     },
     computed: {
+
+      ...mapState({
+        Lang : state => (state as VuexMap).App.Lang
+      }),
 
       releaseDate(): number {
         return this.payload.accepted + this.payload.delivery;
@@ -366,7 +374,7 @@
         const { Day, Time } = utils.getLocalTime(this.payload.recived);
 
         return [
-          { name: 'Состояние',          value: work.defineStatus(this.payload.status) },
+          { name: 'Состояние',          value: work.defineStatus(this.payload.status, this.Lang) },
           { name: 'Цена',               value: `${ this.payload.cost } ₽` },
           { name: 'Дата заказа',        value: `${ Day } в ${ Time }` },
           { name: 'Тип Заказа',         value: this.getOrderType(this.payload.type) },

@@ -1,1 +1,5 @@
-export type ROUTES = 'home' | 'gallery' | 'recommendation' | 'portfolio' | 'service';
+export namespace navigation {
+
+  export type routes = 'home' | 'gallery' | 'recommendation' | 'portfolio' | 'service';
+
+}

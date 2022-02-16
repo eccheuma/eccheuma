@@ -1,14 +1,14 @@
 import { ActionTree, MutationTree } from 'vuex'
 
 // TYPES AND INTERFACES
-	import type { NOTIFICATION_CONTENT } from '~/typescript/Notification'
+	import type { Notification } from '~/typescript/Notification'
 
 // STATE
 	export const state = () => ({
 
 		status: false,
 
-		content: new Object() as NOTIFICATION_CONTENT,
+		content: new Object() as Notification.struct,
 
 	})
 
@@ -27,14 +27,14 @@ import { ActionTree, MutationTree } from 'vuex'
 		changeNotificationState: (state, status?: boolean ) => {
 			state.status = status ?? !state.status
 		},
-		Change_Content(state, _content: NOTIFICATION_CONTENT ) {
+		Change_Content(state, _content: Notification.struct ) {
 			state.content = _content
 		},
 	}
 
 // ACTIONS
 	export const actions: ActionTree<CurentState, CurentState>  = {
-		setNotification({ commit }, payload: NOTIFICATION_CONTENT) {
+		setNotification({ commit }, payload: Notification.struct) {
 
 			commit('Change_Content', payload)
 

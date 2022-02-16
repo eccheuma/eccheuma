@@ -26,7 +26,13 @@
 			</p>
 			<hr v-once>
 			<common-button v-if="LoginStatus && canDelete" @click.native="RemoveComment">
-				Удалить комментарий
+				Удалить комментарий 
+				<template v-if="State.UserStatus === 0">
+					от лица администратора
+				</template>
+				<template v-if="State.UserStatus === 1">
+					от лица модератора
+				</template>
 			</common-button>
 		</section>
 
@@ -291,21 +297,21 @@
 
 			...mapState({
 				LoginStatus:	state => (state as VuexMap).Auth.Session.LoginStatus,
-				UserState: 		state => (state as VuexMap).User.State.UserState 
+				State: 		state => (state as VuexMap).User.State.State 
 			}),
 
 			canDelete(): boolean {
 
 				if ( !this.LoginStatus ) return false;
 
-				switch (this.UserState.UserStatus) {
+				switch (this.State.UserStatus) {
 
 					case User.status.Admin: 
 						return true;
 					case User.status.Moderator: 
 						return true;
 					default:
-						return this.UserState.UserID === this.comment.userID;
+						return this.State.UserID === this.comment.userID;
 
 				}
 

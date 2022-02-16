@@ -31,7 +31,7 @@
 
 				<section class="registration-body">
 
-					<registration-form />
+					<registration-form @form-send="(form) => sendForm(form)" />
 
 					<!-- <caption-card status="missunderstood">
 						<template #type>
@@ -49,9 +49,6 @@
 				</section>
 
 				<section class="registration-footer">
-					<common-button :class="{ disabled: Stage === крайняяСтадия }" @click.native="STEP_IMMITATION">
-						Выбор иконки
-					</common-button>
 					<common-button @click.native="ChangeModalStatus(false)">
 						Закрыть
 					</common-button>
@@ -172,7 +169,7 @@
 		place-items: center;
 		align-content: space-between;
 
-		grid-template-rows: min-content 6vh;
+		grid-template-rows: 1fr 6vh;
 
 		&-stage {
 
@@ -218,11 +215,10 @@
 
 // VUEX
 	import { mapState, mapMutations, mapActions } from 'vuex'
-	import { email, required, minLength, alphaNum } from 'vuelidate/lib/validators'
 	import type { VuexMap } from '~/typescript/VuexMap'
 
 // TYPES & INTERFACES & ENUMS
-	import type { REGISTER_FORM, AUTH_ERRORS } from '~/store/Auth/Session'
+	import { auth, form } from '~/api/auth';
 
 // COMPONENTS
 	import Loader 			from '~/components/common/Loader.vue'
@@ -245,10 +241,6 @@
 				ElementLoad: true,
 				ElementLoadComplete: true,
 
-				Email: String(),
-				Password: String(),
-				Name: String(),
-
 				Stage: 1,
 
 				LoaderStage: -1,
@@ -259,24 +251,14 @@
 
 			}
 		},
-		validations: {
-
-			Email: { email, required },
-			Password: { required, alphaNum, minLength: minLength(6) },
-			Name: { required, minLength: minLength(3) },
-
-		},
 		computed: {
 
 			...mapState({
-				LoginStatus: 				state => ( state as VuexMap ).Auth.Session.LoginStatus,
-				RegistrationModal: 	state => ( state as VuexMap ).Auth.Register.Modal,
-				AuthError: 					state => ( state as VuexMap ).Auth.Session.AuthError,
+				LoginStatus				:	state => (state as VuexMap).Auth.Session.LoginStatus,
+				RegistrationModal	:	state => (state as VuexMap).Auth.Register.Modal,
+				AuthError					:	state => (state as VuexMap).Auth.Session.AuthError,
+				Lang							: state => (state as VuexMap).App.Lang
 			}),
-
-			крайняяСтадия(): number {
-				return 3;
-			}
 
 		},
 		watch: {
@@ -298,49 +280,25 @@
 				Register: 'Auth/Register/Register',
 			}),
 
-			// TODO | Relocate enum on separated module.
-			DefineError(e: AUTH_ERRORS): string {
-
-				enum ERROR {
-					'auth/network-request-failed'	= 'Ошибка соединения',
-					'auth/user-not-found' 				= 'Пользователя с такой почтой не существует',
-					'auth/invalid-email' 					= 'Поле не соответствует критериям почты',
-					'auth/wrong-password'					=	'Неверный пароль',
-					'auth/email-already-in-use' 	= 'Данная почта занята другим пользователем',
-				}
-
-				return ERROR[e] ?? e
-
+			defineError(e: auth.error): string {
+				return auth.defineError(e, this.Lang)
 			},
 			
-			Auth() {
+			async sendForm(form: form.registration) {
 
-				this.ChangeLoadMessage('Отправка формы')
+				console.log(form);
 
-				const FORM: REGISTER_FORM  = {
-					email: this.Email,
-					password: this.Password,
-					name: this.Name,
-				} 
+				this.ChangeLoadMessage('Отправка формы');
 
-				this.Register(FORM)
+				this.LoaderStage += 1;
+
+				const response: boolean = await this.Register(form);
+
+				if ( typeof response === 'string' ) {
+
+				}
 
 			},
-
-			// ! Delete placeholder method
-			STEP_IMMITATION() {
-
-				this.LoaderStage 			= 0;
-				this.Stage 						= 2;
-
-				setTimeout(() => {
-
-					this.LoaderStage 			= 1;
-					this.Stage 						= 1;
-
-				}, 6000)
-
-			}
 
 		}
 	})

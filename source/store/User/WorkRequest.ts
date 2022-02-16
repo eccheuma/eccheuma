@@ -13,7 +13,7 @@
 	import { Purchase } 	from '~/typescript/Services'
 	import { Message } from '~/typescript/Message'
 
-	import type { NOTIFICATION_CONTENT } from '~/typescript/Notification'
+	import type { Notification } from '~/typescript/Notification'
 	
 // STATE
 	export const state = () => ({
@@ -48,13 +48,12 @@
 		}
 	}
 
-// ACTIONS
+	// ACTIONS
 	export const actions: ActionTree<CurentState, VuexMap> = {
 
-		async SendWorkRequest(vuex, order: Purchase.order<any>) {
+		async sendWorkRequest(vuex, order: Purchase.order<any>) {
 
-			const { uid } 			= vuex.rootState.Auth.Session.CurentUser
-			const MessageCount 	= vuex.rootState.User.Messages.Messages.length
+			const { UserID } = vuex.rootState.User.State.State
 
 			const Message: Message.struct = {
 				ID: utils.hashGenerator(),
@@ -71,20 +70,22 @@
 				date: Date.now(),
 			}
 
-			const NOTIFICATION_Message: NOTIFICATION_CONTENT = {
+			const newNotification: Notification.struct = {
 				message: 'Ваша заявка пошла на рассмотрение',
 				description: 'Информацию о стаусе заказа, вы можете посмотреть в личном кабинете, что находиться вверху приложения.',
 			}
 
 			try {
 
-				await vuex.dispatch('setRequestQuantity')
+				await vuex.dispatch('setRequestQuantity');
 
-				await database.set(`Users/${ uid }/work_requests/WorkID-${ vuex.state.RequestQuantity }`, order);
-				await database.set(`Users/${ uid }/messages/Hash_${ MessageCount + 1 }`, Message);
+				const requestHash = utils.hashGenerator();
+
+				await database.set(`Users/${ UserID }/work_requests/WorkID-${ requestHash }`, order);
+				await database.set(`Users/${ UserID }/messages/Hash_${ requestHash }`, Message);
 
 				vuex.commit('Notification/Notification_Status', true, { root: true })
-				vuex.commit('Notification/setNotification', NOTIFICATION_Message, { root: true })
+				vuex.commit('Notification/setNotification', newNotification, { root: true })
 
 			} catch (e) {
 				console.log(e) 
@@ -92,12 +93,18 @@
 
 		},
 		
-		async setRequestContent(vuex, uid: string) {
-			vuex.commit('Change_Requests', await database.get(`Users/${ uid }/work_requests`)) 
+		async setRequestContent(vuex) {
+
+			const { UserID } = vuex.rootState.User.State.State
+
+			vuex.commit('Change_Requests', await database.get(`Users/${ UserID }/work_requests`)) 
 		},
 
-		async setRequestQuantity(vuex, uid: string) {
-			vuex.commit('Change_WorkQuantity', await database.getLength(`Users/${uid}/work_requests`)) 
+		async setRequestQuantity(vuex) {
+
+			const { UserID } = vuex.rootState.User.State.State
+
+			vuex.commit('Change_WorkQuantity', await database.getLength(`Users/${ UserID }/work_requests`)) 
 		},
 
 		setActiveRequest(vuex) {

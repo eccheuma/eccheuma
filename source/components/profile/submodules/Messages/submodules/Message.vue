@@ -27,7 +27,7 @@
     --border-color: rgb(var(--color-mono-400));
 
     &[data-status="0"] {
-      --border-color: var(--color-accent-pass) !important;
+      --border-color: var(--color-accent-edges-200) !important;
     }
 
     &[data-status="1"] {
@@ -156,16 +156,37 @@
     created() {
       this.date = utils.getLocalTime(this.payload.date);
     },
-    async mounted() {
+    mounted() {
 
-      const { UserName, UserStatus } = await database.get<User.state>(`Users/${ this.payload.userID }/state`);
+      switch (this.payload.userID) {
 
-      this.author = {
-        name: UserName,
-        status: UserStatus
+        case 'SUPPORT': this.author = {
+          name: 'Eccheuma Support',
+          status: User.status.Support,
+        }; break;
+
+        case 'ADMIN': this.author = {
+          name: 'Eccheuma Administration',
+          status: User.status.Admin,
+        }; break;
+      
+        default: this.getUser(); break;
+
       }
 
     },
+    methods: {
+      async getUser() {
+
+        const { UserName, UserStatus } = await database.get<User.state>(`Users/${ this.payload.userID }/state`);
+
+        this.author = {
+          name: UserName,
+          status: UserStatus
+        }
+
+      }
+    }
   })
 
 </script>

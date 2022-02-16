@@ -14,7 +14,7 @@
 // STATE
 	export const state = () => ({
 
-		Messages: new Array<Message.struct>(0),     
+		Data: new Array<Message.struct>(0),     
 
 		NewMessagesCount: 0
 		
@@ -38,7 +38,7 @@
 		},
 
 		setMessages(state, messages: Array<Message.struct>) {
-			state.Messages = messages.sort((a, b) => b.date - a.date);
+			state.Data = messages.sort((a, b) => b.date - a.date);
 		},
 		
 	}
@@ -75,14 +75,16 @@
 			// Получение ID пользователя
 			const { uid } = rootState.Auth.Session.CurentUser;
 
+			console.log('markAsReaded VUEX')
+
 			database.update(`Users/${ uid }/messages/Hash_${ ID }`, { readed: true } as Partial<Message.struct>)
 
 		},
 
 		checkUnreaded({ rootState, commit, state }) {
 
-			const { length } = state.Messages.filter(({ readed, userID }) => {
-				return userID !== rootState.User.State.UserState.UserID && readed === false
+			const { length } = state.Data.filter(({ readed, userID }) => {
+				return userID !== rootState.User.State.State.UserID && readed === false
 			})
 			
 			commit('setUnreadedQuanity', length)

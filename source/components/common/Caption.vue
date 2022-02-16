@@ -64,7 +64,7 @@
 
     &[data-status="error"] {
       --caption-card-bg: var(--color-accent-error);
-      --caption-card-color: rgb(var(--color-mono-900));
+      --caption-card-color: rgb(var(--color-mono-300));
     }
 
     &[data-status="warning"] {

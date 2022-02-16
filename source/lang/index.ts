@@ -5,6 +5,8 @@ export const enum languages {
 
 export namespace russian {
 
+  export const blacklist: Array<string> = ['аниме']
+
   export const userStatus = {
     Admin     : 'Администратор',
     Moderator : 'Модератор',
@@ -26,6 +28,26 @@ export namespace russian {
 		Multipage : 'Многостраничник',
 	}
 
+  export const authError = {
+    'auth/network-request-failed'	: 'Ошибка соединения',
+    'auth/user-not-found' 				: 'Пользователя с такой почтой не существует',
+    'auth/invalid-email' 					: 'Поле не соответствует критериям почты',
+    'auth/wrong-password'					: 'Неверный пароль',
+    'auth/email-already-in-use' 	: 'Данная почта занята другим пользователем',
+  }
+
+  export const fileInput = {
+    sizeStrict  : 'Загружаемый размер файла привышает 1.5МБ: Размер вашего изображения:',
+    sendError   : 'При отправке изображения произошла ошибка',
+    loadError   : 'При загрузке изображения произошла ошибка',
+  }
+
+}
+
+export namespace english {
+  export const fileInput = {
+    FilesizeStrict: 'File size limit is 1.5MB. Your is:'
+  }
 }
 
 export function getLocale(lang: languages) {

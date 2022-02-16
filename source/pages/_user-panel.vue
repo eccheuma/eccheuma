@@ -32,7 +32,7 @@
 		},
 		validate({ store, query }) {
 			
-			return ( store.state as VuexMap ).User.State.UserState.UserID === query.uid
+			return ( store.state as VuexMap ).User.State.State.UserID === query.uid
 
 		},
 		mounted() {

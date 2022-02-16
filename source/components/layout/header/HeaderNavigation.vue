@@ -15,10 +15,10 @@
 
 		<nav class="navigation-items">
 
-			<template v-for="prop in HeaderMenu">
+			<template v-for="(prop, index) in HeaderMenu">
 				
 				<div 
-					:key="prop.ID" 
+					:key="prop.name" 
 					
 					class="navigation-item"
 					:class="[
@@ -35,10 +35,10 @@
 
 					<!-- prefetch -->
 					<nuxt-link 
-						:id="`nav_item-${ prop.ID }`"
+						:id="`nav_item-${ prop.name }`"
 						:to="prop.route"
 						:prefetch="routePrefetch"
-						@click="ScrollPage"
+						@click="topScroll"
 						>
 
 						<icon :name="prop.icon" />
@@ -47,14 +47,14 @@
 
 					</nuxt-link>
 					
-					<popover v-if="!prop.disabled || !$isMobile" :target="`nav_item-${ prop.ID }`">
+					<popover v-if="!prop.disabled || !$isMobile" :target="`nav_item-${ prop.name }`">
 						<!-- <i class="fas fa-info-circle" /> -->
 						{{ prop.discription }}
 					</popover>
 
 				</div>
 
-				<span :key="`${ prop.ID }-separator`" class="navigation-separator" />
+				<span :key="index" class="navigation-separator" />
 
 			</template>
 
@@ -311,6 +311,57 @@ $TransitionDuration: 250ms;
 	import Popover 		from '~/components/common/Popover.vue'
 	import Icon				from '~/components/common/Icon.vue'
 
+	// TYPES
+
+	import { navigation } from '~/typescript/Navigation'
+
+	type HeaderMenuItem = {
+		disabled		: boolean,
+		route				: `/${ navigation.routes }`, 
+		name				: string, 
+		icon				: string,
+		discription	: string
+	}
+
+	// PREDEFINED VARIABLES
+	const HeaderRoutes: ReadonlyArray<HeaderMenuItem> = [
+		{
+			disabled: false,
+			route: '/home', 
+			name: 'Главная', 
+			icon: 'Home',
+			discription: 'Главная страница. Тут собраны статьи на завязанные на профильную тему.'
+		},
+		{
+			disabled: false,
+			route: '/gallery', 
+			name: 'Галерея', 
+			icon: 'Gallery',
+			discription: 'Галлерея изображений. Начиная от логотипов и полноценных макетов, заканчивая всякими набросками и непринятыми вариантами работ.'
+		},
+		{
+			disabled: true,
+			route: '/recommendation', 
+			name: 'Рекомендации', 
+			icon: 'Fire',
+			discription: 'Предложения по оказанию услуг. В зависимости от сезона и нагруженности тут появляются выгодные предложения на разные виды услуг.'
+		},
+		{
+			disabled: false,
+			route: '/portfolio', 
+			name: 'Портфолио', 
+			icon: 'Portfolio',
+			discription: 'Принятые работы. С указанием сроков, цены, комментариев, и отзывов на выполненую работу.'
+		},
+		{
+			disabled: false,
+			route: '/service', 
+			name: 'Услуги', 
+			icon: 'Service',
+			discription: 'Услуги. Перечень оказываемых услуг, калькулятор стоимости, и форма обратной связи.'
+		},
+	]
+
 	// MODULE
 	export default Vue.extend({
 		components: {
@@ -343,48 +394,8 @@ $TransitionDuration: 250ms;
 
 				CursorInArea: false,
 
-				HeaderMenu: [ // Пункты меню
-					{
-						ID: 0, 
-						disabled: false,
-						route: '/home', 
-						name: 'Главная', 
-						icon: 'Home',
-						discription: 'Главная страница. Тут собраны статьи на завязанные на профильную тему.'
-					},
-					{
-						ID: 1, 
-						disabled: false,
-						route: '/gallery', 
-						name: 'Галерея', 
-						icon: 'Gallery',
-						discription: 'Галлерея изображений. Начиная от логотипов и полноценных макетов, заканчивая всякими набросками и непринятыми вариантами работ.'
-					},
-					{
-						ID: 2, 
-						disabled: true,
-						route: '/recomend', 
-						name: 'Рекомендации', 
-						icon: 'Fire',
-						discription: 'Предложения по оказанию услуг. В зависимости от сезона и нагруженности тут появляются выгодные предложения на разные виды услуг.'
-					},
-					{
-						ID: 3, 
-						disabled: false,
-						route: '/portfolio', 
-						name: 'Портфолио', 
-						icon: 'Portfolio',
-						discription: 'Принятые работы. С указанием сроков, цены, комментариев, и отзывов на выполненую работу.'
-					},
-					{
-						ID: 4, 
-						disabled: false,
-						route: '/service', 
-						name: 'Услуги', 
-						icon: 'Service',
-						discription: 'Услуги. Перечень оказываемых услуг, калькулятор стоимости, и форма обратной связи.'
-					},
-				]
+				HeaderMenu: HeaderRoutes,	
+
 			}
 		},
 		computed: {
@@ -404,15 +415,15 @@ $TransitionDuration: 250ms;
 			this.Ready = true;
 		},
 		methods: {
-			ScrollPage(): void {
 
+			topScroll() {
 				window.scrollTo({
-					top: ( window.innerHeight * .725 ),
-					behavior: 'smooth'
+					top: this.$el.scrollTop,
+					behavior: 'smooth',
 				})
-
-			},
-		},
+			}
+			
+		}
 	})
 
 </script>

@@ -7,7 +7,7 @@
 			<input 
 				v-model="NewName" 
 				type="text" 
-				:placeholder="`Текущее имя: ${ UserState.UserName }`"
+				:placeholder="`Текущее имя: ${ State.UserName }`"
 				@keypress.shift.enter="setUsername"
 			>
 
@@ -74,7 +74,7 @@
 		},
 		computed: {
 			...mapState({
-				UserState: state => (state as VuexMap).User.State.UserState,
+				State: state => (state as VuexMap).User.State.State,
 			}),
 		},
 		validations: {
@@ -83,7 +83,7 @@
 		methods: {
 			setUsername() {
 				
-				database.update(`Users/${ this.UserState.UserID }/state`, { UserName: this.NewName })
+				database.update(`Users/${ this.State.UserID }/state`, { UserName: this.NewName })
 
 			},
 		}

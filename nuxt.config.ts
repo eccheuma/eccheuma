@@ -137,10 +137,18 @@
         presets: [
           ['@babel/preset-env', {
             useBuiltIns: false,
+            exclude: [
+              // ! Из-за того что бабель пытается настырно пережевать все асинхронные методы в генераторы, 
+              // ! часть асинхронных методов внезапно прерывается другими вызовами. Ошибка ли это Nuxt, Vue, или других прослоек - Я не знаю.
+              // ! Но я как-то не собираюсь ебать себе голову на счёт этого. И сделаю всё это крайне нахально...
+              "@babel/plugin-transform-async-to-generator"
+            ]
           }]
         ],
         plugins: [
-          '@babel/plugin-transform-runtime'
+          ['@babel/plugin-transform-runtime', {
+            regenerator: true
+          }]
         ]
       },
 

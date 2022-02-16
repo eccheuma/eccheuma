@@ -1,10 +1,8 @@
-	import firebase from 'firebase/app'
-	import 'firebase/auth'
-
 // API
 	import type { MutationTree, ActionTree } from 'vuex'
 	import { database } from '~/api/database';
 	import { storage } from '~/api/storage';
+	import { auth, form } from '~/api/auth'
 
 // UTILS
 	import { utils } from '~/utils';
@@ -13,8 +11,7 @@
 
 	import type { VuexMap } from '~/typescript/VuexMap'
 
-	import type { REGISTER_FORM } from '~/store/Auth/Session'
-	import type { Message } 			from '~/typescript/Message'
+	import type { Message } from '~/typescript/Message'
 
 // NAMESPACES
 	import { User } 		from '~/typescript/User'
@@ -45,50 +42,54 @@
 // ACTIONS
 	export const actions: ActionTree<CurentState, VuexMap> = {
 
-		async Register({ dispatch, commit }, form: REGISTER_FORM): Promise<Error | Boolean> {
+		async Register(vuex, form: form.registration): Promise<auth.error | Boolean> {
 
-			try {
+			// ! Должен возвращать не только тип формы но и ошибку, чтобы можно было её передать дальше.
+			// ! Ну а пока имеем то, что имеем.
 
-				// eslint-disable-next-line import/no-named-as-default-member
-				const { user } = await firebase.auth().createUserWithEmailAndPassword( form.email, form.password );
+			const response = await auth.register(form.email, form.password);
 
-				if ( !user ) return new Error('sdf');
+			if ( typeof response === 'string' ) {
 
-				commit('Auth/Session/Change_userState', { _uid: user.uid, _email: user.email }, { root: true })
+				vuex.commit('Auth/Session/ChangeAuthError', response, { root: true });
 
-				await database.set(`Users/${ user.uid }/state`, {
-					UserID: 				user.uid,
-					UserEmail: 			user.email,
-					UserName: 			form.name,
-					UserStatus: 		User.status.User,
-					UserBalance: 		0,
-					UserWorkStatus: Purchase.status.None,
-					UserImageID:		storage.reference('UserIcons/default.webp')
-				} as User.state)
+				return false
 
-				await database.set(`Users/${ user.uid  }/preferences`, {
-					DarkTheme: true,
-					Anotations: true,
-				})
+			};
 
-				await database.set(`Users/${ user.uid  }/messages/Hash_0`, {
-					ID: utils.hashGenerator(),
-					date: Date.now(),
-					from: 'Eccheuma',
-					userID: 'SUPPORT',
-					message: 'Благодарю вас за регистрацию!',
-					readed: false,
-				} as Message.struct)
-	
-				dispatch('Auth/Login/SignIn', form, { root: true });
-				
-				return true;
+			const { uid, email } = response;
+			
+			vuex.commit('Auth/Session/Change_userState', { uid, email }, { root: true })
+			vuex.commit('Auth/Session/ChangeAuthError', null, { root: true });
 
-			} catch (e: any) {
+			await database.set(`Users/${ uid }/state`, {
+				UserID					:	uid,
+				UserEmail				:	email,
+				UserName				:	form.name,
+				UserStatus			:	User.status.User,
+				UserBalance			:	0,
+				UserWorkStatus	: Purchase.status.None,
+				UserImageID			:	storage.reference('UserIcons/default.webp')
+			} as User.state)
 
-				commit('Auth/Session/ChangeAuthError', e.code, { root: true }); return false;
+			// ? Всё ещё стоит под вопросом. Нужно ли хранить данные касательно клиентских настроек вне браузера...
+			//	await database.set(`Users/${ uid  }/preferences`, {
+			// 		DarkTheme		: true,
+			// 		Anotations	: true,
+			// 	})
 
+			const Message: Message.struct = {
+				ID			: utils.hashGenerator(),
+				date		: Date.now(),
+				from		: 'Eccheuma',
+				userID	: 'SUPPORT',
+				message	: 'Благодарю вас за регистрацию!',
+				readed	: false,
 			}
+
+			await database.set(`Users/${ uid }/messages/Hash_${ Message.ID }`, Message);
+
+			return true;
 
 		},
 

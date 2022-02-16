@@ -205,8 +205,8 @@
 		computed: {
 
 			...mapState({
-				UserState: 							state	=> ( state as VuexMap ).User.State.UserState,
-				Messages:								state => ( state as VuexMap ).User.Messages.Messages,
+				State: 							state	=> ( state as VuexMap ).User.State.State,
+				Messages:								state => ( state as VuexMap ).User.Messages.Data,
 				GetRequestsQuantity:		state => ( state as VuexMap ).User.WorkRequest.RequestQuantity
 			}),
 
@@ -241,11 +241,7 @@
 
 		},
 		mounted() {
-
 			this.$nextTick(() => { this.ReadyToRead = true });
-
-			console.log(Notification.permission)
-
 		},
 		methods: {
 
@@ -262,10 +258,10 @@
 
 			checkMessage({ ID, readed, userID }: MessageNamespace.struct) {
 
-				console.log('check message initiate')
+				console.log('vuex_markAsReaded')
 
-				if ( userID !== this.UserState.UserID && readed === false ) { 
-					this.vuex_markAsReaded(ID);
+				if ( userID !== this.State.UserID && readed === false ) { 
+					this.vuex_markAsReaded(ID); console.log('vuex_markAsReaded VALID')
 				}
 
 			},
@@ -275,9 +271,9 @@
 
 					const M: MessageNamespace.struct = {
 						ID				: utils.hashGenerator(),
-						userID		: this.UserState.UserID,
+						userID		: this.State.UserID,
 						date			: Date.now(),
-						from			: this.UserState.UserName,
+						from			: this.State.UserName,
 						message		: this.UserMessage,
 						readed		: false
 					}
@@ -298,7 +294,7 @@
 
 			async sendNotification({ message, userID, from, readed }: MessageNamespace.struct ) {
 				
-				if ( userID !== this.UserState.UserID && readed === false ) {
+				if ( userID !== this.State.UserID && readed === false ) {
 
 					// eslint-disable-next-line no-undef
 					const CONTENT: NotificationOptions = {

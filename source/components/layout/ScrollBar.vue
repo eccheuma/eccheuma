@@ -311,7 +311,7 @@
 			...mapState({
 				UI: 						state => (state as VuexMap).App.UI,
 				LoginStatus: 		state => (state as VuexMap).Auth.Session.LoginStatus,
-				Messages: 			state => (state as VuexMap).User.Messages.Messages,
+				Messages: 			state => (state as VuexMap).User.Messages.Data,
 				NewMessages: 		state => (state as VuexMap).User.Messages.NewMessagesCount,
 				GlobalHowler: 	state => (state as VuexMap).Sound.global,
 			}),

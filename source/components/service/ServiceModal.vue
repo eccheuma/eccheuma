@@ -10,9 +10,9 @@
 
 		<section class="service_modal-user">
 			<template v-if="LoginStatus">
-				<i :style="`background-image: url(${ UserState.UserImageID })`" />
-				<span>{{ UserState.UserName }}</span>
-				<span>{{ UserState.UserBalance }} ₽</span>
+				<i :style="`background-image: url(${ State.UserImageID })`" />
+				<span>{{ State.UserName }}</span>
+				<span>{{ State.UserBalance }} ₽</span>
 			</template>
 		</section>
 		<section class="service_modal-calc">
@@ -170,14 +170,14 @@
 			...mapState({
 
 				LoginStatus: 		state => ( state as VuexMap ).Auth.Session.LoginStatus,
-				UserState: 			state => ( state as VuexMap ).User.State.UserState,
+				State: 			state => ( state as VuexMap ).User.State.State,
 
 			}),
 		},
 		methods: {
 
 			...mapActions({
-				SendWorkRequest: 'User/WorkRequest/SendWorkRequest'
+				sendWorkRequest: 'User/WorkRequest/sendWorkRequest'
 			}),
 
 			SetSelectedService(purchase: Purchase.struct<any>) {
@@ -194,7 +194,7 @@
 
 				this.CloseModal();
 
-				this.SendWorkRequest(this.selectedPurchase)
+				this.sendWorkRequest(this.selectedPurchase)
 
 			}
 			

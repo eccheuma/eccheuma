@@ -1,15 +1,11 @@
-/* eslint-disable import/no-named-as-default-member */
-import firebase from 'firebase/app'
-import 'firebase/auth'
+import type { ActionTree, MutationTree } from 'vuex'
 
 // API
-	import type { ActionTree, MutationTree } from 'vuex'
-	import { database } from '~/api/database'
-
-// VUEX
+	import { database } 	from '~/api/database'
+	import { auth, form } from '~/api/auth'
 
 // TYPES
-	import type { REGISTER_FORM, CurentState as SessionState } from '~/store/Auth/Session'
+	import type { CurentState as SessionState } from '~/store/Auth/Session'
 	import type { VuexMap } 	from '~/typescript/VuexMap'
 
 // STATE
@@ -36,40 +32,36 @@ import 'firebase/auth'
 
 // ACTIONS
 	export const actions: ActionTree<CurentState, VuexMap> = {
-		async SignIn({ commit }, { email, password }: REGISTER_FORM) {
+		async SignIn(vuex, form: form.registration): Promise<auth.error | boolean> {
 
-			commit('setAction', true)
+				vuex.commit('setAction', true);
 
-			try {
+				const response = await auth.login(form.email, form.password);
 
-				const { user } = await firebase.auth().signInWithEmailAndPassword(email, password);
+				if ( typeof response === 'string' ) {
 
-				if ( !user ) return;
+					vuex.commit('Auth/Session/ChangeAuthError', response, { root: true });
 
-				const userData: SessionState['CurentUser'] = {
-					uid: user.uid!,
-					email: user.email || String('email is not defined'),
-				}
+					return false
+
+				};
+
+				const { uid, email } = response;
+
+				const userData: SessionState['CurentUser'] = { uid, email: email || String() }
 				
-				commit('Auth/Session/Change_userState', userData, { root: true })
+				vuex.commit('Auth/Session/Change_userState', userData, { root: true })
 
 				// Загрузка стейта пользователя из Firebase
-				database.listen(`Users/${ user.uid }/state`, (data) => {
-					commit('User/State/Change_UserState', data, { root: true })
+				database.listen(`Users/${ uid }/state`, (data) => {
+					vuex.commit('User/State/Change_UserState', data, { root: true })
 				})
 
-				commit('Auth/Session/ChangeLoginStatus', true, { root: true })
+				vuex.commit('Auth/Session/ChangeLoginStatus', true, { root: true });
+			
+				vuex.commit('setAction', false);
 
-			} catch (e: any) {
+				return true;
 
-				console.log(e)
-				
-				commit('Auth/Session/ChangeAuthError', e.code, { root: true })
-				
-			} finally {
-
-				commit('setAction', false)
-
-			}
 		}
 	}

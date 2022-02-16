@@ -1,5 +1,9 @@
-export type NOTIFICATION_CONTENT = {
-	message: string
-	description: string
-	link?: string,
+export namespace Notification {
+
+	export type struct = {
+		message: string
+		description: string
+		link?: string,
+	}
+
 }

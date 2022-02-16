@@ -4,22 +4,20 @@
 
 // TRANSLATES
   import { languages, getLocale } from '~/lang';
-
-  const applicationLang = languages.Russian;
   
 // NAMESPACES
 export namespace work {
 
-  export function defineStatus(status: Purchase.status): string {
-		return Object.values(getLocale(applicationLang).PurchaseStatus)[status]
+  export function defineStatus(status: Purchase.status, lang: languages): string {
+		return Object.values(getLocale(lang).PurchaseStatus)[status]
 	}
 
 }
 
 export namespace user {
 
-  export function defineStatus(status: User.status): string {
-		return Object.values(getLocale(applicationLang).userStatus)[status]
+  export function defineStatus(status: User.status, lang: languages): string {
+		return Object.values(getLocale(lang).userStatus)[status]
 	}
 
 }

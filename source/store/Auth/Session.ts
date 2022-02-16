@@ -1,23 +1,13 @@
 // VUEX
 	import type { MutationTree } from 'vuex'
 
-// TYPES AND INTERFACES
-	export type REGISTER_FORM = {
-		email: string
-		password: string
-		name?: string
-	}
-
-	export type AUTH_ERRORS = 'auth/network-request-failed'
-			| 'auth/user-not-found'
-			| 'auth/invalid-email'
-			| 'auth/wrong-password'
-			| 'auth/email-already-in-use'
+// AUTH
+	import { auth } from '~/api/auth';
 
 // STATE
 	export const state = () => ({
 
-		AuthError: null as AUTH_ERRORS | null,
+		AuthError: null as auth.error | null,
 
 		LoginStatus: false,
 
@@ -40,13 +30,13 @@
 
 // MUTATIONS	
 	export const mutations: MutationTree<CurentState> = {
-		ChangeLoginStatus(state, prop) {
+		ChangeLoginStatus(state, prop: boolean) {
 			state.LoginStatus = prop
 		},
-		ChangeAuthError(state, prop) {
+		ChangeAuthError(state, prop: auth.error) {
 			state.AuthError = prop
 		},
-		Change_userState(state, user: CurentState['CurentUser']) {
-			state.CurentUser = { email: user.email, uid: user.uid }
+		Change_userState(state, { email, uid }: CurentState['CurentUser']) {
+			state.CurentUser = { email, uid }
 		}
 	}

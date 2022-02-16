@@ -1,13 +1,13 @@
 <template>
 	<div class="auth_profile-container">
 
-		<section class="auth_profile-header" :style="`background-image: url(${ UserState.UserImageID })`">
-			<i :style="`background-image: url(${ UserState.UserImageID })`" />
+		<section class="auth_profile-header" :style="`background-image: url(${ State.UserImageID })`">
+			<i :style="`background-image: url(${ State.UserImageID })`" />
 			<div class="auth_profile-header-info">
 				<tag :light="true">
-					{{ UserState.UserName }}
+					{{ State.UserName }}
 				</tag>
-				<span>{{ defineStatus(UserState.UserStatus) }}</span>
+				<span>{{ defineStatus(State.UserStatus) }}</span>
 			</div>
 		</section>
 
@@ -29,12 +29,12 @@
 		<section v-once class="auth_profile-footer">
 
 			<!-- <template v-if="$isMobile">
-				<nuxt-link tag="button" :to="`/user-panel?uid=${ UserState.UserID }`">
+				<nuxt-link tag="button" :to="`/user-panel?uid=${ State.UserID }`">
 					Личный Кабинет
 				</nuxt-link>
 			</template>
 
-			<nuxt-link v-if="UserState.UserID === __SELF_KEY__" tag="button" to="/admin">
+			<nuxt-link v-if="State.UserID === __SELF_KEY__" tag="button" to="/admin">
 				Админ Панель
 			</nuxt-link> -->
 			<eccheuma-button @click.native="logout()">
@@ -278,9 +278,10 @@
 		computed: {
 			...mapState({
 
-				UserState: 			state => ( state as VuexMap ).User.State.UserState,
-				NewMessages:		state => ( state as VuexMap ).User.Messages.NewMessagesCount,
-				Messages: 			state => ( state as VuexMap ).User.Messages.Messages
+				State		: state => (state as VuexMap).User.State.State,
+				NewMessages	: state => (state as VuexMap).User.Messages.NewMessagesCount,
+				Messages		: state => (state as VuexMap).User.Messages.Data,
+				Lang				: state => (state as VuexMap).App.Lang
 
 			}),
 
@@ -293,13 +294,13 @@
 				return {
 					UserBalance: {
 						title: 'Баланс',
-						value: `${ this.UserState.UserBalance } ₽`,
+						value: `${ this.State.UserBalance } ₽`,
 						info: 'Ваш текущий баланс.',
 						icon: 'Service',
 					},
 					UserWorkStatus: {
 						title: 'Статус заказа',
-						value: work.defineStatus(this.UserState.UserWorkStatus),
+						value: work.defineStatus(this.State.UserWorkStatus, this.Lang),
 						info: 'Текущий статус последнего заказа заказа',
 						icon: 'Fire',
 					},
@@ -320,7 +321,7 @@
 			}),
 
 			defineStatus(status: User.status) {
-				return user.defineStatus(status);
+				return user.defineStatus(status, this.Lang);
 			}
 
 		}

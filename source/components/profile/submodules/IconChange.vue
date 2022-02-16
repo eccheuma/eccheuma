@@ -2,7 +2,7 @@
 	<div class="user_profile-component-picture">
 
 		<div class="user_profile-component-picture-user">
-			<i ref="iconPreview" :style="`background-image: url(${ NewIcon || UserState.UserImageID })`" />
+			<i ref="iconPreview" :style="`background-image: url(${ NewIcon || State.UserImageID })`" />
 			<input 
 				v-show="false" 
 				id="CustomImage" 
@@ -28,7 +28,7 @@
 		</div>
 		<hr v-once>
 		<div class="user_profile-component-picture-footer">
-			<common-button :class="{ disabled: !NewIcon || NewIcon === UserState.UserImageID || Pending }" @click.native="updateIcon">
+			<common-button :class="{ disabled: !NewIcon || NewIcon === State.UserImageID || Pending }" @click.native="updateIcon">
 				Подтвердить
 			</common-button>
 		</div>
@@ -137,6 +137,9 @@
 	import { storage } from '~/api/storage';
 	import { database } from '~/api/database';
 
+	// LANG
+	import { getLocale } from '~/lang'
+
 	// COMPONENT
 	import CommonButton from '~/components/buttons/CommonButton.vue'
 
@@ -176,7 +179,8 @@
 		computed: {
 			...mapState({
 
-				UserState: state	=> (state as VuexMap).User.State.UserState,
+				State	: state	=> (state as VuexMap).User.State.State,
+				Lang			: state => (state as VuexMap).App.Lang
 
 			}),
 		},
@@ -243,15 +247,17 @@
 
 			},
 
-			async uploadIcon() {
+			async uploadIcon(event: InputEvent) {
+
+				const INPUT = (event.target as HTMLInputElement);
+
+				if ( INPUT.files?.length === 0 ) return;
 
 				this.Pending = true;
 				this.NewIcon = String();
 
-				const INPUT = this.$refs.CustomIcon as HTMLInputElement
-				
 				const PATH			= 'UserIcons/ID'
-				const ID 				= this.UserState.UserID
+				const ID 				= this.State.UserID
 				// eslint-disable-next-line prefer-regex-literals
 				const FILENAME 	= new RegExp('.*(avif|png|jpe?g|webp)').exec(INPUT.value)!; 
 
@@ -264,7 +270,7 @@
 
 					if ( FILE.size >= 15e5 ) {
 
-						this.Warning = `File size limit is 1.5MB. Your is: ${ parseFloat(Number(FILE.size / 10e5).toPrecision(3)) }MB`; 
+						this.Warning = `${ getLocale(this.Lang).fileInput.sizeStrict }: ${ parseFloat(Number(FILE.size / 10e5).toPrecision(3)) }`; 
 						this.Pending = false;
 
 						return;
@@ -279,13 +285,13 @@
 
 					if ( URL ) { this.NewIcon = URL }
 
-				} else { this.Warning = 'File not loaded'; this.Pending = false }
+				} else { this.Warning = getLocale(this.Lang).fileInput.sendError; this.Pending = false }
 
 			},
 
 			updateIcon() {
 
-				database.update(`Users/${ this.UserState.UserID }/state`, { UserImageID: this.NewIcon });
+				database.update(`Users/${ this.State.UserID }/state`, { UserImageID: this.NewIcon });
 
 			},
 			

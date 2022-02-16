@@ -2,9 +2,9 @@
 
 	<collapse 
 		class="user_profile-collapse"
-		:active="UserProfileArea" 
+		:active="ProfileArea" 
 		:options="{ duration: 500, emit: true }"
-		@collapsed="(v) => status = v"
+		@collapsed="(s) => status = s"
 		>
 
 		<section ref="UserProfileContainer" class="user_profile-container">
@@ -20,12 +20,12 @@
 					<hr v-once>
 
 					<section class="user_profile-info-body">
-						<i ref="UserIcon" :style="`background-image: url(${ UserState.UserImageID }); transform: scale(0)`" />
+						<i ref="UserIcon" :style="`background-image: url(${ State.UserImageID }); transform: scale(0)`" />
 						<div class="user_profile-info-body-name">
 							<tag :light="true">
-								{{ UserState.UserName }}
+								{{ State.UserName }}
 							</tag>
-							<span>{{ defineStatus(UserState.UserStatus) }}</span>
+							<span>{{ defineStatus(State.UserStatus) }}</span>
 						</div>
 					</section>
 
@@ -39,11 +39,11 @@
 
 							<span>
 								<div>Баланс: </div>
-								<strong>{{ UserState.UserBalance }} ₽</strong>
+								<strong>{{ State.UserBalance }} ₽</strong>
 							</span>
 							<span>
 								<div>Сообщений: </div>
-								<strong>{{ MessagesCount }} ( Новых: {{ NewMessages }} )</strong>
+								<strong>{{ Messages.length }} ( Новых: {{ NewMessages }} )</strong>
 							</span>
 
 							<!-- <template v-if="ActiveRequest.length">
@@ -63,7 +63,7 @@
 
 							<span>
 								<div>Заказов в прогрессе: </div>
-								<strong>{{ RequestsQuantity }}</strong>
+								<strong>{{ WorkRequest.RequestQuantity }}</strong>
 							</span>
 
 						</div>
@@ -84,9 +84,9 @@
 					<hr v-once>
 					
 					<transition name="UserProfileComponentTransition" mode="out-in">
-
-						<component :is="CurentPreferencesComponent" :key="`${CurentPreferencesComponent}-Key`" />
-
+						<keep-alive>
+							<component :is="CurentPreferencesComponent" :key="`${CurentPreferencesComponent}-Key`" />
+						</keep-alive>
 					</transition>
 
 				</div>
@@ -577,17 +577,13 @@
 		computed: {
 
 			...mapState({
-				// AUTH
-				LoginStatus:	 		state => (state as VuexMap).Auth.Session.LoginStatus,
-				// USER STATE
-				UserProfileArea: 	state => (state as VuexMap).User.State.UserProfileArea,
-				UserState:			 	state	=> (state as VuexMap).User.State.UserState,
-				// MessageS
-				MessagesCount: 		state => (state as VuexMap).User.Messages.Messages.length,
-				NewMessages: 			state => (state as VuexMap).User.Messages.NewMessagesCount,
-				// WORK REQUESTS
-				RequestsQuantity: state => (state as VuexMap).User.WorkRequest.RequestQuantity,
-				ActiveRequest: 		state => (state as VuexMap).User.WorkRequest.ActiveOrders,
+				Lang						: state => (state as VuexMap).App.Lang,
+				LoginStatus			:	state => (state as VuexMap).Auth.Session.LoginStatus,
+				State						:	state	=> (state as VuexMap).User.State.State,
+				ProfileArea			:	state	=> (state as VuexMap).User.State.UserProfileArea,
+				Messages				: state => (state as VuexMap).User.Messages.Data,
+				NewMessages			: state => (state as VuexMap).User.Messages.NewMessagesCount,
+				WorkRequest			: state => (state as VuexMap).User.WorkRequest,
 			}),
 
 			// COMPONENT_HEADER
@@ -629,7 +625,7 @@
 
 		watch: {
 
-			'UserState.UserImageID': {
+			'State.UserImageID': {
 				handler() {
 					this.AnimateUserIcon('update'); 
 				},
@@ -652,7 +648,8 @@
 		created() {
 
 			this.setRequestQuantity(); 
-			this.setRequestContent(this.UserState.UserID); 
+			// ! LOADER TEST...
+			// this.setRequestContent(); 
 
 			this.getMessages();
 
@@ -694,7 +691,7 @@
 			},
 
 			defineStatus(status: User.status) {
-				return user.defineStatus(status)
+				return user.defineStatus(status, this.Lang)
 			},
 
 		},

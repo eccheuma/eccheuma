@@ -16,53 +16,35 @@
 
 			<div class="auth_login-body-email">
 				<span>Ваш email</span>
-				<template v-if="$v.Form.email">
-					<input 
-						v-model="Form.email"
-						type="email"
-						:class="[
-							{ invalid: $v.Form.email.$invalid 
-								&& $v.Form.email.$dirty 
-								&& Form.email.length 
-							},
-							{ valid: !$v.Form.email.$anyError 
-								&& $v.Form.email.$dirty 
-								&& Form.email.length 
-							},
-						]"
-						@input="inputSound"
-						@change.once="$v.Form.email && $v.Form.email.$touch()"
-					>
-				</template>
+				<input 
+					v-model="userForm.email"
+					type="email"
+					:class="userForm.email.length ? formValidation.email ? 'valid' : 'invalid' : 'await'"
+					@input="inputSound"
+				>
 			</div>
 
 			<div class="auth_login-body-password">
 				<span>Ваш пароль</span>
-				<template v-if="$v.Form.password">
-					<input 
-						v-model="Form.password"
-						type="password"
-						:class="[
-							{ invalid: $v.Form.password.$invalid && $v.Form.password.$dirty && Form.password.length },
-							{ valid: !$v.Form.password.$anyError && $v.Form.password.$dirty && Form.password.length }
-						]"
-						@input="inputSound"
-						@change.once="$v.Form.password && $v.Form.password.$touch()"
-					>
-				</template>
+				<input 
+					v-model="userForm.password"
+					type="password"
+					:class="userForm.password.length ? formValidation.password ? 'valid' : 'invalid' : 'await'"
+					@input="inputSound"
+				>
 			</div>
 
 			<caption-card 
 				v-if="AuthError" 
 				:status="[
-					{ 'error': AuthError === 'auth/invalid-email' }
+					{ 'error': AuthError.length }
 				]"
 			>
 				<template #type>
 					Ошибка входа
 				</template>
 				<template #desc>
-					{{ DefineAuthError(AuthError) }}
+					{{ getLocaleError(AuthError) }}
 				</template>
 			</caption-card>
 
@@ -93,9 +75,7 @@
 		<section class="auth_login-footer">
 
 			<eccheuma-button 
-				:class="[
-					{ disabled: $v.Form.$anyError }
-				]"
+				:class="{ disabled: !formValidation.email || !formValidation.password }"
 				@click.native="sendForm()"
 				>
 				Войти
@@ -307,20 +287,19 @@ import Vue from 'vue'
 // VUEX
 	import { mapState, mapMutations, mapActions } from 'vuex'
 
-// VUELIDATE
-	import { email, required, minLength } from 'vuelidate/lib/validators'
+// UTILS
+	import { validate } from '~/utils/validate'
 
 // MIXINS
 	import EmitSound from '~/assets/mixins/EmitSound'
-	import F_AuthErrors from '~/assets/mixins/filters/AuthError'
 
 // TYPES 
 
+	// AUTH
+	import { form, auth } from '~/api/auth'
+
 	// VUEX MODULE TYPE MAP
 	import type { VuexMap } from '~/typescript/VuexMap'
-
-	// OTHER TYPES
-	import type { REGISTER_FORM } from '~/store/Auth/Session'
 
 	// COMPONENTS
 	import EccheumaButton from '~/components/buttons/CommonButton.vue';
@@ -334,31 +313,33 @@ import Vue from 'vue'
 			CaptionCard,
 			Icon,
 		},
-		mixins: [ EmitSound, F_AuthErrors ],
+		mixins: [ EmitSound ],
 		data() {
 			return {
 
 				inFocus: false,
 
-				Form: {
-					email: '',
-					password: '',
-				} as REGISTER_FORM
+				userForm: {
+					email: String(),
+					password: String(),
+				} as form.registration
 
-			}
-		},
-		validations: {
-			Form: {
-				email: 		{ email, required },
-				password: { required, minLength: minLength(6) }
 			}
 		},
 		computed: {
 
 			...mapState({
-				LoginStatus: 	state => (state as VuexMap).Auth.Session.LoginStatus,
-				AuthError: 		state => (state as VuexMap).Auth.Session.AuthError,
-			})
+				LoginStatus	: state => (state as VuexMap).Auth.Session.LoginStatus,
+				AuthError		: state => (state as VuexMap).Auth.Session.AuthError,
+				Lang				: state => (state as VuexMap).App.Lang
+			}),
+
+			formValidation(): { email: boolean, password: boolean } {
+				return {
+					email			: validate.email(this.userForm.email),
+					password	: validate.pass(this.userForm.password, 6, '[a-zA-Z0-9]'),
+				}
+			}
 
 		},
 		mounted() {
@@ -391,10 +372,16 @@ import Vue from 'vue'
 
 			sendForm() {
 
-				if ( !this.$v.Form.$anyError ) {
-					this.signIn(this.Form)
-				}
+				const { email, password } = this.formValidation;
 
+				if ( email && password ) {
+					this.signIn(this.userForm)
+				};
+
+			},
+
+			getLocaleError(error: auth.error) {
+				return auth.defineError(error, this.Lang)
 			}
 
 		}

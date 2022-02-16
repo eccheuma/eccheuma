@@ -1,7 +1,7 @@
 <template>
 	
 	<transition name="LoaderTransition">
-		<section v-if="active && !error" class="page_loader-container">
+		<section v-show="active" class="page_loader-container">
 
 			<svg ref="svg" fill="none" viewBox="0 0 157 24">
 				<path
@@ -158,18 +158,18 @@
 				type: Boolean,
 				default: false,
 			} as PropOptions<boolean>,
-			timeLimit: {
-				type: Number,
-				default: 10000
-			} as PropOptions<number>,
 			error: {
 				type: Boolean,
 				default: false
-			} as PropOptions<boolean>,
+			},
 			forcedStage: {
 				type: Number,
 				default: 0,
-			} as PropOptions<number>
+			} as PropOptions<number>,
+			timeLimit: {
+				type: Number,
+				default: 10000
+			},
 		},
 		data() {
 			return {
@@ -179,27 +179,39 @@
 				active: this.ignite,
 				curentStage: 0,
 
+				dash: 1 as number,
+
 			} 
+		},
+		computed: {
+
+			stageBound(): number {
+				return this.curentStage < this.stages.length 
+					? this.curentStage + 1 
+					: this.stages.length;
+			},
+
+			lineSegment(): number {
+				return this.dash / this.stages.length
+			},
+
+			pathFromTo(): [number, number] {
+
+				return [
+					this.lineSegment * ( this.stages.length - ( this.curentStage / 2 )),
+					this.lineSegment * ( this.stages.length - ( this.stageBound / 2 ))
+				]
+
+			}
+
 		},
 		watch: {
 			forcedStage: {
 				handler(stage: number) {
 
-					if ( !stage ) {
-						this.active = true;
-					}
+					if ( this.active === false ) this.active = true;
 
-					if ( this.idle ) {
-
-						this.$nextTick().then(() => this.changeStage(stage))
-
-					} else {
-
-						const IdleWatcher = this.$watch('idle', () => {
-							this.$nextTick().then(() => this.changeStage(stage)); IdleWatcher();
-						})
-
-					}
+					queueMicrotask(() => this.changeStage(stage))
 
 				}
 			},
@@ -217,59 +229,56 @@
 				this.changeStage(0);
 			}
 
+			this.$nextTick(() => {
+				if ( this.$refs.path ) {
+					this.dash = this.$AnimeJS.setDashoffset(this.$refs.path as SVGElement);
+				}
+			})
+
 		},
 		methods: {
 
-			changeStage(stage: number) {
+			async changeStage(stage: number) {
 
 				this.idle = false;
 
-				const StageDur = () => Math.trunc(1000 - (500 * Math.random()));
+				const stageDurationFN = () => Math.trunc(750 - (500 * Math.random()));
+				
+				// ---
 
-				this.animateText({ direction: 'normal', duration: StageDur(), delay: this.curentStage ? 0 : 250 }).then(() => {
+				await this.animateText({ direction: 'normal',  duration: 250 });
+				await this.pathlineDash({ direction: 'normal',  duration: stageDurationFN() });
+				await this.animateText({ direction: 'reverse', duration: 250 });
 
-					const animations = [
-						this.animateText({ direction: 'reverse', duration: 150 }),
-						this.animateLogo({ direction: 'normal',  duration: StageDur() }),
-					]
-	
-					Promise.all(animations).then(() => {
+				const newStage = stage + 1;
 
-						const newStage = stage + 1;
+				if ( this.stages[newStage] ) {
 
-						if ( this.stages[newStage] ) {
-							
-							this.curentStage = newStage;
+					this.curentStage = newStage;
 
-							if ( !this.controllable ) {
-								this.changeStage(newStage);
-							}
+					if ( !this.controllable ) this.changeStage(newStage);
 
-						} else {
+				} else {
 
-							this.$AnimeJS({
-								targets: this.$refs.svg,
-								fill: { value: 'rgb(255,255,255)' },
-								duration: 500,
-								endDelay: 1000,
-								easing: 'easeInOutQuad',
-								complete: () => {
-									this.active 			= false; 
-									this.curentStage 	= 0;
-								}
-							})
+					await this.fillLogo();
 
-						}
+					this.active 			= false; 
+					this.curentStage 	= 0;
 
-						this.idle = true;
+					this.$emit('complete')
 
-					})
-					
-				})
+				}
+
+				// ---
+
+				this.idle = true;
 
 			},
 
-			animateText(params?: AnimeParams): Promise<boolean> {
+			animateText(params: AnimeParams): Promise<boolean> {
+
+				console.time('animateText')
+				console.debug('[ Loader ]: AnimateText start')
 				
 				return new Promise((resolve) => {
 
@@ -282,7 +291,11 @@
 						
 						...params,
 
-						complete: () => resolve(true)
+						complete: () => { 
+							resolve(true); 
+							console.debug('[ Loader ]: AnimateText resolve'); 
+							console.timeEnd('animateText')
+						}
 
 					})
 
@@ -292,14 +305,7 @@
 
 			},
 
-			animateLogo(params?: AnimeParams): Promise<boolean> {
-
-				const DASH			= this.$AnimeJS.setDashoffset(this.$refs.path as SVGElement);
-				
-				const Q					= this.stages.length;
-				const N					= this.curentStage < Q ? this.curentStage + 1 : Q;
-
-				const defineOffset 		= (tar: number) => (DASH / Q) * (Q - (tar / 2));
+			pathlineDash(params: AnimeParams): Promise<boolean> {
 
 				return new Promise((resolve) => {
 
@@ -307,20 +313,36 @@
 						targets: this.$refs.path,	
 						easing: 'easeInOutQuad',
 						round: 1,
-						strokeDashoffset: [defineOffset(this.curentStage), defineOffset(N)],
+						strokeDashoffset: this.pathFromTo,
 						stroke: { value: 'rgb(255,255,255)', duration: 250 },
 						
 						...params,
 
-						complete() {
-							resolve(true)
-						}
+						complete: () => resolve(true),
 						
 					})
 
 				})
 
 			},
+
+			fillLogo(): Promise<boolean> {
+
+				return new Promise((resolve) => {
+					this.$AnimeJS({
+						targets: this.$refs.svg,
+						fill: { value: 'rgb(255,255,255)' },
+						duration: 500,
+						endDelay: 1000,
+						easing: 'easeInOutQuad',
+						
+						complete: () => resolve(true),
+
+					})
+				}) 
+
+
+			}
 
 		}
 	})

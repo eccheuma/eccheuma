@@ -118,22 +118,27 @@
 			type: {
 				type: String,
 				default: 'button',
+				required: false,
 			},
 			link: {
 				type: String,
 				default: '',
+				required: false,
 			},
 			scheme: {
 				type: String,
-				default: 'light'
-			} as PropOptions<'light' | 'dark'>,
+				default: 'light',
+				required: false,
+			},
 			indicator: {
 				type: Boolean,
 				default: false,
+				required: false,
 			},
 			sound: {
 				type: Boolean,
 				default: true,
+				required: false,
 			}
 		},
 		data() {

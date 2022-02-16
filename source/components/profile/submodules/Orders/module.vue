@@ -135,7 +135,7 @@
 
 			...mapState({
 				Orders		: state => ( state as VuexMap ).User.WorkRequest.Orders,
-				UserState	: state => ( state as VuexMap ).User.State.UserState,
+				State	: state => ( state as VuexMap ).User.State.State,
 			}),
 
 		},
@@ -144,7 +144,7 @@
 			this.setOrders([LOGO_ORDER, DEFAULT_ORDER])
 		},
 		mounted() {
-			this.setRequestContent(this.UserState.UserID)
+			this.setRequestContent(this.State.UserID)
 		},
 		methods: {
 

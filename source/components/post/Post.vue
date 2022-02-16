@@ -4,7 +4,6 @@
 			:id="`PostID-${ payload.ID }`" 
 			ref="post"
 			class="post-container"
-			:data-hash="HashGenerator(12)"
 			@keydown.ctrl.enter="sendComment"
 			> 
 
@@ -218,7 +217,7 @@
 										placeholder="Напишите тут что-то в ответ." 
 									/>
 			
-									<button :class="{ disabled: $v.Message.$anyError }" type="button" @click="sendComment">
+									<button :class="{ disabled: validation === false }" type="button" @click="sendComment">
 										Ответить <span>( Ctrl + Enter )</span>
 									</button>
 
@@ -729,18 +728,15 @@
 	// VUEX
 	import { mapActions, mapState } from 'vuex'
 
-	// VUELIDATE
-	import { required, minLength, maxLength, helpers } from 'vuelidate/lib/validators'
-
 	// API
 	import { database } from '~/api/database';
 
 	// UTILS
 	import { utils } from '~/utils';
+	import { validate } from '~/utils/validate';
 
 	// MIXINS
 	import EmitSound 						from '~/assets/mixins/EmitSound'
-	import HashGenerator 				from '~/assets/mixins/HashGenerator'
 	import IntersectionCooler 	from '~/assets/mixins/IntersectionCooler'
 
 	// COMPONETS
@@ -781,9 +777,6 @@
 
 	const CHAR_LIMIT = 600;
 
-	// VALIDATE REGULAR EXPRESSION
-	const CYRILLIC_VALIDATION = helpers.regex('alpha', /^[а-яА-ЯЁё\n\t\s\w\W]*$/)
-
 	// MODULE
 	export default Vue.extend({
 
@@ -803,8 +796,6 @@
 
 		mixins: [ 
 			EmitSound, 
-			HashGenerator, 
-			// IntersectionObserver, 
 			IntersectionCooler 
 		],
 		
@@ -863,7 +854,7 @@
 			...mapState({
 				UI:						state => (state as VuexMap).App.UI,
 				LoginStatus: 	state => (state as VuexMap).Auth.Session.LoginStatus,
-				StoreUser:		state => (state as VuexMap).User.State.UserState,
+				StoreUser:		state => (state as VuexMap).User.State.State,
 			}),
 
 			charLimit(): number {
@@ -876,6 +867,10 @@
 
 			sortedComments(): Array<Post.comment> {
 				return Object.values(this.Comments || {}).sort((a, b) => a.date - b.date)
+			},
+
+			validation(): boolean {
+				return validate.sentence(this.Message, ['something'], { minLength: 6 })
 			}
 			
 		},
@@ -969,15 +964,6 @@
 
 		},
 
-		validations: {
-			Message: {
-				required, 
-				CYRILLIC_VALIDATION,
-				minLength: minLength(6),
-				maxLength: maxLength(CHAR_LIMIT),
-			}
-		},
-
 		methods: {
 
 			...mapActions({
@@ -1069,7 +1055,7 @@
 
 			sendComment(): void {
 
-				if ( !this.$v.Message.$anyError && this.LoginStatus && this.PrevMessage !== this.Message ) {
+				if ( this.validation && this.LoginStatus && this.PrevMessage !== this.Message ) {
 
 					this.PrevMessage = this.Message;
 
