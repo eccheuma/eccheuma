@@ -15,7 +15,7 @@
 
 .cases-container {
 	padding: 2vh 0;
-	min-height: 50vh;
+	min-height: 100vh;
 }
 
 </style>
@@ -31,7 +31,8 @@
 	import { database } from '~/api/database';
 
 	// TYPES
-	import type { Workcase } from '~/typescript/WorkCase'
+	import { Workcase } from '~/typescript/WorkCase';
+	import { Portfolio } from '~/typescript/Portfolio';
 
 	// MODULE
 	export default Vue.extend({
@@ -42,29 +43,42 @@
 			name: 'opacity-enterDelayed-transition',
 			mode: 'out-in',
 		},
+		asyncData({ params, redirect }) {
+
+			let Type: Portfolio.sections = Portfolio.sections.landings;
+
+			switch (params.type) {
+
+				case 'landings'	: Type = Portfolio.sections.landings; 
+					break;
+				case 'logo'			: Type = Portfolio.sections.logo; 
+					break;	
+				case 'mockups'	: Type = Portfolio.sections.mockups; 
+					break;
+				default: redirect('/error'); break;
+			}
+
+			return { Type };
+
+		},
 		data() {
 			return {
 
 				Case: new Array() as Array<Workcase.struct>,
 
+				Type: Portfolio.sections.landings,
+
 			}
 		},
 		async mounted() {
-
-			this.Case = await this.GetCases()
-
+			this.Case = await this.GetCases();
 		},
 		methods: {
 			async GetCases(): Promise<Array<Workcase.struct>> {
 
-				// ! Refactor this piece of shit as soon as posible
-				// @ That path defenition is a mess
-
-				const T = this.$route.params.type.split('')
-
-				const PATH = [T[0].toUpperCase(), ...T.slice(1)].join('');
-
-				return await database.get(`Cases/${ PATH }`).then(data => Object.values(data))
+				return await database
+					.get(`Cases/${ this.Type }`)
+					.then(data => Object.values(data || new Object()))
 
 			},
 		}

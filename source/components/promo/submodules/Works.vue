@@ -111,7 +111,7 @@ export default Vue.extend({
 
 			// CASE DATA
 			CasesType: [
-        Portfolio.sections.landing
+        Portfolio.sections.landings
       ] as Array<Portfolio.sections>,
 
 			Works: new Object() as {[ KEY in Portfolio.sections ]: Array<Workcase.struct> },

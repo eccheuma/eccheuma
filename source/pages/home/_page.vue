@@ -93,9 +93,7 @@
 		},
 		async fetch() {
 
-			// if ( !process.browser ) {
-				await this.getDatabaseData();
-			// }
+			await this.getDatabaseData();
 
 		},
 		head(): any {

@@ -146,14 +146,15 @@
 				type: Array,
 				default() {
 					return [
-						{ LoadPoint: 0, Message: 'Подготовка' },
+						{ LoadPoint: 0, 	Message: 'Подготовка' },
+						{ LoadPoint: 100, Message: 'Готово' },
 					]
 				}
-			} as PropOptions<LoadStage[]>,
+			} as PropOptions<Array<LoadStage>>,
 			controllable: {
 				type: Boolean,
 				default: false,
-			} as PropOptions<boolean>,
+			},
 			ignite: {
 				type: Boolean,
 				default: false,
@@ -165,7 +166,7 @@
 			forcedStage: {
 				type: Number,
 				default: 0,
-			} as PropOptions<number>,
+			},
 			timeLimit: {
 				type: Number,
 				default: 10000
@@ -185,21 +186,21 @@
 		},
 		computed: {
 
-			stageBound(): number {
+			nextStage(): number {
 				return this.curentStage < this.stages.length 
 					? this.curentStage + 1 
 					: this.stages.length;
 			},
 
-			lineSegment(): number {
+			segmentLength(): number {
 				return this.dash / this.stages.length
 			},
 
-			pathFromTo(): [number, number] {
+			segmentCoord(): [number, number] {
 
 				return [
-					this.lineSegment * ( this.stages.length - ( this.curentStage / 2 )),
-					this.lineSegment * ( this.stages.length - ( this.stageBound / 2 ))
+					this.segmentLength * ( this.stages.length - ( this.curentStage / 2 )),
+					this.segmentLength * ( this.stages.length - ( this.nextStage / 2 ))
 				]
 
 			}
@@ -211,15 +212,15 @@
 
 					if ( this.active === false ) this.active = true;
 
+					// After each force stage change, add func in microtask queue 
+					// to not interrupt already running loader stage
 					queueMicrotask(() => this.changeStage(stage))
 
 				}
 			},
 			active: {
 				handler() {
-					setTimeout(() => {
-						this.active = false;
-					}, this.timeLimit)
+					setTimeout(() => { this.active = false }, this.timeLimit );
 				}
 			}
 		},
@@ -250,13 +251,13 @@
 				await this.pathlineDash({ direction: 'normal',  duration: stageDurationFN() });
 				await this.animateText({ direction: 'reverse', duration: 250 });
 
-				const newStage = stage + 1;
+				// ---
 
-				if ( this.stages[newStage] ) {
+				if ( this.curentStage !== this.nextStage ) {
 
-					this.curentStage = newStage;
+					this.curentStage = this.nextStage;
 
-					if ( !this.controllable ) this.changeStage(newStage);
+					if ( this.controllable === false ) this.changeStage(this.nextStage);
 
 				} else {
 
@@ -313,7 +314,7 @@
 						targets: this.$refs.path,	
 						easing: 'easeInOutQuad',
 						round: 1,
-						strokeDashoffset: this.pathFromTo,
+						strokeDashoffset: this.segmentCoord,
 						stroke: { value: 'rgb(255,255,255)', duration: 250 },
 						
 						...params,

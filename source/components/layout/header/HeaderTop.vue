@@ -14,15 +14,21 @@
 			/>
 		</svg>
 
-		<eccheuma-button
-			v-if="LoginStatus == true && !$isMobile"
-			scheme="dark"
-			:indicator="Notification"
-			@mouseenter.native="Notification = false"
-			@click.native="ToggleProfileArea"  
-		>
-			Личный кабинет
-		</eccheuma-button>
+		<template v-if="LoginStatus == true && !$isMobile">
+			<eccheuma-button
+				:indicator="Notification"
+				@mouseenter.native="Notification = false"
+				@click.native="toggleProfileArea"  
+			>
+				Личный кабинет
+			</eccheuma-button>
+		</template>
+
+		<template v-else>
+			<eccheuma-button @click.native="toggleRegisterModal">
+				Зарегистрироваться
+			</eccheuma-button>
+		</template>
 
 	</header>
 </template>
@@ -31,7 +37,8 @@
 
 	import Vue from 'vue'
 
-	import { mapState, mapMutations } from 'vuex'
+	// VUEX
+	import { mapState, mapMutations, mapActions } from 'vuex'
 
 	// COMPONENTS
 	import EccheumaButton		from '~/components/buttons/CommonButton.vue'
@@ -62,8 +69,10 @@
 		},
 		methods: {
 			...mapMutations({
-				ToggleProfileArea: 'User/State/Toggle_UserProfileArea'
+				toggleProfileArea: 'User/State/Toggle_UserProfileArea',
+				toggleRegisterModal: 'Auth/Register/ToggleRegisterModal',
 			}),
+
 			GoToHoll() {
 				this.$router.push({ path: '/' })
 			},

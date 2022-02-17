@@ -38,102 +38,102 @@
 
 <style lang="scss">
 
-eccheuma-layout {
+	eccheuma-layout {
 
-	position: relative;
-
-	display: grid;
-	grid-template: {
-		columns: $GLOBAL-BodySize;
-		rows: 10vh 75vh $GLOBAL-HeaderHeight;
-	};
-
-	--crusoris-circle-color: var(--color-accent-edges-100);
-	--crusoris-dot-color: var(--color-accent-edges-300);
-	--crusoris-transition-duration: 333ms;
-
-	.fixed-node {
-		position: absolute;
-	}
-
-	&:before {
-
-		content: '';
-		width: $GLOBAL-BodySize;
-		height: 1px;
-		position: fixed;
-		bottom: 0px;
-
-		background: linear-gradient(90deg, var(--color-accent-edges-100), var(--color-accent-edges-200), var(--color-accent-edges-100));
-		z-index: 9999;
-
-		cursor: pointer;
-
-	}
-
-}
-
-.content {
-	&-wrapper {
+		position: relative;
 
 		display: grid;
 		grid-template: {
-			columns: 
-				minmax(min-content, #{ $GLOBAL-AsideColumnsWidth }) 
-				1fr
-				$GLOBAL-AsideColumnsWidth; 
-			rows: 1fr;
+			columns: $GLOBAL-BodySize;
+			rows: 10vh 75vh $GLOBAL-HeaderHeight;
+		};
+
+		--crusoris-circle-color: var(--color-accent-edges-100);
+		--crusoris-dot-color: var(--color-accent-edges-300);
+		--crusoris-transition-duration: 333ms;
+
+		.fixed-node {
+			position: absolute;
 		}
 
-		column-gap: 1vw;
+		&:before {
 
-		min-height: 100vh;
-		justify-content: space-between;
-		
-	}
-	&-container {
-
-		width: 100%;
-		margin: 0 auto;
-
-		border: {
-			right: 1px solid rgb(var(--color-mono-300));
-			left: 1px solid rgb(var(--color-mono-300));
-		}
-
-		// Mobile
-		@media screen and ( max-width: $mobile-breakpoint ) {
+			content: '';
 			width: $GLOBAL-BodySize;
+			height: 1px;
+			position: fixed;
+			bottom: 0px;
+
+			background: linear-gradient(90deg, var(--color-accent-edges-100), var(--color-accent-edges-200), var(--color-accent-edges-100));
+			z-index: 9999;
+
+			cursor: pointer;
+
 		}
 
 	}
-}
 
-.ui-theme {
-	&-light {
+	.content {
+		&-wrapper {
 
-		--color-mono-000: var(--mono-1000);
-    --color-mono-100: var(--mono-1000);
-    --color-mono-200: var(--mono-900);
-    --color-mono-300: var(--mono-800);
-    --color-mono-400: var(--mono-700);
-    --color-mono-500: var(--mono-500);
-    --color-mono-600: var(--mono-500);
-    --color-mono-700: var(--mono-400);
-    --color-mono-800: var(--mono-400);
-		--color-mono-900: var(--mono-400);
-    --color-mono-1000: var(--mono-100);
+			display: grid;
+			grid-template: {
+				columns: 
+					minmax(min-content, #{ $GLOBAL-AsideColumnsWidth }) 
+					1fr
+					$GLOBAL-AsideColumnsWidth; 
+				rows: 1fr;
+			}
 
-		transition-duration: .75s;
-		background-color: rgb(var(--color-mono-100));
-		color: rgb(var(--color-mono-900));
+			column-gap: 1vw;
 
+			min-height: 100vh;
+			justify-content: space-between;
+			
+		}
+		&-container {
+
+			width: 100%;
+			margin: 0 auto;
+
+			border: {
+				right: 1px solid rgb(var(--color-mono-300));
+				left: 1px solid rgb(var(--color-mono-300));
+			}
+
+			// Mobile
+			@media screen and ( max-width: $mobile-breakpoint ) {
+				width: $GLOBAL-BodySize;
+			}
+
+		}
 	}
-	&-dark {
-		transition-duration: .75s;
-		background-color: rgb(var(--color-mono-100));
+
+	.ui-theme {
+		&-light {
+
+			--color-mono-000: var(--mono-1000);
+			--color-mono-100: var(--mono-1000);
+			--color-mono-200: var(--mono-900);
+			--color-mono-300: var(--mono-800);
+			--color-mono-400: var(--mono-700);
+			--color-mono-500: var(--mono-500);
+			--color-mono-600: var(--mono-500);
+			--color-mono-700: var(--mono-400);
+			--color-mono-800: var(--mono-400);
+			--color-mono-900: var(--mono-400);
+			--color-mono-1000: var(--mono-100);
+
+			transition-duration: .75s;
+			background-color: rgb(var(--color-mono-100));
+			color: rgb(var(--color-mono-900));
+
+		}
+		&-dark {
+			transition-duration: .75s;
+			background-color: rgb(var(--color-mono-100));
+		}
 	}
-}
 
 </style>
 
@@ -165,7 +165,7 @@ eccheuma-layout {
 	// COMPONENTS
 	import HeaderCarousel from '~/components/layout/header/HeaderCarousel.vue'
 	import HeaderTop 			from '~/components/layout/header/HeaderTop.vue'
-	import Loader 				from '~/components/common/Loader.vue'
+	import Loader, { LoadStage } from '~/components/common/Loader.vue'
 
 	// FUNCTIONAL COMPONENTS
 	import HardwareAccelerationDecorator 	from '~/components/functional/HardwareAcceleration.vue';
@@ -216,8 +216,7 @@ eccheuma-layout {
 					{ LoadPoint: 25, 	Message: 'Монтирование элементов' },
 					{ LoadPoint: 80, 	Message: 'Остаточная компоновка элементов' },
 					{ LoadPoint: 100, Message: 'Готово!' },
-				]
-
+				] as Array<LoadStage>
 			}
 		},
 		computed: {
@@ -230,7 +229,7 @@ eccheuma-layout {
 		},
 		mounted() {
 
-			setTimeout(this.setRegNotification, 120_000)
+			setTimeout(this.setRegNotification, 360_000)
 
 		},
 		methods: {

@@ -4,7 +4,7 @@
 		key="main"
 		ref="index"
 		class="holl-container"
-		style="opacity: 0.01"
+		style="opacity: 0.001"
 		@mouseover="changeGlobalVolume(1)"
 		@mouseleave="changeGlobalVolume(0)"
 	>

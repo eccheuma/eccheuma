@@ -205,14 +205,14 @@
 		width: $dotSize; height: 100%; 
 		&:before {
 			content: ''; 
-			width: 100%; height: 1px; margin: auto 0; opacity: .5;
+			width: 100%; height: 1px; margin: auto 0px; opacity: .5;
 			box-shadow: 0px 1px 0px rgb(var(--color-mono-200));
 			background-color: rgb(var(--color-mono-1000)); 
-			transition: opacity, margin 250ms ease-in-out;
+			transition-duration: 250ms;
 		}
 		&:hover {
 			&:before {
-				margin: auto 8px; opacity: 1;
+				margin: auto 4px; opacity: 1;
 			}
 		}
 	}

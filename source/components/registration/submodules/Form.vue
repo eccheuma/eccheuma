@@ -9,52 +9,64 @@
       </caption-card>
       <caption-card v-else status="default">
         <template #type>
-          Lorem ipsum amete an darum
+          Напоминание с добрым умыслом:
+        </template>
+        <template #desc>
+          Никогда не используйте один и тот же пароль на малознакомых сайтах. 
         </template>
       </caption-card>
     </transition>
 
     <section>
       <label for="RegistrationFormMail">
-        <span>Электронная почта: </span>
+        <span>
+          <strong>Почта</strong>
+        </span>
       </label>
       <input 
         id="RegistrationFormMail" 
         v-model="form.email" 
-        type="email" 
+        type="email"
+        placeholder="profile@mail.com"
+        @input="inputSound" 
         :class="validation.email ? 'valid' : 'invalid'"
         >
     </section>
 
     <section>
       <label for="RegistrationFormPass">
-        <span>Пароль: </span>
+        <span>
+          <strong>Пароль: </strong> Длинна не менее 6 символов
+        </span>
       </label>
       <input 
         id="RegistrationFormPass" 
         v-model="form.password" 
-        type="password" 
+        type="password"
+        placeholder="Только латинские буквы и как минимум одна цифра"
+        @input="inputSound" 
         :class="validation.password ? 'valid' : 'invalid'"
         >
     </section>
 
     <section>
       <label for="RegistrationFormName">
-        <span>Ваше имя: </span>
+        <strong>Ваше имя</strong>
       </label>
       <input 
         id="RegistrationFormName" 
         v-model="form.name" 
         type="name" 
-        name="Placeholder" 
+        placeholder="Будет выводится как имя профиля"
+        @input="inputSound" 
         :class="validation.name ? 'valid' : 'invalid'"
         >
     </section>
 
     <hr>
 
-    <eccheuma-button :class="{ disabled: Object.values(validation).some(x => x === false) }">
-      Submit
+    <eccheuma-button :class="{ disabled: invalidForm }">
+      {{ invalidForm ? 'Заполните или исправьте поля' : 'Отправить' }}
     </eccheuma-button>
 
   </form>
@@ -71,18 +83,22 @@
 
     width: 100%;
 
-    hr {
+    > hr {
       width: 100%;
       height: 1px;
       background: rgb(var(--color-mono-300));
       margin: .5vh 0;
     }
 
-    section {
+    > section {
 
       display: grid;
 
       grid-template-columns: 100%;
+
+      span {
+        font-size: var(--font-size-16);
+      }
 
       input {
 
@@ -100,7 +116,7 @@
         padding: 1vh 1vw;
 
         font: {
-          size: var(--font-size-14);
+          size: var(--font-size-16);
           weight: 600;
         }
 
@@ -138,6 +154,9 @@
 	import { mapState, mapMutations } from 'vuex'
 	import type { VuexMap } from '~/typescript/VuexMap'
 
+  // MIXINS
+	import EmitSound from '~/assets/mixins/EmitSound'
+
   // TYPES & INTERFACES & ENUMS
 	import { form, auth } from '~/api/auth';
 	import { validate } from '~/utils/validate';
@@ -162,6 +181,7 @@
       EccheumaButton,
       CaptionCard
     },
+    mixins: [ EmitSound ],
     data() {
       return {
         form: PREDEFINED_FORM,
@@ -194,7 +214,11 @@
           password  : this.form.password  === this.prev.form.password,
           name      : this.form.name      === this.prev.form.name
         }
-      }
+      },
+
+      invalidForm(): boolean {
+        return Object.values(this.validation).some(x => x === false)
+      },
 
     },
     watch: {
@@ -204,6 +228,18 @@
         },
         deep: true,
       },
+    },
+    mounted() {
+      
+      if ( process.browser ) {
+
+				this.setSounds([
+					{ file: 'Off', name: 'Input::Increment', settings: { rate: 0.65, volume: .25 } },
+					{ file: 'Off', name: 'Input::Decrement', settings: { rate: 0.50, volume: .25 } },
+				])
+
+			}
+
     },
     methods: {
 
@@ -218,6 +254,10 @@
         this.$emit('form-send', this.form);
 
       },
+
+      inputSound(input: InputEvent) {
+        this.playSound(this.Sounds.get(input.data ? 'Input::Increment' : 'Input::Decrement'))
+			},
 
       getLocale(error: auth.error) {
         return getLocale(this.Lang).authError[error];

@@ -55,6 +55,9 @@
 	import TransitionSound 	from '~/assets/mixins/TransitionSound';
 	import EmitSound 				from '~/assets/mixins/EmitSound';
 
+// TYPE
+	import { Portfolio } from '~/typescript/Portfolio';
+
 // COMPONENTS
 	import SectionHeader 		from '~/components/common/SectionHeader.vue'
 
@@ -74,7 +77,7 @@
 				HeaderMenu: [
 					{
 						disabled: false,
-						route: '/portfolio/landings',
+						route: `/portfolio/${ Portfolio.sections.landings.toLowerCase() }`,
 						name: 'Лэндинги',
 						icon: 'JS',
 						discription:
@@ -82,7 +85,7 @@
 					},
 					{
 						disabled: false,
-						route: '/portfolio/logo',
+						route: `/portfolio/${ Portfolio.sections.logo.toLowerCase()  }`,
 						name: 'Логотипы',
 						icon: 'Vector',
 						discription:
@@ -90,7 +93,7 @@
 					},
 					{
 						disabled: false,
-						route: '/portfolio/banners',
+						route: `/portfolio/${ Portfolio.sections.mockups.toLowerCase() }`,
 						name: 'Макеты',
 						icon: 'Blank',
 						discription:

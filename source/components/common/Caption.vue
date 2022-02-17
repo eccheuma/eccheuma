@@ -21,6 +21,8 @@
   &-icon {
     display: flex;
     place-content: center;
+    width: min-content;
+    margin: auto;
     aspect-ratio: 1/1;
     border: 2px solid var(--caption-card-color);
     border-radius: 100%;

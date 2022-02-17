@@ -70,6 +70,7 @@
 		}
 
 		width: $GLOBAL-BodySize;
+		min-height: 15vh;
 		z-index: 1020;
 
 		padding: 2vh 3vw;
@@ -180,7 +181,7 @@
 		},
 		computed: {
 			...mapState({
-				Notification: ( state: any ) => ( state as VuexMap ).Notification
+				Notification: state => ( state as VuexMap ).Notification
 			}),
 		},
 		methods: {

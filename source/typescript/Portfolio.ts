@@ -1,9 +1,9 @@
 export namespace Portfolio {
 
   export const enum sections {
-    logo    = 'Logo',
-    landing = 'Landings',
-    mockups = 'Banners',
+    logo      = 'Logo',
+    landings  = 'Landings',
+    mockups   = 'Mockups',
   }
 
 }

@@ -185,6 +185,11 @@
 							]"
 						>
 
+							<section class="post-comments-header">
+								<span>Комментарии</span>
+								<hr>
+							</section>
+
 							<template v-if="!sortedComments.length"> 
 								<section class="post-comments-first">
 									<span>" Тут ещё нет комментариев, но это пока... "</span>
@@ -217,16 +222,22 @@
 										placeholder="Напишите тут что-то в ответ." 
 									/>
 			
-									<button :class="{ disabled: validation === false }" type="button" @click="sendComment">
+									<button :class="{ disabled: validation === false }" type="button" @click="sendComment" class="post-comments-answer-button">
 										Ответить <span>( Ctrl + Enter )</span>
 									</button>
 
 								</template>
 
 								<template v-else>
+
 									<icon v-once name="Info" />
 									<h5>Для комментирования необходима авторизация</h5>
 									<p>Это не так уж и сложно, да и получите сверху ещё больше функионала.</p>
+
+									<common-button v-once @click.native="toggleRegisterModal()" style="margin: 1vh auto">
+										Зарегистрироваться
+									</common-button>
+
 								</template>
 
 							</section>
@@ -633,6 +644,26 @@
 		background-color: rgb(var(--color-mono-200));
 		color: rgb(var(--color-mono-900));
 
+		&-header {
+
+			display: grid;
+			margin: 2vh 0;
+
+			span {
+				font-size: var(--font-size-36);
+				font-weight: 800;
+				text-align: center;
+			}
+
+			hr {
+				width: 75%;
+				margin: 1.75vh auto;
+				height: 1px;
+				background: var(--color-accent-edges-100);
+			}
+
+		}
+
 		&-first {
 
 			text-align: center;
@@ -706,15 +737,17 @@
 				}
 
 			}
-			button {
+
+			&-button {
 				@include push-button {
 					background-color: transparent;
 				};
 
 				margin: {
-					top: 3vh;
+					top: 3vh !important;
 				}
 			}
+			
 		}
 	}
 }
@@ -726,7 +759,7 @@
 	import Vue, { PropOptions } from 'vue'
 
 	// VUEX
-	import { mapActions, mapState } from 'vuex'
+	import { mapActions, mapState, mapMutations } from 'vuex'
 
 	// API
 	import { database } from '~/api/database';
@@ -744,7 +777,7 @@
 	import Popover 							from '~/components/common/Popover.vue'
 	import Tag 									from '~/components/common/Tag.vue'
 	import Icon									from '~/components/common/Icon.vue'
-	import CommonButton 				from '~/components/buttons/CommonButton.vue'
+	import CommonButton 				from '~/components/buttons/CommonButton.vue';
 
 	// FUNCTIONAL COMPONENTS
 	import HardwareAccelerationDecorator 	from '~/components/functional/HardwareAcceleration.vue';
@@ -968,6 +1001,10 @@
 
 			...mapActions({
 				getImageURL: 	'Images/getImageURL',
+			}),
+
+			...mapMutations({
+				toggleRegisterModal: 'Auth/Register/ToggleRegisterModal',
 			}),
 			
 			getAuthor(): Promise<void> {

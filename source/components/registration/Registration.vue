@@ -120,7 +120,7 @@
 		};
 
 		height: 90vh;
-		width: min(420px, 50vw);
+		width: min(460px, 50vw);
 
 		background-color: rgba(var(--color-mono-200));
 		border-radius: var(--border-radius);
