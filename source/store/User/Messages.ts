@@ -75,8 +75,6 @@
 			// Получение ID пользователя
 			const { uid } = rootState.Auth.Session.CurentUser;
 
-			console.log('markAsReaded VUEX')
-
 			database.update(`Users/${ uid }/messages/Hash_${ ID }`, { readed: true } as Partial<Message.struct>)
 
 		},

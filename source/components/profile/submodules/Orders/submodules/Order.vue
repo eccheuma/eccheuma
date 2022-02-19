@@ -318,8 +318,6 @@
     },
     mounted() {
 
-      console.log(this.getOrderType(2));
-
       this.infoList = this.getInfo();
 
       switch (this.payload.status) {

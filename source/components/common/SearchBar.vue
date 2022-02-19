@@ -200,8 +200,6 @@
 
 			const watcherPrepared = this.$watch('preparedInteraction', () => {
 
-				console.log('watcherPrepared');
-
 				this.setSounds([
 					{ file: 'On', 	name: 'Input::Increment',  settings: { rate: 1.00, volume: 0.25 } },
 					{ file: 'Off', 	name: 'Input::Decrement',  settings: { rate: 1.00, volume: 0.25 } },

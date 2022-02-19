@@ -49,7 +49,7 @@
 					
 					<popover v-if="!prop.disabled || !$isMobile" :target="`nav_item-${ prop.name }`">
 						<!-- <i class="fas fa-info-circle" /> -->
-						{{ prop.discription }}
+						{{ prop.description }}
 					</popover>
 
 				</div>
@@ -311,8 +311,12 @@ $TransitionDuration: 250ms;
 	import Popover 		from '~/components/common/Popover.vue'
 	import Icon				from '~/components/common/Icon.vue'
 
-	// TYPES
+	import { PageDescription as HomePage } from '~/pages/home.vue';
+	import { PageDescription as GalleryPage } from '~/pages/gallery.vue';
+	import { PageDescription as PortfolioPage } from '~/pages/portfolio.vue';
+	import { PageDescription as ServicePage } from '~/pages/service.vue';
 
+	// TYPES
 	import { navigation } from '~/typescript/Navigation'
 
 	type HeaderMenuItem = {
@@ -320,7 +324,7 @@ $TransitionDuration: 250ms;
 		route				: `/${ navigation.routes }`, 
 		name				: string, 
 		icon				: string,
-		discription	: string
+		description	: string
 	}
 
 	// PREDEFINED VARIABLES
@@ -330,35 +334,35 @@ $TransitionDuration: 250ms;
 			route: '/home', 
 			name: 'Главная', 
 			icon: 'Home',
-			discription: 'Главная страница. Тут собраны статьи на завязанные на профильную тему.'
+			description: HomePage.description
 		},
 		{
 			disabled: false,
 			route: '/gallery', 
 			name: 'Галерея', 
 			icon: 'Gallery',
-			discription: 'Галлерея изображений. Начиная от логотипов и полноценных макетов, заканчивая всякими набросками и непринятыми вариантами работ.'
+			description: GalleryPage.description
 		},
 		{
-			disabled: true,
+			disabled: false,
 			route: '/recommendation', 
 			name: 'Рекомендации', 
 			icon: 'Fire',
-			discription: 'Предложения по оказанию услуг. В зависимости от сезона и нагруженности тут появляются выгодные предложения на разные виды услуг.'
+			description: PortfolioPage.description
 		},
 		{
 			disabled: false,
 			route: '/portfolio', 
 			name: 'Портфолио', 
 			icon: 'Portfolio',
-			discription: 'Принятые работы. С указанием сроков, цены, комментариев, и отзывов на выполненую работу.'
+			description: 'Принятые работы. С указанием сроков, цены, комментариев, и отзывов на выполненую работу.'
 		},
 		{
 			disabled: false,
 			route: '/service', 
 			name: 'Услуги', 
 			icon: 'Service',
-			discription: 'Услуги. Перечень оказываемых услуг, калькулятор стоимости, и форма обратной связи.'
+			description: ServicePage.description
 		},
 	]
 

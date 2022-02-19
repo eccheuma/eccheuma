@@ -62,17 +62,13 @@ export namespace database {
   
   export function set(path: string, data: any): Promise<any> {
   
-    console.log('setDatabaseData', path, data);
-  
     return firebase.database().ref(path).set(data, (response) => {
-      console.log(response);
+      console.debug(response);
     });
   
   }
   
   export function remove(path: string): Promise<any> {
-  
-    console.log('removeDatabaseData', path);
   
     return firebase.database().ref(path).remove();
   

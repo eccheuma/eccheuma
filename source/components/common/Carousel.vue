@@ -178,7 +178,7 @@ import Vue, { PropOptions } from 'vue'
 			slotChecker(): void {
 
 				if ( this.slotChecks === 10 ) {
-					console.log("Swiper content may be empty, and it can't be mounted."); return
+					console.warn("Swiper content may be empty, and it can't be mounted."); return
 				}
 				setTimeout(() => {
 					( this.$refs.swiperContent as Element ).childElementCount 

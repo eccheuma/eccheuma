@@ -150,6 +150,16 @@
 	import PromoBanner 		from '~/components/promo/PromoBanner.vue'
 	import SectionHeader 	from '~/components/common/SectionHeader.vue'
 
+// PAGE DESCRIPTION
+	import { Opengraph } from '~/utils/opengraph'
+
+	export const PageDescription: Opengraph.struct = {
+		title				: 'Eccheuma | Галерея',
+		description	: 'Галлерея изображений. Начиная от логотипов и полноценных макетов, заканчивая всякими набросками и непринятыми вариантами работ.',
+		url					: '',
+		image				: require('~/assets/images/NotificationBadge.png?resize&size=600').src,
+	}
+
 // MODULE
 	export default Vue.extend({ 
 		components: {
@@ -186,14 +196,10 @@
 		},
 		head () {
 			return {
-				title: 'Eccheuma | Галерея',
+				title: PageDescription.title,
 				meta: [
-					{ 
-						hid: 'description', 
-						name: 'description', 
-						content: 'Галлерея изображений. Начиная от логотипов и полноценных макетов, заканчивая всякими набросками и непринятыми вариантами работ.'
-					}
-				]
+					...new Opengraph.meta(PageDescription).buildMeta()
+				],
 			}
 		},
 		methods: {

@@ -1,6 +1,6 @@
 import type { MetaInfo, MetaPropertyName } from 'vue-meta';
 
-const yandexVerification: MetaPropertyName = { name: "yandex-verification", content: "cfc2699abdb958a8" }
+const yandexVerification: MetaPropertyName = { name: "yandex-verification", content: "cfc2699abdb958a8" };
 
 const HEAD: MetaInfo = {
   title: 'Eccheuma',

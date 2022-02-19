@@ -89,6 +89,16 @@ main {
 // LOAD POLITIC
 	import { load_ranges } from '~/config/LoadPolitic'
 
+// PAGE DESCRIPTION
+	import { Opengraph } from '~/utils/opengraph'
+
+	export const PageDescription: Opengraph.struct = {
+		title				: 'Eccheuma | Главная',
+		description	: 'Главная страница. Тут собраны статьи на завязанные на профильную тему.',
+		url					: '',
+		image				: require('~/assets/images/NotificationBadge.png?resize&size=600').src,
+	}
+
 // MODULE
 	export default Vue.extend({ 
 		components: {
@@ -117,23 +127,9 @@ main {
 		},
 		head () {
 			return {
-				title: 'Eccheuma | Главная',
+				title: PageDescription.title,
 				meta: [
-					{ 
-						hid: 'description', 
-						name: 'description', 
-						content: 'Главная страница. Тут собраны статьи на завязанные на профильную тему.',
-					},
-					{
-						hid: 'og:title', 
-						property: 'og:title',
-						content: 'Escape from Mordorland - Главная',
-					},
-					{
-						hid: 'og:description', 
-						property: 'og:description',
-						content: 'Главная страница. Тут собраны статьи на завязанные на профильную тему.',
-					},
+					...new Opengraph.meta(PageDescription).buildMeta()
 				],
 			}
 		},

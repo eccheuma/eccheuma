@@ -113,6 +113,18 @@
 		category : Categories,
 	}
 
+	// 'Услуги. Перечень оказываемых услуг, калькулятор стоимости, и форма обратной связи.'
+
+	// PAGE DESCRIPTION
+	import { Opengraph } from '~/utils/opengraph'
+
+	export const PageDescription: Opengraph.struct = {
+		title				: 'Eccheuma | Услуги',
+		description	: 'Услуги. Перечень оказываемых услуг, калькулятор стоимости, и форма обратной связи.',
+		url					: '',
+		image				: require('~/assets/images/NotificationBadge.png?resize&size=600').src,
+	}
+
 	// MODULE
 	export default Vue.extend({
 		components: {
@@ -155,13 +167,10 @@
 		},
 		head () {
 			return {
-				title: 'Eccheuma | Портфолио',
+				title: PageDescription.title,
 				meta: [
-					{ 
-						name: 'description', 
-						content: 'Услуги. Перечень оказываемых услуг, калькулятор стоимости, и форма обратной связи.'
-					}
-				]
+					...new Opengraph.meta(PageDescription).buildMeta()
+				],
 			}
 		},
 	})

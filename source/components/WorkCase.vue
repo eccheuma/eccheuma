@@ -455,7 +455,7 @@
 			},
 
 			forceCarouselIndex(index: number) {
-				this.CarouselIndex = index; console.log(index)
+				this.CarouselIndex = index;
 			}
 
 		}

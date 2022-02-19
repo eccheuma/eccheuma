@@ -286,8 +286,6 @@
 			
 			async sendForm(form: form.registration) {
 
-				console.log(form);
-
 				this.ChangeLoadMessage('Отправка формы');
 
 				this.LoaderStage += 1;

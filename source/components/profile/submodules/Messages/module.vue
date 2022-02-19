@@ -258,10 +258,8 @@
 
 			checkMessage({ ID, readed, userID }: MessageNamespace.struct) {
 
-				console.log('vuex_markAsReaded')
-
 				if ( userID !== this.State.UserID && readed === false ) { 
-					this.vuex_markAsReaded(ID); console.log('vuex_markAsReaded VALID')
+					this.vuex_markAsReaded(ID);
 				}
 
 			},

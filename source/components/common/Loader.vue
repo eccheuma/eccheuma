@@ -89,6 +89,10 @@
 			align-self: end;
 			justify-self: center;
 
+			path {
+				color: red;
+			}
+
 		}
 
 		span {
@@ -138,6 +142,9 @@
 	import type { AnimeParams } from 'animejs'
 
 	export type LoadStage = { LoadPoint: number, Message: string }
+
+	// VARIABLES
+	const ICON_COLOR_VARIABLE = 'rgb(var(--color-mono-900))'
 
 	// MODULE
 	export default Vue.extend({
@@ -227,7 +234,9 @@
 		mounted() {
 
 			if ( this.ignite ) {
-				this.changeStage(0);
+				this.$nextTick(() => {
+					this.changeStage(0);
+				})
 			}
 
 			this.$nextTick(() => {
@@ -243,30 +252,36 @@
 
 				this.idle = false;
 
-				const stageDurationFN = () => Math.trunc(750 - (500 * Math.random()));
+				const stageDurationFN = () => Math.trunc(750 - (250 * Math.random()));
 				
 				// ---
 
+				console.log('await block start')
+
 				await this.animateText({ direction: 'normal',  duration: 250 });
-				await this.pathlineDash({ direction: 'normal',  duration: stageDurationFN() });
+				await this.pathlineDash({ direction: 'normal', duration: stageDurationFN() });
 				await this.animateText({ direction: 'reverse', duration: 250 });
+
+				console.log('await block end')
 
 				// ---
 
-				if ( this.curentStage !== this.nextStage ) {
-
-					this.curentStage = this.nextStage;
-
-					if ( this.controllable === false ) this.changeStage(this.nextStage);
-
-				} else {
+				if ( this.nextStage === this.stages.length ) {
 
 					await this.fillLogo();
 
 					this.active 			= false; 
 					this.curentStage 	= 0;
 
-					this.$emit('complete')
+					// this.$emit('complete')
+
+				} else {
+
+					this.curentStage = this.nextStage;
+
+					if ( this.controllable === false ) this.changeStage(this.nextStage);
+
+					// this.$emit('next-stage')
 
 				}
 
@@ -276,31 +291,26 @@
 
 			},
 
-			animateText(params: AnimeParams): Promise<boolean> {
-
-				console.time('animateText')
-				console.debug('[ Loader ]: AnimateText start')
+			animateText(params: KeyframeAnimationOptions): Promise<boolean> {
 				
-				return new Promise((resolve) => {
+				return new Promise((resolve, reject) => {
 
-					const ANIMATION = this.$AnimeJS({
-						targets: this.$refs.stage,	
-						easing: 'easeInOutQuad',
-						round: 100, 
-						opacity: [0, 1],
-						autoplay: false,
+					const el = (this.$refs.stage as HTMLElement);
+
+					if ( !el ) reject(false);
+
+					const animation = el.animate([
+						{ opacity: 0 },
+						{ opacity: 1 },
+					], {
+						easing: 'ease-in-out',
+						fill: 'both',
+
+						...params
 						
-						...params,
-
-						complete: () => { 
-							resolve(true); 
-							console.debug('[ Loader ]: AnimateText resolve'); 
-							console.timeEnd('animateText')
-						}
-
 					})
 
-					ANIMATION.play();
+					animation.onfinish = () => resolve(true);
 
 				})
 
@@ -315,7 +325,7 @@
 						easing: 'easeInOutQuad',
 						round: 1,
 						strokeDashoffset: this.segmentCoord,
-						stroke: { value: 'rgb(255,255,255)', duration: 250 },
+						stroke: { value: ICON_COLOR_VARIABLE, duration: 250 },
 						
 						...params,
 
@@ -329,19 +339,29 @@
 
 			fillLogo(): Promise<boolean> {
 
-				return new Promise((resolve) => {
-					this.$AnimeJS({
-						targets: this.$refs.svg,
-						fill: { value: 'rgb(255,255,255)' },
-						duration: 500,
-						endDelay: 1000,
-						easing: 'easeInOutQuad',
-						
-						complete: () => resolve(true),
+				console.log('fillLogo start')
 
+				return new Promise((resolve, reject) => {
+
+					const el = (this.$refs.svg as SVGElement);
+
+					if ( !el ) reject(false);
+
+					console.log('fillLogo animation start', el)
+
+					const animation = el.animate([
+						{ fill: 'rgba(var(--color-mono-900), 0)' },
+						{ fill: 'rgba(var(--color-mono-900), 1)' },
+					], {
+						duration	: 500,
+						endDelay	: 1000,
+						easing		: 'ease-in-out',
+						fill			: 'forwards'
 					})
-				}) 
 
+					animation.onfinish = () => resolve(true);
+
+				}) 
 
 			}
 

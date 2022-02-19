@@ -49,7 +49,9 @@
 
 </style>
 
-<script>
+<script lang="ts">
+
+	import Vue from 'vue'
 
 // MIXINS
 	import TransitionSound 	from '~/assets/mixins/TransitionSound';
@@ -61,12 +63,22 @@
 // COMPONENTS
 	import SectionHeader 		from '~/components/common/SectionHeader.vue'
 
+// PAGE DESCRIPTION
+	import { Opengraph } from '~/utils/opengraph'
+
+	export const PageDescription: Opengraph.struct = {
+		title				: 'Eccheuma | Портфолио',
+		description	: 'Предложения по оказанию услуг. В зависимости от сезона и нагруженности тут появляются выгодные предложения на разные виды услуг.',
+		url					: '',
+		image				: require('~/assets/images/NotificationBadge.png?resize&size=600').src,
+	}
+
 // MODULE
-	export default {
+	export default Vue.extend({
 		components: {
 			SectionHeader,
-			PromoBanner: () => import('~/components/promo/PromoBanner.vue'),
-			Navigation: () => import('~/components/common/Navigation.vue'),
+			PromoBanner	: () => import('~/components/promo/PromoBanner.vue'),
+			Navigation	: () => import('~/components/common/Navigation.vue'),
 		},
 		mixins: [ TransitionSound, EmitSound ],
 		layout: 'Application',
@@ -102,19 +114,14 @@
 				],
 			};
 		},
-		head() {
+		head () {
 			return {
-				title: 'Eccheuma | Портфолио',
+				title: PageDescription.title,
 				meta: [
-					{
-						hid: 'description',
-						name: 'description',
-						content:
-							'Принятые работы. С указанием сроков, цены, комментариев, и отзывов на выполненую работу.',
-					},
+					...new Opengraph.meta(PageDescription).buildMeta()
 				],
-			};
+			}
 		},
-	}
+	})
 
 </script>

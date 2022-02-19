@@ -389,8 +389,6 @@
 
 			await this.GetPosts();
 
-			console.log(this.Slides)
-
 		},
 		computed: {
 
