@@ -5,15 +5,15 @@
 		<template v-for="(item, index) in source">
 
 			<template v-if="item.type === 'img'">
-				<vue-image 
+				<eccheuma-image 
 					:key="index"
 					:class="{ EditableBlock: editableBlock == index }"
 					:content="item.value" 
 					:sections="{ date: false, description: true, zoom: true }" 
-					:property="{ fit: 'cover', type: 'promo', collumn: 10 }"
+					:property="{ type: 'promo' }"
 					>
 					{{ item.value.description }}
-				</vue-image>
+				</eccheuma-image>
 			</template>
 
 			<template v-else>
@@ -132,7 +132,7 @@
 	// MODULE
   export default Vue.extend({
 		components: {
-			VueImage: () => import('~/components/image/Image.vue'),
+			EccheumaImage: () => import('~/components/image/Image.vue'),
 		},
 		props: {
 			source: {

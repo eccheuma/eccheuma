@@ -23,7 +23,7 @@
 
 		</section>
 
-		<section v-once class="auth_profile-footer">
+		<section v-once class="auth_profile-footer ">
 			<eccheuma-button @click.native="logout()">
 				Выйти
 			</eccheuma-button>

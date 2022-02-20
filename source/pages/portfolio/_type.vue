@@ -14,8 +14,14 @@
 <style lang="scss">
 
 .cases-container {
+	
 	padding: 2vh 0;
 	min-height: 100vh;
+
+	display: flex;
+	flex-direction: column-reverse;
+	gap: 2vh;
+
 }
 
 </style>

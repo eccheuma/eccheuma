@@ -66,6 +66,7 @@
 
 			.type\:\:gallery {
 				height: 50vh !important;
+				--fit-type: cover;
 			}
 
 			.type\:\:promo {
@@ -76,6 +77,7 @@
 
 			.type\:\:case {
 				height: 100% !important;
+				--fit-type: contain;
 			}
 
 			.type\:\:default {
@@ -229,7 +231,7 @@
 			img {
 				width: 100%;
 				height: 100%;
-				object-fit: cover;
+				object-fit: var(--fit-type, cover);
 			}
 
 		}
@@ -301,7 +303,6 @@
 	}
 
 	const defaultProperty: Image.struct['property'] = {
-		fit: 'cover',
 		type: 'gallery',
 	}
 

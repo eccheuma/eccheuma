@@ -15,7 +15,7 @@
 			</section-header>
 
 			<div class="gallery-pinned-body">
-				<vue-image
+				<eccheuma-image
 					:content="{ path: 'Promo/1.png', title: 'TEST' }" 
 					:sections="{ date: false, description: true, zoom: true }" 
 					:property="{ fit: 'cover', type: 'promo', collumn: 6 }"
@@ -23,9 +23,9 @@
 
 					А теперь с помощь Slot'a я могу вполне комфорто вливать описание изображения. Ну или получать его из json.
 
-				</vue-image>
+				</eccheuma-image>
 
-				<vue-image 
+				<eccheuma-image 
 					:content="{ path: 'Promo/4.png', title: 'TEST' }" 
 					:sections="{ date: false, description: true, zoom: true }" 
 					:property="{ fit: 'cover', type: 'promo', collumn: 6 }"
@@ -33,7 +33,7 @@
 
 					А теперь с помощь Slot'a я могу вполне комфорто вливать описание изображения. Ну или получать его из json.
 
-				</vue-image>
+				</eccheuma-image>
 			</div>
 
 		</section>
@@ -166,7 +166,7 @@
 			PromoBanner,
 			SectionHeader,
 			Pagination: 	() => import('~/components/common/Pagination.vue'),
-			VueImage: 		() => import('~/components/image/Image.vue'),
+			EccheumaImage: 		() => import('~/components/image/Image.vue'),
 		},
 		mixins: [ TransitionSound ],
 		layout: 'Application', 

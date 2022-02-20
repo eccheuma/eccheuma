@@ -42,7 +42,6 @@
 				>
 
 				<template #icon-prev="{ onEdge }">
-					<!-- @click="playSound(Sounds.get('CarouselButton'))"  -->
 					<button 
 						class="workcase-content-swiper-buttons" 
 						:class="[
@@ -54,7 +53,6 @@
 				</template>
 
 				<template #icon-next="{ onEdge }">
-					<!-- @click="playSound(Sounds.get('CarouselButton'))"  -->
 					<button 
 						class="workcase-content-swiper-buttons" 
 						:class="[
@@ -67,34 +65,35 @@
 
 				<template #default>
 					<section v-for="(item, index) in content.images" :key="index" class="workcase-content-swiper-item">
-						<vue-image
+						<eccheuma-image
 							style="height: 100%; width: 75%; margin: auto"
 							:content="{ path: item.content.path }"
 							:sections="{ date: false, description: false, zoom: true }"
-							:property="{ fit: 'cover', type: 'default', collumn: 7 }"
+							:property="{ type: 'default' }"
 						>
 							{{ content.name }}
-						</vue-image>
+						</eccheuma-image>
 					</section>
 				</template>
 
 			</eccheuma-swiper>
 			<div class="workcase-content-preview">
 
+				<!-- // ? This is a filter binding implementation -->
 				<!-- <noise-filter :key="`filter-${index}`" :name="`WPF-${ index }`" :status="CarouselIndex !== index" /> -->
 				<!-- :style="`filter: url(#filter::WPF-${ index })`" -->
 
 				<template v-for="(item, index) in content.images">
-					<vue-image
+					<eccheuma-image
 						:key="index"
 						:class="{ faded: CarouselIndex !== index }"
 						:content="{ path: item.content.path }"
 						:sections="{ date: false, description: false, zoom: false }"
-						:property="{ fit: 'cover', type: 'default', collumn: 7 }"
+						:property="{ type: 'default' }"
 						@click.native="forceCarouselIndex(index)"
 					>
 						<!---->
-					</vue-image>
+					</eccheuma-image>
 				</template>
 
 			</div>
@@ -429,7 +428,7 @@
 		components: {
 			EccheumaSwiper,
 			Icon,
-			VueImage: () => import('~/components/image/Image.vue')
+			EccheumaImage: () => import('~/components/image/Image.vue')
 		},
 		mixins: [ IntersectionObserver ],
 		props: {

@@ -1,11 +1,11 @@
 <template>
 	<section class="promo_body">
 
-		<vue-image
+		<eccheuma-image
 			style="height: 100%"
 			:content="{ path: 'Promo/3.png' }" 
 			:sections="{ date: false, description: false, zoom: false }" 
-			:property="{ fit: 'cover', type: 'promo', collumn: 12 }"
+			:property="{ type: 'promo' }"
 		/>
 
 		<section v-once>
@@ -68,7 +68,7 @@
 
 	export default {
 		components: {
-			VueImage: () => import( '~/components/image/Image.vue' ),
+			EccheumaImage: () => import( '~/components/image/Image.vue' ),
 		},
 	}
 </script>

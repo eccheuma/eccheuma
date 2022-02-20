@@ -9,14 +9,14 @@
             class="works_swiper-item"
           >
             
-            <vue-image
+            <eccheuma-image
               style="height: 40vh"
               :content="{ path: item.content.path }"
               :sections="{ date: false, description: false, zoom: true }"
               :property="{ fit: 'cover', type: 'default', collumn: 7 }"
             >
               {{ section.content.name }}
-            </vue-image>
+            </eccheuma-image>
 
             <hr v-once>
 
@@ -98,7 +98,7 @@ import { Workcase  } from '~/typescript/WorkCase'
 
 export default Vue.extend({
 	components: {
-		VueImage: () => import('~/components/image/Image.vue'),
+		EccheumaImage: () => import('~/components/image/Image.vue'),
 		EccheumaSwiper: () => import('~/components/common/Carousel.vue')
 	},
 	mixins: [ EmitSound ],

@@ -22,7 +22,6 @@ export namespace Image {
 			description?: string
 		}
 		property?: {
-			fit: 'contain' | 'cover'
 			type: 'promo' | 'gallery'
 		}
 		sections?: {

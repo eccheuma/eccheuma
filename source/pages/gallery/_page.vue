@@ -2,7 +2,7 @@
 	<section ref="page" class="gallery-page">
 
 		<template v-if="$isMobile">
-			<vue-image
+			<eccheuma-image
 
 				v-for="(image, index) in Images"
 
@@ -19,7 +19,7 @@
 
 				{{ image.content.description }}
 
-			</vue-image>
+			</eccheuma-image>
 		</template>
 
 		<template v-for="(image, index) in Images" v-else>
@@ -30,7 +30,7 @@
 				:wrap="true" 
 				@isIntersecting="animateImage"
 				>
-				<vue-image
+				<eccheuma-image
 					:id="`GalleryImage_${ index }`"
 					:ref="'images'" 
 
@@ -41,7 +41,7 @@
 
 					{{ image.content.description }}
 
-				</vue-image>
+				</eccheuma-image>
 			</intesection-component>
 		</template>
 
@@ -72,7 +72,7 @@
 		import { load_ranges } from '~/config/LoadPolitic'
 
 	// COMPONENTS
-		import VueImage 						from '~/components/image/Image.vue'
+		import EccheumaImage 						from '~/components/image/Image.vue'
 		import IntesectionComponent from '~/components/functional/intersectionComponent.vue'
 
 	// INTERSECTION_ANIMATION
@@ -92,7 +92,7 @@
 	// MODULE
 	export default Vue.extend({
 		components: {
-			VueImage, IntesectionComponent
+			EccheumaImage, IntesectionComponent
 		},
 		mixins: [ PageTransitionProperty ],
 		async middleware({ params, query, redirect }) {
