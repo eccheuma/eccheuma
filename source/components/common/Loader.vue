@@ -1,21 +1,34 @@
 <template>
 	
 	<transition name="LoaderTransition">
-		<section v-show="active" class="page_loader-container">
+		<div v-show="active" class="page_loader-container">
 
-			<svg ref="svg" fill="none" viewBox="0 0 157 24">
-				<path
-					ref="path"
-					d="m156 7h-155c1-2 1-3 3-4 1-1 3-2 6-2h138c2 0 4 1 5 2 2 1 3 2 3 4zm-135 2h20c0 1 0 3-1 4s-3 2-7 2h-20c0-2 1-3 2-4 2-1 4-2 6-2zm135 8c0 2-1 3-3 4-1 1-3 2-5 2h-138c-3 0-5-1-6-2-2-1-2-2-3-4h155z"
-					stroke="none"
-				/>
-			</svg>
+			<section>
 
-			<template v-if="stages[curentStage]">
-				<span ref="stage">{{ stages[curentStage].Message }}</span>
-			</template>
+			</section>
 
-		</section>
+			<section>
+				<svg ref="svg" fill="none" viewBox="0 0 157 24">
+					<path
+						ref="path"
+						d="m156 7h-155c1-2 1-3 3-4 1-1 3-2 6-2h138c2 0 4 1 5 2 2 1 3 2 3 4zm-135 2h20c0 1 0 3-1 4s-3 2-7 2h-20c0-2 1-3 2-4 2-1 4-2 6-2zm135 8c0 2-1 3-3 4-1 1-3 2-5 2h-138c-3 0-5-1-6-2-2-1-2-2-3-4h155z"
+						stroke="none"
+					/>
+				</svg>
+
+				<template v-if="stages[curentStage]">
+					<span ref="stage">{{ stages[curentStage].Message }}</span>
+				</template>
+
+			</section>
+
+			<section>
+				<p>
+					As by lenore horror upon myself on. Or sent marvelled door entrance, was one thy a my stately was much. A followed the quaint oer all and soul, nevernevermore lent not his from, is on here ah answer rare. The entreating then take the tapping and fancy utters. That before perched melancholy this the separate whose nepenthe. Lenore it to lost my is tapping whom...
+				</p>
+			</section>
+
+		</div>
 	</transition>
 
 </template>
@@ -61,12 +74,19 @@
 
 		display: grid;
 		grid-template: {
-			rows: 50% 1fr 1fr;
+			rows: 1fr 1fr 1fr;
 			columns: 100%;
 		};
 
-		background: radial-gradient(farthest-side, rgb(var(--color-mono-200), .9) 0%, rgb(var(--color-mono-200), 1) 85%);
+		background:
+			radial-gradient(farthest-side, rgb(var(--color-mono-200), .5) 0%, rgb(var(--color-mono-200), .9) 85%), 
+			url(~assets/images/Stripes.png?size=15);
 		backdrop-filter: blur(12px);
+
+		section {
+			display: grid;
+    	place-content: center;
+		}
 
 		&:after {
 			content: '';
@@ -74,6 +94,8 @@
 			position: absolute;
 			width: calc(100% - 2vw);
 			height: calc(100% - 4vh);
+
+			border-radius: var(--border-radius);
 
 			left: 1vw;
 			top: 2vh;
@@ -113,20 +135,20 @@
 
 		}
 
-		// p {
+		p {
 
-		// 	align-self: center;
-		// 	justify-self: center;
+			align-self: center;
+			justify-self: center;
 
-		// 	text-align: center;
-		// 	width: 65ch;
+			text-align: center;
+			width: clamp(160px, 75%, 65ch);
 
-		// 	color: rgba(var(--mono-400));
-		// 	font: {
-		// 		size: var(--font-size-14);
-		// 	}
+			color: rgba(var(--color-mono-500));
+			font: {
+				size: var(--font-size-12);
+			}
 
-		// }
+		}
 
 	}
 
@@ -189,6 +211,8 @@
 
 				dash: 1 as number,
 
+				ashed: false,
+
 			} 
 		},
 		computed: {
@@ -217,11 +241,23 @@
 			forcedStage: {
 				handler(stage: number) {
 
-					if ( this.active === false ) this.active = true;
+					if ( !this.active ) this.active = true;
+
+					if ( !this.ashed ) this.ashed = true;
 
 					// After each force stage change, add func in microtask queue 
 					// to not interrupt already running loader stage
-					queueMicrotask(() => this.changeStage(stage))
+					if ( this.idle === true ) {
+
+						queueMicrotask(() => this.changeStage(stage));
+
+					} else {
+						const idleWathcer = this.$watch('idle', (value) => {
+							if (value) {
+								queueMicrotask(() => this.changeStage(stage)); idleWathcer();
+							}
+						})
+					}
 
 				}
 			},
@@ -234,41 +270,41 @@
 		mounted() {
 
 			if ( this.ignite ) {
-				this.$nextTick(() => {
-					this.changeStage(0);
-				})
+				this.changeStage(0);
 			}
 
-			this.$nextTick(() => {
-				if ( this.$refs.path ) {
-					this.dash = this.$AnimeJS.setDashoffset(this.$refs.path as SVGElement);
-				}
-			})
+			if ( this.$refs.path ) {
+				this.dash = this.$AnimeJS.setDashoffset(this.$refs.path as SVGElement);
+			}
 
 		},
 		methods: {
 
-			async changeStage(stage: number) {
+			async changeStage(stage: number = 0) {
 
 				this.idle = false;
+
+				if ( stage === 0 && this.ashed ) {
+					this.fillLogo({ direction: 'reverse', duration: 0, endDelay: 0 });
+				}
 
 				const stageDurationFN = () => Math.trunc(750 - (250 * Math.random()));
 				
 				// ---
 
-				console.log('await block start')
+				// console.log('await block start')
 
 				await this.animateText({ direction: 'normal',  duration: 250 });
 				await this.pathlineDash({ direction: 'normal', duration: stageDurationFN() });
 				await this.animateText({ direction: 'reverse', duration: 250 });
 
-				console.log('await block end')
+				// console.log('await block end')
 
 				// ---
 
 				if ( this.nextStage === this.stages.length ) {
 
-					await this.fillLogo();
+					await this.fillLogo({ playbackRate: 1 });
 
 					this.active 			= false; 
 					this.curentStage 	= 0;
@@ -279,7 +315,7 @@
 
 					this.curentStage = this.nextStage;
 
-					if ( this.controllable === false ) this.changeStage(this.nextStage);
+					if ( this.controllable === false ) this.changeStage(stage + 1);
 
 					// this.$emit('next-stage')
 
@@ -337,17 +373,13 @@
 
 			},
 
-			fillLogo(): Promise<boolean> {
-
-				console.log('fillLogo start')
+			fillLogo(params: KeyframeAnimationOptions): Promise<boolean> {
 
 				return new Promise((resolve, reject) => {
 
 					const el = (this.$refs.svg as SVGElement);
 
 					if ( !el ) reject(false);
-
-					console.log('fillLogo animation start', el)
 
 					const animation = el.animate([
 						{ fill: 'rgba(var(--color-mono-900), 0)' },
@@ -356,10 +388,15 @@
 						duration	: 500,
 						endDelay	: 1000,
 						easing		: 'ease-in-out',
-						fill			: 'forwards'
+						fill			: 'both',
+
+						...params,
+
 					})
 
-					animation.onfinish = () => resolve(true);
+					animation.onfinish = () => {
+						resolve(true);
+					};
 
 				}) 
 

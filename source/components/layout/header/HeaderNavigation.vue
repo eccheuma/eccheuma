@@ -1,7 +1,7 @@
 <template>
 	<section 
 		id="header-navigation" 
-		class="navigation-container" 
+		class="main_navigation-container" 
 		:class="[
 			{'module-background': background }, 
 			{'module-search': search }
@@ -13,14 +13,14 @@
 			<CursorFX v-if="Ready && CursorInArea && !$isMobile" />
 		</client-only>
 
-		<nav class="navigation-items">
+		<nav class="main_navigation-items">
 
 			<template v-for="(prop, index) in HeaderMenu">
 				
 				<div 
 					:key="prop.name" 
 					
-					class="navigation-item"
+					class="main_navigation-item"
 					:class="[
 						{ disabled: prop.disabled },
 						{ active: CurentRoute === prop.route }
@@ -54,13 +54,13 @@
 
 				</div>
 
-				<span :key="index" class="navigation-separator" />
+				<span :key="index" class="main_navigation-separator" />
 
 			</template>
 
 		</nav>
 
-		<div v-if="search" class="navigation-search">
+		<div v-if="search" class="main_navigation-search">
 			<search-bar />
 		</div>
 
@@ -111,7 +111,7 @@ $TransitionDuration: 250ms;
 	}
 }
 
-.navigation {
+.main_navigation {
 	&-container {
 
 		position: sticky; top: 0; z-index: 1010;

@@ -18,25 +18,12 @@
 					<strong>{{ area.title }}</strong>
 					<span>{{ area.value }}</span>
 					<icon :name="area.icon" />
-						<!-- <popover>
-							{{ area.info }}
-						</popover> -->
 				</div>
 			</template>
 
 		</section>
 
 		<section v-once class="auth_profile-footer">
-
-			<!-- <template v-if="$isMobile">
-				<nuxt-link tag="button" :to="`/user-panel?uid=${ State.UserID }`">
-					Личный Кабинет
-				</nuxt-link>
-			</template>
-
-			<nuxt-link v-if="State.UserID === __SELF_KEY__" tag="button" to="/admin">
-				Админ Панель
-			</nuxt-link> -->
 			<eccheuma-button @click.native="logout()">
 				Выйти
 			</eccheuma-button>
@@ -80,6 +67,13 @@
 			repeat: no-repeat;
 			size: calc(100% - 1.4rem) auto;
 			position: center;
+		}
+
+		&-info {
+			span:last-of-type {
+				font-size: var(--font-size-14);
+				margin: 0.5vh;
+			}
 		}
 
 		&:before {
@@ -250,7 +244,6 @@
 
 // COMPONENTS
 	import EccheumaButton from '~/components/buttons/CommonButton.vue';
-	// import Popover 				from '~/components/common/Popover.vue';
 	import Tag 						from '~/components/common/Tag.vue';
 	import Icon						from '~/components/common/Icon.vue'
 
@@ -270,7 +263,6 @@
 // MODULE
 	export default Vue.extend({
 		components: {
-			// Popover,
 			Icon,
 			Tag,
 			EccheumaButton,

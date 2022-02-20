@@ -65,7 +65,7 @@
 
     <hr>
 
-    <eccheuma-button :class="{ disabled: invalidForm }">
+    <eccheuma-button :class="{ disabled: invalidForm }" style="align-content: flex-end">
       {{ invalidForm ? 'Заполните или исправьте поля' : 'Отправить' }}
     </eccheuma-button>
 
@@ -78,10 +78,15 @@
   &-container {
 
     display: grid;
+    grid-template: {
+      rows: repeat(4,min-content) 1fr min-content;
+    }
+
     gap: 2vh;
-    align-content: center;
+    align-content: flex-start;
 
     width: 100%;
+    height: 100%;
 
     > hr {
       width: 100%;

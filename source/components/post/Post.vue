@@ -556,7 +556,7 @@
 				background: {
 					size: cover;
 					position: center;
-					color: rgb(var(--color-mono-900));
+					color: rgb(var(--color-mono-300));
 				}
 
 				border: 4px solid var(--color-accent-edges-100);

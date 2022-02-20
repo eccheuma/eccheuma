@@ -24,27 +24,18 @@
 					<span>
 						Регистрация
 					</span>
-					<span>
-						Какая-то ошибка, или напоминание о чём-то
-					</span>
+					<!-- <span>
+						
+					</span> -->
 				</section>
 
 				<section class="registration-body">
 
 					<registration-form @form-send="(form) => sendForm(form)" />
 
-					<!-- <caption-card status="missunderstood">
-						<template #type>
-							Тут сыровато и пахнет плесенью.
-						</template>
-						<template #desc>
-							Регистрация пока не доступна, простите.
-						</template>
-					</caption-card> -->
-
-					<div class="registration-body-stage">
+					<!-- <div class="registration-body-stage">
 						<span v-for="i in 3" :key="i" :class="{ active: i === Stage }" />
-					</div>
+					</div> -->
 
 				</section>
 
@@ -120,7 +111,7 @@
 		};
 
 		height: 90vh;
-		width: min(460px, 50vw);
+		width: min(50ch, 50vw);
 
 		background-color: rgba(var(--color-mono-200));
 		border-radius: var(--border-radius);
@@ -169,7 +160,7 @@
 		place-items: center;
 		align-content: space-between;
 
-		grid-template-rows: 1fr 6vh;
+		grid-template-rows: 1fr;
 
 		&-stage {
 

@@ -76,8 +76,8 @@ input[type="range"] {
 
 body {
 
-	// width: 100vw;
-	// height: 100vh;
+	min-width: 100vw;
+	min-height: 100vh;
 	overflow-x: hidden;
 	font-size: var(--font-size-18);
 	color: rgb(var(--color-mono-800));

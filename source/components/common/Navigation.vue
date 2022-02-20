@@ -1,29 +1,39 @@
 <template>
-	<nav id="Navigation" class="common_navigation-container">
-	<template v-for="(link, index) in category">
+	<nav id="Navigation" class="navigation-container">
+		<template v-for="(link, index) in category">
 
-		<nuxt-link ref="links" :key="index" :to="link.route">
+			<div 
+				class="navigation-item" 
+				:key="index" 
+				:class="[
+					{ disabled: link.disabled },
+					{ active: curentRoute === link.route }
+				]">
 
-			<transition name="opacity-transition">
-				<span v-if="link.route === $route.path" />
-			</transition>
+				<transition name="opacity-transition">
+					<span v-if="link.route === curentRoute" />
+				</transition>
 
-			<icon :name="link.icon" />
-			{{ link.name }}
+				<nuxt-link ref="links" :to="link.route">
 
-		</nuxt-link>
+				<icon :name="link.icon" />
+				{{ link.name }}
 
-		<template v-if="index < category.length - 1">
-			<span :key="`${ index }-separator`" class="common_navigation-separator" />
+				</nuxt-link>
+
+			</div>
+
+			<span class="navigation-separator" :key="`${ index }-separator`" />
+
 		</template>
-
-	</template>
 	</nav>
 </template>
 
 <style lang="scss">
 
-.common_navigation {
+$TransitionDuration: 250ms;
+
+.navigation {
 	&-container {
 
 		@include gradient_border(block);
@@ -31,91 +41,152 @@
 
 		height: 15vh;
 		width: 100%;
-		// display: inline-grid;
-		display: flex;
-		background-color: rgb(var(--color-mono-200));
 
-		// padding: 0 20vw;
+    display: inline-flex;
+    justify-content: center;
+		gap: 2vw;
+
+		background-color: rgb(var(--color-mono-200));
 		border-radius: var(--border-radius);
 
-		// grid-template: {
-		// 	columns: repeat(auto-fit, minmax(10px, min-content));
-		// };
+		.active {
 
-		column-gap: 1vw;
+			color: rgb(var(--color-mono-900)) !important;
 
-		align-items: center;
-		justify-content: center;
+			i {
+				fill: rgb(var(--color-mono-900)) !important;
+			}
+
+		}
+
+	}
+	&-item {
+
+		position: relative;
+
+		display: grid;
+		align-content: center;
+		text-align: center;
+
+		width: 10vw;
+
+		@media screen and ( max-width: $mobile-breakpoint ) {
+			margin: .5vh 0;
+		}
+
+		&:before {
+
+			content: '';
+			opacity: 0;
+	
+			display: block; 
+			position: absolute; 
+			top: -1px;
+
+			width: 100%; 
+			height: 1px;
+
+			background: linear-gradient(90deg, transparent, var(--color-accent-lighting), transparent);
+			transition-duration: 500ms;
+
+		}
+
+		&:hover {
+			
+			&:before {
+				opacity: 1;
+			}
+
+			a {
+				color: var(--color-accent-edges-300);
+				text-decoration: none;
+				i {
+					fill: var(--color-accent-edges-300);
+				}
+			}
+
+		}
+
+		> span {
+			
+			display: block; 
+			position: absolute; 
+			top: -1px;
+
+			width: 100%; 
+			height: 1px;
+			
+			background: linear-gradient(90deg, transparent, var(--color-accent-edges-200), transparent);
+
+		}
 
 		a {
 
-			--nav-color: rgb(var(--color-mono-400));
+			display: inline-grid;
+			justify-items: center;
 
-			display: grid;
-			row-gap: 1vh;
-			place-items: center;
-			place-content: center;
-			position: relative;
+			cursor: pointer;
 
-			height: 100%;
-			min-width: 160px;
-	
-			color: var(--nav-color);
 			font: {
 				size: var(--font-size-24);
 				family: var(--decor-font);
 			}
 
-			letter-spacing: .15ch;
+			line-height: 6vh;
+			letter-spacing: .2ch;
 
-			span {
-				position: absolute;
-				top: -1px;
-				left: 0;
-				width: 100%;
-				height: 1px;
-				background: linear-gradient(90deg, transparent 0%, var(--color-accent-edges-300) 50%, transparent 100%)
+			transition-duration: $TransitionDuration;
+			color: rgb(var(--color-mono-400));
+
+			z-index: 1000;
+
+			@media screen and ( max-width: $mobile-breakpoint ) {
+				display: inline-flex;
+				font-size: var(--font-size-20);
 			}
 
 			i {
-				@include icon-size(32px);
-				fill: var(--nav-color);
-				transition: inherit;
-			}
 
-			// transition-property: transform, color, fill;
-			transition-duration: 250ms;
+				$size: 30px;
 
-			&:hover {
-				--nav-color: rgb(var(--color-mono-1000));
-				i {
-					transform: translateY(-9vh) scale(1.5);
-					filter: drop-shadow(0px 0px 10px var(--color-accent-lighting));
+				width:  $size;
+				height: $size;
+
+				pointer-events: none;
+
+				display: block;
+
+				padding: 2vh 0 0px;
+				transition-property: transform;
+				transition-duration: $TransitionDuration;
+				filter: drop-shadow(0px -5vh 0px rgba(var(--color-mono-1000),0));
+
+				@media screen and ( max-width: $mobile-breakpoint ) {
+					margin-right: 1ch;
+					display: none;
 				}
+
+				fill: rgb(var(--color-mono-400));
+
 			}
-			
-		}
 
-		.active {
-
-			--nav-color: rgb(var(--color-mono-800));
-
-			a {
-				color: rgb(var(--color-mono-900));
-			}
-			
 		}
 
 	}
 	&-separator {
 
+		display: block;
 		align-self: center;
 
-		width: 5px;
-    aspect-ratio: 1/3;
+		width: 4px; 
+		height: 10px;
 
-		background-color: rgb(var(--color-mono-500));
+		background-color: rgb(var(--color-mono-400));
 		border-radius: var(--border-radius);
+
+		&:last-of-type {
+			display: none;
+		}
 
 	}
 }
@@ -158,7 +229,7 @@
 			} as PropOptions< NAV_ITEM[] >,
 		},
 		computed: {
-			CurentRoute(): navigation.routes {
+			curentRoute(): navigation.routes {
 				return this.$route.path as navigation.routes
 			},
 		},
