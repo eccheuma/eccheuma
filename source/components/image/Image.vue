@@ -12,7 +12,7 @@
 
 		<div 
 			class="eccheuma-image-container"
-			:class="`type::${ property && property.type || 'default' }`" 
+			:class="`type::${ property ? property.type : 'default' }`" 
 			@mouseenter="ImageFocus = true" 
 			@mouseleave="ImageFocus = false"
 			>
