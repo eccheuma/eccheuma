@@ -69,7 +69,7 @@
 							style="height: 100%; width: 75%; margin: auto"
 							:content="{ path: item.content.path }"
 							:sections="{ date: false, description: false, zoom: true }"
-							:property="{ type: 'default' }"
+							:property="{ type: 'case' }"
 						>
 							{{ content.name }}
 						</eccheuma-image>
@@ -89,7 +89,7 @@
 						:class="{ faded: CarouselIndex !== index }"
 						:content="{ path: item.content.path }"
 						:sections="{ date: false, description: false, zoom: false }"
-						:property="{ type: 'default' }"
+						:property="{ type: 'case' }"
 						@click.native="forceCarouselIndex(index)"
 					>
 						<!---->
