@@ -12,8 +12,22 @@ export namespace Image {
 		avif,
 		webp,
 	}
+
+	export function matchSize(size: number): sizes {
+
+		const Sizes = [ 
+			Image.sizes.placehoder,
+			Image.sizes.small,
+			Image.sizes.medium,
+			Image.sizes.large,
+			Image.sizes.full 
+		];
+
+		return Sizes.find(x => Math.max(x, size) === x) || sizes.medium
+
+	}
 	
-	export type struct = {
+	export interface struct {
 		ID: number,
 		content: {
 			path: string

@@ -9,15 +9,6 @@ import { ActionTree, MutationTree } from 'vuex'
 // UTILS
 	import { cache } from '~/utils/cache';
 
-// VARIABLES
-	const Sizes = [ 
-		Image.sizes.placehoder,
-		Image.sizes.small,
-		Image.sizes.medium,
-		Image.sizes.large,
-		Image.sizes.full 
-	];
-
 // STATE
 	export const state = () => ({
 		AVIF_SUPPORT: false,
@@ -47,7 +38,7 @@ import { ActionTree, MutationTree } from 'vuex'
 
 			const imageFormats: Array<keyof typeof Image.allowedFormats> = ['webp', 'avif'];
 	
-			const matchedSize = Sizes.find(x => Math.max(x, params.size) === x)
+			const matchedSize = Image.matchSize(params.size);
 			
 			const imageStruct: Image.formatsStruct = {
 				avif: String(),
