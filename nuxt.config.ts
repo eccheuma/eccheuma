@@ -6,8 +6,8 @@
   import { NuxtConfig } from '@nuxt/types';
 
 // TEMPLATES
-  import HEAD_CONFIG    from './properties/defaultHead';
-  import genearateName  from './properties/nameGenerator';
+  import HEAD_CONFIG    from './utils/defaultHead';
+  import genearateName  from './utils/nameGenerator';
 
 // VARIABLES
   const inDevelopment = process.env.NODE_ENV === 'development';

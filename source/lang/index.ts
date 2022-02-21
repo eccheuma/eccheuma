@@ -10,7 +10,8 @@ export namespace russian {
   export const userStatus = {
     Admin     : 'Администратор',
     Moderator : 'Модератор',
-    User      : 'Пользователь'
+    Support   : 'Поддержка',
+    User      : 'Пользователь',
   }
 
   export const PurchaseStatus = {
