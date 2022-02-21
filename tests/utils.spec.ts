@@ -4,6 +4,7 @@ import { languages, russian } from '~/lang'
 // UTILS
 import { user } from '~/utils/status'
 import { validate } from '~/utils/validate';
+import { Opengraph } from '~/utils/opengraph';
 
 import { User } from '~/typescript/User'
 
@@ -41,7 +42,7 @@ test('utils::validate::sentence', () => {
 
   const validSentences   = [
     'Тут могла быть речь о некоторых плодах',
-    'Ябло. Блоки. Я Блок',
+    'Ябло. Блоки. Я Блок. Яблоня',
   ];
   const invalidSentences = [
     'А тут речь про жуткие яблоки',
@@ -55,5 +56,20 @@ test('utils::validate::sentence', () => {
   invalidSentences.forEach(sentence => {
     expect(validate.sentence(sentence, banWords)).toBe(false)
   })
+
+})
+
+test('utils::opengraph::new', () => {
+
+  const META = new Opengraph.meta({ title: 'something', description: 'something', image: 'something', url: 'something' })
+
+  const target = [
+    { property: `og:description`, content: 'something' },
+    { property: `og:image`,       content: 'something' },
+    { property: `og:title`,       content: 'something' },
+    { property: `og:url`,         content: 'something' },
+  ]
+
+  expect(META.buildMeta()).toEqual(target)
 
 })

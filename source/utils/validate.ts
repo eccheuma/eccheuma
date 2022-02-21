@@ -32,7 +32,7 @@ export namespace validate {
     if ( list.length ) {
 
       return !sentence.split(' ').some(word => {
-        return list.some(banned => new RegExp(banned.toLowerCase()).test(word))
+        return list.some(banned => new RegExp(`\\S*${ banned.toLowerCase() }.?[а-яa-z]`).test(word))
       })
 
     };

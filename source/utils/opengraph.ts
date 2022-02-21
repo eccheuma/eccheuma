@@ -11,7 +11,7 @@ export namespace Opengraph {
     image       : string
   }
 
-  const fieds: Array<keyof struct> = ['description', 'image', 'title', 'url'];
+  export const fieds: Array<keyof struct> = ['description', 'image', 'title', 'url'];
 
   export class meta implements struct {
 
