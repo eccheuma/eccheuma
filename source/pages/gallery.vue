@@ -183,8 +183,6 @@
 					params: `range=${ load_ranges.gallery }`
 				},
 
-				GalleryWrap: false,
-
 			}
 		},
 		async fetch() {
@@ -203,12 +201,11 @@
 			}
 		},
 		methods: {
+
 			...mapMutations({
 				ChangePageQuantity: 'PageSelector/ChangePageQuantity'
 			}),
-			ShowGalleryWrap() {
-				this.GalleryWrap = !this.GalleryWrap;
-			},
+
 		},
 	})
 

@@ -4,9 +4,7 @@ import path from 'path';
 
 export default defineConfig({
   test: {
-    coverage: {
-      reporter: ['text', 'json', 'html']
-    }
+    exclude: ['node_modules', 'source', 'utils', '.vscode', '.nuxt', '.firebase', '.github']
   },
   resolve: {
     alias: {

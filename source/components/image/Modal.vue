@@ -3,7 +3,7 @@
 
 		<div 
 			class="modal-wrap"
-			:class="{ 'utils::glassy': BROWSER && (!$isMobile || $PIXI.utils.isWebGLSupported()) }" 
+			:class="{ 'utils::glassy': application.context.browser && (!$isMobile || application.gpu.available()) }" 
 			@mousewheel.prevent="changeZoom"
 			@click.self="ToggleModal" 
 		>
@@ -223,7 +223,7 @@
 			}
 		},
 		async created() {
-			if ( this.BROWSER ) {
+			if ( this.application.context.browser ) {
 				this.URL = await this.getImageURL({ 
 					path: this.path,
 					size: 1440,

@@ -1,5 +1,9 @@
 import { expect, test } from 'vitest';
 
+// UTILS
+import { gpu } from '~/utils/gpu';
+
+// MODULES
 import { Image } from '~/typescript/Image';
 
 test('images::matchSize', () => {
@@ -16,4 +20,4 @@ test('images::matchSize', () => {
   expect(Image.matchSize(Image.sizes.medium - 1))
     .toBe(Image.sizes.medium);
 
-})
+});

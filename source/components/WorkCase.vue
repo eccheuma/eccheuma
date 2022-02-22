@@ -37,15 +37,15 @@
 			<eccheuma-swiper 
 				class="workcase-content-swiper" 
 				:options="{ buttons: true }" 
-				:forcedIndex="CarouselIndex"
-				@active-index="setCurentIndex"
+				:forcedIndex="swiperIndex"
+				@active-index="(i) => swiperIndex = i"
 				>
 
 				<template #icon-prev="{ onEdge }">
 					<button 
 						class="workcase-content-swiper-buttons" 
 						:class="[
-							{ onEdge }, { 'utils::glassy': BROWSER && !$isMobile && $PIXI.utils.isWebGLSupported() }
+							{ onEdge }, { 'utils::glassy': application.context.browser && !$isMobile && application.gpu.available() }
 						]"
 						>
 						<icon name="Arrow" style="transform: rotate(0deg)" />
@@ -56,7 +56,7 @@
 					<button 
 						class="workcase-content-swiper-buttons" 
 						:class="[
-							{ onEdge }, { 'utils::glassy': BROWSER && !$isMobile && $PIXI.utils.isWebGLSupported() }
+							{ onEdge }, { 'utils::glassy': application.context.browser && !$isMobile && application.gpu.available() }
 						]"
 						>
 						<icon name="Arrow" style="transform: rotate(180deg)" />
@@ -80,17 +80,17 @@
 			<div class="workcase-content-preview">
 
 				<!-- // ? This is a filter binding implementation -->
-				<!-- <noise-filter :key="`filter-${index}`" :name="`WPF-${ index }`" :status="CarouselIndex !== index" /> -->
+				<!-- <noise-filter :key="`filter-${index}`" :name="`WPF-${ index }`" :status="swiperIndex !== index" /> -->
 				<!-- :style="`filter: url(#filter::WPF-${ index })`" -->
 
 				<template v-for="(item, index) in content.images">
 					<eccheuma-image
 						:key="index"
-						:class="{ faded: CarouselIndex !== index }"
+						:class="{ faded: swiperIndex !== index }"
 						:content="{ path: item.content.path }"
 						:sections="{ date: false, description: false, zoom: false }"
 						:property="{ type: 'case' }"
-						@click.native="forceCarouselIndex(index)"
+						@click.native="() => swiperIndex = index"
 					>
 						<!---->
 					</eccheuma-image>
@@ -438,26 +438,16 @@
 		},
 		data() {
 			return {
-				CarouselIndex: 0,
+				swiperIndex: 0,
 			}
 		},
 		computed: {
+			
 			...mapState({
 				UI: state => (state as VuexMap).App.UI,
 			}),
 
 		},
-		methods: {
-
-			setCurentIndex(index: number) {
-				this.CarouselIndex = index;
-			},
-
-			forceCarouselIndex(index: number) {
-				this.CarouselIndex = index;
-			}
-
-		}
 	})
 
 </script>

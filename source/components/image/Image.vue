@@ -381,7 +381,7 @@
 					size: width * window.devicePixelRatio
 				})
 
-				if ( this.BROWSER && this.$PIXI.utils.isWebGLSupported() ) {
+				if ( this.application.context.browser && this.application.gpu.available() ) {
 					this.prepareAnimations(IMAGE_CONTAINER, URL)
 				} else {
 					this.Source = URL;

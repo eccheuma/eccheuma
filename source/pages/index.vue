@@ -10,7 +10,7 @@
 	>
 
 		<client-only>
-			<canvas-component v-if="BROWSER && $PIXI.utils.isWebGLSupported()" @ready.once="Animate" />
+			<canvas-component v-if="application.context.browser && application.gpu.available()" @ready.once="Animate" />
 		</client-only>
 
 		<section class="holl-mute">
@@ -25,7 +25,7 @@
 		<section class="holl-info">
 
 			<span class="index_app_version">
-				СБОРКА: {{ BUILD_HASH }}
+				СБОРКА: {{ application.hash }}
 			</span>
 
 		</section>
@@ -46,13 +46,11 @@
 			<header-navigation :search="false" :background="false" :routePrefetch="false" />
 		</section>
 
-		<template v-if="!$isMobile">
-			<section class="holl-quote">
-				<span ref="quote">
-					" {{ Quotes[CurentQuoteIndex] }} "
-				</span>
-			</section>
-		</template>
+		<section class="holl-quote">
+			<span ref="quote">
+				" {{ Quotes[CurentQuoteIndex] }} "
+			</span>
+		</section>
 
 		<section class="holl-links">
 
@@ -361,6 +359,9 @@
 // VUEX
 	import { mapState, mapMutations, mapActions } from 'vuex'
 
+// UTILS
+	import { gpu } from '~/utils/gpu';
+
 // TYPES
 	import type { AnimeInstance, AnimeAnimParams } 	from 'animejs'
 	import type { VuexMap } 										from '~/typescript/VuexMap'
@@ -419,30 +420,13 @@
 			CanvasReady: {
 				handler() {
 
-					const AMBIENT 				= this.Sounds.get('Ambient')!;
-					const INITIAL_VOLUME 	= AMBIENT.volume();
-
-					AMBIENT.volume(0)
-
-					const DUR = 3000;
-
-					this.$AnimeJS({
-
-						targets: this.$refs.index,
-						opacity: [0, 1],
-						duration: DUR,
-						easing: 'easeOutQuad',
-
-						begin: () => {
-
-							AMBIENT.volume(0)
-
-							this.playSound(AMBIENT)
-
-							AMBIENT.fade(0, INITIAL_VOLUME, DUR)
-
-						}
-
+					(this.$refs.index as HTMLElement).animate([
+						{ opacity: 0 },
+						{ opacity: 1 },
+					], {
+						duration: 3000,
+						easing: 'ease-in-out',
+						fill: 'forwards',
 					})
 
 				}
@@ -450,51 +434,49 @@
 		},
 		created() {
 
-			if ( process.browser ) {
+			if ( process.server ) return;
 
-				window.onload = () => {
-					setTimeout(() => {
+			this.setSounds([{
+				file: 'Holl',
+				name: 'Ambient',
+				settings: { 
+					rate: .45, 
+					volume: 1, 
+					loop: true,
+				},
+			}])
 
-						console.debug('READY!')
-
-						if ( !this.CanvasReady ) {
-							this.CanvasReady = undefined;
-						}
-
-					}, 1000)
+			window.onload = () => {
+				if ( ! gpu.available() ) {
+					this.CanvasReady = undefined;
 				}
-
 			}
 
 		},
 		mounted() {
 
-			this.initQuoteChanger(); 
-
 			if ( process.browser ) {
-				this.setSounds([
-					{
-						file: 'Holl',
-						name: 'Ambient',
-						settings: { 
-							rate: .45, 
-							volume: 1.25, 
-							loop: true, 
-						},
-					}
-				])
+
+				const Ambient = this.Sounds.get('Ambient')!;
+
+				Ambient.volume(0);
+				this.playSound(this.Sounds.get('Ambient'))
+				Ambient.fade(0, 1, 3000)
+
+				this.changeQuote();
+
 			}
 
 		},
 		beforeDestroy() {
 
+			const HOWL = this.Sounds.get('Ambient');
+
 			this.AnimeInstance.forEach((anim) => {
 				anim.pause();
 			})
 
-			const HOWL = this.Sounds.get('Ambient')!;
-
-			HOWL.fade(HOWL.volume(), 0, 5e3);
+			if ( HOWL ) HOWL.fade(HOWL.volume(), 0, 5e3);
 
 		},
 		methods: {
@@ -508,6 +490,7 @@
 				globalMute: 				'Sound/globalMute',
 			}),
 
+			// ! Refactor this with Animation API
 			Animate() {
 
 				this.CanvasReady = true;
@@ -565,38 +548,24 @@
 
 			},
 
-			initQuoteChanger() {
+			changeQuote() {
 
-				this.CurentQuoteIndex = Math.trunc( Math.random() * this.Quotes.length )
+				this.CurentQuoteIndex = Math.trunc(Math.random() * this.Quotes.length)
 
-				this.$AnimeJS({
-					targets: this.$refs.quote,
-					opacity: [1, 0],
-					easing: 'linear',
-					direction: 'alternate',
-					loop: true,
-					duration: 500,
-					endDelay: 250,
-					delay: 8000,
-					update: ({ progress }) => {
-						if ( progress === 100 ) {
-
-							switch (this.CurentQuoteIndex) {
-
-								case this.Quotes.length - 1: 
-									this.CurentQuoteIndex = 0; 
-									break;
-
-								default: 
-									this.CurentQuoteIndex += 1; 
-									break
-
-							}
-
-						}
-					},
+				const textAnimation = (this.$refs.quote as HTMLElement).animate([
+					{ opacity: 0 },
+					{ opacity: 1 },
+				], {
+					duration: 750,
+					endDelay: 5000,
+					fill: 'both',
 				})
 
+				textAnimation.onfinish = () => {
+					textAnimation.onfinish = () => this.changeQuote();
+					textAnimation.reverse();
+				}
+				
 			}
 
 		},

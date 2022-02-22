@@ -128,7 +128,7 @@
 		},
 		async fetch() {
 
-			// if ( process.server && !this.BROWSER ) {
+			// if ( process.server && !this.application.context.browser ) {
 			await this.getDatabaseData();
 			// }
 			

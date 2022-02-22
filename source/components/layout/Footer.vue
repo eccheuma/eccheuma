@@ -62,7 +62,7 @@
 				</svg>
 			</div>
 			<div class="footer-pit-version">
-				<span>ВЕРСИЯ СБОРКИ: {{ BUILD_HASH || '000000' }}</span>
+				<span>ВЕРСИЯ СБОРКИ: {{ application.hash || '000000' }}</span>
 			</div>
 		</section>
 

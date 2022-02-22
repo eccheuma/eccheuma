@@ -4,7 +4,7 @@
 			v-if="RegistrationModal" 
 			class="registration-wrap" 
 			:class="[
-				{ 'utils::glassy': $PIXI.utils.isWebGLSupported() }
+				{ 'utils::glassy': application.gpu.available() }
 			]"
 			@click.self="ChangeModalStatus(false)"
 			@mousewheel.prevent

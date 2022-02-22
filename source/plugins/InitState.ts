@@ -4,35 +4,47 @@ import Vue from 'vue'
 import type { Context } from '@nuxt/types';
 import { database } from '~/api/database';
 
+// UTILS
+import { gpu } from '~/utils/gpu';
+
 // CONTRACTS
 import { DatabaseContract } from '~/typescript/FirebaseDatabase'
 
 export default ({ env, isDev }: Context) => {
 
-	Vue.config.ignoredElements = ['eccheuma-wrapper', 'eccheuma-layout', 'eccheuma-intersection', 'eccheuma-collapse']
+	Vue.config.ignoredElements = ['eccheuma-layout'];
 
-	Vue.prototype.BUILD_HASH					= env.buildHash
-	Vue.prototype.BROWSER 						= process.browser;
-	Vue.prototype.SSR 								= process.server;
-	Vue.prototype.DEVELOPMENT 				= isDev;
+	Vue.prototype.application = {
+		hash: env.buildHash,
+		dev: isDev,
+		gpu: gpu,
+		context: {
+			browser	: process.browser,
+			server	: process.server,
+		}
+	}
 
 	database.get<DatabaseContract['App']>('App').then(response => {
-		Vue.prototype.__SELF_KEY__  = response.__SELF_KEY__
+		Vue.prototype.application.selfKey  = response.__SELF_KEY__
 	})
 
 	if ( isDev && process.browser ) {
 		console.log(`%cEccheuma | Build: ${ env.buildHash }`,
-		'background-color: #141418; padding: 4px 20px; border-radius: 4px;')
+		'background-color: #141418; padding: 4px 20px; border-radius: 4px; border: 1px solid #323236')
 	}
 
 }
 
 declare module 'vue/types/vue' {
 	interface Vue {
-		BUILD_HASH: string
-		BROWSER: boolean
-		SSR: boolean
-		DEVELOPMENT: boolean
-		__SELF_KEY__: DatabaseContract['App']['__SELF_KEY__']
+		application: {
+			hash: string,
+			dev: boolean,
+			gpu: typeof gpu,
+			context: {
+				browser	: boolean,
+				server	: boolean,
+			}
+		}
 	}
 }

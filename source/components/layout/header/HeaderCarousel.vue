@@ -10,7 +10,7 @@
 					<button 
 						class="eccheuma_swiper-buttons" 
 						:class="[
-							{ onEdge }, { 'utils::glassy': BROWSER && !$isMobile && $PIXI.utils.isWebGLSupported() && !CarouselFocus }
+							{ onEdge }, { 'utils::glassy': application.context.browser && !$isMobile && application.gpu.available() && !CarouselFocus }
 						]"
 						@mouseenter="CarouselFocus = true" 
 						@mouseleave="CarouselFocus = false"
@@ -23,7 +23,7 @@
 					<button 
 						class="eccheuma_swiper-buttons" 
 						:class="[
-							{ onEdge }, { 'utils::glassy': BROWSER && !$isMobile && $PIXI.utils.isWebGLSupported() && !CarouselFocus }
+							{ onEdge }, { 'utils::glassy': application.context.browser && !$isMobile && application.gpu.available() && !CarouselFocus }
 						]"
 						@mouseenter="CarouselFocus = true" 
 						@mouseleave="CarouselFocus = false"

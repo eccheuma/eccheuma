@@ -9,7 +9,8 @@
       }
     },  
     created() {
-      if ( process.browser && !this.$PIXI.utils.isWebGLSupported() ) {
+      
+      if ( process.browser && !this.application.gpu.available() ) {
         this.GPU = false;
       }
 
