@@ -1,4 +1,4 @@
-import { expect, test } from 'vitest';
+import { expect, test, describe } from 'vitest';
 import { languages, russian } from '~/lang'
 
 // UTILS
@@ -22,39 +22,43 @@ test('utils::status::define', () => {
 
 })
 
-test('utils::validate::email', () => {
+describe('utils::validate', () => {
 
-  expect(validate.email('someone@gmail.com')).toBe(true)
-  expect(validate.email('госпочта@почта.рф')).toBe(true)
+  test('email', () => {
 
-  expect(validate.email('someone@.com'))
-    .toBe(false)
-  expect(validate.email('someone@gmail'))
-    .toBe(false)
-  expect(validate.email('@gmail.com'))
-    .toBe(false)
-
-})
-
-test('utils::validate::sentence', () => {
-
-  const banWords = ['Яблок', 'Яблоч', 'Apples'];
-
-  const validSentences   = [
-    'Тут могла быть речь о некоторых плодах',
-    'Ябло. Блоки. Я Блок. Яблоня',
-  ];
-  const invalidSentences = [
-    'А тут речь про жуткие яблоки',
-    'Яблочный пирог, для яблочника'
-  ];
-
-  validSentences.forEach(sentence => {
-    expect(validate.sentence(sentence, banWords)).toBe(true)
+    expect(validate.email('someone@gmail.com')).toBe(true)
+    expect(validate.email('госпочта@почта.рф')).toBe(true)
+  
+    expect(validate.email('someone@.com'))
+      .toBe(false)
+    expect(validate.email('someone@gmail'))
+      .toBe(false)
+    expect(validate.email('@gmail.com'))
+      .toBe(false)
+  
   })
-
-  invalidSentences.forEach(sentence => {
-    expect(validate.sentence(sentence, banWords)).toBe(false)
+  
+  test('sentence', () => {
+  
+    const banWords = ['Яблок', 'Яблоч', 'Apples'];
+  
+    const validSentences   = [
+      'Тут могла быть речь о некоторых плодах',
+      'Ябло. Блоки. Я Блок. Яблоня',
+    ];
+    const invalidSentences = [
+      'А тут речь про жуткие яблоки',
+      'Яблочный пирог, для яблочника'
+    ];
+  
+    validSentences.forEach(sentence => {
+      expect(validate.sentence(sentence, banWords)).toBe(true)
+    })
+  
+    invalidSentences.forEach(sentence => {
+      expect(validate.sentence(sentence, banWords)).toBe(false)
+    })
+  
   })
 
 })

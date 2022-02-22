@@ -60,11 +60,9 @@ export namespace database {
     return firebase.database().ref(path).once('value').then(data => data.numChildren());
   }
   
-  export function set(path: string, data: any): Promise<any> {
+  export function set(path: string, data: any): Promise<Error | null> {
   
-    return firebase.database().ref(path).set(data, (response) => {
-      console.debug(response);
-    });
+    return firebase.database().ref(path).set(data, error => error);
   
   }
   

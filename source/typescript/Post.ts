@@ -21,7 +21,7 @@ export namespace Post {
 		ID					: number
 		authorID		: string
 		description	: string
-		comment			: Array<comment>
+		comments		: Array<comment>
 		content			: Array<content>
 		likes				: Array<like>
 		image				: string
