@@ -24,21 +24,20 @@ import { ActionTree, MutationTree } from 'vuex'
 
 // MUTATIONS
 	export const mutations: MutationTree<CurentState> = {
-		changeNotificationState: (state, status?: boolean ) => {
+		changeStatus: (state, status?: boolean ) => {
 			state.status = status ?? !state.status
 		},
-		Change_Content(state, _content: Notification.struct ) {
+		setContent(state, _content: Notification.struct ) {
 			state.content = _content
 		},
 	}
 
 // ACTIONS
 	export const actions: ActionTree<CurentState, CurentState>  = {
-		setNotification({ commit }, payload: Notification.struct) {
+		createNotification(vuex, payload: Notification.struct) {
 
-			commit('Change_Content', payload)
-
-			commit('changeNotificationState', true)
+			vuex.commit('setContent', payload)
+			vuex.commit('changeStatus', true)
 
 		}
 	}

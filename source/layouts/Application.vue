@@ -236,11 +236,11 @@
 
 			...mapMutations({
 				setDeviceType: 						'setDeviceType',
-				changeNotificationState: 	'Notification/changeNotificationState',
+				changeStatus: 	'Notification/changeStatus',
 			}),
 
 			...mapActions({
-				setNotification: 'Notification/setNotification',
+				createNotification: 'Notification/createNotification',
 			}),
 
 			setRegNotification() {
@@ -252,7 +252,7 @@
 						description: 'Благодаря регистрации на сайте, вы получите личный кабинет с возможностью мониторинга состояния заказа, просмотр заявок, и возможность коментиривания и оценки контента.',
 					}
 				
-					this.setNotification(C);
+					this.createNotification(C);
 
 				}
 

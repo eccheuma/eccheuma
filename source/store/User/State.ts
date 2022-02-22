@@ -25,7 +25,7 @@
 
 // MUTATIONS
 	export const mutations: MutationTree<CurentState> = {
-		Change_UserState(state, newUserState: User.state) {
+		setUserState(state, newUserState: User.state) {
 			state.State = newUserState
 		},
 		Toggle_UserProfileArea(state) {

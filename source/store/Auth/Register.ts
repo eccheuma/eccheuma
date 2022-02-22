@@ -51,7 +51,7 @@
 
 			if ( typeof response === 'string' ) {
 
-				vuex.commit('Auth/Session/ChangeAuthError', response, { root: true });
+				vuex.commit('Auth/Session/setAuthError', response, { root: true });
 
 				return false
 
@@ -60,7 +60,7 @@
 			const { uid, email } = response;
 			
 			vuex.commit('Auth/Session/Change_userState', { uid, email }, { root: true })
-			vuex.commit('Auth/Session/ChangeAuthError', null, { root: true });
+			vuex.commit('Auth/Session/setAuthError', null, { root: true });
 
 			await database.set(`Users/${ uid }/state`, {
 				UserID					:	uid,

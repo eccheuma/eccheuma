@@ -40,7 +40,7 @@ import type { ActionTree, MutationTree } from 'vuex'
 
 				if ( typeof response === 'string' ) {
 
-					vuex.commit('Auth/Session/ChangeAuthError', response, { root: true });
+					vuex.commit('Auth/Session/setAuthError', response, { root: true });
 
 					return false
 
@@ -54,10 +54,10 @@ import type { ActionTree, MutationTree } from 'vuex'
 
 				// Загрузка стейта пользователя из Firebase
 				database.listen(`Users/${ uid }/state`, (data) => {
-					vuex.commit('User/State/Change_UserState', data, { root: true })
+					vuex.commit('User/State/setUserState', data, { root: true })
 				})
 
-				vuex.commit('Auth/Session/ChangeLoginStatus', true, { root: true });
+				vuex.commit('Auth/Session/setLoginStatus', true, { root: true });
 			
 				vuex.commit('setAction', false);
 

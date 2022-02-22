@@ -55,6 +55,10 @@ export namespace auth {
 
   }
 
+  export async function logout() {
+    return firebase.auth().signOut()
+  }
+
   export async function register(email: form.email, pass: string): Promise<form.loginPass | auth.error> {
 
     try {

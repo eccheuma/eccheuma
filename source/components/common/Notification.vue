@@ -17,7 +17,7 @@
 				</template>
 			</div>
 			<div class="notification-button">
-				<common-button @click.native="changeNotificationState(!Notification.status)">
+				<common-button @click.native="changeStatus(!Notification.status)">
 					Скрыть уведомление
 				</common-button>
 			</div>
@@ -186,7 +186,7 @@
 		},
 		methods: {
 			...mapMutations({
-				changeNotificationState: 'Notification/changeNotificationState' 
+				changeStatus: 'Notification/changeStatus' 
 			})
 		}
 	})

@@ -229,7 +229,7 @@
     watch: {
       form: {
         handler() {
-          this.ChangeAuthError(this.matchWithPrev ? this.prev.error : null);
+          this.setAuthError(this.matchWithPrev ? this.prev.error : null);
         },
         deep: true,
       },
@@ -249,7 +249,7 @@
     methods: {
 
       ...mapMutations({
-        ChangeAuthError: 'Auth/Session/ChangeAuthError'
+        setAuthError: 'Auth/Session/setAuthError'
       }),
 
       sendForm() {

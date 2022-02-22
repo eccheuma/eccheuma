@@ -30,13 +30,21 @@
 
 // MUTATIONS	
 	export const mutations: MutationTree<CurentState> = {
-		ChangeLoginStatus(state, prop: boolean) {
+		setLoginStatus(state, prop: boolean) {
 			state.LoginStatus = prop
 		},
-		ChangeAuthError(state, prop: auth.error) {
+		setAuthError(state, prop: auth.error) {
 			state.AuthError = prop
 		},
 		Change_userState(state, { email, uid }: CurentState['CurentUser']) {
 			state.CurentUser = { email, uid }
+		},
+
+		resetUser(state) {
+			state.CurentUser = {
+				email	: String(),
+				uid		: String(),
+			}
 		}
+
 	}

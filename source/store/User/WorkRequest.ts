@@ -85,7 +85,7 @@
 				await database.set(`Users/${ UserID }/messages/Hash_${ requestHash }`, Message);
 
 				vuex.commit('Notification/Notification_Status', true, { root: true })
-				vuex.commit('Notification/setNotification', newNotification, { root: true })
+				vuex.commit('Notification/createNotification', newNotification, { root: true })
 
 			} catch (e) {
 				console.log(e) 
