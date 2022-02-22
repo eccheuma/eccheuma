@@ -60,7 +60,7 @@ describe('store::image', () => {
     
     const virtualSize   = Image.sizes.medium + 60;
 
-    const actualURLS = {
+    const actualURLS: Image.formatsStruct = {
       webp: `https://${ subabaseDomen }/storage/v1/object/public/main/images/${ imagePath }/webp/${ targetSize }.webp`,
       avif: `https://${ subabaseDomen }/storage/v1/object/public/main/images/${ imagePath }/avif/${ targetSize }.avif`,
     }
