@@ -6,6 +6,7 @@ export default defineConfig({
   test: {
     exclude: ['node_modules', 'source', 'utils', '.vscode', '.nuxt', '.firebase', '.github'],
     reporters: 'verbose',
+    watch: false,
   },
   resolve: {
     alias: {

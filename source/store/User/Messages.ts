@@ -46,18 +46,26 @@
 // ACTIONS
 	export const actions: ActionTree<CurentState, VuexMap>  = {
 
-		getMessages({ dispatch, commit, rootState }) {
+		async getMessages({ dispatch, commit, rootState }): Promise<boolean> {
 
 			// Получение ID пользователя
 			const { uid } = rootState.Auth.Session.CurentUser;
 
-			database.listen<utils.asJSONArray<Message.struct>>(`Users/${uid}/messages`, messages => {
-				
-				commit('setMessages', Object.values(messages)); 
+			return new Promise((resolve) => {
 
-				dispatch('checkUnreaded');
+				database.listen<utils.asJSONArray<Message.struct>>(`Users/${uid}/messages`, messages => {
+				
+					commit('setMessages', Object.values(messages)); 
+	
+					dispatch('checkUnreaded');
+
+					resolve(true)
+	
+				})
 
 			})
+
+			
 
 		},
 
@@ -66,26 +74,26 @@
 			// Получение ID пользователя
 			const { uid } = rootState.Auth.Session.CurentUser;
 
-			database.set(`Users/${ uid }/messages/Hash_${prop.ID}`, prop) 
+			return database.set(`Users/${ uid }/messages/Hash_${prop.ID}`, prop) 
 
 		},
 
-		markAsReaded({ rootState }, ID: Message.struct['ID']) {
+		markAsReaded({ rootState }, ID: Message.struct['ID']): Promise<Error | null> {
 
 			// Получение ID пользователя
 			const { uid } = rootState.Auth.Session.CurentUser;
 
-			database.update(`Users/${ uid }/messages/Hash_${ ID }`, { readed: true } as Partial<Message.struct>)
+			return database.update(`Users/${ uid }/messages/Hash_${ ID }`, { readed: true } as Partial<Message.struct>)
 
 		},
 
 		checkUnreaded({ rootState, commit, state }) {
 
 			const { length } = state.Data.filter(({ readed, userID }) => {
-				return userID !== rootState.User.State.State.UserID && readed === false
+				return readed === false
 			})
 			
-			commit('setUnreadedQuanity', length)
+			commit('setUnreadedQuanity', length);
 
 		},
 		

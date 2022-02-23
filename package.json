@@ -4,9 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "npm run test && nuxt dev",
+    "dev": "nuxt dev",
     "build": "nuxt build",
-    "generate": "nuxt generate",
+    "generate": "npm run test && nuxt generate",
     "generate-deploy": "nuxt generate && firebase deploy --only hosting",
     "firebase:serve": "firebase serve",
     "firebase:deploy": "firebase deploy --only hosting",

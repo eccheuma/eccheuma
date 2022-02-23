@@ -1,4 +1,4 @@
-import type { ActionTree, MutationTree } from 'vuex'
+import type { ActionTree } from 'vuex'
 
 // API
 import { auth } from '~/api/auth'
@@ -10,6 +10,9 @@ export const actions: ActionTree<any,any> = {
 		// Изменение статуса аутинтификации
 		vuex.commit('Auth/Session/setLoginStatus', false, { root: true })
 		vuex.commit('Auth/Session/resetUser', null, { root: true })
+
+		// Cброс Окна пользователя
+		vuex.commit('User/State/Toggle_UserProfileArea', false, { root: true });
 
 		// Сброс стейта пользователя
 		vuex.commit('User/State/setUserState', new Object(), { root: true })

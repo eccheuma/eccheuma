@@ -59,7 +59,7 @@
 
 			const { uid, email } = response;
 			
-			vuex.commit('Auth/Session/Change_userState', { uid, email }, { root: true })
+			vuex.commit('Auth/Session/setUserState', { uid, email }, { root: true })
 			vuex.commit('Auth/Session/setAuthError', null, { root: true });
 
 			await database.set(`Users/${ uid }/state`, {

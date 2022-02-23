@@ -60,10 +60,12 @@ export namespace database {
     return firebase.database().ref(path).once('value').then(data => data.numChildren());
   }
   
-  export function set(path: string, data: any): Promise<Error | null> {
+  export async function set(path: string, data: any): Promise<Error | boolean> {
   
-    return firebase.database().ref(path).set(data, error => error);
-  
+    return new Promise((res, rej) => {
+      firebase.database().ref(path).set(data, error => error ? rej(error) : res(true));
+    })
+    
   }
   
   export function remove(path: string): Promise<any> {
@@ -72,8 +74,8 @@ export namespace database {
   
   }
   
-  export function update(path: string, data: any, callback: any = null): Promise<any> {
-    return firebase.database().ref(path).update(data, callback)
+  export function update(path: string, data: any, callback: any = null): Promise<Error | null> {
+    return firebase.database().ref(path).update(data, e => e)
   }
 
 }

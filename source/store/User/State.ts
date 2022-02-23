@@ -28,7 +28,7 @@
 		setUserState(state, newUserState: User.state) {
 			state.State = newUserState
 		},
-		Toggle_UserProfileArea(state) {
-			state.UserProfileArea = !state.UserProfileArea
+		Toggle_UserProfileArea(state, value: boolean) {
+			state.UserProfileArea = value || !state.UserProfileArea
 		}
 	}

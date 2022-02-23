@@ -36,7 +36,7 @@
 		setAuthError(state, prop: auth.error) {
 			state.AuthError = prop
 		},
-		Change_userState(state, { email, uid }: CurentState['CurentUser']) {
+		setUserState(state, { email, uid }: CurentState['CurentUser']) {
 			state.CurentUser = { email, uid }
 		},
 

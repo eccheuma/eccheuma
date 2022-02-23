@@ -50,18 +50,18 @@ import type { ActionTree, MutationTree } from 'vuex'
 
 				const userData: SessionState['CurentUser'] = { uid, email: email || String() }
 				
-				vuex.commit('Auth/Session/Change_userState', userData, { root: true })
+				vuex.commit('Auth/Session/setUserState', userData, { root: true })
 
 				// Загрузка стейта пользователя из Firebase
 				database.listen(`Users/${ uid }/state`, (data) => {
-					vuex.commit('User/State/setUserState', data, { root: true })
+					vuex.commit('User/State/setUserState', data, { root: true }); 
 				})
 
 				vuex.commit('Auth/Session/setLoginStatus', true, { root: true });
 			
 				vuex.commit('setAction', false);
 
-				return true;
+				return true
 
 		}
 	}

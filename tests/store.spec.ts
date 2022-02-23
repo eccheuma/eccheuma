@@ -1,7 +1,13 @@
 import { describe, test, expect } from 'vitest';
 
+// UTILS
+import { utils } from '~/utils';
+
 // API
+import { auth, form } from '~/api/auth';
+
 import '~/plugins/Supabase';
+import '~/plugins/Firebase';
 
 // VUE PREPARATIONS
 import Vuex from 'vuex';
@@ -11,11 +17,64 @@ Vue.use(Vuex as any);
 
 // STORES
 import * as NotificationStore from '~/store/Notification';
-import * as ImageStore from '~/store/Images';
+import * as ImageStore        from '~/store/Images';
+
+import * as MessageStore      from '~/store/User/Messages';
+import * as UserStateStore    from '~/store/User/State';
+
+import * as AuthSessionStore  from '~/store/Auth/Session';
+import * as AuthLoginStore    from '~/store/Auth/Login';
+import * as AuthLogoutStore   from '~/store/Auth/Logout'
 
 // TYPES
 import { Notification } from '~/typescript/Notification';
+import { Message } from '~/typescript/Message';
 import { Image } from '~/typescript/Image';
+
+// VIRTUAL STATE
+const virtualStore = new Vuex.Store({
+  modules: {
+    Auth: {
+      namespaced: true,
+      modules: {
+        Login: {
+          state       : AuthLoginStore.state,
+          actions     : AuthLoginStore.actions,
+          mutations   : AuthLoginStore.mutations,
+          namespaced  : true,
+        },
+        Logout: {
+          actions     : AuthLogoutStore.actions,
+          namespaced  : true,
+        },
+        Session: {
+          state       : AuthSessionStore.state,
+          mutations   : AuthSessionStore.mutations,
+          namespaced  : true,
+        }
+      }
+    },
+    User: {
+      namespaced: true,
+      modules: {
+        State: {
+          state       : UserStateStore.state,
+          mutations   : UserStateStore.mutations,
+          namespaced  : true,
+        },
+        Messages: {
+          state       : MessageStore.state,
+          actions     : MessageStore.actions,
+          mutations   : MessageStore.mutations,
+          namespaced  : true,
+        }
+      }
+    }
+  }
+})
+
+// TEST USER
+const userForm: form.registration = { email: 'testing@mail.tech', password: 'TESTING001', name: 'TESTING' };
 
 // TESTS
 describe('store::notification', () => {
@@ -71,6 +130,102 @@ describe('store::image', () => {
     expect(struct.webp).toBeTypeOf('string');
 
     expect(struct).toStrictEqual(actualURLS);
+
+  })
+
+})
+
+describe('store::user', async () => {
+
+  const messageID = utils.hashGenerator();
+
+  test('user::message::send', async () => {
+
+    await virtualStore.dispatch('Auth/Login/SignIn', userForm);
+
+    const newMessage: Message.struct = {
+      ID: messageID,
+      date: Date.now(),
+      from: 'Vitest',
+      message: 'Dreams that forgotten shorn distant perched door floating, i for a whose before the has...',
+      readed: false,
+      userID: 'xOfKdd6uBASwgGJvQNhomyeI7TI3'
+    }
+
+    const response: Error | boolean = await virtualStore.dispatch('User/Messages/sendMessage', newMessage);
+
+    await virtualStore.dispatch('User/Messages/getMessages');
+
+    expect(response).toBe(true);
+
+  })
+
+  test('user::message::check', async () => {
+
+    await virtualStore.dispatch('User/Messages/checkUnreaded');
+
+    const { NewMessagesCount } = virtualStore.state.User.Messages;
+
+    expect(NewMessagesCount).toBeGreaterThan(0);
+
+  })
+
+  test('user::message::mark', async () => {
+
+    await virtualStore.dispatch('User/Messages/markAsReaded', messageID);
+
+    const { Data } = virtualStore.state.User.Messages;
+
+    const [ newMessage ] = Data.filter(({ ID }) => ID === messageID)
+
+    expect(newMessage.readed).toBe(true);
+
+
+
+  })
+
+})
+
+describe('store::auth', () => {
+
+  test('auth::login', async () => {
+    
+    const response: auth.error | boolean = await virtualStore.dispatch('Auth/Login/SignIn', userForm);
+
+    await new Promise((res) => setTimeout(res, 2000));
+
+    // Open UserProfile window
+    virtualStore.commit('User/State/Toggle_UserProfileArea', true);
+
+    const { State } = virtualStore.state.User.State;
+    const { CurentUser } = virtualStore.state.Auth.Session;
+
+    expect(response).toBe(true);
+
+    expect(State.UserEmail).toBe(userForm.email);
+    expect(State.UserID).toBe(CurentUser.uid)
+    
+  })
+
+  test('auth::logout', async () => {
+
+    await virtualStore.dispatch('Auth/Logout/Logout', userForm);
+
+    const { State, UserProfileArea } = virtualStore.state.User.State;
+    const { CurentUser, LoginStatus, AuthError }  = virtualStore.state.Auth.Session;
+
+    expect(LoginStatus)
+      .toBeFalsy();
+    expect(AuthError)
+      .toBeNull();
+    expect(State)
+      .toStrictEqual(new Object());
+    expect(UserProfileArea)
+      .toBeFalsy();
+
+    Object.values(CurentUser).forEach(value => {
+      expect(value.length).toBe(0)
+    })
 
   })
 
