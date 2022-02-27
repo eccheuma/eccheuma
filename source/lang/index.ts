@@ -35,6 +35,7 @@ export namespace russian {
     'auth/invalid-email' 					: 'Поле не соответствует критериям почты',
     'auth/wrong-password'					: 'Неверный пароль',
     'auth/email-already-in-use' 	: 'Данная почта занята другим пользователем',
+    'auth/weak-password'          : 'Слабый пароль',
   }
 
   export const fileInput = {

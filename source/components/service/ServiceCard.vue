@@ -273,7 +273,7 @@
 		methods: {
 
 			...mapMutations({
-				ToggleRegisterModal: 'Auth/Register/ToggleRegisterModal',
+				toggleRegisterModal: 'Auth/Register/toggleRegisterModal',
 			}),
 
 			ToggleModal(value: boolean) {

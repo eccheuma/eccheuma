@@ -169,7 +169,7 @@
 
 	// FUNCTIONAL COMPONENTS
 	import HardwareAccelerationDecorator 	from '~/components/functional/HardwareAcceleration.vue';
-	import TransitionWrapper 							from '~/components/functional/TransitionWrapper.vue'
+	import TransitionWrapper 							from '~/components/functional/TransitionWrapper.vue';
 
 	// TYPES
 	import type { Notification } from '~/typescript/Notification'
@@ -228,9 +228,7 @@
 
 		},
 		mounted() {
-
 			setTimeout(this.setRegNotification, 360_000)
-
 		},
 		methods: {
 

@@ -1,4 +1,4 @@
-import { expect, test } from 'vitest';
+import { describe, expect, test } from 'vitest';
 
 // UTILS
 import { gpu } from '~/utils/gpu';
@@ -21,3 +21,15 @@ test('images::matchSize', () => {
     .toBe(Image.sizes.medium);
 
 });
+
+describe('gpu::checks', () => {
+
+  // @vitest-environment jsdom
+  test('checks::available', () => {
+    expect(gpu.available()).toBe(false);
+  })
+
+}) 
+
+
+

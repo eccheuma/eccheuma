@@ -29,6 +29,7 @@ export namespace auth {
 		notUser     = 'auth/user-not-found',
 		email       = 'auth/invalid-email',
 		password    = 'auth/wrong-password',
+    weekPass    = 'auth/weak-password',
 		takedEmail  = 'auth/email-already-in-use',
   }
 
@@ -59,34 +60,27 @@ export namespace auth {
     return firebase.auth().signOut()
   }
 
-  export async function register(email: form.email, pass: string): Promise<form.loginPass | auth.error> {
+  export async function register(email: form.email, pass: string): Promise<auth.error | form.loginPass> {
 
-    try {
+    return firebase.auth().createUserWithEmailAndPassword(email, pass).then(({ user }) => {
 
-      const { user } = await firebase.auth().createUserWithEmailAndPassword(email, pass);
+      if ( !user ) throw new Error(auth.error.notUser);
   
-      if ( !user ) throw new Error();
-
       return {
-        email: user.email as form.email,
-        uid: user.uid,
+        email : user.email as form.email,
+        uid   : user.uid,
       }
 
-
-    } catch (e: any) {
-      return e.code as auth.error
-    }
+    }).catch((e: any) => { return e?.code as auth.error });
 
   }
 
-  export async function applyPassword(email: form.email, passcode: string) {
-    return await firebase.auth().confirmPasswordReset(passcode, email)
+  export async function applyPassword(code: string, pass: string) {
+    return await firebase.auth().confirmPasswordReset(code, pass)
   }
 
-  export async function requirePassword(email: form.email, returnURL: string) {
-    return await firebase.auth().sendPasswordResetEmail(email, {
-      url: returnURL
-    })
+  export async function requirePassword(email: form.email) {
+    return await firebase.auth().sendPasswordResetEmail(email)
   }
 
 }

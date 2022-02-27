@@ -1,5 +1,5 @@
 // TYPES
-import type { FileOptions } from '@supabase/storage-js/src/lib/types'
+import type { FileOptions, FileObject } from '@supabase/storage-js';
 
 // SUPABASE
 import Supabase from '~/plugins/Supabase';
@@ -10,6 +10,21 @@ export namespace references {
 
 // MODULE NAMESPACE
 export namespace storage {
+
+  type ResponseFile = {
+    name: string,
+    path: string,
+  }
+
+  type ListResponse = {
+    files   : Array<ResponseFile>,
+    folders : Array<ResponseFile>,
+  }
+
+  export const enum error {
+    path = 'Get of undefined or wrong path' 
+  } 
+
   export function reference(path: string): string | null {
 
     const { publicURL, error } = Supabase.storage.from('main').getPublicUrl(path);
@@ -20,8 +35,37 @@ export namespace storage {
   
   }
   
-  export function list(path: string = '/') {
-    return Supabase.storage.from('main').list(path)
+  export async function list(path: string = '/'): Promise<ListResponse | storage.error> {
+
+    function constructFile(object: FileObject): ResponseFile {
+      return {
+        name: object.name,
+        path: `${ path }/${ object.name }`
+      }
+    }
+
+    const FOLDERS = Array<ResponseFile>();
+    const FILES   = Array<ResponseFile>();   
+
+    const { error, data } = await Supabase.storage.from('main').list(path)
+
+    if ( error || !data ) return storage.error.path;
+
+    for ( let value of data ) {
+
+      const responseStruct = constructFile(value);
+
+      value.metadata
+        ? FILES.push(responseStruct)
+        : FOLDERS.push(responseStruct)
+
+    }
+
+    return {
+      files   : FILES,
+      folders : FOLDERS
+    }
+
   }
   
   export function upload(path: string, data: any, meta?: FileOptions) {

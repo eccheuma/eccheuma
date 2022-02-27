@@ -234,7 +234,7 @@
 									<h5>Для комментирования необходима авторизация</h5>
 									<p>Это не так уж и сложно, да и получите сверху ещё больше функионала.</p>
 
-									<common-button v-once @click.native="toggleRegisterModal()" style="margin: 1vh auto">
+									<common-button v-once @click.native="() => toggleRegisterModal()" style="margin: 1vh auto">
 										Зарегистрироваться
 									</common-button>
 
@@ -1004,7 +1004,7 @@
 			}),
 
 			...mapMutations({
-				toggleRegisterModal: 'Auth/Register/ToggleRegisterModal',
+				toggleRegisterModal: 'Auth/Register/toggleRegisterModal',
 			}),
 			
 			getAuthor(): Promise<void> {

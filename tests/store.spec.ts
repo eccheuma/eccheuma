@@ -5,6 +5,7 @@ import { utils } from '~/utils';
 
 // API
 import { auth, form } from '~/api/auth';
+import { database } from '~/api/database'
 
 import '~/plugins/Supabase';
 import '~/plugins/Firebase';
@@ -137,11 +138,13 @@ describe('store::image', () => {
 
 describe('store::user', async () => {
 
+  const loginStatus: auth.error | boolean = await virtualStore.dispatch('Auth/Login/SignIn', userForm);
+
+  if ( typeof loginStatus === 'string' ) throw new Error(loginStatus);
+
   const messageID = utils.hashGenerator();
 
   test('user::message::send', async () => {
-
-    await virtualStore.dispatch('Auth/Login/SignIn', userForm);
 
     const newMessage: Message.struct = {
       ID: messageID,
@@ -156,6 +159,7 @@ describe('store::user', async () => {
 
     await virtualStore.dispatch('User/Messages/getMessages');
 
+    // EXPECT
     expect(response).toBe(true);
 
   })
@@ -164,9 +168,15 @@ describe('store::user', async () => {
 
     await virtualStore.dispatch('User/Messages/checkUnreaded');
 
-    const { NewMessagesCount } = virtualStore.state.User.Messages;
+    const { NewMessagesCount, Data } = virtualStore.state.User.Messages;
+    const { State } = virtualStore.state.User.State
 
-    expect(NewMessagesCount).toBeGreaterThan(0);
+    // EXPECT
+    expect(NewMessagesCount).toBe(0);
+
+    Data.forEach(mess => {
+      expect(mess.userID).toBe(State.UserID);
+    })
 
   })
 
@@ -176,11 +186,27 @@ describe('store::user', async () => {
 
     const { Data } = virtualStore.state.User.Messages;
 
-    const [ newMessage ] = Data.filter(({ ID }) => ID === messageID)
+    const [ newMessage, emptyMessage ] = Data.filter(({ ID }) => ID === messageID)
 
-    expect(newMessage.readed).toBe(true);
+    // EXPECT
 
+    expect(newMessage.readed)
+      .toBe(true);
 
+    expect(emptyMessage)
+      .toBeUndefined();
+
+  })
+
+  test('user::message::remove', async () => {
+
+    const [ newMessage ] = virtualStore.state.User.Messages.Data;
+
+    const response: database.error | boolean = await virtualStore.dispatch('User/Messages/removeMessage', newMessage);
+
+    typeof response === 'string'
+      ? expect(response).toBe(database.error.denied)
+      : expect(response).toBe(true)
 
   })
 
@@ -195,7 +221,7 @@ describe('store::auth', () => {
     await new Promise((res) => setTimeout(res, 2000));
 
     // Open UserProfile window
-    virtualStore.commit('User/State/Toggle_UserProfileArea', true);
+    virtualStore.commit('User/State/toggleProfileArea', true);
 
     const { State } = virtualStore.state.User.State;
     const { CurentUser } = virtualStore.state.Auth.Session;

@@ -22,6 +22,9 @@
 // WRITE A VERSION
   writeFile('.version', hash, () => console.log(`≏ Hash build: ${ genearateName(4) }:${ hash }`))
 
+// ENV
+  require('dotenv').config();
+
 // CONFIG
   const config: NuxtConfig = {
 
@@ -39,7 +42,7 @@
     },
 
     env: {
-      buildHash: hash
+      buildHash: hash,
     },
 
     target: inDevelopment ? 'server' : 'static',
@@ -81,6 +84,9 @@
     modules: [
 
       '@nuxt/typescript-build',
+      ['@nuxtjs/dotenv', {
+        path: './'
+      }],
 
       ['@nuxtjs/style-resources', {
         scss: [

@@ -12,7 +12,7 @@ export const actions: ActionTree<any,any> = {
 		vuex.commit('Auth/Session/resetUser', null, { root: true })
 
 		// Cброс Окна пользователя
-		vuex.commit('User/State/Toggle_UserProfileArea', false, { root: true });
+		vuex.commit('User/State/toggleProfileArea', false, { root: true });
 
 		// Сброс стейта пользователя
 		vuex.commit('User/State/setUserState', new Object(), { root: true })

@@ -1,5 +1,6 @@
+import type { MutationTree, ActionTree } from 'vuex'
+
 // API
-	import type { MutationTree, ActionTree } from 'vuex'
 	import { database } from '~/api/database';
 	import { storage } from '~/api/storage';
 	import { auth, form } from '~/api/auth'
@@ -7,10 +8,8 @@
 // UTILS
 	import { utils } from '~/utils';
 
-// VUEX
-
+// TYPES
 	import type { VuexMap } from '~/typescript/VuexMap'
-
 	import type { Message } from '~/typescript/Message'
 
 // NAMESPACES
@@ -34,7 +33,7 @@
 
 // MUTATIONS
 	export const mutations: MutationTree<CurentState> = {
-		ToggleRegisterModal(state, prop?: boolean) {
+		toggleRegisterModal(state, prop?: boolean) {
 			state.Modal = prop ?? !state.Modal
 		}
 	}
@@ -42,10 +41,7 @@
 // ACTIONS
 	export const actions: ActionTree<CurentState, VuexMap> = {
 
-		async Register(vuex, form: form.registration): Promise<auth.error | Boolean> {
-
-			// ! Должен возвращать не только тип формы но и ошибку, чтобы можно было её передать дальше.
-			// ! Ну а пока имеем то, что имеем.
+		async Register(vuex, form: form.registration): Promise<auth.error | boolean> {
 
 			const response = await auth.register(form.email, form.password);
 
@@ -91,18 +87,6 @@
 
 			return true;
 
-		},
-
-		Set_RegisterNotification({ commit }) {
-
-			const NotificationMessage = {
-				Message: 'Благодарю за регистрацию!',
-				Description: 'Для перехода в личный кабинет перейдите вверх сайта, а нажмите на "Личный Кабинет"',
-			}
-
-			commit('Notification/Notification_Message', NotificationMessage, { root: true })
-			commit('Notification/Notification_Status', true, { root: true })
-
-		},
+		}
 
 	}

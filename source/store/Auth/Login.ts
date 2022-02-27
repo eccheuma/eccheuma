@@ -7,6 +7,7 @@ import type { ActionTree, MutationTree } from 'vuex'
 // TYPES
 	import type { CurentState as SessionState } from '~/store/Auth/Session'
 	import type { VuexMap } 	from '~/typescript/VuexMap'
+	import type { User } from '~/typescript/User'
 
 // STATE
 	export const state = () => ({
@@ -53,15 +54,19 @@ import type { ActionTree, MutationTree } from 'vuex'
 				vuex.commit('Auth/Session/setUserState', userData, { root: true })
 
 				// Загрузка стейта пользователя из Firebase
-				database.listen(`Users/${ uid }/state`, (data) => {
-					vuex.commit('User/State/setUserState', data, { root: true }); 
-				})
+				const userState: User.state = await database.get(`Users/${ uid }/state`)
+
+				vuex.commit('User/State/setUserState', userState, { root: true });
 
 				vuex.commit('Auth/Session/setLoginStatus', true, { root: true });
 			
 				vuex.commit('setAction', false);
 
-				return true
+				database.listen(`Users/${ uid }/state`, value => {
+					vuex.commit('User/State/setUserState', value, { root: true });
+				}, { change: true })
+
+				return true;
 
 		}
 	}

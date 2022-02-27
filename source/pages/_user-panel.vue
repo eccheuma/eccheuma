@@ -40,7 +40,7 @@
 		},
 		methods: {
 			...mapMutations({
-				ToggleProfileArea: 'User/State/Toggle_UserProfileArea'
+				ToggleProfileArea: 'User/State/toggleProfileArea'
 			}),
 		}
 	})

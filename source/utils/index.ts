@@ -7,6 +7,18 @@ export namespace utils {
 
   export type asJSONArray<T> = { [index: string]: T };
 
+  export function getExtension(filename: string ): string | Error {
+
+    const result = new RegExp('.*(avif|png|jpe?g|webp)').exec(filename); 
+
+    if ( !result ) return new Error('requested format is not allowed')
+
+    const [_, ext] = result;
+
+    return ext;
+
+  }
+
   export function getLocalTime(n: number = 0): LocaleDate 
   {
 

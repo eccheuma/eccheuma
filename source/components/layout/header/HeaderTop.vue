@@ -25,7 +25,7 @@
 		</template>
 
 		<template v-else>
-			<eccheuma-button @click.native="toggleRegisterModal">
+			<eccheuma-button @click.native="() => toggleRegisterModal()">
 				Зарегистрироваться
 			</eccheuma-button>
 		</template>
@@ -69,8 +69,8 @@
 		},
 		methods: {
 			...mapMutations({
-				toggleProfileArea: 'User/State/Toggle_UserProfileArea',
-				toggleRegisterModal: 'Auth/Register/ToggleRegisterModal',
+				toggleProfileArea: 'User/State/toggleProfileArea',
+				toggleRegisterModal: 'Auth/Register/toggleRegisterModal',
 			}),
 
 			GoToHoll() {

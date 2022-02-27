@@ -6,9 +6,10 @@ import 'firebase/database';
 
 // TYPES
 type GetParams = {
-  start: number,
-  end: number,
-  limit: number,
+  change  : boolean
+  limit   : number
+  start   : number
+  end     : number
 }
 
 // INNER FUNCTIONS
@@ -30,6 +31,10 @@ function defineQuery(ref: firebase.database.Query, params: Partial<GetParams>): 
 // MODULE NAMESPACE
 export namespace database {
 
+  export const enum error {
+    denied = 'PERMISSION_DENIED',
+  }
+
   export function get<T extends object | string>(path: string, params?: Partial<GetParams>): Promise<T> {
 
     const REF = firebase.database().ref(path);
@@ -49,8 +54,12 @@ export namespace database {
     let QUERY;
   
     if ( params ) QUERY = defineQuery(REF, params!);
+
+    const databaseEvent: firebase.database.EventType = params?.change 
+      ? 'child_changed' 
+      : 'value';
   
-    (QUERY || REF).on('value', data => {
+    (QUERY || REF).on(databaseEvent, data => {
       callback(data.val());
     })
   
@@ -68,14 +77,22 @@ export namespace database {
     
   }
   
-  export function remove(path: string): Promise<any> {
-  
-    return firebase.database().ref(path).remove();
-  
+  export function remove(path: string): Promise<error | boolean> {
+
+    return firebase.database().ref(path)
+      .remove()
+      .then(() => true)
+      .catch(e => e.code as error)
+
   }
   
-  export function update(path: string, data: any, callback: any = null): Promise<Error | null> {
-    return firebase.database().ref(path).update(data, e => e)
+  export function update(path: string, data: any): Promise<error | boolean> {
+
+    return firebase.database().ref(path)
+      .update(data)
+      .then(() => true)
+      .catch(e => e.code as error)
+
   }
 
 }

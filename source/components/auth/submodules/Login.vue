@@ -81,7 +81,7 @@
 				Войти
 			</eccheuma-button>
 
-			<eccheuma-button v-once @click.native="toggleRegisterModal()">
+			<eccheuma-button v-once @click.native="() => toggleRegisterModal()">
 				Зарегистрироваться
 			</eccheuma-button>
 			
@@ -361,7 +361,7 @@ import Vue from 'vue'
 			}),
 
 			...mapMutations({
-				toggleRegisterModal: 'Auth/Register/ToggleRegisterModal',
+				toggleRegisterModal: 'Auth/Register/toggleRegisterModal',
 			}),
 
 			inputSound(input: InputEvent) {

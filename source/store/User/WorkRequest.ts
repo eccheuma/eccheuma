@@ -18,10 +18,10 @@
 // STATE
 	export const state = () => ({
 
-		ActiveOrders: new Array<Purchase.order<any>>(0),
+		Orders				: new Array<Purchase.order<any>>(0),
+		ActiveOrders	: new Array<Purchase.order<any>>(0),
 
 		RequestQuantity: 0,
-		Orders: new Array<Purchase.order<any>>(0),
 		
 	})
 
@@ -37,13 +37,13 @@
 
 // MUTATIONS
 	export const mutations: MutationTree<CurentState> = {
-		Change_WorkQuantity(state, prop) {
+		setQuantity(state, prop) {
 			state.RequestQuantity = prop;
 		},
 		setOrders(state, prop) {
 			state.Orders = prop
 		},
-		Change_ActiveRequests(state, prop) {
+		setActiveOrder(state, prop) {
 			state.ActiveOrders = prop
 		}
 	}
@@ -97,21 +97,21 @@
 
 			const { UserID } = vuex.rootState.User.State.State
 
-			vuex.commit('Change_Requests', await database.get(`Users/${ UserID }/work_requests`)) 
+			vuex.commit('setOrders', await database.get(`Users/${ UserID }/work_requests`)) 
 		},
 
 		async setRequestQuantity(vuex) {
 
 			const { UserID } = vuex.rootState.User.State.State
 
-			vuex.commit('Change_WorkQuantity', await database.getLength(`Users/${ UserID }/work_requests`)) 
+			vuex.commit('setQuantity', await database.getLength(`Users/${ UserID }/work_requests`)) 
 		},
 
 		setActiveRequest(vuex) {
 
 			if ( !vuex.state.Orders.length ) return;
 
-			vuex.commit('Change_ActiveRequests', vuex.state.Orders.filter((order) => {
+			vuex.commit('setActiveOrder', vuex.state.Orders.filter((order) => {
 				return order.status === Purchase.status.Process
 			}))
 

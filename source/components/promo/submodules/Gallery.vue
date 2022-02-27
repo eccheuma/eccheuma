@@ -4,7 +4,7 @@
 		<eccheuma-image
 			:content="{ path: 'Promo/4.png' }" 
 			:sections="{ date: false, description: false, zoom: false }" 
-			:property="{ type: 'gallery' }"
+			:property="{ type: 'promo' }"
 		/>
 
 		<section v-once>

@@ -205,9 +205,8 @@
 		computed: {
 
 			...mapState({
-				State: 							state	=> ( state as VuexMap ).User.State.State,
-				Messages:								state => ( state as VuexMap ).User.Messages.Data,
-				GetRequestsQuantity:		state => ( state as VuexMap ).User.WorkRequest.RequestQuantity
+				UserState	: state	=> ( state as VuexMap ).User.State.State,
+				Messages	:	state => ( state as VuexMap ).User.Messages.Data,
 			}),
 
 		},
@@ -246,8 +245,8 @@
 		methods: {
 
 			...mapActions({
-				vuex_markAsReaded:	'User/Messages/markAsReaded',
-				vuex_sendMessage:	'User/Messages/sendMessage',
+				vuex_markAsReaded	:	'User/Messages/markAsReaded',
+				vuex_sendMessage	:	'User/Messages/sendMessage',
 			}),
 
 			observeIntesection(message: MessageNamespace.struct) {
@@ -258,7 +257,7 @@
 
 			checkMessage({ ID, readed, userID }: MessageNamespace.struct) {
 
-				if ( userID !== this.State.UserID && readed === false ) { 
+				if ( userID !== this.UserState.UserID && readed === false ) { 
 					this.vuex_markAsReaded(ID);
 				}
 
@@ -269,9 +268,9 @@
 
 					const M: MessageNamespace.struct = {
 						ID				: utils.hashGenerator(),
-						userID		: this.State.UserID,
+						userID		: this.UserState.UserID,
 						date			: Date.now(),
-						from			: this.State.UserName,
+						from			: this.UserState.UserName,
 						message		: this.UserMessage,
 						readed		: false
 					}
@@ -292,9 +291,8 @@
 
 			async sendNotification({ message, userID, from, readed }: MessageNamespace.struct ) {
 				
-				if ( userID !== this.State.UserID && readed === false ) {
+				if ( userID !== this.UserState.UserID ) {
 
-					// eslint-disable-next-line no-undef
 					const CONTENT: NotificationOptions = {
 						body: `${ from }: ${ message }`,
 						image: require('~/assets/images/NotificationBadge.png'),

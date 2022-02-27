@@ -11,7 +11,6 @@
 				accept=".png, .jpg, .webp" 
 				@change="uploadIcon"
 				>
-			<span>{{ CustomIconName }}</span>
 			<common-button type="label" for="CustomImage">
 				Загрузить своё
 			</common-button>
@@ -28,7 +27,7 @@
 		</div>
 		<hr v-once>
 		<div class="user_profile-component-picture-footer">
-			<common-button :class="{ disabled: !NewIcon || NewIcon === State.UserImageID || Pending }" @click.native="updateIcon">
+			<common-button :class="{ disabled: !NewIcon || NewIcon === State.UserImageID }" @click.native="updateIcon">
 				Подтвердить
 			</common-button>
 		</div>
@@ -126,16 +125,16 @@
 
 	import Vue from 'vue'
 
-	// IMPORTED TYPES
-	import type { AnimeAnimParams, AnimeInstance } from 'animejs'
-
 	// VUEX
 	import { mapState } from 'vuex'
-	import type { VuexMap } from '~/typescript/VuexMap'
+	import type { VuexMap } from '~/typescript/VuexMap';
 
 	// API
 	import { storage } from '~/api/storage';
 	import { database } from '~/api/database';
+
+	// UTILS
+	import { utils } from '~/utils'
 
 	// LANG
 	import { getLocale } from '~/lang'
@@ -143,18 +142,15 @@
 	// COMPONENT
 	import CommonButton from '~/components/buttons/CommonButton.vue'
 
-	// TYPES 
-	type MODE = 'custom' | 'predefined' | undefined;
+	const enum loadStatus {
+		start,
+		pending,
+		error,
+		done,
+	}
 
 	// VARIABLES 
-	const DefaultIconAnimation: AnimeAnimParams = {
-		opacity: [1, 0],
-		scale: [1, .9],
-		duration: 500,
-		direction: 'alternate',
-		easing: 'easeInOutQuad',
-		autoplay: false,
-	}
+	const SIZE_LIMIT = 15e5;
 
 	export default Vue.extend({
 		components: {
@@ -163,13 +159,9 @@
 		data() {
 			return {
 
-				Animations: new Map() as Map<string, AnimeInstance>,
+				Warning	: String(),
+				Loading	: loadStatus.done,
 
-				Warning: String(),
-				Mode: undefined as MODE,
-				Pending: false,
-
-				CustomIconName: String(),
 				NewIcon: String(),
 
 				SelectableIcon: Array<string>(),
@@ -179,113 +171,88 @@
 		computed: {
 			...mapState({
 
-				State	: state	=> (state as VuexMap).User.State.State,
-				Lang			: state => (state as VuexMap).App.Lang
+				State	: state => (state as VuexMap).User.State.State,
+				Lang	: state => (state as VuexMap).App.Lang,
 
 			}),
 		},
 		watch: {
-			Pending: {
-				handler(value) {
+			Loading: {
+				handler(value: loadStatus) {
 
-					const PA = this.Animations.get('iconPending')!;
-								PA.play();
-
-					if ( !value ) {
-						PA.update = ({ progress }) => { 
-							if ( progress === 0 ) { PA.pause() }
-						}
-					} else {
-						PA.update = undefined
+					switch (value) {
+						case loadStatus.start: 
+							this.animateIcon({ direction: 'reverse' }); console.log('start'); break;
+						case loadStatus.pending: 
+							this.animateIcon({ direction: 'alternate', iterations: Infinity }); console.log('pending'); break;
+						case loadStatus.error: 
+							this.animateIcon({ direction: 'normal', duration: 100, iterations: 3 }); console.log('error'); break;
+						case loadStatus.done: 
+							this.animateIcon({ direction: 'normal', iterations: 1 }); console.log('done'); break;
 					}
 
 				}
 			}
 		},
-		created() {
-			this.getDefaultIcons()
-		},
-		mounted() {
+		async mounted() {
 
-			this.Animations.set('iconPending', this.$AnimeJS({
-
-				targets: this.$refs.iconPreview,
-				loop: true,
-
-				...DefaultIconAnimation,
-
-			}))
+			this.SelectableIcon = await this.getDefaultIcons()
 
 		},
 		methods: {
 
-			getDefaultIcons() {
+			async getDefaultIcons(): Promise<Array<string>> {
 
-				storage.list('UserIcons').then(response => {
+				const response = await storage.list('UserIcons');
 
-					if ( response?.error ) throw response.error;
+				if ( typeof response === 'string' ) return new Array(0);
 
-					if ( response?.data === null ) throw new Error('response error');
-
-					response.data.forEach(file => {
-
-						if ( file.metadata ) {
-
-							const URL = storage.reference(`UserIcons/${ file.name }`);
-
-							if ( URL ) {
-								this.SelectableIcon.push(URL);
-							} else { 
-								throw new Error(`[getDefaultIcons]: File on relative path "UserIcons/${ file.name }" not exist`) 
-							}
-
-						}
-
-					})
-
-				})
+				return response.files
+					.map(({ path }) => storage.reference(path))
+					.filter(x => x) as Array<string>;
 
 			},
 
 			async uploadIcon(event: InputEvent) {
 
-				const INPUT = (event.target as HTMLInputElement);
+				const { files, value,  } = event.target as HTMLInputElement;
 
-				if ( INPUT.files?.length === 0 ) return;
+				if ( !files || files.length === 0 ) return;
 
-				this.Pending = true;
+				this.Loading = loadStatus.start;
 				this.NewIcon = String();
 
-				const PATH			= 'UserIcons/ID'
-				const ID 				= this.State.UserID
-				// eslint-disable-next-line prefer-regex-literals
-				const FILENAME 	= new RegExp('.*(avif|png|jpe?g|webp)').exec(INPUT.value)!; 
+				const EXTENSION = utils.getExtension(value);
 
-				this.CustomIconName = FILENAME[0].replace(FILENAME[1], '');
+				if ( typeof EXTENSION !== 'string' ) throw EXTENSION;
 
-				if ( INPUT.files && ID ) {
+				const FILE = new File([ files[0] ], this.State.UserID);
+				const DIST = `UserIcons/ID/${ FILE.name }::${ FILE.size.toString(36).toUpperCase() }.${ EXTENSION }`;
 
-					const FILE = new File([ INPUT.files[0] ], ID);
-					const DIST = `${ PATH }/${ FILE.name }::${ FILE.size.toString(36).toUpperCase() }.${ FILENAME[1] }`;
+				if ( FILE.size >= SIZE_LIMIT ) {
 
-					if ( FILE.size >= 15e5 ) {
+					this.Warning = `${ getLocale(this.Lang).fileInput.sizeStrict }: ${ parseFloat(Number(FILE.size / 10e5).toPrecision(3)) }МБ`; 
+					this.Loading = loadStatus.error;
 
-						this.Warning = `${ getLocale(this.Lang).fileInput.sizeStrict }: ${ parseFloat(Number(FILE.size / 10e5).toPrecision(3)) }`; 
-						this.Pending = false;
+					return;
 
-						return;
+				}
 
-					}
+				await this.setIcon(DIST, FILE);
 
-					await storage.upload(DIST, FILE, { contentType: FILE.type })
+				this.Loading = loadStatus.done;
+				this.Warning = String();
 
-					const URL = storage.reference(DIST);
+			},
 
-					this.Pending = false;
+			async setIcon(path: string, file: File) {
 
-					if ( URL ) { this.NewIcon = URL }
+				this.Loading = loadStatus.pending;
 
-				} else { this.Warning = getLocale(this.Lang).fileInput.sendError; this.Pending = false }
+				await storage.upload(path, file, { contentType: file.type })
+
+				// TS can't correct work with logical assigment...
+				this.NewIcon ||= storage.reference(path) as string;
 
 			},
 
@@ -294,6 +261,25 @@
 				database.update(`Users/${ this.State.UserID }/state`, { UserImageID: this.NewIcon });
 
 			},
+
+			animateIcon(params: KeyframeAnimationOptions) {
+
+				const element = (this.$refs.iconPreview as HTMLElement);
+
+				element.getAnimations().forEach(animation => animation.cancel())
+
+				element.animate([
+					{ opacity: 0 },
+					{ opacity: 1 },
+				], {
+
+					duration: 500,
+
+					...params,
+
+				})
+
+			}
 			
 		},
 	})

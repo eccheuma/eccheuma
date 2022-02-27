@@ -6,7 +6,7 @@
 			:class="[
 				{ 'utils::glassy': application.gpu.available() }
 			]"
-			@click.self="ChangeModalStatus(false)"
+			@click.self="toggleRegisterModal(false)"
 			@mousewheel.prevent
 			>
 
@@ -40,7 +40,7 @@
 				</section>
 
 				<section class="registration-footer">
-					<common-button @click.native="ChangeModalStatus(false)">
+					<common-button @click.native="toggleRegisterModal(false)">
 						Закрыть
 					</common-button>
 				</section>
@@ -255,7 +255,7 @@
 		watch: {
 			LoginStatus: {
 				handler() {
-					this.ChangeModalStatus(false)
+					this.toggleRegisterModal(false)
 				},
 				deep: true
 			}
@@ -263,7 +263,7 @@
 		methods: {
 
 			...mapMutations({
-				ChangeModalStatus: 'Auth/Register/ToggleRegisterModal',
+				toggleRegisterModal: 'Auth/Register/toggleRegisterModal',
 				ChangeLoadMessage: 'Loader/Loader_ChangeLoadMessage',
 			}),
 
