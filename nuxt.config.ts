@@ -84,7 +84,8 @@
     buildModules: [
 
       ['@nuxtjs/dotenv', {
-        path: './'
+        path: './',
+        systemvars: true,
       }],
 
       ['@nuxtjs/sitemap', {
