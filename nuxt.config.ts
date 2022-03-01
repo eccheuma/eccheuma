@@ -126,6 +126,8 @@
 
     build: {
 
+
+
       extend(config, { isClient }) {
         if ( isClient ) {
           config.entry = {
@@ -173,6 +175,14 @@
         }
       },
 
+    },
+
+    hooks: {
+      generate: {
+        before() {
+          console.log(process.env);
+        }
+      }
     },
 
     plugins: [
