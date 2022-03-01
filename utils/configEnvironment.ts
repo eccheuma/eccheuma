@@ -1,3 +1,7 @@
+import dotenv from 'dotenv';
+
+dotenv.config({ path: '../.env' });
+
 export namespace environment {
 
   type env = {[ i: string ]: string } 
@@ -5,10 +9,10 @@ export namespace environment {
   export function config(keys: Array<string>): env {
   
     const env: env = Object();
-  
-    for ( let K in keys ) {
-      env[K] = process.env[K] as string;
-    }
+
+    keys.forEach(key => {
+      env[key] = process.env[key] as string;
+    })
   
     return env;
   

@@ -1,14 +1,10 @@
 import Vue from 'vue'
 
-// API
+// TYPES
 import type { Context } from '@nuxt/types';
-import { database } from '~/api/database';
 
 // UTILS
 import { gpu } from '~/utils/gpu';
-
-// CONTRACTS
-import { DatabaseContract } from '~/typescript/FirebaseDatabase'
 
 export default ({ env, isDev }: Context) => {
 
@@ -21,12 +17,8 @@ export default ({ env, isDev }: Context) => {
 		context: {
 			browser	: process.browser,
 			server	: process.server,
-		}
+		},
 	}
-
-	database.get<DatabaseContract['App']>('App').then(response => {
-		Vue.prototype.application.selfKey  = response.__SELF_KEY__
-	})
 
 	if ( isDev && process.browser ) {
 		console.log(`%cEccheuma | Build: ${ env.buildHash }`,
@@ -44,7 +36,7 @@ declare module 'vue/types/vue' {
 			context: {
 				browser	: boolean,
 				server	: boolean,
-			}
+			},
 		}
 	}
 }

@@ -23,7 +23,7 @@ import { User } from '~/typescript/User';
 // TESTS
 describe('api::database', () => {
 
-  test('database::get', async () => {
+  test.concurrent('database::get', async () => {
 
     const POSTS_LIMIT = 1;
 
@@ -33,7 +33,7 @@ describe('api::database', () => {
 
   })
 
-  test('database::length', async () => {
+  test.concurrent('database::length', async () => {
 
     const postLength = await database.getLength('Posts');
 
@@ -41,7 +41,7 @@ describe('api::database', () => {
 
   })
 
-  test('database::remove', async () => {
+  test.concurrent('database::remove', async () => {
 
     const response = await database.remove('App/__SELF_KEY__')
 
@@ -51,7 +51,7 @@ describe('api::database', () => {
 
   })
 
-  test('database::update', async () => {
+  test.concurrent('database::update', async () => {
 
     const NAME = `TESTING 00${ Math.trunc(10 * Math.random()) }`;
     const USER = await auth.login(userForm.email, userForm.password)
@@ -85,13 +85,13 @@ describe('api::database', () => {
 
 describe.todo('api::storage', () => {
 
-  test.todo('storage::get');
+  test.concurrent.todo('storage::get');
 
-  test.todo('storage::set');
+  test.concurrent.todo('storage::set');
 
-  test.todo('storage::remove');
+  test.concurrent.todo('storage::remove');
 
-  test.todo('storage::update');
+  test.concurrent.todo('storage::update');
 
 });
 

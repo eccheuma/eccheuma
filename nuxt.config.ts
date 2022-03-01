@@ -2,26 +2,29 @@
   import { writeFile }  from 'fs';
   import { createHash } from 'crypto';
 
+// TESTING
+  import vitest from 'vitest';
+
 // ENV
-  require('dotenv').config();
+  import { environment }  from './utils/configEnvironment'
+
+  const appEnvironment = environment.config([
+    'SUPABASE_API_URL', 
+    'SUPABASE_API_KEY', 
+    'FIREBASE_API_APP', 
+    'FIREBASE_API_KEY'
+  ])
 
 // TYPES
   import { NuxtConfig } from '@nuxt/types';
 
-// TEMPLATES
-  import HEAD_CONFIG    from './utils/defaultHead';
-  import genearateName  from './utils/nameGenerator';
-  import { environment } from './utils/configEnvironment'
+// TEMPLATESnp
+  import HEAD_CONFIG      from './utils/defaultHead';
+  import genearateName    from './utils/nameGenerator';
 
 // VARIABLES
   const inDevelopment = process.env.NODE_ENV === 'development';
   const hash          = createHash('md5').update(Math.random().toString()).digest('hex').slice(-6);
-
-// HTTP CERTIFICATE
-// const certificate: NuxtConfig['server']['https'] = {
-//   key:  readFileSync(path.resolve(__dirname, './container/certificate/localhost.decrypted.key')),
-//   cert: readFileSync(path.resolve(__dirname, './container/certificate/localhost.crt')),
-// }
 
 // WRITE A VERSION
   writeFile('.version', hash, () => console.log(`≏ Hash build: ${ genearateName(4) }:${ hash }`))
@@ -43,15 +46,10 @@
     },
 
     env: {
-      
+
       buildHash: hash,
 
-      ...environment.config([
-        'SUPABASE_API_URL', 
-        'SUPABASE_API_KEY', 
-        'FIREBASE_API_APP', 
-        'FIREBASE_API_KEY'
-      ])
+      ...appEnvironment,
 
     },
 
@@ -130,9 +128,6 @@
     ],
 
     build: {
-
-
-
       extend(config, { isClient }) {
         if ( isClient ) {
           config.entry = {

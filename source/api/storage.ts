@@ -1,9 +1,6 @@
 // TYPES
 import type { FileOptions, FileObject } from '@supabase/storage-js';
 
-// SUPABASE
-import Supabase from '~/plugins/Supabase';
-
 export namespace references {
   export const images = 'images'
 }
@@ -27,7 +24,7 @@ export namespace storage {
 
   export function reference(path: string): string | null {
 
-    const { publicURL, error } = Supabase.storage.from('main').getPublicUrl(path);
+    const { publicURL, error } = global.supabase.storage.from('main').getPublicUrl(path);
   
     if ( error ) throw error;
   
@@ -47,7 +44,7 @@ export namespace storage {
     const FOLDERS = Array<ResponseFile>();
     const FILES   = Array<ResponseFile>();   
 
-    const { error, data } = await Supabase.storage.from('main').list(path)
+    const { error, data } = await global.supabase.storage.from('main').list(path)
 
     if ( error || !data ) return storage.error.path;
 
@@ -69,11 +66,11 @@ export namespace storage {
   }
   
   export function upload(path: string, data: any, meta?: FileOptions) {
-    return Supabase.storage.from('main').upload(path, data, { upsert: true, ...meta })
+    return global.supabase.storage.from('main').upload(path, data, { upsert: true, ...meta })
   }
 
   export function remove(path: string) {
-    return Supabase.storage.from('main').remove([ path ])
+    return global.supabase.storage.from('main').remove([ path ])
   }
 
 }
