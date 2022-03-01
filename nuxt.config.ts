@@ -2,12 +2,16 @@
   import { writeFile }  from 'fs';
   import { createHash } from 'crypto';
 
+// ENV
+  require('dotenv').config();
+
 // TYPES
   import { NuxtConfig } from '@nuxt/types';
 
 // TEMPLATES
   import HEAD_CONFIG    from './utils/defaultHead';
   import genearateName  from './utils/nameGenerator';
+  import { environment } from './utils/configEnvironment'
 
 // VARIABLES
   const inDevelopment = process.env.NODE_ENV === 'development';
@@ -21,9 +25,6 @@
 
 // WRITE A VERSION
   writeFile('.version', hash, () => console.log(`≏ Hash build: ${ genearateName(4) }:${ hash }`))
-
-// ENV
-  require('dotenv').config();
 
 // CONFIG
   const config: NuxtConfig = {
@@ -42,7 +43,16 @@
     },
 
     env: {
+      
       buildHash: hash,
+
+      ...environment.config([
+        'SUPABASE_API_URL', 
+        'SUPABASE_API_KEY', 
+        'FIREBASE_API_APP', 
+        'FIREBASE_API_KEY'
+      ])
+
     },
 
     target: inDevelopment ? 'server' : 'static',
@@ -82,11 +92,6 @@
     },
 
     buildModules: [
-
-      ['@nuxtjs/dotenv', {
-        path: './',
-        systemvars: true,
-      }],
 
       ['@nuxtjs/sitemap', {
         hostname: 'https://escapefrommordorland.web.app',
