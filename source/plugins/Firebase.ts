@@ -6,11 +6,11 @@ declare global {
 	var firebaseClient: firebase.app.App
 }
 
-export default (context: Context) => {
+export default (context?: Context) => {
 
 	const CLIENT_CONFIG = {
-		appId							: context.env.FIREBASE_API_APP,
-		apiKey						: context.env.FIREBASE_API_KEY,
+		appId							: context?.env.FIREBASE_API_APP || process.env.FIREBASE_API_APP,
+		apiKey						: context?.env.FIREBASE_API_KEY || process.env.FIREBASE_API_KEY,
 		authDomain				: 'escapefrommordorland.firebaseapp.com',
 		projectId					: 'escapefrommordorland',
 		databaseURL				: 'https://escapefrommordorland.firebaseio.com',

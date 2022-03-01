@@ -10,12 +10,12 @@ declare global {
   };
 }
  
-export default ({ env }: Context) => {
+export default (context?: Context) => {
 
   global.supabase = Object();
 
-  const SUPA_URL = env.SUPABASE_API_URL;
-  const SUPA_KEY = env.SUPABASE_API_KEY;
+  const SUPA_URL = context?.env.SUPABASE_API_URL || process.env.SUPABASE_API_URL;
+  const SUPA_KEY = context?.env.SUPABASE_API_KEY || process.env.SUPABASE_API_KEY;
   
   if ( !SUPA_URL || !SUPA_KEY ) throw new Error('Environment is undefined or null');
 

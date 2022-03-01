@@ -7,8 +7,8 @@ require('dotenv').config();
 const userForm: form.registration = { email: 'testing@mail.tech', password: 'TESTING001', name: 'TESTING' };
 
 // PLUGINS
-import '~/plugins/Firebase';
-import '~/plugins/Supabase';
+import Supabase from '~/plugins/Supabase'; Supabase();
+import Firebase from '~/plugins/Firebase'; Firebase();
 
 // UTILS
 import { utils } from '~/utils'

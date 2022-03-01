@@ -10,8 +10,9 @@ import { utils } from '~/utils';
 import { auth, form } from '~/api/auth';
 import { database } from '~/api/database';
 
-import '~/plugins/Supabase';
-import '~/plugins/Firebase';
+// PLUGINS
+import Supabase from '~/plugins/Supabase'; Supabase();
+import Firebase from '~/plugins/Firebase'; Firebase();
 
 // VUE PREPARATIONS
 import Vuex from 'vuex';
