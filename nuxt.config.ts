@@ -177,14 +177,6 @@
 
     },
 
-    hooks: {
-      generate: {
-        before() {
-          console.log(process.env);
-        }
-      }
-    },
-
     plugins: [
       { src: '~/plugins/InitState.ts' },
       // Common plugins

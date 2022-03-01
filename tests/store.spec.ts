@@ -1,11 +1,14 @@
 import { describe, test, expect } from 'vitest';
 
+// ENV
+require('dotenv').config();
+
 // UTILS
 import { utils } from '~/utils';
 
 // API
 import { auth, form } from '~/api/auth';
-import { database } from '~/api/database'
+import { database } from '~/api/database';
 
 import '~/plugins/Supabase';
 import '~/plugins/Firebase';

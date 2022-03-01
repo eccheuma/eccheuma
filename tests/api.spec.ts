@@ -1,5 +1,8 @@
 import { describe, test, expect } from 'vitest';
 
+// ENV
+require('dotenv').config();
+
 // TEST USER FORM
 const userForm: form.registration = { email: 'testing@mail.tech', password: 'TESTING001', name: 'TESTING' };
 
