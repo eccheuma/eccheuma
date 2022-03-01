@@ -81,12 +81,23 @@
       mode: 'out-in'
     },
 
-    modules: [
+    buildModules: [
 
-      '@nuxt/typescript-build',
       ['@nuxtjs/dotenv', {
         path: './'
       }],
+
+      ['@nuxtjs/sitemap', {
+        hostname: 'https://escapefrommordorland.web.app',
+        exclude: ['/Admin/*'],
+        trailingSlash: false,
+      }],
+
+    ],
+
+    modules: [
+
+      '@nuxt/typescript-build',
 
       ['@nuxtjs/style-resources', {
         scss: [
@@ -94,12 +105,6 @@
           '~/assets/styles/scss/_mixins.scss',
           '~/assets/styles/scss/_variables.scss',
         ]
-      }],
-
-      ['@nuxtjs/sitemap', {
-        hostname: 'https://escapefrommordorland.web.app',
-        exclude: ['/Admin/*'],
-        trailingSlash: false,
       }],
 
       // Nuxt types fucked up as always...
