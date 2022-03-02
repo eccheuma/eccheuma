@@ -3,6 +3,7 @@
 ![eccheuma-header](https://firebasestorage.googleapis.com/v0/b/escapefrommordorland.appspot.com/o/GitHubBadge.png?alt=media&token=c9422647-a7f1-4d49-bf2a-88bf185b37a9)
 
 [![Run tests](https://github.com/Scarlatum/eccheuma/actions/workflows/node.test.yml/badge.svg)](https://github.com/Scarlatum/eccheuma/actions/workflows/node.test.yml)
+[![CodeQL](https://github.com/Scarlatum/eccheuma/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/Scarlatum/eccheuma/actions/workflows/codeql-analysis.yml)
 
 [pixi-logo]: https://avatars.githubusercontent.com/u/5406849?s=100&v=4
 [vue-logo]: https://avatars.githubusercontent.com/u/6128107?s=100&v=4
