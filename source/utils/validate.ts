@@ -6,8 +6,16 @@ const enum expressions {
   Email         = '.+@.+\\.[a-zа-я]{2,}',
 }
 
-const sentenceParams = {
-  minLength: 0
+namespace Sentence {
+
+  export const params = {
+    minLength: 0
+  }
+
+  export function applyPattern(value: string): string {
+    return `\\S*${ value.toLowerCase() }.?[а-яa-z]`
+  }
+
 }
 
 export namespace validate {
@@ -27,12 +35,16 @@ export namespace validate {
   
   }
 
-  export function sentence(sentence: string, list: Array<string>, params = sentenceParams): boolean {
+  export function sentence(sentence: string, list: Array<string>, params = Sentence.params): boolean {
 
     if ( list.length ) {
 
       return !sentence.split(' ').some(word => {
-        return list.some(banned => new RegExp(`\\S*${ banned.toLowerCase() }.?[а-яa-z]`).test(word))
+        return list.some(banned => {
+
+          return new RegExp(Sentence.applyPattern(banned)).test(word);
+
+        })
       })
 
     };

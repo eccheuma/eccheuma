@@ -4,10 +4,11 @@ import { languages, russian } from '~/lang'
 // UTILS
 import { user, work } from '~/utils/status'
 import { validate } from '~/utils/validate';
-import { Opengraph } from '~/utils/opengraph';
+import { Opengraph, OpengraphMetaObject } from '~/utils/opengraph';
 
 import { User } from '~/typescript/User';
 import { Purchase } from '~/typescript/Services'
+import { utils } from '~/utils';
 
 // TESTS
 describe('utils::status', () => {
@@ -98,15 +99,41 @@ describe('utils::validate', () => {
 
 test('utils::opengraph::new', () => {
 
-  const META = new Opengraph.meta({ title: 'something', description: 'something', image: 'something', url: 'something' })
+  const meta: Opengraph.struct = { title: 'something', description: 'something', image: 'something', url: 'something' };
+
+  const result = new Opengraph.Meta(meta, { locale: languages.Russian }).buildMeta();
 
   const target = [
-    { property: `og:description`, content: 'something' },
-    { property: `og:image`,       content: 'something' },
-    { property: `og:title`,       content: 'something' },
-    { property: `og:url`,         content: 'something' },
+
+    { property: Opengraph.Meta.setPreffix('description'), 
+      content : meta.description },
+
+    { property: Opengraph.Meta.setPreffix('website'),     
+      content : Opengraph.Meta.predefined.website },
+
+    { property: Opengraph.Meta.setPreffix('locale'),      
+      content : languages.Russian },
+
+    { property: Opengraph.Meta.setPreffix('image'),       
+      content : meta.image },
+
+    { property: Opengraph.Meta.setPreffix('title'),       
+      content : meta.title },
+
+    { property: Opengraph.Meta.setPreffix('url'),         
+      content : meta.url },
+
   ]
 
-  expect(META.buildMeta()).toEqual(target)
+  // ! Это будет работать только при одинарной вложенности. Вложенные объекты сравнить не получиться.
+  target.forEach(targetMeta => {
+
+    result.forEach(resultMeta => {
+      if ( targetMeta.property === resultMeta.property ) {
+        expect(targetMeta.content).toBe(resultMeta.content); 
+      }
+    })
+
+  })
 
 })

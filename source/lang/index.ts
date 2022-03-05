@@ -1,6 +1,6 @@
 export const enum languages {
-  Russian,
-  English,
+  Russian = 'ru_RU',
+  English = 'en_EN',
 }
 
 export namespace russian {

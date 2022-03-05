@@ -409,7 +409,7 @@
 
 			async GetPosts() {
 
-				const POSTS: utils.asJSONArray<Post.struct> = await database.get('Posts', { limit: load_ranges.posts })
+				const POSTS: utils.asIterableObject<Post.struct> = await database.get('Posts', { limit: load_ranges.posts })
 
 				const formatedSlides = Object
 					.values(POSTS)

@@ -864,8 +864,8 @@
 				PostDate: utils.getLocalTime(0),
 
 				Content: 	new Array<Post.content>(0),
-				Comments: new Object() as utils.asJSONArray<Post.comment>,
-				Likes: 		new Object() as utils.asJSONArray<Post.like>,
+				Comments: new Object() as utils.asIterableObject<Post.comment>,
+				Likes: 		new Object() as utils.asIterableObject<Post.like>,
 
 				IntersectionAnimation: undefined as Animation | undefined
 

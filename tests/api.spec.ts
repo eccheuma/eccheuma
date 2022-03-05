@@ -25,9 +25,11 @@ describe('api::database', () => {
 
   test.concurrent('database::get', async () => {
 
-    const POSTS_LIMIT = 1;
+    const POSTS_LIMIT: number = 1;
 
-    const Posts: Array<Post.struct> = Object.values(await database.get('Posts', { limit: POSTS_LIMIT }));
+    const response: utils.asIterableObject<Post.struct> = await database.get('Posts', { limit: POSTS_LIMIT });
+
+    const Posts: Array<Post.struct> = Object.values(response);
 
     expect(Posts).toHaveLength(POSTS_LIMIT);
 
@@ -85,13 +87,13 @@ describe('api::database', () => {
 
 describe.todo('api::storage', () => {
 
+  test.concurrent.todo('storage::set');
+  
   test.concurrent.todo('storage::get');
 
-  test.concurrent.todo('storage::set');
+  test.concurrent.todo('storage::update');
 
   test.concurrent.todo('storage::remove');
-
-  test.concurrent.todo('storage::update');
 
 });
 
@@ -112,6 +114,8 @@ describe('api::auth', () => {
       const responseEmail     = await auth.register(email.wrong as form.email, PASS);
       const responsePassword  = await auth.register(email.valid as form.email, '  ');
       const takedEmail        = await auth.register(email.taked as form.email, PASS);  
+
+      if ( responseEmail === auth.error.network ) throw new Error('Network connection error');
 
       typeof responseEmail === 'string'
         ? expect(responseEmail).toBe(auth.error.email)

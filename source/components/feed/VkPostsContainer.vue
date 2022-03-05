@@ -364,7 +364,7 @@
 
         return await new Promise<POST[]>((resolve) => {
 
-          database.get<utils.asJSONArray<VK_POST>>('VkPosts').then((response) => {
+          database.get<utils.asIterableObject<VK_POST>>('VkPosts').then((response) => {
             resolve(Object.values(response).map(item => {
 
               return {

@@ -53,7 +53,7 @@
 
 			return new Promise((resolve) => {
 
-				database.listen<utils.asJSONArray<Message.struct>>(`Users/${uid}/messages`, messages => {
+				database.listen<utils.asIterableObject<Message.struct>>(`Users/${uid}/messages`, messages => {
 				
 					commit('setMessages', Object.values(messages || new Object())); 
 	

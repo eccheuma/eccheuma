@@ -5,7 +5,15 @@ export type LocaleDate = {
 
 export namespace utils {
 
-  export type asJSONArray<T> = { [index: string]: T };
+  export namespace object {
+
+    export function getTypedKeys<T extends object>(value: T) {
+      return Object.keys(value) as Array<keyof T>;
+    }
+
+  }
+
+  export type asIterableObject<Struct extends object> = {[ index: string ]: Struct };
 
   export function getExtension(filename: string ): string | Error {
 
@@ -40,5 +48,7 @@ export namespace utils {
   {
     return Math.random().toString(36).slice(-9).toUpperCase()
   }
+
+  
 
 }
