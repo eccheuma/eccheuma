@@ -15,4 +15,7 @@ export default defineConfig({
     }
   },
   clearScreen: true,
+  esbuild: {
+    target: 'ES6'
+  }
 })
