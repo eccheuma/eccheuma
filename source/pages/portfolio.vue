@@ -126,7 +126,7 @@
 			return {
 				title: PageDescription.title,
 				meta: [
-					...new Opengraph.meta(PageDescription).buildMeta()
+					...new Opengraph.Meta(PageDescription).buildMeta()
 				],
 			}
 		},
