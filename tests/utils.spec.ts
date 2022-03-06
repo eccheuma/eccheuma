@@ -1,14 +1,16 @@
 import { expect, test, describe } from 'vitest';
-import { languages, russian } from '~/lang'
+import { getLocale, languages, russian } from '~/lang'
 
 // UTILS
 import { user, work } from '~/utils/status'
 import { validate } from '~/utils/validate';
-import { Opengraph, OpengraphMetaObject } from '~/utils/opengraph';
+import { Opengraph } from '~/utils/opengraph';
 
 import { User } from '~/typescript/User';
 import { Purchase } from '~/typescript/Services'
 import { utils } from '~/utils';
+import { Meta } from '~/utils/meta';
+import { navigation } from '~/typescript/Navigation';
 
 // TESTS
 describe('utils::status', () => {
@@ -97,43 +99,66 @@ describe('utils::validate', () => {
 
 })
 
-test('utils::opengraph::new', () => {
+describe('utils::meta', () => {
+  test('meta::opengraph', () => {
+  
+    const meta: Opengraph.struct = { title: 'something', description: 'something', image: 'something', url: 'something' };
+  
+    const result = new Opengraph.Meta(meta, { locale: languages.Russian }).buildMeta();
+  
+    const target = [
+  
+      { property: Opengraph.Meta.setPreffix('description'), 
+        content : meta.description },
+  
+      { property: Opengraph.Meta.setPreffix('website'),     
+        content : Opengraph.Meta.predefined.website },
+  
+      { property: Opengraph.Meta.setPreffix('locale'),      
+        content : languages.Russian },
+  
+      { property: Opengraph.Meta.setPreffix('image'),       
+        content : meta.image },
+  
+      { property: Opengraph.Meta.setPreffix('title'),       
+        content : meta.title },
+  
+      { property: Opengraph.Meta.setPreffix('url'),         
+        content : meta.url },
+  
+    ]
+  
+    // ! Это будет работать только при одинарной вложенности. Вложенные объекты сравнить не получиться.
+    target.forEach(targetMeta => {
+  
+      result.forEach(resultMeta => {
+        if ( targetMeta.property === resultMeta.property ) {
+          expect(targetMeta.content).toBe(resultMeta.content); 
+        }
+      })
+  
+    })
+  
+  })
 
-  const meta: Opengraph.struct = { title: 'something', description: 'something', image: 'something', url: 'something' };
+  describe('meta::head', () => {
 
-  const result = new Opengraph.Meta(meta, { locale: languages.Russian }).buildMeta();
+    test('head::constructTitle', () => {
 
-  const target = [
+      const page: number = 1;
+      const section = navigation.routeSections.service;
 
-    { property: Opengraph.Meta.setPreffix('description'), 
-      content : meta.description },
+      const pageType = getLocale(languages.Russian).Pagination.page;
+      const pageName = getLocale(languages.Russian).Routes[ utils.enums.toString(navigation.routeSections, section) ]
 
-    { property: Opengraph.Meta.setPreffix('website'),     
-      content : Opengraph.Meta.predefined.website },
+      const result = Meta.conctructTitle(languages.Russian, { page, section });
+      const target = `Eccheuma | ${ pageName } | ${ page } ${ pageType }`;
 
-    { property: Opengraph.Meta.setPreffix('locale'),      
-      content : languages.Russian },
+      expect(result).toBe(target)
 
-    { property: Opengraph.Meta.setPreffix('image'),       
-      content : meta.image },
-
-    { property: Opengraph.Meta.setPreffix('title'),       
-      content : meta.title },
-
-    { property: Opengraph.Meta.setPreffix('url'),         
-      content : meta.url },
-
-  ]
-
-  // ! Это будет работать только при одинарной вложенности. Вложенные объекты сравнить не получиться.
-  target.forEach(targetMeta => {
-
-    result.forEach(resultMeta => {
-      if ( targetMeta.property === resultMeta.property ) {
-        expect(targetMeta.content).toBe(resultMeta.content); 
-      }
     })
 
   })
 
-})
+}) 
+

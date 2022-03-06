@@ -40,13 +40,17 @@
 
 	// TYPES
 	import type { PAYLOAD } from '~/store/PageContent';
+	import { navigation } from '~/typescript/Navigation'
 
 	// COMPONENTS
 	import PromoBanner 					from '~/components/promo/PromoBanner.vue';
 	import Post 								from '~/components/post/Post.vue';
 
 	// LOAD POLITIC
-	import { load_ranges } from '~/config/LoadPolitic'
+	import { Ranges } from '~/config/LoadPolitic'
+	
+	// UTILS
+	import { Meta } from '~/utils/meta';
 
 	// MODULE
 	export default Vue.extend({
@@ -57,11 +61,11 @@
 		mixins: [ PageTransitionProperty ],
 		async middleware({ params, query, redirect }) {
 
-			const PAGE 			= Number( params.page.slice(-1) ) // page_1 => 1
-			const LOADRANGE = Number( query.range || load_ranges.posts );
+			const Page 			= Number( params.page.slice(-1) ) // page_1 => 1
+			const LOADRANGE = Number( query.range || Ranges.posts );
 			const QUANTITY 	= await database.getLength('Posts');
 
-			const OutRange = QUANTITY + LOADRANGE < PAGE * LOADRANGE 
+			const OutRange = QUANTITY + LOADRANGE < Page * LOADRANGE 
 
 			if ( OutRange ) { redirect('/error') }
 
@@ -74,10 +78,10 @@
 		//
 		asyncData({ params, query }) {
 
-			const PAGE 				= Number( params.page.slice(-1) ) || 1 // page_1 => 1
-			const LOAD_RANGE 	= Number( query.range || load_ranges.posts )
+			const Page 				= Number( params.page.slice(-1) ) || 1 // page_1 => 1
+			const LOAD_RANGE 	= Number( query.range || Ranges.posts )
 
-			return { PAGE, LOAD_RANGE }
+			return { Page, LOAD_RANGE }
 
 		},
 		data() {
@@ -86,8 +90,8 @@
 				Ready: false,
 
 			// ASYNC DATA
-				PAGE: 1,
-				LOAD_RANGE: load_ranges.posts,
+				Page: 1,
+				LOAD_RANGE: Ranges.posts,
 
 			}
 		},
@@ -97,18 +101,24 @@
 
 		},
 		head(): any {
+
 			return {
-				title: `Eccheuma | Главная | ${ this.PAGE } Страница`
+				title: Meta.conctructTitle(this.Lang, { 
+					page: this.Page, 
+					section: navigation.routeSections.home
+				}),
 			}
+
 		},
 		computed: {
 			...mapState({
-				Posts: state => (state as VuexMap).PageContent.Content.Posts
+				Posts	: state => (state as VuexMap).PageContent.Content.Posts,
+				Lang 	: state => (state as VuexMap).App.Lang,
 			}),
 		},
 		created() {
 
-			this.ChangePage(this.PAGE);
+			this.ChangePage(this.Page);
 
 			// Fix fetching on diferrent routes for some reasons...
 			if ( process.browser && this.$router.currentRoute.name === 'home' ) {
@@ -132,7 +142,7 @@
 
 				const QUANTITY = await database.getLength('Posts');
 
-				const REM: number = QUANTITY - ( this.LOAD_RANGE * this.PAGE )
+				const REM: number = QUANTITY - ( this.LOAD_RANGE * this.Page )
 
 				const PAYLOAD: PAYLOAD = {
 					REF: 'Posts',

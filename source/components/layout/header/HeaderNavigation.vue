@@ -10,7 +10,7 @@
 		>
 
 		<client-only>
-			<CursorFX v-if="Ready && CursorInArea && !$isMobile" />
+			<CursorFX v-if="CursorInArea && !$isMobile" />
 		</client-only>
 
 		<nav class="main_navigation-items">
@@ -18,7 +18,7 @@
 			<template v-for="(prop, index) in HeaderMenu">
 				
 				<div 
-					:key="prop.name" 
+					:key="prop.route" 
 					
 					class="main_navigation-item"
 					:class="[
@@ -43,7 +43,8 @@
 
 						<icon :name="prop.icon" />
 
-						{{ prop.name }}		
+
+						{{ getLocale(prop.name) }}
 
 					</nuxt-link>
 					
@@ -304,6 +305,18 @@ $TransitionDuration: 250ms;
 
 	import Vue from 'vue'
 
+	// VUEX
+	import { mapState } from 'vuex';
+
+	// VUEX MAP
+	import { VuexMap } from '~/typescript/VuexMap'
+
+	// LANG
+	import { getLocale } from '~/lang';
+
+	// UTILS
+	import { utils } from '~/utils';
+
 	// MIXINS
 	import EmitSound from '~/assets/mixins/EmitSound'
 
@@ -321,8 +334,8 @@ $TransitionDuration: 250ms;
 
 	type HeaderMenuItem = {
 		disabled		: boolean,
-		route				: `/${ navigation.routes }`, 
-		name				: string, 
+		route				: `/${ keyof typeof navigation.routeSections }`, 
+		name				: navigation.routeSections, 
 		icon				: string,
 		description	: string
 	}
@@ -332,35 +345,35 @@ $TransitionDuration: 250ms;
 		{
 			disabled: false,
 			route: '/home', 
-			name: 'Главная', 
+			name: navigation.routeSections.home, 
 			icon: 'Home',
 			description: HomePage.description
 		},
 		{
 			disabled: false,
 			route: '/gallery', 
-			name: 'Галерея', 
+			name: navigation.routeSections.gallery, 
 			icon: 'Gallery',
 			description: GalleryPage.description
 		},
 		{
 			disabled: false,
 			route: '/recommendation', 
-			name: 'Рекомендации', 
+			name: navigation.routeSections.recommendation, 
 			icon: 'Fire',
 			description: PortfolioPage.description
 		},
 		{
 			disabled: false,
 			route: '/portfolio', 
-			name: 'Портфолио', 
+			name: navigation.routeSections.portfolio, 
 			icon: 'Portfolio',
 			description: 'Принятые работы. С указанием сроков, цены, комментариев, и отзывов на выполненую работу.'
 		},
 		{
 			disabled: false,
 			route: '/service', 
-			name: 'Услуги', 
+			name: navigation.routeSections.service, 
 			icon: 'Service',
 			description: ServicePage.description
 		},
@@ -394,8 +407,6 @@ $TransitionDuration: 250ms;
 		data() {
 			return {
 
-				Ready: false,
-
 				CursorInArea: false,
 
 				HeaderMenu: HeaderRoutes,	
@@ -403,6 +414,11 @@ $TransitionDuration: 250ms;
 			}
 		},
 		computed: {
+
+			...mapState({
+				Lang 	: state => (state as VuexMap).App.Lang,
+			}),
+
 			CurentRoute(): string { // Текущий рут
 				return this.$route.matched?.[0].path
 			},
@@ -416,7 +432,6 @@ $TransitionDuration: 250ms;
 				])
 			}
 
-			this.Ready = true;
 		},
 		methods: {
 
@@ -425,6 +440,10 @@ $TransitionDuration: 250ms;
 					top: this.$el.scrollTop,
 					behavior: 'smooth',
 				})
+			},
+
+			getLocale(route: navigation.routeSections): string {
+				return getLocale(this.Lang).Routes[ utils.enums.toString(navigation.routeSections, route) ]
 			}
 			
 		}

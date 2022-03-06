@@ -53,27 +53,32 @@
 	import Vue from 'vue'
 
 	// VUEX
-		import { mapActions, mapMutations, mapState } from 'vuex'
+	import { mapActions, mapMutations, mapState } from 'vuex'
+	
+	// VUEX MAP
+	import type { VuexMap } from '~/typescript/VuexMap';
 
 	// API
-		import { database } from '~/api/database';
+	import { database } from '~/api/database';
 
-	// VUEX MODULE TYPE MAP
-		import type { VuexMap } from '~/typescript/VuexMap';
+	// UTILS
+	import { Meta } from '~/utils/meta';
 
 	// MIXINS
-		import PageTransitionProperty 	from '~/assets/mixins/PageTransitionProperty'
+	import PageTransitionProperty 	from '~/assets/mixins/PageTransitionProperty'
 
 	// TYPES
-		import type { PAYLOAD } 					from '~/store/PageContent'
-		import type { ANIMATION_PAYLOAD } from '~/assets/mixins/IntersectionObserver'
+	import type { PAYLOAD } 					from '~/store/PageContent'
+	import type { ANIMATION_PAYLOAD } from '~/assets/mixins/IntersectionObserver'
+
+	import { navigation } from '~/typescript/Navigation';
 
 	// LOAD POLITIC
-		import { load_ranges } from '~/config/LoadPolitic'
+	import { Ranges } from '~/config/LoadPolitic'
 
 	// COMPONENTS
-		import EccheumaImage 						from '~/components/image/Image.vue'
-		import IntesectionComponent from '~/components/functional/intersectionComponent.vue'
+	import EccheumaImage 						from '~/components/image/Image.vue'
+	import IntesectionComponent from '~/components/functional/intersectionComponent.vue'
 
 	// INTERSECTION_ANIMATION
 	const Animation: ANIMATION_PAYLOAD = {
@@ -97,14 +102,26 @@
 		mixins: [ PageTransitionProperty ],
 		async middleware({ params, query, redirect }) {
 
-			const PAGE 			= Number( params.page.slice(-1) ) // Parse page_1: str => 1: int
-			const LOADRANGE = Number( query.range ) || 6
-			
-			const QUANTITY 	= await database.getLength('Gallery')
+			// Возможно лучше вообще отказаться от мидлвар вовсе. Уж больно они мне не нравятся.
 
-			const OutRange = QUANTITY + LOADRANGE < PAGE * LOADRANGE 
+			if ( !query.range && !params.query ) return;
 
-			if ( OutRange ) { redirect('/error') }
+			// ? Parse page_1: str => 1: int
+			const Page: number = parseInt(params.page.slice(-1));
+
+			const Range: number = typeof query.range === 'string'
+				? parseInt(query.range)
+				: Ranges.gallery
+
+			const Quantity: number = await database.getLength('Gallery');
+
+			if ( ! Number.isInteger(Page) ) redirect('/error');
+ 
+			const inRange: boolean = (Quantity + Range) >= (Page * Range);
+
+			inRange 
+				? null 
+				: redirect('/error');
 
     },
 		asyncData({ params, query }) {
@@ -121,7 +138,7 @@
 				Ready: false,
 				
 				Page: 1,
-				LoadRange: load_ranges.gallery,
+				LoadRange: Ranges.gallery,
 				BasePoint: 0,
 
 			}
@@ -134,14 +151,20 @@
 			
 		},
 		head(): {[index: string]: string } {
+
 			return {
-				title: `Eccheuma | Галлерея | ${ this.Page } Страница`
+				title: Meta.conctructTitle(this.Lang, { 
+					page: this.Page, 
+					section: navigation.routeSections.gallery
+				}),
 			}
+			
 		},
 		computed: {
 
 			...mapState({
-				Images: state => (state as VuexMap).PageContent.Content.Gallery
+				Images	: state => (state as VuexMap).PageContent.Content.Gallery,
+				Lang 		: state => (state as VuexMap).App.Lang
 			}),
 
 		},

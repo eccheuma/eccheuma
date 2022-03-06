@@ -6,11 +6,11 @@
 			:class="{ disabled: PageSelector.Page == 1 }"  
 			:to="getPath(PageSelector.Page - 1)"  
 		>
-			{{ 2 >= PageSelector.Page ? 'Начальная' : 'Предыдущая' }}
+			{{ pageLabels.prev }}
 		</nuxt-link>
 
 		<span style="pointer-events: none">
-			Cтраница {{ PageSelector.Page }} из {{ PageSelector.PageQuantity }} 
+			{{ PageSelector.Page }}-я cтраница из {{ PageSelector.PageQuantity }}-{{ getSuffix(PageSelector.PageQuantity) }} 
 		</span>
 
 		<nuxt-link 
@@ -18,7 +18,7 @@
 			:class="{ disabled: PageSelector.Page == PageSelector.PageQuantity }"  
 			:to="getPath(PageSelector.Page + 1)" 
 			>
-			{{ PageSelector.Page + 1 === PageSelector.PageQuantity ? 'Последняя' : 'Следующая' }}
+			{{ pageLabels.next }}
 		</nuxt-link>
 
 	</nav>
@@ -37,10 +37,8 @@ $h: 10vh;
 
 	display: grid;
 	grid-template: {
-		columns: repeat(3, auto);
+		columns: repeat(3, minmax(160px, min-content));
 	};
-
-  column-gap: 4vw;
 
 	border-radius: var(--border-radius);
 
@@ -105,15 +103,22 @@ $h: 10vh;
 
 	import Vue, { PropOptions } from 'vue'
 
+	// VUEX
 	import { mapState } from 'vuex'
 
+	// VUEX MAP
 	import type { VuexMap } from '~/typescript/VuexMap'
 
+	// UTILS
+	import { getLocale, languages, russian } from '~/lang'
+
+	// TYPES
 	type PageSelectorProperty = {
 		section: string
 		params?: string
 	}
 
+	// MODULE
 	export default Vue.extend({
 		props: {
 			payload: {
@@ -123,8 +128,26 @@ $h: 10vh;
 		},
 		computed: {
 			...mapState({
-				PageSelector: (state: any) => ( state as VuexMap).PageSelector
+				PageSelector	: state => (state as VuexMap).PageSelector,
+				Lang					: state => (state as VuexMap).App.Lang,
 			}),
+
+			pageLabels(): { next: string, prev: string } {
+
+				const locale = getLocale(this.Lang).Pagination;
+
+				const next = this.PageSelector.Page + 1 >= this.PageSelector.PageQuantity
+					? locale.last
+					: locale.next
+
+				const prev = 2 >= this.PageSelector.Page
+					? locale.first
+					: locale.prev
+
+				return { next, prev }
+
+			}
+
 		},
 		methods: {
 
@@ -134,6 +157,12 @@ $h: 10vh;
 
 				return `/${ this.payload.section }/page_${ page }${ QUERY_PARAMS }`
 
+			},
+
+			getSuffix(value: number) {
+				switch (this.Lang) {
+					case languages.Russian: return russian.getSuffix(value)
+				}
 			}
 
 		},

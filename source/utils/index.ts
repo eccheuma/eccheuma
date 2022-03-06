@@ -7,8 +7,18 @@ export namespace utils {
 
   export namespace object {
 
-    export function getTypedKeys<T extends object>(value: T) {
-      return Object.keys(value) as Array<keyof T>;
+    export function getTypedKeys<GenObject extends object>(object: GenObject): Array<keyof GenObject> {
+      return Object.keys(object) as Array<keyof GenObject>;
+    }
+
+  }
+
+  export namespace enums {
+
+    // Так как обычный реверсивный маппинг енамов не даёт типов, приходится пользоваться жуткими обёртками.
+    // Для примера enum[enum] вернёт строку, хотя, по идее, он должен вернуть ключ этого enum'а.
+    export function toString<E, K extends number>(enumLike: E, key: K) {
+      return (enumLike as unknown as {[ index: number ]: keyof E })[key];
     }
 
   }
@@ -21,9 +31,7 @@ export namespace utils {
 
     if ( !result ) return new Error('requested format is not allowed')
 
-    const [_, ext] = result;
-
-    return ext;
+    return result[1];
 
   }
 

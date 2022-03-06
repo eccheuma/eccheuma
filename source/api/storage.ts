@@ -48,7 +48,7 @@ export namespace storage {
 
     if ( error || !data ) return storage.error.path;
 
-    for ( let value of data ) {
+    for ( const value of data ) {
 
       const responseStruct = constructFile(value);
 

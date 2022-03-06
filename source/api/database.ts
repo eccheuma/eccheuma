@@ -1,5 +1,3 @@
-/* eslint-disable import/no-named-as-default-member */
-
 // FIREBASE
 import firebase from 'firebase/app';
 import 'firebase/database';
@@ -41,7 +39,7 @@ export namespace database {
   
     let QUERY;
   
-    if ( params ) QUERY = defineQuery(REF, params!)
+    if ( params ) QUERY = defineQuery(REF, params)
   
     return (QUERY || REF).once('value').then(data => data.val());
   
@@ -53,7 +51,7 @@ export namespace database {
   
     let QUERY;
   
-    if ( params ) QUERY = defineQuery(REF, params!);
+    if ( params ) QUERY = defineQuery(REF, params);
 
     const databaseEvent: firebase.database.EventType = params?.change 
       ? 'child_changed' 

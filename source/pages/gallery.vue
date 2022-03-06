@@ -144,7 +144,7 @@
 	import TransitionSound from '~/assets/mixins/TransitionSound'
 
 // LOAD POLITIC
-	import { load_ranges } from '~/config/LoadPolitic'
+	import { Ranges } from '~/config/LoadPolitic'
 
 // COMPONENTS
 	import PromoBanner 		from '~/components/promo/PromoBanner.vue'
@@ -165,8 +165,8 @@
 		components: {
 			PromoBanner,
 			SectionHeader,
-			Pagination: 	() => import('~/components/common/Pagination.vue'),
-			EccheumaImage: 		() => import('~/components/image/Image.vue'),
+			Pagination		: () => import('~/components/common/Pagination.vue'),
+			EccheumaImage	: () => import('~/components/image/Image.vue'),
 		},
 		mixins: [ TransitionSound ],
 		layout: 'Application', 
@@ -176,20 +176,18 @@
 		data() {
 			return {
 
-				LoadRange: load_ranges.gallery,
-
 				PaginationParams: {
 					section: 'gallery', 
-					params: `range=${ load_ranges.gallery }`
+					params: `range=${ Ranges.gallery }`
 				},
 
 			}
 		},
 		async fetch() {
 
-			const GalleryQuantity = await database.getLength('Gallery')
+			const GalleryQuantity = await database.getLength('Gallery');
 
-			this.ChangePageQuantity( Math.ceil(GalleryQuantity / this.LoadRange) )
+			this.ChangePageQuantity(Math.ceil( GalleryQuantity / Ranges.gallery ))
 
 		},
 		head () {

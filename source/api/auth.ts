@@ -1,4 +1,3 @@
-/* eslint-disable import/no-named-as-default-member */
 import firebase from 'firebase/app';
 import 'firebase/auth';
 
@@ -56,22 +55,28 @@ export namespace auth {
 
   }
 
-  export async function logout() {
+  export function logout() {
     return firebase.auth().signOut()
   }
 
   export async function register(email: form.email, pass: string): Promise<auth.error | form.loginPass> {
 
-    return firebase.auth().createUserWithEmailAndPassword(email, pass).then(({ user }) => {
+    try {
 
-      if ( !user ) throw new Error(auth.error.notUser);
-  
+      const { user } = await firebase.auth().createUserWithEmailAndPassword(email, pass);
+
+      if (!user) throw new Error(auth.error.notUser);
+
       return {
-        email : user.email as form.email,
-        uid   : user.uid,
-      }
+        email: user.email as form.email,
+        uid: user.uid,
+      };
 
-    }).catch((e: any) => { return e?.code as auth.error });
+    } catch (e: any) {
+
+      return e?.code as auth.error;
+
+    }
 
   }
 

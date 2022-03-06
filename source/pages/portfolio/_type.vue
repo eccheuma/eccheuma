@@ -30,8 +30,14 @@
 
 	import Vue from 'vue'
 
-	// // UTILS
-	// import { utils } from '~/utils';
+	// VUEX
+	import { mapState } from 'vuex';
+
+	// VUEX MAP
+	import { VuexMap } from '~/typescript/VuexMap';
+
+	// UTILS
+	import { Meta } from '~/utils/meta';
 
 	// API
 	import { database } from '~/api/database';
@@ -39,6 +45,7 @@
 	// TYPES
 	import { Workcase } from '~/typescript/WorkCase';
 	import { Portfolio } from '~/typescript/Portfolio';
+	import { navigation } from '~/typescript/Navigation';
 
 	// MODULE
 	export default Vue.extend({
@@ -75,6 +82,24 @@
 				Type: Portfolio.sections.landings,
 
 			}
+		},
+		computed: {
+
+			...mapState({
+				Posts	: state => (state as VuexMap).PageContent.Content.Posts,
+				Lang 	: state => (state as VuexMap).App.Lang,
+			}),
+
+		},
+		head(): any {
+
+			return {
+				title: Meta.conctructTitle(this.Lang, { 
+					page: this.Type, 
+					section: navigation.routeSections.portfolio
+				}),
+			}
+
 		},
 		async mounted() {
 			this.Case = await this.GetCases();

@@ -210,7 +210,7 @@ $TransitionDuration: 250ms;
 	type NAV_ITEM = {
 		ID					: number 
 		disabled		: boolean
-		route				:	navigation.routes
+		route				:	keyof typeof navigation.routeSections
 		name				: string
 		icon				: string
 		discription	: string

@@ -338,7 +338,7 @@
 		import EmitSound from '~/assets/mixins/EmitSound'
 
 	// LOAD POLITIC
-		import { load_ranges } from '~/config/LoadPolitic'
+		import { Ranges } from '~/config/LoadPolitic'
 
 	// TYPES
 		import type { Image } from '~/typescript/Image';
@@ -409,7 +409,7 @@
 
 			async GetPosts() {
 
-				const POSTS: utils.asIterableObject<Post.struct> = await database.get('Posts', { limit: load_ranges.posts })
+				const POSTS: utils.asIterableObject<Post.struct> = await database.get('Posts', { limit: Ranges.posts })
 
 				const formatedSlides = Object
 					.values(POSTS)

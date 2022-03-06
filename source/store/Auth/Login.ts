@@ -45,7 +45,7 @@ import type { ActionTree, MutationTree } from 'vuex'
 
 					return false
 
-				};
+				}
 
 				const { uid, email } = response;
 

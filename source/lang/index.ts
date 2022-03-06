@@ -1,9 +1,33 @@
+
+import { navigation } from '~/typescript/Navigation';
+
 export const enum languages {
   Russian = 'ru_RU',
   English = 'en_EN',
 }
 
 export namespace russian {
+
+  // ! Пока это только для Дательного падежа. Надо будут переделать...
+  const suffix = ['ой', 'ух', 'ёх', 'ми', 'ти']
+
+  export function getSuffix(num: number): string {
+
+    const rem = num % 10;
+
+    if ( rem === 1 && num !== 11 ) return suffix[0];
+
+    if ( num < 10 || num > 20 ) {
+
+      if ( rem === 2 ) return suffix[1]
+      if ( rem > 1 && rem < 5 ) return suffix[2];
+      if ( rem === 7 || rem === 8 ) return suffix[3];
+
+    }
+
+    return suffix[4];
+
+  }
 
   export const blacklist: Array<string> = ['аниме']
 
@@ -12,6 +36,22 @@ export namespace russian {
     Moderator : 'Модератор',
     Support   : 'Поддержка',
     User      : 'Пользователь',
+  }
+
+  export const Routes: {[ key in keyof typeof navigation.routeSections ]: string } = {
+    recommendation  : 'Рекомендации',
+    portfolio       : 'Работы',
+    service         : 'Услуги',
+    gallery         : 'Галерея',
+    home            : 'Главная',
+  }
+
+  export const Pagination = {
+    page  : 'Страница',
+    next  : 'Следующая',
+    prev  : 'Предыдущая',
+    last  : 'Последняя',
+    first : 'Начальная',
   }
 
   export const PurchaseStatus = {

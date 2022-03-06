@@ -1,4 +1,7 @@
-export const load_ranges = {
-	posts: 4,
-	gallery: 12,
+export namespace Ranges {
+
+	export const posts: number = 4;
+
+	export const gallery: number = 12;
+
 }

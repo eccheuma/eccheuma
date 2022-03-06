@@ -47,7 +47,7 @@ export namespace validate {
         })
       })
 
-    };
+    }
   
     if ( params.minLength > sentence.length ) return false;
   

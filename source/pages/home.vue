@@ -87,7 +87,7 @@ main {
 	import type { VuexMap } from '~/typescript/VuexMap'
 
 // LOAD POLITIC
-	import { load_ranges } from '~/config/LoadPolitic'
+	import { Ranges } from '~/config/LoadPolitic'
 
 // PAGE DESCRIPTION
 	import { Opengraph } from '~/utils/opengraph'
@@ -114,15 +114,13 @@ main {
 
 				Title: 'Главная',
 
-				LoadRange: load_ranges.posts,
-
 			}
 		},
 		async fetch() {
 
 			const PostsQuantity: number = await database.getLength('Posts');
 
-			this.ChangePageQuantity( Math.ceil( PostsQuantity / this.LoadRange ) );
+			this.ChangePageQuantity(Math.ceil( PostsQuantity / Ranges.posts ));
 
 		},
 		head () {

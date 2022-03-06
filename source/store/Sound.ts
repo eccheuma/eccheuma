@@ -2,8 +2,6 @@
 	import 			{ Howler, Howl } 	from 'howler'
 	import type { HowlOptions } 	from 'howler';
 
-	
-
 // VUEX
 	import type { ActionTree, MutationTree } from 'vuex'
 
@@ -15,7 +13,7 @@
 		mute: boolean
 		volume: number
 		inChange: boolean
-	};
+	}
 
 	type GLOBAL_VALUES = GLOBAL_PROPERTY[keyof GLOBAL_PROPERTY];
 
@@ -80,7 +78,13 @@
 				}).once('load', () => {
 					console.debug(`[registerSound]: Load sound element | ${ sound.name }`);
 				}).once('unlock', () => {
-					CURRENT_HOWL.fade(0, sound.settings?.volume!, 1000)
+
+					const volume = sound.settings?.volume;
+
+					if ( volume ) {
+						CURRENT_HOWL.fade(0, volume, 1000)
+					}
+
 				})
 
 				vuex.commit('setSound', { name: sound.name, howl: CURRENT_HOWL });

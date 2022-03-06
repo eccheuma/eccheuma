@@ -59,7 +59,14 @@ export default Vue.extend({
 			};
 	
 			const OBSERVER = new IntersectionObserver((entry) => {
-				payload._cb ? payload._cb(entry) : DEF_CB(entry.pop()!.isIntersecting)
+
+				const observer = entry.pop();
+
+				if ( observer ) {
+					payload._cb ? payload._cb(entry) : DEF_CB(observer.isIntersecting)
+				}
+
+
 			}, OPTIONS);
 
 			this.ObserversMap.set(payload.el, OBSERVER);
