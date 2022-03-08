@@ -1,0 +1,20 @@
+on:
+    pull_request:
+        branches:
+        - main
+    schedule:
+        - cron: "0 2 * * 1-5"
+
+jobs:
+ generate_metrics:
+  name: Succint report
+  uses: lowlighter/metrics@latest
+  with:
+    filename: metrics.plugin.pagespeed.svg
+    token: NOT_NEEDED
+    base: ""
+    plugin_pagespeed: yes
+    plugin_pagespeed_screenshot: no
+    plugin_pagespeed_detailed: yes
+    plugin_pagespeed_token: AIzaSyB-jcsA7jYelMnx0gwxIKrfTqfABOVuGC0
+    plugin_pagespeed_url: https://eccheuma.vercel.app/
