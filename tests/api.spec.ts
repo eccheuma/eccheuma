@@ -1,10 +1,7 @@
-import { describe, test, expect } from 'vitest';
+import { describe, test, expect, beforeAll, afterAll  } from 'vitest';
 
-// ENV
-require('dotenv').config();
-
-// TEST USER FORM
-const userForm: form.registration = { email: 'testing@mail.tech', password: 'TESTING001', name: 'TESTING' };
+// TEST USER
+import { userForm } from 'path::root/utils/defaultUser';
 
 // PLUGINS
 import Supabase from '~/plugins/Supabase'; Supabase();
@@ -21,82 +18,6 @@ import { Post } from '~/typescript/Post';
 import { User } from '~/typescript/User';
 
 // TESTS
-describe('api::database', () => {
-
-  test.concurrent('database::get', async () => {
-
-    const POSTS_LIMIT: number = 1;
-
-    const response: utils.asIterableObject<Post.struct> = await database.get('Posts', { limit: POSTS_LIMIT });
-
-    const Posts: Array<Post.struct> = Object.values(response);
-
-    expect(Posts).toHaveLength(POSTS_LIMIT);
-
-  })
-
-  test.concurrent('database::length', async () => {
-
-    const postLength = await database.getLength('Posts');
-
-    expect(postLength).toBeTypeOf('number');
-
-  })
-
-  test.concurrent('database::remove', async () => {
-
-    const response = await database.remove('App/__SELF_KEY__')
-
-    typeof response === 'string'
-      ? expect(response).toBe(database.error.denied)
-      : expect.fail('write permissions in a mess')
-
-  })
-
-  test.concurrent('database::update', async () => {
-
-    const NAME = `TESTING 00${ Math.trunc(10 * Math.random()) }`;
-    const USER = await auth.login(userForm.email, userForm.password)
-
-    if ( typeof USER === 'string' ) throw Error('wrong login data');
-
-    // Check restricted writes
-      const invalidWrite = await database.update('App', { __SELF_KEY__: NAME });
-      
-      typeof invalidWrite === 'string'
-        ? expect(invalidWrite).toBe(database.error.denied)
-        : expect.fail('write permissions in a mess')
-
-    // Check valid writes  
-      const validWrite = await database.update(`Users/${ USER.uid }/state`, { UserName: NAME } as Partial<User.state>);
-
-      typeof validWrite === 'boolean'
-        ? expect(validWrite).toBe(true)
-        : expect.fail('write permissions in a mess')
-
-    // Check writes
-      expect(await database.get(`Users/${ USER.uid }/state/UserName`))
-        .toBe(NAME);
-      expect(await database.get(`App/__SELF_KEY__`))
-        .not
-        .toBe(NAME);
-
-  })
-
-})
-
-describe.todo('api::storage', () => {
-
-  test.concurrent.todo('storage::set');
-  
-  test.concurrent.todo('storage::get');
-
-  test.concurrent.todo('storage::update');
-
-  test.concurrent.todo('storage::remove');
-
-});
-
 describe('api::auth', () => {
 
   describe('auth::register', () => {
@@ -104,7 +25,7 @@ describe('api::auth', () => {
     const email = {
       valid : 'someone@yandex.ru',
       wrong : 'someone@yandex',
-      taked : 'testing@mail.tech'
+      taked : userForm.email
     }
 
     test('register::invalid', async () => {
@@ -139,3 +60,90 @@ describe('api::auth', () => {
 
 })
 
+describe('api::database', () => {
+
+  let userName = `TESTING 00${ Math.trunc(10 * Math.random()) }`;
+  let userAccount: form.loginPass; 
+
+  beforeAll(async () => {
+    
+    const response = await auth.login(userForm.email, userForm.password);
+
+    if ( typeof response === 'string' ) throw Error(response);
+
+    userAccount = response;
+
+  })
+
+  afterAll(() => auth.logout());
+
+  test.concurrent('database::get', async () => {
+
+    const POSTS_LIMIT: number = 1;
+
+    const response: utils.asIterableObject<Post.struct> = await database.get('Posts', { limit: POSTS_LIMIT });
+
+    const Posts: Array<Post.struct> = Object.values(response);
+
+    expect(Posts).toHaveLength(POSTS_LIMIT);
+
+  })
+
+  test.concurrent('database::length', async () => {
+
+    const postLength = await database.getLength('Posts');
+
+    expect(postLength).toBeTypeOf('number');
+
+  })
+
+  test.concurrent('database::remove', async () => {
+
+    const response = await database.remove('App/__SELF_KEY__')
+
+    typeof response === 'string'
+      ? expect(response).toBe(database.error.denied)
+      : expect.fail('write permissions in a mess')
+
+  })
+
+  test.concurrent('database::update', async () => {
+
+    const { uid } = userAccount;
+    
+    // Check restricted writes
+      const invalidWrite = await database.update('App', { __SELF_KEY__: userName });
+      
+      typeof invalidWrite === 'string'
+        ? expect(invalidWrite).toBe(database.error.denied)
+        : expect.fail('write permissions in a mess')
+
+    // Check valid writes  
+      const validWrite = await database.update(`Users/${ uid }/state`, { UserName: userName } as Partial<User.state>);
+
+      typeof validWrite === 'boolean'
+        ? expect(validWrite).toBe(true)
+        : expect.fail('write permissions in a mess')
+
+    // Check writes
+      expect(await database.get(`Users/${ uid }/state/UserName`))
+        .toBe(userName);
+      expect(await database.get(`App/__SELF_KEY__`))
+        .not
+        .toBe(userName);
+
+  })
+
+})
+
+describe.todo('api::storage', () => {
+
+  test.concurrent.todo('storage::set');
+  
+  test.concurrent.todo('storage::get');
+
+  test.concurrent.todo('storage::update');
+
+  test.concurrent.todo('storage::remove');
+
+});

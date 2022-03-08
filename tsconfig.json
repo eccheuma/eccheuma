@@ -21,6 +21,7 @@
     "resolveJsonModule": true,
     "paths": {
       "~/*": ["source/*"],
+      "path::root/*": ["./*"],
     },
     "types": [
       "vue/types",

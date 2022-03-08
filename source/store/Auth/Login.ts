@@ -49,12 +49,12 @@ import type { ActionTree, MutationTree } from 'vuex'
 
 				const { uid, email } = response;
 
-				const userData: SessionState['CurentUser'] = { uid, email: email || String() }
+				const userData: SessionState['CurentUser'] = { uid, email }
 				
 				vuex.commit('Auth/Session/setUserState', userData, { root: true })
 
 				// Загрузка стейта пользователя из Firebase
-				const userState: User.state = await database.get(`Users/${ uid }/state`)
+				const userState: User.state = await database.get(`Users/${ uid }/state`);
 
 				vuex.commit('User/State/setUserState', userState, { root: true });
 

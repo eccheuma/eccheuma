@@ -1,6 +1,9 @@
 import { defineConfig } from 'vitest/dist/config.js';
+import { config as configEnviroment } from 'dotenv';
 
 import path from 'path';
+
+configEnviroment();
 
 export default defineConfig({
   test: {
@@ -11,7 +14,8 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      '~': path.resolve(__dirname, './source')
+      '~': path.resolve(__dirname, './source'),
+      'path::root': path.resolve(__dirname, '.')
     }
   },
   clearScreen: true,
