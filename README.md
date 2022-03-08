@@ -1,8 +1,8 @@
 # Eccheuma
 
-![eccheuma-header](https://unfruhyobjypfbvnncoc.supabase.in/storage/v1/object/public/main/GitHubBadge.png)
+![eccheuma-header](https://unfruhyobjypfbvnncoc.supabase.in/storage/v1/object/public/main/GitHubBadge.svg)
 
-[![Run tests](https://github.com/Scarlatum/eccheuma/actions/workflows/node.test.yml/badge.svg)](https://github.com/Scarlatum/eccheuma/actions/workflows/node.test.yml)
+<!-- [![Run tests](https://github.com/Scarlatum/eccheuma/actions/workflows/node.test.yml/badge.svg)](https://github.com/Scarlatum/eccheuma/actions/workflows/node.test.yml) -->
 [![CodeQL](https://github.com/Scarlatum/eccheuma/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/Scarlatum/eccheuma/actions/workflows/codeql-analysis.yml)
 
 [pixi-logo]: https://avatars.githubusercontent.com/u/5406849?s=100&v=4
