@@ -1,6 +1,6 @@
 # Eccheuma
 
-![eccheuma-header](https://firebasestorage.googleapis.com/v0/b/escapefrommordorland.appspot.com/o/GitHubBadge.png?alt=media&token=c9422647-a7f1-4d49-bf2a-88bf185b37a9)
+![eccheuma-header](https://unfruhyobjypfbvnncoc.supabase.in/storage/v1/object/public/main/GitHubBadge.png)
 
 [![Run tests](https://github.com/Scarlatum/eccheuma/actions/workflows/node.test.yml/badge.svg)](https://github.com/Scarlatum/eccheuma/actions/workflows/node.test.yml)
 [![CodeQL](https://github.com/Scarlatum/eccheuma/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/Scarlatum/eccheuma/actions/workflows/codeql-analysis.yml)
