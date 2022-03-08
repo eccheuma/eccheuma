@@ -10,6 +10,8 @@
 [firebase-logo]: https://avatars.githubusercontent.com/u/1335026?s=100&v=4
 [nuxt-logo]: https://avatars.githubusercontent.com/u/23360933?s=100&v=4
 
+![Metrics](https://metrics.lecoq.io/Scarlatum)
+
 ## Технологии:
 
 ### Фронтенд
