@@ -1,20 +1,26 @@
+name: Metrics
 on:
-    pull_request:
-        branches:
-        - main
-    schedule:
-        - cron: "0 2 * * 1-5"
-
+  # Schedule updates (each hour)
+  schedule: [{cron: "0 * * * *"}]
+  # Lines below let you run workflow manually and on each commit
+  workflow_dispatch:
+  push: {branches: ["master", "main"]}
 jobs:
- generate_metrics:
-  name: Succint report
-  uses: lowlighter/metrics@latest
-  with:
-    filename: metrics.plugin.pagespeed.svg
-    token: NOT_NEEDED
-    base: ""
-    plugin_pagespeed: yes
-    plugin_pagespeed_screenshot: no
-    plugin_pagespeed_detailed: yes
-    plugin_pagespeed_token: AIzaSyB-jcsA7jYelMnx0gwxIKrfTqfABOVuGC0
-    plugin_pagespeed_url: https://eccheuma.vercel.app/
+  github-metrics:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: lowlighter/metrics@latest
+        with:
+          # Current configuration doesn't require a GitHub token
+          token: NOT_NEEDED
+
+          # Options
+          user: Scarlatum
+          template: classic
+          base: ""
+          config_timezone: Asia/Irkutsk
+          plugin_pagespeed: yes
+          plugin_pagespeed_detailed: yes
+          plugin_pagespeed_url: https://eccheuma.vercel.app/
+          plugin_pagespeed_token: AIzaSyB-jcsA7jYelMnx0gwxIKrfTqfABOVuGC0
+
