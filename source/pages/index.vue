@@ -186,9 +186,14 @@
 			}
 
 			.active {
-				color: rgb(var(--color-mono-200)) !important;
+
 				background-color: rgb(var(--color-mono-900)) !important;
 				animation: Mute 1s infinite alternate;
+
+				i {
+					fill: rgb(var(--color-mono-300)) !important;
+				}
+
 				@keyframes Mute {
 					0% {
 						transform: scale(0.85);
@@ -197,6 +202,7 @@
 						transform: scale(1);
 					}
 				}
+
 			}
 
 		}
@@ -327,13 +333,17 @@
 				font-size: var(--font-size-16);
 				color: rgb(var(--color-mono-400));
 				text-decoration: underline;
-				transition-duration: 500ms;
 				display: flex;
+
+		    justify-content: center;
+		    align-items: flex-end;
+
+				transition-duration: 250ms;
 
 				i {
 					margin: 0 4px;
-					transition-duration: 500ms;
 					fill: rgb(var(--color-mono-400));
+					transition-duration: 125ms;
 				}
 
 				&:hover {
@@ -398,9 +408,10 @@
 				],
 
 				Links: [
-					{ link: 'https://vk.com/club158755478', icon: 'VK', 				title: 'ВКонтакте' 	},
-					{ link: 'https://facebook.com', 				icon: 'Facebook', 	title: 'FaceBook' 	},
-					{ link: 'https://telegramm.com', 				icon: 'Telegramm', 	title: 'Telegramm' 	},
+					{ link: 'https://vk.com/club158755478', icon: 'VK', title: 'ВКонтакте'},
+					{ link: 'https://github.com/Scarlatum', icon: 'URL', title: 'GitHub' },
+					// { link: 'https://facebook.com', 				icon: 'Facebook', 	title: 'FaceBook' 	},
+					// { link: 'https://telegramm.com', 				icon: 'Telegramm', 	title: 'Telegramm' 	},
 				],
 			
 				HollVolume: 0,
@@ -440,8 +451,8 @@
 				file: 'Holl',
 				name: 'Ambient',
 				settings: { 
-					rate: .45, 
-					volume: 1, 
+					rate: 1, 
+					volume: .25, 
 					loop: true,
 				},
 			}])

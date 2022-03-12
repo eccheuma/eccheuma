@@ -16,7 +16,7 @@ export namespace utils {
   export namespace enums {
 
     // Так как обычный реверсивный маппинг енамов не даёт типов, приходится пользоваться жуткими обёртками.
-    // Для примера enum[enum] вернёт строку, хотя, по идее, он должен вернуть ключ этого enum'а.
+    // Для примера enum[enum] вернёт строку, хотя, по идее, он должен вернуть тип по ключю этого enum'а.
     export function toString<E, K extends number>(enumLike: E, key: K) {
       return (enumLike as unknown as {[ index: number ]: keyof E })[key];
     }
@@ -25,7 +25,7 @@ export namespace utils {
 
   export type asIterableObject<Struct extends object> = {[ index: string ]: Struct };
 
-  export function getExtension(filename: string ): string | Error {
+  export function getExtension(filename: string): string | Error {
 
     const result = new RegExp('.*(avif|png|jpe?g|webp)').exec(filename); 
 
@@ -56,7 +56,5 @@ export namespace utils {
   {
     return Math.random().toString(36).slice(-9).toUpperCase()
   }
-
-  
 
 }

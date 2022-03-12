@@ -229,8 +229,8 @@ $TransitionDuration: 250ms;
 			} as PropOptions< NAV_ITEM[] >,
 		},
 		computed: {
-			curentRoute(): navigation.routes {
-				return this.$route.path as navigation.routes
+			curentRoute(): string {
+				return this.$route.path
 			},
 		},
 		created() {
@@ -250,15 +250,6 @@ $TransitionDuration: 250ms;
 				component.$el.addEventListener('click', 			() => this.playSound(this.Sounds.get('Element::Action')))
 			})
 
-		},
-		methods: {
-			GoRouterTo(path: navigation.routes) {
-
-				if ( this.$route.path !== path ) {
-					this.$router.push({ path })
-				}
-
-			},
 		},
 	})
 
