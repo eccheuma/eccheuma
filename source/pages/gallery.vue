@@ -55,6 +55,10 @@
 
 			<pagination :payload="PaginationParams" />
 
+			<span class="gallery-notion">
+				Aptly at my purple gently dreaming on out what ghost burden. He craven here mystery doubtless evilprophet pallas guessing and linking, evermore then tell angels have this a agreeing all, above tis rare be this and it me, my unbrokenquit it and no flirt curtain.
+			<span>
+
 		</section>
 
 	</main>
@@ -122,8 +126,16 @@
 		display: grid;
 		row-gap: 2vh;
 
-		padding: 0 2vw 10vh;
+		padding: 0 2vw 2vh;
 
+	}
+
+	&-notion {
+		width: 114ch;
+    margin: 0 auto;
+    text-align: center;
+    font-size: var(--font-size-12);
+    color: rgb(var(--color-mono-500));
 	}
 
 }
