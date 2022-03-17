@@ -81,7 +81,7 @@ describe('api::database', () => {
 
     const POSTS_LIMIT: number = 1;
 
-    const response: utils.asIterableObject<Post.struct> = await database.get('Posts', { limit: POSTS_LIMIT });
+    const response: utils.types.asIterableObject<Post.struct> = await database.get('Posts', { limit: POSTS_LIMIT });
 
     const Posts: Array<Post.struct> = Object.values(response);
 

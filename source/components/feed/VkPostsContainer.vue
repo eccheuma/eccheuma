@@ -326,7 +326,8 @@
 
         EccheumaAvatar: require('~/assets/images/GroupAvatar.jpg').src as string,
 
-        Posts: [] as POST[],
+        Posts: [] as Array<POST>,
+
       }
     },
     created() {
@@ -340,6 +341,7 @@
     },
     methods: {
 
+      // TODO | Использовать внутренние утилиты для работы с хранилищем.
       async checkPosts(SERVER_HASH: string) {
 
         const LOCAL_HASH = window.localStorage.getItem('VK_HASH');
@@ -360,28 +362,22 @@
 
       },
 
-      async getPosts() {
+      async getPosts(): Promise<Array<POST>> {
 
-        return await new Promise<POST[]>((resolve) => {
+        const response = await database.get<utils.types.asIterableObject<VK_POST>>('VkPosts');
 
-          database.get<utils.asIterableObject<VK_POST>>('VkPosts').then((response) => {
-            resolve(Object.values(response).map(item => {
-
-              return {
-                thumb: item.attachments[0].photo.sizes[4].url,
-                body: item.text,
-                date: utils.getLocalTime(Number(`${ item.date + '000' }`)),
-                link: `https://vk.com/club${ Math.abs(item.from_id) }?w=wall${ item.from_id }_${ item.id }`,
-                social: {
-                  likes: item.likes.count,
-                  comments: item.comments.count,
-                  reposts: item.reposts.count,
-                }
-              }
-
-            }));
-          })
-
+        return Array.from(Object.values(response), post => {
+          return {
+            thumb: post.attachments[0].photo.sizes[4].url,
+            body: post.text,
+            date: utils.getLocalTime(Number(`${ post.date + '000' }`)),
+            link: `https://vk.com/club${ Math.abs(post.from_id) }?w=wall${ post.from_id }_${ post.id }`,
+            social: {
+              likes     : post.likes.count,
+              comments  : post.comments.count,
+              reposts   : post.reposts.count,
+            }
+          }
         })
 
       }

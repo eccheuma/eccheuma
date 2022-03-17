@@ -11,6 +11,9 @@ export namespace Image {
 	export enum allowedFormats {
 		avif,
 		webp,
+		jpg,
+		jpeg,
+		png,
 	}
 
 	export function matchSize(size: number): sizes {

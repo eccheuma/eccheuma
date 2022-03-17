@@ -3,6 +3,8 @@ export type LocaleDate = {
   Time: string
 }
 
+export type Hash = utils.types.nominal<string,'__HASH__'>;
+
 export namespace utils {
 
   export namespace object {
@@ -23,15 +25,48 @@ export namespace utils {
 
   }
 
-  export type asIterableObject<Struct extends object> = {[ index: string ]: Struct };
+  export namespace types {
 
-  export function getExtension(filename: string): string | Error {
+    export type nominal<Type, Key extends string> = Type & {[ Symbol.species ]: Key }
 
-    const result = new RegExp('.*(avif|png|jpe?g|webp)').exec(filename); 
+    export type asIterableObject<Struct extends object> = {[ index: string ]: Struct };
 
-    if ( !result ) return new Error('requested format is not allowed')
+  }
 
-    return result[1];
+  export namespace extension {
+
+    // const regular = new RegExp('.+.(avif|png|jpe?g|webp)')
+
+    export const enum error {
+      extension = 'requested format is not allowed',
+      name      = 'bad file naming',
+      dot       = 'dot'
+    }
+
+    export function define(filename: string, extensions: Array<string>): string | Error {
+
+      const splited = filename.split('.');
+
+      switch (splited.length) {
+        case 0: 
+          return new Error(error.name);
+        case 1: 
+          return new Error(error.name);
+        case 2: 
+          break;
+        default: 
+          if ( splited.length > 2 ) return Error(error.dot);
+      }
+
+      const [ _name, ext ] = splited.filter(x => x.length);
+
+      if ( !ext ) return Error(error.name);
+
+      return extensions.some(x => x === ext )
+        ? ext
+        : new Error(error.extension);
+
+    }
 
   }
 
@@ -52,9 +87,9 @@ export namespace utils {
 
   }
 
-  export function hashGenerator(): string 
+  export function hashGenerator(): Hash 
   {
-    return Math.random().toString(36).slice(-9).toUpperCase()
+    return Math.random().toString(36).slice(-9).toUpperCase() as Hash
   }
 
 }

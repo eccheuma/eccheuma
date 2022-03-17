@@ -409,7 +409,7 @@
 
 			async GetPosts() {
 
-				const POSTS: utils.asIterableObject<Post.struct> = await database.get('Posts', { limit: Ranges.posts })
+				const POSTS: utils.types.asIterableObject<Post.struct> = await database.get('Posts', { limit: Ranges.posts })
 
 				const formatedSlides = Object
 					.values(POSTS)
