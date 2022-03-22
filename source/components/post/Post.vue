@@ -533,7 +533,7 @@
 			display: inline-grid;
 			row-gap: 2vh;
 
-			transform: translateY(calc((#{ $iconSize } - 10vh) - ($iconSize / 2)));
+			transform: translateY(calc((#{ $iconSize } - 10vh) - (#{ $iconSize } / 2)));
 
 			justify: {
 				self: end;
@@ -803,7 +803,7 @@
 	type SECTIONS = 'Likes' | 'Comments' | 'Content'
 
 	// IMAGE PLACEHOLDER
-	const PLACEHOLDER: Image.formatsStruct = {
+	const PLACEHOLDER: Pick<Image.formatsStruct, 'avif' | 'webp'> = {
 		avif: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=avif').src,
 		webp: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src
 	}

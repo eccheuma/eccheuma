@@ -34,15 +34,15 @@ import { ActionTree, MutationTree } from 'vuex'
 // ACTIONS
 	export const actions: ActionTree<CurentState, CurentState> = {
 
-		getImageURL(_vuex, params: { path: string, size: number }): Image.formatsStruct {
+		getImageURL(_vuex, params: { path: string, size: number }): Pick<Image.formatsStruct, 'avif' | 'webp'> {
 
-			const imageFormats: Array<keyof typeof Image.allowedFormats> = ['webp', 'avif'];
+			const imageFormats: Array<'webp' | 'avif'> = ['webp', 'avif'];
 	
 			const matchedSize = Image.matchSize(params.size);
 			
-			const imageStruct: Image.formatsStruct = {
+			const imageStruct: Pick<Image.formatsStruct, 'avif' | 'webp'> = {
 				avif: String(),
-				webp: String()
+				webp: String(),
 			};
 
 			imageFormats.forEach(format => {

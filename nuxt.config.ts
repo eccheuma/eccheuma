@@ -105,7 +105,7 @@
 
       ['@nuxtjs/style-resources', {
         scss: [
-          '~/assets/styles/scss/_uses.scss',
+          '~/assets/styles/scss/libraries.scss',
           '~/assets/styles/scss/_mixins.scss',
           '~/assets/styles/scss/_variables.scss',
         ]

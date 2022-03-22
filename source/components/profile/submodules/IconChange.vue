@@ -222,7 +222,7 @@
 				this.Loading = loadStatus.start;
 				this.NewIcon = String();
 
-				const EXTENSION = utils.extension.define(value);
+				const EXTENSION = utils.extension.define(value, ['png', 'jpg', 'webp']);
 
 				if ( typeof EXTENSION !== 'string' ) throw EXTENSION;
 

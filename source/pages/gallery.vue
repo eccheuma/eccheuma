@@ -57,7 +57,7 @@
 
 			<span class="gallery-notion">
 				Aptly at my purple gently dreaming on out what ghost burden. He craven here mystery doubtless evilprophet pallas guessing and linking, evermore then tell angels have this a agreeing all, above tis rare be this and it me, my unbrokenquit it and no flirt curtain.
-			<span>
+			</span>
 
 		</section>
 

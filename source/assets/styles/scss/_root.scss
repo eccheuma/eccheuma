@@ -1,5 +1,5 @@
-$mockup-viewport-vh: math.div(1080, 100);
-$mockup-viewport-vw: math.div(1980, 100);
+$mockup-viewport-vh: 108;
+$mockup-viewport-vw: 198;
 
 $accent-hsl-rotate: 30;
 
@@ -42,7 +42,15 @@ $accent-hsl-rotate: 30;
 	// Font sizes
 	@each $norm-size in 56,42,36,32,28,24,21,18,16,14,12,11,10 {
 
-		--size-#{ $norm-size }: #{ math.div(math.round(math.div($norm-size,$mockup-viewport-vh) * 100), 100) }vh;
+
+		// math.div(
+		// 	math.round(
+		// 		math.div($norm-size,$mockup-viewport-vh) 
+		// 	* 100), 
+		// 100) }vh;
+
+
+		--size-#{ $norm-size }: calc(#{ $norm-size }px * .725);
 		--font-size-#{ $norm-size }: var(--size-#{ $norm-size });
 		
 	}
@@ -56,8 +64,8 @@ $accent-hsl-rotate: 30;
 	--accent: var(--color-accent-edges-200);
 
 	// CRUSORIS
-	--crusoris-circle-color: var(--color-accent-edges-200);
-	--crusoris-dot-color: var(--color-accent-lighting);
-	--crusoris-transition-duration: 250ms;
+	--crusoris-color-tail: var(--color-accent-edges-200);
+	--crusoris-color-dot: var(--color-accent-lighting);
+	--crusoris-color-accent: var(--color-accent-edges-200);
 
 }

@@ -34,7 +34,7 @@
 
 		&-track {
 			background-color: var(--color-accent-edges-100);
-			border-inline: math.div(($w - $line-w),2) solid rgb(var(--color-mono-200));
+			border-inline: 0.45vw solid rgb(var(--color-mono-200));
 		}
 		&-thumb {
 

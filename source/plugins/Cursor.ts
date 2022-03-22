@@ -1,5 +1,8 @@
-import Crusoris from '@eccheuma/crusoris';
+import crusoris from '@eccheuma/crusoris';
+import { Context } from '@nuxt/types';
 
-import '@eccheuma/crusoris/styles/index.css'
-
-new Crusoris(document.body).init();
+export default (nuxt: Context) => {
+	if ( process.browser ) {
+		crusoris({ dist: true, styles: true })
+	}
+}
