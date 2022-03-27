@@ -87,9 +87,18 @@ export namespace utils {
 
   }
 
-  export function hashGenerator(): Hash 
+  export function hashGenerator(length: number = 12): Hash 
   {
-    return Math.random().toString(36).slice(-9).toUpperCase() as Hash
+
+    const randomChar = () => Math.floor(36 * Math.random()).toString(36);
+
+    return Array<string>(length)
+      .fill(String()) 
+      .map(randomChar)
+      .reduce((acc, cur) => {
+        return acc + cur.toUpperCase()
+      }, '') as Hash;
+
   }
 
 }

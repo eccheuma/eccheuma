@@ -1,9 +1,13 @@
 import { Context } from '@nuxt/types'
 
-import firebase from 'firebase/app'
+import { initializeApp, getApps, FirebaseApp } from 'firebase/app';
+import { getDatabase, Database } from 'firebase/database';
+import { getAuth, Auth } from 'firebase/auth';
 
 declare global {
-	var firebaseClient: firebase.app.App
+	var firebaseClient: FirebaseApp;
+	var firebaseDB: Database;
+	var firebaseAuth: Auth;
 }
 
 export default (context?: Context) => {
@@ -19,8 +23,10 @@ export default (context?: Context) => {
 		measurementId			: 'G-W49JBK6546',
 	};
 	
-	if ( !firebase.apps.length ) {
-		globalThis.firebaseClient = firebase.initializeApp(CLIENT_CONFIG);
+	if ( !getApps().length ) {
+		globalThis.firebaseClient = initializeApp(CLIENT_CONFIG);
+		globalThis.firebaseDB 		= getDatabase(globalThis.firebaseClient);
+		globalThis.firebaseAuth		= getAuth(globalThis.firebaseClient);
 	}
 
 }

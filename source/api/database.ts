@@ -1,6 +1,14 @@
-// FIREBASE
-import firebase from 'firebase/app';
-import 'firebase/database';
+import { ref, 
+  get as firebaseGet, 
+  set as firebaseSet, 
+  remove as firebaseRemove, 
+  update as firebaseUpdate,
+} from 'firebase/database';
+
+import { onValue, onChildChanged  } from 'firebase/database';
+import { query, startAt, endAt, limitToFirst } from 'firebase/database';
+
+import type { DatabaseReference, EventType, Query, QueryConstraint } from 'firebase/database';
 
 // TYPES
 type GetParams = {
@@ -11,18 +19,18 @@ type GetParams = {
 }
 
 // INNER FUNCTIONS
-function defineQuery(ref: firebase.database.Query, params: Partial<GetParams>): firebase.database.Query | undefined {
+function defineQuery(ref: DatabaseReference, params: Partial<GetParams>): Query {
 
-  let QUERY
+  let QUERY = Array<QueryConstraint>();
 
   if ( params?.start ) 
-    QUERY = ref.startAt(params.start);
+    QUERY.push(startAt(params.start));
   if ( params?.end )
-    QUERY = ref.endAt(params.end);
+    QUERY.push(endAt(params.end));
   if ( params?.limit )
-    QUERY = ref.limitToFirst(params.limit);
+    QUERY.push(limitToFirst(params.limit));
 
-  return QUERY;
+  return query(ref, ...QUERY);
 
 }
 
@@ -35,61 +43,81 @@ export namespace database {
 
   export function get<T extends object | string>(path: string, params?: Partial<GetParams>): Promise<T> {
 
-    const REF = firebase.database().ref(path);
-  
-    let QUERY;
-  
-    if ( params ) QUERY = defineQuery(REF, params)
-  
-    return (QUERY || REF).once('value').then(data => data.val());
+    const REF = ref(globalThis.firebaseDB, path);
+
+    let getQuery: Query = query(REF);
+
+    if ( params ) getQuery = defineQuery(REF, params);
+
+    return firebaseGet(getQuery).then(snap => snap.val());
   
   }
   
   export function listen<C extends object | any>(path: string, callback: (value: C) => any, params?: Partial<GetParams>) {
   
-    const REF = firebase.database().ref(path);
+    const REF = ref(globalThis.firebaseDB, path);
   
-    let QUERY;
+    let getQuery: Query = query(REF);
   
-    if ( params ) QUERY = defineQuery(REF, params);
+    if ( params ) getQuery = defineQuery(REF, params);
 
-    const databaseEvent: firebase.database.EventType = params?.change 
+    const databaseEvent: EventType = params?.change 
       ? 'child_changed' 
       : 'value';
-  
-    (QUERY || REF).on(databaseEvent, data => {
-      callback(data.val());
-    })
+
+    switch (databaseEvent) {
+
+      case 'child_changed':
+        onChildChanged(getQuery, snap  => callback(snap.val())); break;
+
+      case 'value': 
+        onValue(getQuery, snap => callback(snap.val())); break;
+      
+    }
   
   }
   
   export function getLength(path: string): Promise<number> {
-    return firebase.database().ref(path).once('value').then(data => data.numChildren());
+
+    const Query: Query = query(ref(globalThis.firebaseDB, path));
+
+    return firebaseGet(Query).then(snap => snap.size);
+
   }
   
   export async function set(path: string, data: any): Promise<Error | boolean> {
   
     return new Promise((res, rej) => {
-      firebase.database().ref(path).set(data, error => error ? rej(error) : res(true));
+
+      const REF = ref(globalThis.firebaseDB, path);
+
+      try {
+        
+        firebaseSet(REF, data); res(true);
+
+      } catch (error) {
+
+        rej(error);
+
+      }
+
     })
     
   }
   
   export function remove(path: string): Promise<error | boolean> {
 
-    return firebase.database().ref(path)
-      .remove()
+    return firebaseRemove(ref(globalThis.firebaseDB, path))
       .then(() => true)
-      .catch(e => e.code as error)
+      .catch(e => e.code as error);
 
   }
   
   export function update(path: string, data: any): Promise<error | boolean> {
 
-    return firebase.database().ref(path)
-      .update(data)
+    return firebaseUpdate(ref(globalThis.firebaseDB, path), data)
       .then(() => true)
-      .catch(e => e.code as error)
+      .catch(e => e.code as error);
 
   }
 

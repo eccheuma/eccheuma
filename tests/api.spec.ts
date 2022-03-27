@@ -99,7 +99,7 @@ describe('api::database', () => {
 
   test.concurrent('database::remove', async () => {
 
-    const response = await database.remove('App/__SELF_KEY__')
+    const response = await database.remove('App/__SELF_KEY__');
 
     typeof response === 'string'
       ? expect(response).toBe(database.error.denied)
