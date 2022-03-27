@@ -162,3 +162,19 @@ describe('utils::meta', () => {
 
 }) 
 
+describe('utils::hash', () => {
+
+  test('hash::generate', () => {
+
+    const LENGTH = 24;
+
+    const Hash = utils.hashGenerator(LENGTH);
+
+    console.log(Hash);
+
+    expect(Hash.length).toBe(LENGTH);
+
+  })
+
+})
+
