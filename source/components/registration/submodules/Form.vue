@@ -157,7 +157,7 @@
 
   // VUEX
 	import { mapState, mapMutations } from 'vuex'
-	import type { VuexMap } from '~/typescript/VuexMap'
+	import type { VuexMap } from '~/types/VuexMap'
 
   // MIXINS
 	import EmitSound from '~/assets/mixins/EmitSound'

@@ -127,8 +127,8 @@
   import Icon from '~/components/common/Icon.vue'
 
   // TYPE | INTERFACES | NAMESPACES
-  import { Message }  from '~/typescript/Message';
-  import { User }     from '~/typescript/User'
+  import { Message }  from '~/types/Message';
+  import { User }     from '~/types/User'
 
   // MODULE
   export default Vue.extend({

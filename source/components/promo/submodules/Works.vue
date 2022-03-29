@@ -93,8 +93,8 @@ import { database } from '~/api/database'
 import EmitSound from '~/assets/mixins/EmitSound'
 
 // Namespaces
-import { Portfolio } from '~/typescript/Portfolio'
-import { Workcase  } from '~/typescript/WorkCase'
+import { Portfolio } from '~/types/Portfolio'
+import { Workcase  } from '~/types/WorkCase'
 
 export default Vue.extend({
 	components: {

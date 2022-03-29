@@ -97,9 +97,6 @@
 
 	import Vue from 'vue'
 
-	// MIXINS
-	import TransitionSound from '~/assets/mixins/TransitionSound';
-
 	// COMPONENTS
 	import SectionHeader 		from '~/components/common/SectionHeader.vue'
 	import ServiceCard 			from '~/components/service/ServiceCard.vue'
@@ -107,7 +104,7 @@
 	// import Calculator				from '~/components/service/Calculator.vue'
 
 	// TYPES 
-	import type { Categories, Purchase } from '~/typescript/Services'
+	import type { Categories, Purchase } from '~/types/Services'
 
 	interface CardStruct extends Purchase.Description {
 		category : Categories,
@@ -133,7 +130,6 @@
 			PromoBanner,
 			// Calculator,
 		}, 
-		mixins: [ TransitionSound ],
 		layout: 'Application',
 		scrollToTop: false,  
 		transition: 'opacity-transition',

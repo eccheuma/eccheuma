@@ -131,8 +131,8 @@
       extend(config, { isClient }) {
         if ( isClient ) {
           config.entry = {
-            pixi: 'pixi.js',
-            firebase: 'firebase/database',
+            // pixi: 'pixi.js',
+            // firebase: 'firebase/database',
           }
         }
       },

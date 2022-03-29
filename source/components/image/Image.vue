@@ -278,10 +278,10 @@
 	import { utils } from '~/utils'
 
 	// TYPES
-	import { Image } from '~/typescript/Image'
+	import { Image } from '~/types/Image'
 
 	// VUEX MAP
-	import type { VuexMap } from '~/typescript/VuexMap'
+	import type { VuexMap } from '~/types/VuexMap'
 
 	// COMPONENTS
 	import Icon 			from '~/components/common/Icon.vue';

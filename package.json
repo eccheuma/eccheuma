@@ -3,14 +3,16 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
+  "author": {
+    "name": "Alexey Skurlatov",
+    "email": "Scarlatum@yandex.ru"
+  },
   "scripts": {
-    "dev": "nuxt dev",
-    "test": "vitest --config vitest.config.ts",
-    "build": "npm run test && nuxt build",
-    "generate": "npm run test && nuxt generate",
-    "test::watch": "vitest --watch --config vitest.config.ts",
-    "lint:js": "eslint --ext \".ts,.vue\"",
-    "lint": "npm run lint:js"
+    "nuxt::dev": "nuxt dev",
+    "nuxt::test": "vitest --config vitest.config.ts",
+    "nuxt::build": "npm run test && nuxt build",
+    "nuxt::generate": "npm run test && nuxt generate",
+    "test::watch": "vitest --watch --config vitest.config.ts"
   },
   "dependencies": {
     "@eccheuma/crusoris": "^1.1.16",
@@ -19,7 +21,7 @@
     "animejs": "3.2.1",
     "bootstrap": "4.6.0",
     "core-js": "3.17.2",
-    "firebase": "9.5",
+    "firebase": "9.6.7",
     "howler": "2.2.3",
     "mobile-device-detect": "0.4.3",
     "nuxt": "2.15.8",

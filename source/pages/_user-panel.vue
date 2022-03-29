@@ -22,7 +22,7 @@
 
 	import { mapMutations } from 'vuex'
 
-	import type { VuexMap } from '~/typescript/VuexMap'
+	import type { VuexMap } from '~/types/VuexMap'
 
 	import UserProfile from '~/components/profile/Profile.vue'
 	

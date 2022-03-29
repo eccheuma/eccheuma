@@ -20,7 +20,7 @@
           <img :src="post.thumb" alt="">
           <hr v-once>
           <p>
-            {{ post.body }}
+            {{ cutText(post.body, 75) }} ...
           </p>
           <hr v-once>
           <common-button :link="post.link" target="_blank" type="a">
@@ -144,6 +144,9 @@
         size: var(--font-size-18);
         family: var(--read-font);
       }
+
+      letter-spacing: .1ch;
+
     }
 
     hr {
@@ -237,16 +240,13 @@
           padding: 2vh 4vw;
         }
 
+        padding: 2vh 1vw;
+
         font: {
-          size: var(--font-size-21);
+          size: var(--font-size-18);
         }
 
         -webkit-box-orient: vertical;
-
-        -webkit-line-clamp: 13;
-        @media screen and ( max-width: $mobile-breakpoint ) {
-          -webkit-line-clamp: unset;
-        }
 
       }
 
@@ -380,6 +380,10 @@
           }
         })
 
+      },
+
+      cutText(text: string, words: number) {
+        return utils.cutText(text, words);
       }
 
     }

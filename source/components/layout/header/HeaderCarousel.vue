@@ -341,10 +341,10 @@
 		import { Ranges } from '~/config/LoadPolitic'
 
 	// TYPES
-		import type { Image } from '~/typescript/Image';
-		import type { Post } 	from '~/typescript/Post';
+		import type { Image } from '~/types/Image';
+		import type { Post } 	from '~/types/Post';
 
-		import type { VuexMap } from '~/typescript/VuexMap';
+		import type { VuexMap } from '~/types/VuexMap';
 
 		type HeaderSlide = {
 			content: Pick<Post.struct, 'title' | 'description' | 'ID' | 'tags'>
@@ -409,7 +409,7 @@
 
 			async GetPosts() {
 
-				const POSTS: utils.types.asIterableObject<Post.struct> = await database.get('Posts', { limit: Ranges.posts })
+				const POSTS: utils.types.asIterableObject<Post.struct> = await database.get('Posts', { limit: Ranges.posts });
 
 				const formatedSlides = Object
 					.values(POSTS)

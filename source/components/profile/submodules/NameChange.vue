@@ -63,7 +63,7 @@
 	import { database } from '~/api/database';
 
 	// VUEX MODULE TYPE MAP
-	import type { VuexMap } 				from '~/typescript/VuexMap'
+	import type { VuexMap } 				from '~/types/VuexMap'
 
 	// MODULE
 	export default Vue.extend({

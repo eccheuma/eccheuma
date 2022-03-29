@@ -14,8 +14,8 @@ import { utils } from '~/utils'
 import { database } from '~/api/database';
 import { auth, form } from '~/api/auth';
 
-import { Post } from '~/typescript/Post';
-import { User } from '~/typescript/User';
+import { Post } from '~/types/Post';
+import { User } from '~/types/User';
 
 // TESTS
 describe('api::auth', () => {

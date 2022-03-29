@@ -8,8 +8,8 @@ import { ActionTree, MutationTree } from 'vuex'
 
 // INTERFACES & TYPES
 
-	import type { Post } 	from '~/typescript/Post'
-	import type { Image } from '~/typescript/Image'
+	import type { Post } 	from '~/types/Post'
+	import type { Image } from '~/types/Image'
 
 	type REFS = 'Posts' | 'Gallery';
 
@@ -37,7 +37,7 @@ import { ActionTree, MutationTree } from 'vuex'
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/typescript/VuexMap' {
+	declare module '~/types/VuexMap' {
 		interface VuexMap {
 			PageContent: CurentState
 		}

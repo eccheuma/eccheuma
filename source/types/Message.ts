@@ -1,4 +1,4 @@
-import { User } from '~/typescript/User'
+import { User } from '~/types/User'
 
 export namespace Message {
 

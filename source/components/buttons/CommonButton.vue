@@ -102,18 +102,17 @@
 
 <script lang="ts"> 
 
-	import Vue, { PropOptions } from 'vue'
+	import Vue from 'vue'
 
 	// MIXINS
 	import EmitSound      from '~/assets/mixins/EmitSound'
-	import HashGenerator  from '~/assets/mixins/HashGenerator'
 	
 	// MODULE
 	export default Vue.extend({
 		components: {
 			CursorVisual: 	() => import('~/components/common/CursorFX.vue'),
 		},
-		mixins: [ EmitSound, HashGenerator ],
+		mixins: [ EmitSound ],
 		props: {
 			type: {
 				type: String,

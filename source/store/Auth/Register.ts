@@ -9,12 +9,12 @@ import type { MutationTree, ActionTree } from 'vuex'
 	import { utils } from '~/utils';
 
 // TYPES
-	import type { VuexMap } from '~/typescript/VuexMap'
-	import type { Message } from '~/typescript/Message'
+	import type { VuexMap } from '~/types/VuexMap'
+	import type { Message } from '~/types/Message'
 
 // NAMESPACES
-	import { User } 		from '~/typescript/User'
-	import { Purchase } from '~/typescript/Services';
+	import { User } 		from '~/types/User'
+	import { Purchase } from '~/types/Services';
 
 // STATE
 	export const state = () => ({
@@ -25,7 +25,7 @@ import type { MutationTree, ActionTree } from 'vuex'
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/typescript/VuexMap' {
+	declare module '~/types/VuexMap' {
 		interface Auth {
 			Register: CurentState
 		}

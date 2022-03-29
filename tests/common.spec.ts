@@ -5,7 +5,7 @@ import { gpu } from '~/utils/gpu';
 import { utils } from '~/utils/index'
 
 // MODULES
-import { Image } from '~/typescript/Image';
+import { Image } from '~/types/Image';
 
 describe('images::helpers', () => {
 

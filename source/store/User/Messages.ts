@@ -8,8 +8,8 @@
 	import { database } from '~/api/database';
 
 // TYPES
-	import type { VuexMap } from '~/typescript/VuexMap'
-	import type { Message } from '~/typescript/Message'
+	import type { VuexMap } from '~/types/VuexMap'
+	import type { Message } from '~/types/Message'
 
 // STATE
 	export const state = () => ({
@@ -24,7 +24,7 @@
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/typescript/VuexMap' {
+	declare module '~/types/VuexMap' {
 		interface User {
 			Messages: CurentState
 		}

@@ -228,8 +228,8 @@
 	import CaptionCard 	from '~/components/common/Caption.vue'
 
 	// TYPES 
-	import type { Purchase } from '~/typescript/Services'
-	import type { VuexMap } from '~/typescript/VuexMap'
+	import type { Purchase } from '~/types/Services'
+	import type { VuexMap } from '~/types/VuexMap'
 
 	// MODULE
 	export default Vue.extend({

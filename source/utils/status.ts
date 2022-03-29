@@ -1,6 +1,6 @@
 // TYPES
-  import { Purchase } from '~/typescript/Services';
-  import { User }     from '~/typescript/User';
+  import { Purchase } from '~/types/Services';
+  import { User }     from '~/types/User';
 
 // TRANSLATES
   import { languages, getLocale } from '~/lang';

@@ -107,7 +107,7 @@ $h: 10vh;
 	import { mapState } from 'vuex'
 
 	// VUEX MAP
-	import type { VuexMap } from '~/typescript/VuexMap'
+	import type { VuexMap } from '~/types/VuexMap'
 
 	// UTILS
 	import { getLocale, languages, russian } from '~/lang'

@@ -101,4 +101,13 @@ export namespace utils {
 
   }
 
+  export function cutText(text: string, words: number = 45): string {
+
+    return text
+      .split(' ')
+      .slice(0, words)
+      .reduce((acc, cur) => `${ acc } ${ cur }`, String())
+
+  }
+
 }

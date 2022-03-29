@@ -6,8 +6,8 @@ import type { ActionTree, MutationTree } from 'vuex'
 
 // TYPES
 	import type { CurentState as SessionState } from '~/store/Auth/Session'
-	import type { VuexMap } 	from '~/typescript/VuexMap'
-	import type { User } from '~/typescript/User'
+	import type { VuexMap } 	from '~/types/VuexMap'
+	import type { User } from '~/types/User'
 
 // STATE
 	export const state = () => ({
@@ -18,7 +18,7 @@ import type { ActionTree, MutationTree } from 'vuex'
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/typescript/VuexMap' {
+	declare module '~/types/VuexMap' {
 		interface Auth {
 			Login: CurentState,
 		}
