@@ -103,7 +103,7 @@ main {
 		components: {
 			Pagination,
 			Auth,
-			VkPostsContainer: () => import('~/components/feed/VkPostsContainer.vue'),
+			VkPostsContainer: () => import('~/components/feed/Container.vue'),
 		},
 		mixins: [ TransitionProperty ],
 		layout: 'Application', 
