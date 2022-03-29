@@ -8,11 +8,11 @@
     "email": "Scarlatum@yandex.ru"
   },
   "scripts": {
-    "nuxt::dev": "nuxt dev",
-    "nuxt::test": "vitest --config vitest.config.ts",
-    "nuxt::build": "npm run test && nuxt build",
-    "nuxt::generate": "npm run test && nuxt generate",
-    "test::watch": "vitest --watch --config vitest.config.ts"
+    "nuxt::dev"     : "nuxt dev",
+    "nuxt::build"   : "npm run vitest::test && nuxt build",
+    "nuxt::generate": "npm run vitest::test && nuxt generate",
+    "vitest::test"  : "vitest --config vitest.config.ts",
+    "vitest::watch" : "vitest --config --watch vitest.config.ts"
   },
   "dependencies": {
     "@eccheuma/crusoris": "^1.1.16",
