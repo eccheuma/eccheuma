@@ -76,7 +76,6 @@ main {
 	import { database } from '~/api/database'
 
 // MIXINS
-	import TransitionSound 		from '~/assets/mixins/TransitionSound'
 	import TransitionProperty from '~/assets/mixins/PageTransitionProperty'
 
 // COMPONENTS
@@ -84,7 +83,7 @@ main {
 	import Auth 						from '~/components/auth/Auth.vue'
 
 // TYPES
-	import type { VuexMap } from '~/typescript/VuexMap'
+	import type { VuexMap } from '~/types/VuexMap'
 
 // LOAD POLITIC
 	import { Ranges } from '~/config/LoadPolitic'
@@ -106,7 +105,7 @@ main {
 			Auth,
 			VkPostsContainer: () => import('~/components/feed/VkPostsContainer.vue'),
 		},
-		mixins: [ TransitionSound, TransitionProperty ],
+		mixins: [ TransitionProperty ],
 		layout: 'Application', 
 		scrollToTop: false, 
 		data() {

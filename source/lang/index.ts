@@ -1,5 +1,5 @@
 
-import { navigation } from '~/typescript/Navigation';
+import { navigation } from '~/types/Navigation';
 
 export const enum languages {
   Russian = 'ru_RU',

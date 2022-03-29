@@ -4,7 +4,7 @@ import { ActionTree, MutationTree } from 'vuex'
 	import { storage, references } from '~/api/storage';
 
 // TYPES
-	import { Image } from '~/typescript/Image';
+	import { Image } from '~/types/Image';
 
 // UTILS
 	import { cache } from '~/utils/cache';
@@ -18,7 +18,7 @@ import { ActionTree, MutationTree } from 'vuex'
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/typescript/VuexMap' {
+	declare module '~/types/VuexMap' {
 		interface VuexMap {
 			Images: CurentState
 		}

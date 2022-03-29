@@ -6,11 +6,11 @@ import { user, work } from '~/utils/status'
 import { validate } from '~/utils/validate';
 import { Opengraph } from '~/utils/opengraph';
 
-import { User } from '~/typescript/User';
-import { Purchase } from '~/typescript/Services'
+import { User } from '~/types/User';
+import { Purchase } from '~/types/Services'
 import { utils } from '~/utils';
 import { Meta } from '~/utils/meta';
-import { navigation } from '~/typescript/Navigation';
+import { navigation } from '~/types/Navigation';
 
 // TESTS
 describe('utils::status', () => {

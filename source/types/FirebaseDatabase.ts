@@ -1,9 +1,9 @@
-import { Product, Purchase } from '~/typescript/Services';
-import { User } from '~/typescript/User';
-import { Image } from '~/typescript/Image' 
-import { Workcase } from '~/typescript/WorkCase'
-import { Message } from '~/typescript/Message'
-import { Post } from '~/typescript/Post'
+import { Product, Purchase } from '~/types/Services';
+import { User } from '~/types/User';
+import { Image } from '~/types/Image' 
+import { Workcase } from '~/types/WorkCase'
+import { Message } from '~/types/Message'
+import { Post } from '~/types/Post'
 
 // TYPES
   type HASH_LIKE = string;

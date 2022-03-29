@@ -127,7 +127,7 @@
 	import Vue, { PropOptions } from 'vue'
 
 	// TYPES
-	import type { Post } from '~/typescript/Post'
+	import type { Post } from '~/types/Post'
 
 	// MODULE
   export default Vue.extend({

@@ -34,7 +34,7 @@
 	import { mapState } from 'vuex';
 
 	// VUEX MAP
-	import { VuexMap } from '~/typescript/VuexMap';
+	import { VuexMap } from '~/types/VuexMap';
 
 	// UTILS
 	import { Meta } from '~/utils/meta';
@@ -43,9 +43,9 @@
 	import { database } from '~/api/database';
 
 	// TYPES
-	import { Workcase } from '~/typescript/WorkCase';
-	import { Portfolio } from '~/typescript/Portfolio';
-	import { navigation } from '~/typescript/Navigation';
+	import { Workcase } from '~/types/WorkCase';
+	import { Portfolio } from '~/types/Portfolio';
+	import { navigation } from '~/types/Navigation';
 
 	// MODULE
 	export default Vue.extend({

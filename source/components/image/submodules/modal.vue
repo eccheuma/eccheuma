@@ -193,7 +193,7 @@
 	import { mapActions } from 'vuex'
 	
 	// NAMESPACES
-	import { Image } from '~/typescript/Image'
+	import { Image } from '~/types/Image'
 
 	// VARIABLES
 	const PLACEHOLDER: Pick<Image.formatsStruct, 'avif' | 'webp'> = {

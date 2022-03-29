@@ -206,7 +206,7 @@
 
 // VUEX
 	import { mapState, mapMutations, mapActions } from 'vuex'
-	import type { VuexMap } from '~/typescript/VuexMap'
+	import type { VuexMap } from '~/types/VuexMap'
 
 // TYPES & INTERFACES & ENUMS
 	import { auth, form } from '~/api/auth';

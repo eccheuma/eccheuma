@@ -32,9 +32,9 @@ import * as AuthLoginStore    from '~/store/Auth/Login';
 import * as AuthLogoutStore   from '~/store/Auth/Logout'
 
 // TYPES
-import { Notification } from '~/typescript/Notification';
-import { Message } from '~/typescript/Message';
-import { Image } from '~/typescript/Image';
+import { Notification } from '~/types/Notification';
+import { Message } from '~/types/Message';
+import { Image } from '~/types/Image';
 
 // VIRTUAL STATE
 const virtualStore = new Vuex.Store({

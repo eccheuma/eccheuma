@@ -1,5 +1,5 @@
 import { languages, getLocale } from '~/lang';
-import { navigation } from '~/typescript/Navigation';
+import { navigation } from '~/types/Navigation';
 import { utils } from '~/utils';
 
 

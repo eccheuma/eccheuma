@@ -172,9 +172,9 @@
 	import TransitionWrapper 							from '~/components/functional/TransitionWrapper.vue';
 
 	// TYPES
-	import type { Notification } from '~/typescript/Notification'
+	import type { Notification } from '~/types/Notification'
 
-	import type { VuexMap } from '~/typescript/VuexMap'
+	import type { VuexMap } from '~/types/VuexMap'
 	
 	Vue.component('TransitionWrapper', TransitionWrapper)
 

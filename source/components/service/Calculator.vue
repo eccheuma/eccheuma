@@ -335,7 +335,7 @@
 	import { database } from '~/api/database'
 
 // TYPES
-	import type { Categories, Purchase } from '~/typescript/Services'
+	import type { Categories, Purchase } from '~/types/Services'
 
 // COMPONENTS 
 	import CaptionCard from '~/components/common/Caption.vue'

@@ -79,9 +79,7 @@ export namespace auth {
       };
 
     } catch (e: any) {
-
       return e?.code as auth.error;
-
     }
 
   }

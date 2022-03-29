@@ -791,14 +791,14 @@
 	// import NoiseFilter					from '~/components/filters/noise.vue'
 
 	// VUEX MODULE TYPE MAP
-	import type { VuexMap } from '~/typescript/VuexMap'
+	import type { VuexMap } from '~/types/VuexMap'
 
 	// NAMESPACES
-	import { Post } from '~/typescript/Post'
-	import { User } from '~/typescript/User'
+	import { Post } from '~/types/Post'
+	import { User } from '~/types/User'
 
 	// TYPES & INTERFACES
-	import type { Image } from '~/typescript/Image'
+	import type { Image } from '~/types/Image'
 
 	type SECTIONS = 'Likes' | 'Comments' | 'Content'
 

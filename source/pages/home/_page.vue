@@ -33,14 +33,14 @@
 	import { database } from '~/api/database';
 
 	// VUEX MODULE TYPE MAP
-	import type { VuexMap } from '~/typescript/VuexMap';
+	import type { VuexMap } from '~/types/VuexMap';
 
 	// MIXINS
 	import PageTransitionProperty 	from '~/assets/mixins/PageTransitionProperty'
 
 	// TYPES
 	import type { PAYLOAD } from '~/store/PageContent';
-	import { navigation } from '~/typescript/Navigation'
+	import { navigation } from '~/types/Navigation'
 
 	// COMPONENTS
 	import PromoBanner 					from '~/components/promo/PromoBanner.vue';
