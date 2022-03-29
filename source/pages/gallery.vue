@@ -1,7 +1,7 @@
 <template>
 	<main class="gallery-container">
 
-		<promo-banner promo-type="Gallery" />
+		<promo-banner promo-type="Works" />
 
 		<section class="gallery-pinned">
 
