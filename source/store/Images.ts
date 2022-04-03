@@ -9,6 +9,14 @@ import { ActionTree, MutationTree } from 'vuex'
 // UTILS
 	import { cache } from '~/utils/cache';
 
+// CONST
+	const FORMATS: Array<keyof typeof Image.formats.output> = ['webp', 'avif'];
+
+	const PLACEHOLDER: Image.formatsStruct = {
+		avif: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src,
+		webp: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src
+	}
+
 // STATE
 	export const state = () => ({
 		AVIF_SUPPORT: false,
@@ -34,19 +42,21 @@ import { ActionTree, MutationTree } from 'vuex'
 // ACTIONS
 	export const actions: ActionTree<CurentState, CurentState> = {
 
-		getImageURL(_vuex, params: { path: string, size: number }): Pick<Image.formatsStruct, 'avif' | 'webp'> {
+		getImageURL(_vuex, params: { path: string, size: number }): Image.formatsStruct {
 
-			const imageFormats: Array<'webp' | 'avif'> = ['webp', 'avif'];
-	
 			const matchedSize = Image.matchSize(params.size);
 			
-			const imageStruct: Pick<Image.formatsStruct, 'avif' | 'webp'> = {
-				avif: String(),
-				webp: String(),
+			const imageStruct: Image.formatsStruct = {
+				avif: PLACEHOLDER.avif,
+				webp: PLACEHOLDER.webp,
 			};
 
-			imageFormats.forEach(format => {
-				imageStruct[format] = storage.reference(`${ references.images }/${ params.path }/${ format }/${ matchedSize }.${ format }`)!
+			FORMATS.forEach(format => {
+
+				const REF = storage.reference(`${ references.images }/${ params.path }/${ format }/${ matchedSize }.${ format }`);
+
+				if ( REF ) imageStruct[format] = REF;
+
 			})
 
 			if ( process.browser ) {

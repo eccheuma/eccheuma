@@ -151,9 +151,6 @@
 
 	import Vue from 'vue'
 
-	// VUELIDATE
-	import { required } from 'vuelidate/lib/validators';
-
 	// VUEX
 	import { mapState, mapActions } from 'vuex';
 	import type { VuexMap } from '~/types/VuexMap';
@@ -175,6 +172,7 @@
 
 	// TYPES
 	import type { Message as MessageNamespace } from '~/types/Message';
+	import type { User } from '~/types/User'
 
 	// MODULE
 	export default Vue.extend({
@@ -194,11 +192,6 @@
 				ReadyToRead: false,
 
 			}
-		},
-		validations: {
-
-			UserMessage: { required },
-
 		},
 		computed: {
 
@@ -292,10 +285,10 @@
 				if ( userID !== this.UserState.UserID ) {
 
 					const CONTENT: NotificationOptions = {
-						body: `${ from }: ${ message }`,
-						image: require('~/assets/images/NotificationBadge.png'),
-						icon: await database.get<string>(`Users/${ userID }/state/UserImageID`),
-						silent: true,
+						body		: `${ from }: ${ message }`,
+						image		: require('~/assets/images/NotificationBadge.png'),
+						icon		: await database.get<User.state['UserImageID']>(`Users/${ userID }/state/UserImageID`),
+						silent	: true,
 					}
 
 					new Notification('Eccheuma | Новое сообщение', CONTENT)

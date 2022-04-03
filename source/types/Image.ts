@@ -8,12 +8,20 @@ export namespace Image {
 		full				= 1440,
 	}
 
-	export enum allowedFormats {
-		avif,
-		webp,
-		jpg,
-		jpeg,
-		png,
+
+	export namespace formats {
+
+		export const enum input {
+			jpg,
+			jpeg,
+			png,
+		}
+
+		export const enum output {
+			avif,
+			webp,
+		}
+
 	}
 
 	export function matchSize(size: number): sizes {
@@ -49,7 +57,7 @@ export namespace Image {
 	}
 	
 	export type formatsStruct = {
-		[F in Partial<keyof typeof allowedFormats>]: string
+		[ F in Partial<keyof typeof formats.output> ]: string
 	}
 
 }

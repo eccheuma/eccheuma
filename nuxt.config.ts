@@ -188,7 +188,6 @@
       // Client plugins TypeScript
       { src: '~/plugins/Pixi.ts',       mode: 'client' },
       { src: '~/plugins/Howler.ts',     mode: 'client' },
-      { src: '~/plugins/Vuelidate.ts',  mode: 'client' },
       { src: '~/plugins/Cursor.ts',     mode: 'client' },
       // Client plugins
       { src: '~/plugins/DragScroll.js',         mode: 'client' },

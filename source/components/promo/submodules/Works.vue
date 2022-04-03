@@ -8,8 +8,8 @@
             
             <eccheuma-image
               style="height: 40vh"
-              :content="{ path: image.content.path }"
-              :sections="{ date: false, description: false, zoom: true }"
+              :content="{ path: image.content.path, description: item.content.description }"
+              :sections="{ date: false, description: true, zoom: true }"
               :property="{ fit: 'cover', type: 'default', collumn: 7 }"
             >
               {{ item.content.name }}

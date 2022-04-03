@@ -291,7 +291,7 @@
 	import EmitSound from '~/assets/mixins/EmitSound'
 
 	// VARS
-	const PLACEHOLDER: Pick<Image.formatsStruct, 'avif' | 'webp'> = {
+	const PLACEHOLDER: Image.formatsStruct = {
 		avif: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src,
 		webp: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src
 	}

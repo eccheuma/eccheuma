@@ -895,7 +895,11 @@
 			},
 
 			userLiked(): boolean {
-				return Reflect.has(this.Likes, this.StoreUser.UserID);
+
+				return this.Likes 
+					? Reflect.has(this.Likes, this.StoreUser.UserID)
+					: false
+
 			},
 
 			sortedComments(): Array<Post.comment> {

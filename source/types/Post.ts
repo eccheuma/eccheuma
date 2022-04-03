@@ -2,7 +2,7 @@
 export namespace Post {
 
 	export type content = { 
-		type	: string, 
+		tag		: string, 
 		value	: any
 	}
 	
