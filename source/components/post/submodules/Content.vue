@@ -16,19 +16,20 @@
 				</eccheuma-image>
 			</template>
 
-			<template v-else>
-				<template v-if="item">
+			<section :key="index" v-else-if="item && item.tag === 'code'" class="post-content-body-code">
+				<span>Синтаксис: {{ item.value.lang }}</span>
+				<code 
+					v-html="prismHighlight(item.value.data, item.value.lang)"
+				/>
+			</section>
 
-					<component v-if="item && item.tag === 'a'" :is="item.tag" :href="item.value.url" :key="index + item.tag">
-						{{ item.value.alt }}
-					</component>
+			<component v-else-if="item && item.tag === 'a'" :is="item.tag" :href="item.value.url" :key="index + item.tag">
+				<icon name="Link" /> {{ item.value.alt }}
+			</component>
 
-					<component v-else :is="item.tag || 'div'" :key="`section-${ index }`">
-						{{ item.value }}
-					</component>
-
-				</template>
-			</template>
+			<component v-else :is="item && item.tag || 'div'" :key="`section-${ index }`">
+				{{ item.value }}
+			</component>
 
 		</template>
 	</section>
@@ -38,12 +39,15 @@
 <style lang="scss">
 
 .post-content {
+
 	&-body {
 
 		padding: 5vh 0vw;
 
 		color: rgb(var(--color-mono-900));
 		font-family: var(--read-font);
+
+		border-top: 1px solid rgb(var(--color-mono-300));
 
 		iframe {
 			overflow: hidden;
@@ -115,6 +119,60 @@
 			}
 		}
 
+		a {
+
+			--color: var(--color-accent-notice);
+
+			color: var(--color);
+			display: inline-flex;
+    	align-items: flex-end;
+
+			i {
+				fill: var(--color); 
+			}
+
+		}
+
+		&-code {
+
+			background: rgb(var(--color-mono-300));
+			border: 1px solid var(--color-accent-edges-100);
+			border-radius: var(--border-radius);
+			padding: 1vh 1.5vw 2vh;
+
+			code {
+				display: block;
+				white-space: pre-wrap;
+				tab-size: 3ch;
+				font-size: 12px;
+			}
+
+			> span {
+				display: block;
+				text-align: right;
+				color: rgb(var(--color-mono-500));
+				font-family: var(--decor-font);
+				font-size: var(--font-size-24);
+			}
+
+			.function {
+				color: var(--color-accent-edges-300);
+			}
+
+			.keyword {
+				color: var(--color-accent-edges-200);
+			}
+
+			.operator {
+				color: rgb(var(--color-mono-600));
+			}
+
+			.string {
+				color: rgb(var(--color-mono-600));
+			}
+
+		}
+
 	}
 }
 
@@ -124,12 +182,19 @@
 
 	import Vue, { PropOptions } from 'vue'
 
+	// PRISM
+	import Prism 		from 'prismjs';
+
 	// TYPES
 	import type { Post } from '~/types/Post'
+
+	// COMPONENTS
+	import Icon from '~/components/common/Icon.vue'
 
 	// MODULE
   export default Vue.extend({
 		components: {
+			Icon,
 			EccheumaImage: () => import('~/components/image/Image.vue'),
 		},
 		props: {
@@ -170,6 +235,15 @@
 			PickBlock(index: number = 0) {
 				this.$emit('curent-block', index )
 			},
+
+			prismHighlight(code: string, lang: string) {
+
+				const res = Prism.highlight(code, Prism.languages.javascript, 'javascript');
+
+				return res;
+
+			},
+
 		}
   })
 

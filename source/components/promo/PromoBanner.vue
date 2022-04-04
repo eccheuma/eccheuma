@@ -42,7 +42,7 @@
 
 		grid-template: {
 			columns: 1fr;
-			rows: 20vh 60vh auto
+			rows: 20vh minmax(50vh, auto) auto
 		}
 
 		overflow: hidden;
