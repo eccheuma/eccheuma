@@ -131,8 +131,8 @@
       extend(config, { isClient }) {
         if ( isClient ) {
           config.entry = {
-            pixi: 'pixi.js',
-            firebase: 'firebase/database',
+            // pixi: 'pixi.js',
+            // firebase: 'firebase/database',
           }
         }
       },
@@ -188,7 +188,6 @@
       // Client plugins TypeScript
       { src: '~/plugins/Pixi.ts',       mode: 'client' },
       { src: '~/plugins/Howler.ts',     mode: 'client' },
-      { src: '~/plugins/Vuelidate.ts',  mode: 'client' },
       { src: '~/plugins/Cursor.ts',     mode: 'client' },
       // Client plugins
       { src: '~/plugins/DragScroll.js',         mode: 'client' },

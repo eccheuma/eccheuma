@@ -205,7 +205,7 @@ $TransitionDuration: 250ms;
 	import EmitSound from '~/assets/mixins/EmitSound'
 
 	// TYPES
-	import type { navigation } from '~/typescript/Navigation'
+	import type { navigation } from '~/types/Navigation'
 
 	type NAV_ITEM = {
 		ID					: number 

@@ -78,10 +78,10 @@
 	import { utils } from '~/utils'
 
 	// VUEX MODULE TYPE MAP
-	import type { VuexMap } from '~/typescript/VuexMap'
+	import type { VuexMap } from '~/types/VuexMap'
 
 	// TYPES
-  import { Purchase, Product } from '~/typescript/Services'
+  import { Purchase, Product } from '~/types/Services'
 
 	// COMPONENTS
 	import CommonButton	from '~/components/buttons/CommonButton.vue';

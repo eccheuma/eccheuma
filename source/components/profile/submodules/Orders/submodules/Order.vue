@@ -222,7 +222,7 @@
 
   // VUEX
 	import { mapState, mapMutations, mapActions } from 'vuex'
-	import type { VuexMap } from '~/typescript/VuexMap'
+	import type { VuexMap } from '~/types/VuexMap'
 
   // UTILS
   import { utils } from '~/utils';
@@ -235,7 +235,7 @@
     import CommonButton	from '~/components/buttons/CommonButton.vue';
 
   // Namespace
-  import { Purchase } from '~/typescript/Services'
+  import { Purchase } from '~/types/Services'
 
   type WAITING_TIME_FORMAT = {
     days: number

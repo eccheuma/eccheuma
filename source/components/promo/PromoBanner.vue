@@ -6,14 +6,17 @@
 			<p>{{ moduleContent.subtitle }}</p>
 		</section>
 
-		<keep-alive>
+		<!-- <keep-alive> -->
 			<component :is="PromoType" />
-		</keep-alive>
+		<!-- </keep-alive> -->
 
-		<section v-once class="promo_footer" :class="{ cooled: Cooled }">
+		<section class="promo_footer" :class="{ cooled: Cooled }">
 
-			<p>{{ moduleContent.footer }}</p>
-			<hr v-once>
+			<template v-if="moduleContent.footer.length">
+				<p>{{ moduleContent.footer }}</p>
+				<hr>
+			</template>
+
 			<common-button @click.native="routeTo(moduleContent.link.path)">
 				{{ moduleContent.link.name }}
 			</common-button>
@@ -39,7 +42,7 @@
 
 		grid-template: {
 			columns: 1fr;
-			rows: 20vh 50vh 30vh
+			rows: 20vh minmax(50vh, auto) auto
 		}
 
 		overflow: hidden;
@@ -114,7 +117,7 @@
 
 		p {
 			width: calc(min(100%, 120ch));
-			font-size: 12px;
+			font-size: var(--font-size-14);
 			font-weight: 700;
 			padding: 0 5vw;
 			color: rgb(var(--color-mono-500));

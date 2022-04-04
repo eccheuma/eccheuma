@@ -14,8 +14,8 @@ import { utils } from '~/utils'
 import { database } from '~/api/database';
 import { auth, form } from '~/api/auth';
 
-import { Post } from '~/typescript/Post';
-import { User } from '~/typescript/User';
+import { Post } from '~/types/Post';
+import { User } from '~/types/User';
 
 // TESTS
 describe('api::auth', () => {
@@ -99,7 +99,7 @@ describe('api::database', () => {
 
   test.concurrent('database::remove', async () => {
 
-    const response = await database.remove('App/__SELF_KEY__')
+    const response = await database.remove('App/__SELF_KEY__');
 
     typeof response === 'string'
       ? expect(response).toBe(database.error.denied)

@@ -151,12 +151,9 @@
 
 	import Vue from 'vue'
 
-	// VUELIDATE
-	import { required } from 'vuelidate/lib/validators';
-
 	// VUEX
 	import { mapState, mapActions } from 'vuex';
-	import type { VuexMap } from '~/typescript/VuexMap';
+	import type { VuexMap } from '~/types/VuexMap';
 
 	// API
 	import { database } from '~/api/database'
@@ -165,18 +162,17 @@
 	import { utils } from '~/utils'
 
 	// MIXINS
-	import HashGenerator 	from '~/assets/mixins/HashGenerator';
-	import EmitSound 			from '~/assets/mixins/EmitSound';
+	import EmitSound from '~/assets/mixins/EmitSound';
 
 	// COMPONENTS
 	import EccheumaButton		from '~/components/buttons/CommonButton.vue'
-	// eslint-disable-next-line import/order
 	import MessageComponent from './submodules/Message.vue'
 
 	import IntesectionComponent from '~/components/functional/intersectionComponent.vue'
 
 	// TYPES
-	import type { Message as MessageNamespace } from '~/typescript/Message';
+	import type { Message as MessageNamespace } from '~/types/Message';
+	import type { User } from '~/types/User'
 
 	// MODULE
 	export default Vue.extend({
@@ -185,7 +181,7 @@
 			MessageComponent,
 			IntesectionComponent
 		},
-		mixins: [ EmitSound, HashGenerator ],
+		mixins: [ EmitSound ],
 		data() {
 			return {
 
@@ -196,11 +192,6 @@
 				ReadyToRead: false,
 
 			}
-		},
-		validations: {
-
-			UserMessage: { required },
-
 		},
 		computed: {
 
@@ -294,10 +285,10 @@
 				if ( userID !== this.UserState.UserID ) {
 
 					const CONTENT: NotificationOptions = {
-						body: `${ from }: ${ message }`,
-						image: require('~/assets/images/NotificationBadge.png'),
-						icon: await database.get<string>(`Users/${ userID }/state/UserImageID`),
-						silent: true,
+						body		: `${ from }: ${ message }`,
+						image		: require('~/assets/images/NotificationBadge.png'),
+						icon		: await database.get<User.state['UserImageID']>(`Users/${ userID }/state/UserImageID`),
+						silent	: true,
 					}
 
 					new Notification('Eccheuma | Новое сообщение', CONTENT)

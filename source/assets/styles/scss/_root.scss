@@ -42,14 +42,6 @@ $accent-hsl-rotate: 30;
 	// Font sizes
 	@each $norm-size in 56,42,36,32,28,24,21,18,16,14,12,11,10 {
 
-
-		// math.div(
-		// 	math.round(
-		// 		math.div($norm-size,$mockup-viewport-vh) 
-		// 	* 100), 
-		// 100) }vh;
-
-
 		--size-#{ $norm-size }: calc(#{ $norm-size }px * .725);
 		--font-size-#{ $norm-size }: var(--size-#{ $norm-size });
 		

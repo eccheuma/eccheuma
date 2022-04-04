@@ -127,7 +127,7 @@
 
 	// VUEX
 	import { mapState } from 'vuex'
-	import type { VuexMap } from '~/typescript/VuexMap';
+	import type { VuexMap } from '~/types/VuexMap';
 
 	// API
 	import { storage } from '~/api/storage';

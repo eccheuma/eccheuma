@@ -169,7 +169,7 @@
 
 	import { mapMutations, mapState } from 'vuex'
 
-	import type { VuexMap } from '~/typescript/VuexMap'
+	import type { VuexMap } from '~/types/VuexMap'
 
 	// COMPONENTS 
 	import Icon 									from '~/components/common/Icon.vue';

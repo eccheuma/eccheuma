@@ -8,12 +8,12 @@
 
 // INTERFACES AND TYPES 
 
-	import { VuexMap } from '~/typescript/VuexMap'
+	import { VuexMap } from '~/types/VuexMap'
 
-	import { Purchase } 	from '~/typescript/Services'
-	import { Message } from '~/typescript/Message'
+	import { Purchase } 	from '~/types/Services'
+	import { Message } from '~/types/Message'
 
-	import type { Notification } from '~/typescript/Notification'
+	import type { Notification } from '~/types/Notification'
 	
 // STATE
 	export const state = () => ({
@@ -29,7 +29,7 @@
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/typescript/VuexMap' {
+	declare module '~/types/VuexMap' {
 		interface User {
 			WorkRequest: CurentState
 		}

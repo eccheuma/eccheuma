@@ -1,7 +1,7 @@
 <template>
 	<main class="gallery-container">
 
-		<promo-banner promo-type="Gallery" />
+		<promo-banner promo-type="Works" />
 
 		<section class="gallery-pinned">
 
@@ -152,9 +152,6 @@
 // API
 	import { database } from '~/api/database'
 	
-// MIXINS
-	import TransitionSound from '~/assets/mixins/TransitionSound'
-
 // LOAD POLITIC
 	import { Ranges } from '~/config/LoadPolitic'
 
@@ -180,7 +177,6 @@
 			Pagination		: () => import('~/components/common/Pagination.vue'),
 			EccheumaImage	: () => import('~/components/image/Image.vue'),
 		},
-		mixins: [ TransitionSound ],
 		layout: 'Application', 
 		scrollToTop: false, 
 		transition: 'opacity-transition',

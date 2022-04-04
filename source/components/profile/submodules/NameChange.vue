@@ -1,9 +1,8 @@
 <template>
 	<section class="user_profile-component">
-		<div class="user_profile-component-name_change">
+		<div class="user_profile-component-name_change" :class="{ NonActive: nameValidation }">
 
-			<!-- :class="{ NonActive: $v.NewName.$invalid }" -->
-			<!-- <span>Любое имя длинее одного символа</span> -->
+			<span>Любое имя длинее одного символа</span>
 			<input 
 				v-model="NewName" 
 				type="text" 
@@ -53,9 +52,6 @@
 
 	import Vue from 'vue';
 
-	// VALIDATORS
-	import { required, minLength } from 'vuelidate/lib/validators'
-
 	// VUEX
 	import { mapState } from 'vuex'
 
@@ -63,7 +59,7 @@
 	import { database } from '~/api/database';
 
 	// VUEX MODULE TYPE MAP
-	import type { VuexMap } 				from '~/typescript/VuexMap'
+	import type { VuexMap } 				from '~/types/VuexMap'
 
 	// MODULE
 	export default Vue.extend({
@@ -76,9 +72,11 @@
 			...mapState({
 				State: state => (state as VuexMap).User.State.State,
 			}),
-		},
-		validations: {
-			NewName: { minLength: minLength(1), required },
+
+			nameValidation(): boolean {
+				return this.NewName.length > 1;
+			}
+
 		},
 		methods: {
 			setUsername() {

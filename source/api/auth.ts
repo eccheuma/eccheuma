@@ -1,7 +1,13 @@
-import firebase from 'firebase/app';
-import 'firebase/auth';
+import { 
+  createUserWithEmailAndPassword, 
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail,
+  confirmPasswordReset,
+  signOut 
+} from 'firebase/auth';
 
-import { getLocale, languages } from '~/lang'
+import { getLocale, languages } from '~/lang';
+
 
 export namespace form {
 
@@ -40,7 +46,7 @@ export namespace auth {
 
     try {
 
-      const { user } = await firebase.auth().signInWithEmailAndPassword(email, pass);
+      const { user } = await signInWithEmailAndPassword(globalThis.firebaseAuth, email, pass);
   
       if ( user === null ) throw new Error();
   
@@ -56,14 +62,14 @@ export namespace auth {
   }
 
   export function logout() {
-    return firebase.auth().signOut()
+    return signOut(globalThis.firebaseAuth);
   }
 
   export async function register(email: form.email, pass: string): Promise<auth.error | form.loginPass> {
 
     try {
 
-      const { user } = await firebase.auth().createUserWithEmailAndPassword(email, pass);
+      const { user } = await createUserWithEmailAndPassword(globalThis.firebaseAuth, email, pass);
 
       if (!user) throw new Error(auth.error.notUser);
 
@@ -73,19 +79,17 @@ export namespace auth {
       };
 
     } catch (e: any) {
-
       return e?.code as auth.error;
-
     }
 
   }
 
   export async function applyPassword(code: string, pass: string) {
-    return await firebase.auth().confirmPasswordReset(code, pass)
+    return await confirmPasswordReset(globalThis.firebaseAuth, code, pass)
   }
 
   export async function requirePassword(email: form.email) {
-    return await firebase.auth().sendPasswordResetEmail(email)
+    return await sendPasswordResetEmail(globalThis.firebaseAuth, email)
   }
 
 }

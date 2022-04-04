@@ -4,10 +4,13 @@ import { ActionTree, MutationTree } from 'vuex'
 	import { storage, references } from '~/api/storage';
 
 // TYPES
-	import { Image } from '~/typescript/Image';
+	import { Image } from '~/types/Image';
 
 // UTILS
 	import { cache } from '~/utils/cache';
+
+// CONST
+	const FORMATS: Array<keyof typeof Image.formats.output> = ['webp', 'avif'];
 
 // STATE
 	export const state = () => ({
@@ -18,7 +21,7 @@ import { ActionTree, MutationTree } from 'vuex'
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/typescript/VuexMap' {
+	declare module '~/types/VuexMap' {
 		interface VuexMap {
 			Images: CurentState
 		}
@@ -34,19 +37,21 @@ import { ActionTree, MutationTree } from 'vuex'
 // ACTIONS
 	export const actions: ActionTree<CurentState, CurentState> = {
 
-		getImageURL(_vuex, params: { path: string, size: number }): Pick<Image.formatsStruct, 'avif' | 'webp'> {
+		getImageURL(_vuex, params: { path: string, size: number }): Image.formatsStruct {
 
-			const imageFormats: Array<'webp' | 'avif'> = ['webp', 'avif'];
-	
 			const matchedSize = Image.matchSize(params.size);
 			
-			const imageStruct: Pick<Image.formatsStruct, 'avif' | 'webp'> = {
+			const imageStruct: Image.formatsStruct = {
 				avif: String(),
 				webp: String(),
 			};
 
-			imageFormats.forEach(format => {
-				imageStruct[format] = storage.reference(`${ references.images }/${ params.path }/${ format }/${ matchedSize }.${ format }`)!
+			FORMATS.forEach(format => {
+
+				const REF = storage.reference(`${ references.images }/${ params.path }/${ format }/${ matchedSize }.${ format }`);
+
+				if ( REF ) imageStruct[format] = REF;
+
 			})
 
 			if ( process.browser ) {

@@ -278,10 +278,10 @@
 	import { utils } from '~/utils'
 
 	// TYPES
-	import { Image } from '~/typescript/Image'
+	import { Image } from '~/types/Image'
 
 	// VUEX MAP
-	import type { VuexMap } from '~/typescript/VuexMap'
+	import type { VuexMap } from '~/types/VuexMap'
 
 	// COMPONENTS
 	import Icon 			from '~/components/common/Icon.vue';
@@ -291,7 +291,7 @@
 	import EmitSound from '~/assets/mixins/EmitSound'
 
 	// VARS
-	const PLACEHOLDER: Pick<Image.formatsStruct, 'avif' | 'webp'> = {
+	const PLACEHOLDER: Image.formatsStruct = {
 		avif: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src,
 		webp: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src
 	}

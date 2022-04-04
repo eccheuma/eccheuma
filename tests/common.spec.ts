@@ -5,7 +5,7 @@ import { gpu } from '~/utils/gpu';
 import { utils } from '~/utils/index'
 
 // MODULES
-import { Image } from '~/typescript/Image';
+import { Image } from '~/types/Image';
 
 describe('images::helpers', () => {
 
@@ -27,8 +27,8 @@ describe('images::helpers', () => {
 
   test('helpers::getExtension', () =>{
 
-    const extensions: Array<keyof typeof Image.allowedFormats> = [
-      'avif', 'jpeg', 'jpg', 'png', 'webp'
+    const extensions: Array<keyof typeof Image.formats.input> = [
+      'jpeg', 'jpg', 'png'
     ];
 
     const validName: string = 'something.jpg';

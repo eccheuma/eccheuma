@@ -249,11 +249,11 @@
 	import EmitSound from '~/assets/mixins/EmitSound';
 
 	// NAMESPACES
-	import { Post } from '~/typescript/Post';
-	import { User }	from '~/typescript/User';	
+	import { Post } from '~/types/Post';
+	import { User }	from '~/types/User';	
 
 	// TYPES
-	import type { VuexMap } 			from '~/typescript/VuexMap';
+	import type { VuexMap } 			from '~/types/VuexMap';
 
 	// COMPONENTS
 	import CommonButton 			from '~/components/buttons/CommonButton.vue'

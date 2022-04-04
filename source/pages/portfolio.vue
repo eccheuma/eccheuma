@@ -54,11 +54,10 @@
 	import Vue from 'vue'
 
 // MIXINS
-	import TransitionSound 	from '~/assets/mixins/TransitionSound';
 	import EmitSound 				from '~/assets/mixins/EmitSound';
 
 // TYPE
-	import { Portfolio } from '~/typescript/Portfolio';
+	import { Portfolio } from '~/types/Portfolio';
 
 // COMPONENTS
 	import SectionHeader 		from '~/components/common/SectionHeader.vue'
@@ -80,7 +79,7 @@
 			PromoBanner	: () => import('~/components/promo/PromoBanner.vue'),
 			Navigation	: () => import('~/components/common/Navigation.vue'),
 		},
-		mixins: [ TransitionSound, EmitSound ],
+		mixins: [ EmitSound ],
 		layout: 'Application',
 		scrollToTop: false,
 		transition: 'opacity-transition',

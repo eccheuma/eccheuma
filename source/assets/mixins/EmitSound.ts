@@ -5,7 +5,7 @@ import Vue from 'vue';
 import 			{ mapActions, mapState } 	from 'vuex'
 import type { Howl, HowlOptions } from 'howler'
 
-import type { VuexMap } from '~/typescript/VuexMap'
+import type { VuexMap } from '~/types/VuexMap'
 
 // TYPES
 export type FILE_NAME = 'Holl' 
@@ -24,6 +24,8 @@ export type SOUND_NAME = 'Ambient'
 	| 'Switch::Off'
 	| 'Input::Increment'
 	| 'Input::Decrement'
+	| 'Translate::In'
+	| 'Translate::Out'
 
 export type SoundInstance = {
 	file: FILE_NAME,

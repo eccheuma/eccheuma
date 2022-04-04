@@ -480,13 +480,13 @@
 
 	// TYPES
 	import type { AnimeAnimParams } from 'animejs';
-	import type { VuexMap } 				from '~/typescript/VuexMap';
+	import type { VuexMap } 				from '~/types/VuexMap';
 
 	// UTILS
 	import { user } from '~/utils/status'
 
 	// ENUMS
-	import { User } from '~/typescript/User'
+	import { User } from '~/types/User'
 
 	// COMPONENTS
 	import CommonButton	from '~/components/buttons/CommonButton.vue'

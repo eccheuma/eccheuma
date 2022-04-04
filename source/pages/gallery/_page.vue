@@ -56,7 +56,7 @@
 	import { mapActions, mapMutations, mapState } from 'vuex'
 	
 	// VUEX MAP
-	import type { VuexMap } from '~/typescript/VuexMap';
+	import type { VuexMap } from '~/types/VuexMap';
 
 	// API
 	import { database } from '~/api/database';
@@ -71,7 +71,7 @@
 	import type { PAYLOAD } 					from '~/store/PageContent'
 	import type { ANIMATION_PAYLOAD } from '~/assets/mixins/IntersectionObserver'
 
-	import { navigation } from '~/typescript/Navigation';
+	import { navigation } from '~/types/Navigation';
 
 	// LOAD POLITIC
 	import { Ranges } from '~/config/LoadPolitic'

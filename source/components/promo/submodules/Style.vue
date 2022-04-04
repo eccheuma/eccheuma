@@ -51,14 +51,15 @@
 	width: 100%;
 
 	h4 {
-		font-weight: 800;
+		font-weight: 700;
+		font-size: var(--font-size-36);
 	}
 
 	p {
-		font-size: var(--font-size-20);
+		font-size: var(--font-size-18);
 		font-family: var(--read-font);
-		font-weight: 500;
-		color: rgb(var(--color-mono-900));
+		font-weight: 300;
+		color: rgb(var(--color-mono-600));
 	}
 
 }

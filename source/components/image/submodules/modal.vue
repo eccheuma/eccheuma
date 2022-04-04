@@ -193,7 +193,10 @@
 	import { mapActions } from 'vuex'
 	
 	// NAMESPACES
-	import { Image } from '~/typescript/Image'
+	import { Image } from '~/types/Image'
+
+	// TYPES
+	// type PREVIEW_MODE = 'cover' | 'contain' | 'zoom'
 
 	// VARIABLES
 	const PLACEHOLDER: Pick<Image.formatsStruct, 'avif' | 'webp'> = {

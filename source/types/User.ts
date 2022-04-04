@@ -1,5 +1,5 @@
 // ENUMS
-import { Purchase } from '~/typescript/Services';
+import { Purchase } from '~/types/Services';
 
 export namespace User {
 

@@ -40,8 +40,8 @@
 
 // VUEX MODULE TYPE MAP
 	import type { Application, Container, Sprite, Texture, Graphics, TilingSprite } from 'pixi.js'
-	import type { AnimeInstance } 																									from 'animejs'
-	import type { VuexMap } 																										from '~/typescript/VuexMap'
+	import type { AnimeInstance } from 'animejs'
+	import type { VuexMap } from '~/types/VuexMap'
 
 // FILES
 	const ASSETS = [
@@ -221,14 +221,10 @@
 
 			ChangeMouseCoordinate(event: MouseEvent) {
 
-				// requestAnimationFrame(() => {
+				this.MousePosition.Y = event.clientY
+				this.MousePosition.X = event.clientX
 
-					this.MousePosition.Y = event.clientY
-					this.MousePosition.X = event.clientX
-
-					this.ShiftBackground()
-
-				// })
+				this.ShiftBackground()
 
 			},
 
@@ -240,7 +236,7 @@
 				// Координаты сентра сцены
 				const CenterScene = {
 					Y: window.innerHeight / 2,
-					X: window.innerWidth / 2
+					X: window.innerWidth 	/ 2
 				};
 
 				// Коофициенты смещения
