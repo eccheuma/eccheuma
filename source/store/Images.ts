@@ -12,11 +12,6 @@ import { ActionTree, MutationTree } from 'vuex'
 // CONST
 	const FORMATS: Array<keyof typeof Image.formats.output> = ['webp', 'avif'];
 
-	const PLACEHOLDER: Image.formatsStruct = {
-		avif: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src,
-		webp: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src
-	}
-
 // STATE
 	export const state = () => ({
 		AVIF_SUPPORT: false,
@@ -47,8 +42,8 @@ import { ActionTree, MutationTree } from 'vuex'
 			const matchedSize = Image.matchSize(params.size);
 			
 			const imageStruct: Image.formatsStruct = {
-				avif: PLACEHOLDER.avif,
-				webp: PLACEHOLDER.webp,
+				avif: String(),
+				webp: String(),
 			};
 
 			FORMATS.forEach(format => {
