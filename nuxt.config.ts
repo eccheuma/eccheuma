@@ -75,6 +75,7 @@
     
     generate: {
       dir: 'app',
+      routes: ['/post/0']
     },
 
     css: [
