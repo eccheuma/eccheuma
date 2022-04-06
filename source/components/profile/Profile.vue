@@ -22,7 +22,7 @@
 					<section class="user_profile-info-body">
 						<i ref="UserIcon" :style="`background-image: url(${ State.UserImageID }); transform: scale(0)`" />
 						<div class="user_profile-info-body-name">
-							<tag :light="true">
+							<tag theme="light">
 								{{ State.UserName }}
 							</tag>
 							<span>{{ defineStatus(State.UserStatus) }}</span>

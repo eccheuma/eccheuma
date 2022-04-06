@@ -18,12 +18,17 @@
 .vk {
   &-container {
 
-    // display: grid;
-    // row-gap: 2vh;
+    position: sticky;
+    top: 17vh;
 
-    > * {
-      margin-bottom: 2vh;
-    }
+    height: 100vh - $GLOBAL-HeaderHeight - 4vh;
+    overflow-y: scroll;
+    border-radius: var(--border-radius);
+
+    padding-right: .5vw;
+
+    display: grid;
+    gap: 2vh;
 
   }
   &-header {

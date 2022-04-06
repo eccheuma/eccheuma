@@ -51,6 +51,7 @@
   row-gap: 2vh;
 
   min-height: 40vh;
+  height: max-content;
 
   overflow: hidden;
   border-radius: var(--border-radius);

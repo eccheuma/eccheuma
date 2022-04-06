@@ -77,7 +77,10 @@ import { ActionTree, MutationTree } from 'vuex'
 
 			} else {
 
-				const DATA = await database.get(payload.REF, { limit: payload.LOAD_PROPERTY.LoadRange })
+				const DATA = await database.get(payload.REF, { 
+					limit: payload.LOAD_PROPERTY.LoadRange,
+					start: payload.LOAD_PROPERTY.LoadPoint, 
+				})
 
 				commit('setContent', { data: DATA, from: 'firebase', to: payload.REF });
 
@@ -96,7 +99,10 @@ import { ActionTree, MutationTree } from 'vuex'
 				
 			} else {
 
-				const DATA = await database.get(payload.REF, { limit: payload.LOAD_PROPERTY.LoadRange })
+				const DATA = await database.get(payload.REF, { 
+					limit: payload.LOAD_PROPERTY.LoadRange,
+					start: payload.LOAD_PROPERTY.LoadPoint, 
+				})
 
 				commit('setContent', { data: Object.values(DATA), from: 'server', to: payload.REF });			
 

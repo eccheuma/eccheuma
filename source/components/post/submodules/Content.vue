@@ -10,7 +10,7 @@
 					:class="{ EditableBlock: editableBlock == index }"
 					:content="{ path: item.value.url, description: item.value.alt }" 
 					:sections="{ date: false, description: false, zoom: true }" 
-					:property="{ type: 'gallery' }"
+					:property="{ type: 'default' }"
 					>
 					{{ item.value.alt }}
 				</eccheuma-image>
@@ -77,16 +77,11 @@
 		}
 
 		p {
-			font-size: var(--font-size-20);
-			font-weight: 500;
-			line-height: 1.4rem;
+			font-size: var(--font-size-21);
+			font-weight: 300;
 			width: clamp(35ch, 75ch, 100%);
-
-			// // Mobile
-			// @media screen and ( max-width: $mobile-breakpoint ) {
-			// 	width: $GLOBAL-BodySize;
-			// }
-
+			line-height: var(--font-size-28);
+			color: rgb(var(--color-mono-600));
 		}
 
 		h5 {
@@ -138,7 +133,9 @@
 			background: rgb(var(--color-mono-300));
 			border: 1px solid var(--color-accent-edges-100);
 			border-radius: var(--border-radius);
-			padding: 1vh 1.5vw 2vh;
+			padding: 1vh 1vw 2vh .5vw;
+
+			margin: 2vh 0;
 
 			code {
 				display: block;
@@ -153,6 +150,7 @@
 				color: rgb(var(--color-mono-500));
 				font-family: var(--decor-font);
 				font-size: var(--font-size-24);
+				margin-bottom: -3vh;
 			}
 
 			.function {

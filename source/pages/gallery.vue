@@ -72,7 +72,7 @@
 
 		display: grid;
 		gap: 15px;
-		grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
 		
 	}
 
@@ -189,13 +189,15 @@
 					params: `range=${ Ranges.gallery }`
 				},
 
+				PageQuantity: 0,
+
 			}
 		},
 		async fetch() {
 
 			const GalleryQuantity = await database.getLength('Gallery');
 
-			this.ChangePageQuantity(Math.ceil( GalleryQuantity / Ranges.gallery ))
+			this.PageQuantity = Math.ceil( GalleryQuantity / Ranges.gallery );
 
 		},
 		head () {
@@ -206,6 +208,11 @@
 				],
 			}
 		},
+
+		mounted() {
+			this.ChangePageQuantity(this.PageQuantity);
+		},
+
 		methods: {
 
 			...mapMutations({

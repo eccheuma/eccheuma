@@ -45,7 +45,7 @@
 
 		</div>
 
-		<tag v-if="sections && sections.date" :transparent="false" :light="true">
+		<tag v-if="sections && sections.date" :transparent="false" theme="grey">
 			{{ LocalDate.Day }} в {{ LocalDate.Time }}
 		</tag>
 
@@ -65,7 +65,8 @@
 			gap: 2vh;
 
 			.type\:\:gallery {
-				height: 50vh !important;
+				// height: 50vh !important;
+				aspect-ratio: 3/2;
 				--fit-type: cover;
 			}
 
@@ -81,7 +82,8 @@
 			}
 
 			.type\:\:default {
-				height: 100%;
+				width: 100%;
+				aspect-ratio: 16/9;
 			}
 
 		}

@@ -1,5 +1,5 @@
 <template>
-	<section ref="page" class="gallery-page">
+	<section ref="page" class="gallery-page" :key="Page" v-show="Ready">
 
 		<template v-if="$isMobile">
 			<eccheuma-image
@@ -7,7 +7,7 @@
 				v-for="(image, index) in Images"
 
 				:id="`GalleryImage_${ index }`"
-				:key="image.content.date"
+				:key="image.content.path"
 
 				:ref="'images'" 
 				:style="`order: ${( BasePoint - image.ID ) + Images.length }`"
@@ -24,7 +24,7 @@
 
 		<template v-for="(image, index) in Images" v-else>
 			<intesection-component 
-				:key="image.content.date" 
+				:key="image.content.path"
 				:style="`order: ${( BasePoint - image.ID ) + Images.length }`"
 				:rootMargin="5"
 				:wrap="true" 
@@ -145,9 +145,7 @@
 		},
 		async fetch() {
 
-			// if ( process.server && !this.application.context.browser ) {
 			await this.getDatabaseData();
-			// }
 			
 		},
 		head(): {[index: string]: string } {
@@ -168,22 +166,20 @@
 			}),
 
 		},
-		watch: {
-			GalleryData: {
-				handler() {
-					this.$nextTick().then(() => {
-						this.Ready = true
-					})
-				}
-			},
-		},
 		created() {
-			
+
 			this.ChangePage(this.Page);
 
 			if ( process.browser && this.$router.currentRoute.name === 'gallery' ) {
 				this.getDatabaseData();
 			}
+
+		},
+		mounted() {
+
+			this.$nextTick().then(() => {
+				this.Ready = true
+			})
 
 		},
 		methods: {

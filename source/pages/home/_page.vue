@@ -2,7 +2,7 @@
 	<section class="home-page">
 
 		<template v-for="( item, index ) in Posts">
-			<post :key="item.date" :style="`order: ${ Posts.length - index }`" :payload="item" />
+			<post :key="item.date" :style="`order: ${ Posts.length - index }`" :payload="item" :opened="!index"/>
 		</template>
 		
 		<promo-banner

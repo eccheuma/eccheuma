@@ -2,12 +2,13 @@
 	<div 
 		:id="`HASH-${ commentID }`" 
 		class="post-comment-item" 
+		@click="pickUser"
 		:style="`
 			--t: ${ Math.trunc(Math.random() * 100) }%; 
 			--l: ${ Math.trunc(Math.random() * 100) }%;
 		`.trim()"
 		>
-
+		
 		<section class="post-comment-item-icon">
 			<i class="post_comment-icon" :style="`background-image: url(${ author.UserImageID })`" />
 		</section>
@@ -22,6 +23,9 @@
 		<section class="post-comment-item-content">
 			<hr v-once>
 			<p>
+				<span v-if="answerTo">
+					Ответ для: <strong>{{ this.answerTo.UserName }}</strong>
+				</span>
 				{{ comment.data }}
 			</p>
 			<hr v-once>
@@ -205,16 +209,17 @@
 
 		hr {
 			background-color: rgb(var(--color-mono-400));
+			margin: 1vh 0;
 		}
 
 		p {
 
 			line-height: 2.5vh;
-			color: rgb(var(--color-mono-900));
+			color: rgb(var(--color-mono-800));
 			font: {
 				size: var(--font-size-18);
 				family: var(--read-font);
-				weight: 500;
+				weight: 300;
 			}
 
 			width: clamp(30ch, 65ch, 100%);
@@ -222,6 +227,20 @@
 			// MOBILE
 			@media screen and ( max-width: $mobile-breakpoint ) {
 				padding: 0 4vw;
+			}
+
+			span {
+				display: block;
+				color: rgb(var(--color-mono-600));
+				font-size: var(--font-size-16);
+				font-weight: 800;
+				margin-bottom: 1vh;
+
+				strong {
+					color: var(--color-accent-link);
+					text-decoration: underline;
+				}
+
 			}
 
 		}
@@ -256,7 +275,7 @@
 	import type { VuexMap } 			from '~/types/VuexMap';
 
 	// COMPONENTS
-	import CommonButton 			from '~/components/buttons/CommonButton.vue'
+	import CommonButton from '~/components/buttons/CommonButton.vue'
 
 	// MODULE
 	export default Vue.extend({
@@ -290,6 +309,8 @@
 
 				author: new Object() as User.state,
 				comment: new Object() as Post.comment,
+
+				answerTo: undefined as User.state | undefined,
 
 			}
 		},
@@ -331,7 +352,9 @@
 
 			this.author = await database.get(`Users/${ this.userID }/state`);
 
-			this.comment = await database.get(`Posts/PostID-${ this.postID }/comments/Hash-${ this.commentID }`)
+			this.comment = await database.get(`Posts/PostID-${ this.postID }/comments/Hash-${ this.commentID }`);
+
+			this.taggedUser();
 
 			this.localeDate = utils.getLocalTime(this.comment.date)
 
@@ -343,6 +366,30 @@
 				await database.remove(`Posts/PostID-${ this.postID }/comments/Hash-${ this.commentID }`);
 
 				this.playSound(this.Sounds.get('Element::Action'));
+
+			},
+
+			pickUser() {
+
+				this.$emit('picked-user', this.author)
+
+			},
+
+			async taggedUser() {
+
+				const users = await database.get<any>('Users');
+
+				Object.values(users).forEach((user: any) => {
+
+					if ( this.answerTo ) return;
+
+					const state = user.state as User.state;
+
+					this.answerTo = new RegExp(`@${ state.UserName }`).test(this.comment.data)
+						? state
+						: undefined
+
+				})
 
 			}
 

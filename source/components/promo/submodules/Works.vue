@@ -4,7 +4,7 @@
       <template #default>
         <template v-for="item in Works.Logo">
           
-          <section v-for="(image, index) in item.content.images" :key="index" class="works_swiper-item">
+          <section v-for="image in item.content.images" :key="image.content.date" class="works_swiper-item">
             
             <eccheuma-image
               style="height: 40vh"

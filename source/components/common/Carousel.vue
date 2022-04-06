@@ -356,6 +356,10 @@ import Vue, { PropOptions } from 'vue'
 			},
 			ChangeSlide(direction: 'NEXT' | 'PREV') {
 
+				if ( this.Quantity === 1 ) {
+					this.UpdateStyles(); return;
+				}	
+
 				const lastIndex = this.Quantity - 1
 
 				switch (direction) {

@@ -19,7 +19,7 @@
 
 				<section v-once class="post-header-tags">
 
-					<tag v-for="(item, i) in payload.tags" :key="i">
+					<tag v-for="(item, i) in payload.tags" :key="i" theme="transparent">
 						#{{ item }}
 					</tag>
 
@@ -31,7 +31,7 @@
 				</section>
 
 				<section class="post-header-time">
-					<tag>
+					<tag theme="transparent">
 						{{ PostDate.Day }} в {{ PostDate.Time }}
 					</tag>
 				</section>
@@ -127,7 +127,7 @@
 
 			</div>
 
-			<client-only>
+			<!-- <client-only> -->
 
 				<hardware-acceleration-decorator>
 					<collapse :active="ContentSection">
@@ -156,7 +156,7 @@
 
 							<section v-once class="post-content-tags">
 								<h6>Теги: </h6>
-								<tag v-for="(item, i) in payload.tags" :key="i" :transparent="false" :light="UI !== 'light'">
+								<tag v-for="(item, i) in payload.tags" :key="i" :transparent="false" theme="grey">
 									#{{ item }}
 								</tag>
 							</section>
@@ -203,7 +203,8 @@
 										:key="item.date" 
 										:userID="item.userID"
 										:postID="payload.ID" 
-										:commentID="item.ID" 
+										:commentID="item.ID"
+										@picked-user="pickUser"
 									/>
 								</transition-group>
 							</section>
@@ -247,7 +248,7 @@
 					</collapse>
 				</hardware-acceleration-decorator>
 
-			</client-only>
+			<!-- </client-only> -->
 
 		</section>
 	</intesection-component>
@@ -650,15 +651,16 @@
 			margin: 2vh 0;
 
 			span {
-				font-size: var(--font-size-36);
-				font-weight: 800;
+				font-size: var(--font-size-56);
+				font-family: var(--decor-font);
+				font-weight: 500;
 				text-align: center;
 			}
 
 			hr {
 				width: 75%;
 				margin: 1.75vh auto;
-				height: 1px;
+				height: .5px;
 				background: var(--color-accent-edges-100);
 			}
 
@@ -841,6 +843,10 @@
 				type: Boolean,
 				default: false
 			},
+			opened: {
+				type: Boolean,
+				default: false,
+			}
 		},
 
 		data() {
@@ -861,6 +867,8 @@
 
 				prepareContent: false,
 
+				answerTo: null as User.state | null,
+
 				PostDate: utils.getLocalTime(0),
 
 				Content: 	new Array<Post.content>(0),
@@ -878,6 +886,10 @@
 
 			if ( process.server ) {
 				await this.getAuthor();
+			}
+
+			if ( this.opened ) {
+				this.Content = await database.get(`Posts/PostID-${ this.payload.ID }/content`)
 			}
 
 		},
@@ -969,6 +981,11 @@
 
 			}
 
+			if ( this.opened ) {
+				this.prepareContent = true;
+				this.ContentSection = this.opened;
+			}
+
 		},
 
 		mounted() {
@@ -1027,13 +1044,7 @@
 
 				const PATH = `Posts/PostID-${ this.payload.ID }/${ section.toLowerCase() }`;
 
-				switch (section) {
-					case 'Content':
-						this[section] = await database.get(PATH); break;
-					default:
-						// ! Need to do something with database API typing.  
-						database.listen(PATH, (data: any) => { this[section] = data }); break;
-				}
+				database.listen(PATH, (data: any) => { this[section] = data })
 
 			}, 
 
@@ -1128,6 +1139,18 @@
 					: database.set(PATH, { hash: utils.hashGenerator() })
 
 			},
+
+			pickUser(User: User.state) {
+
+				console.log(User);
+
+				this.answerTo = User;
+
+				this.Message = this.answerTo
+					? `@${ this.answerTo?.UserName }, ${ this.Message }`
+					: this.Message
+
+			}
 
 		},
 

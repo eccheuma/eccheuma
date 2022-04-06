@@ -4,7 +4,7 @@
 		<section class="auth_profile-header" :style="`background-image: url(${ State.UserImageID })`">
 			<i :style="`background-image: url(${ State.UserImageID })`" />
 			<div class="auth_profile-header-info">
-				<tag :light="true">
+				<tag theme="light">
 					{{ State.UserName }}
 				</tag>
 				<span>{{ defineStatus(State.UserStatus) }}</span>

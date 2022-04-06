@@ -6,7 +6,7 @@ import { ref,
 } from 'firebase/database';
 
 import { onValue, onChildChanged  } from 'firebase/database';
-import { query, startAt, endAt, limitToFirst } from 'firebase/database';
+import { query, startAt, endAt, limitToFirst, orderByKey } from 'firebase/database';
 
 import type { DatabaseReference, EventType, Query, QueryConstraint } from 'firebase/database';
 
@@ -24,9 +24,9 @@ function defineQuery(ref: DatabaseReference, params: Partial<GetParams>): Query 
   let QUERY = Array<QueryConstraint>();
 
   if ( params?.start ) 
-    QUERY.push(startAt(params.start));
+    QUERY.push(startAt(String(params.start)), orderByKey());
   if ( params?.end )
-    QUERY.push(endAt(params.end));
+    QUERY.push(endAt(String(params.end)), orderByKey());
   if ( params?.limit )
     QUERY.push(limitToFirst(params.limit));
 

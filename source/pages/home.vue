@@ -11,7 +11,7 @@
 
 			<nuxt-child :key="$route.path" class="home-content" />
 
-			<pagination style="align-self: end" :payload="{ order: -1, scrollTarget: 445, section: 'home', delay: 0 }" />
+			<pagination :payload="{ order: -1, scrollTarget: 445, section: 'home', delay: 0 }" />
 
 		</main>
 
@@ -112,6 +112,7 @@ main {
 			return {
 
 				Title: 'Главная',
+				PageQuantity: 0,
 
 			}
 		},
@@ -119,7 +120,9 @@ main {
 
 			const PostsQuantity: number = await database.getLength('Posts');
 
-			this.ChangePageQuantity(Math.ceil( PostsQuantity / Ranges.posts ));
+			this.PageQuantity = Math.ceil( PostsQuantity / Ranges.posts );
+
+			this.ChangePageQuantity(this.PageQuantity);
 
 		},
 		head () {
@@ -130,6 +133,13 @@ main {
 				],
 			}
 		},
+
+		mounted() {
+
+			this.ChangePageQuantity(this.PageQuantity);
+
+		},
+
 		computed: {
 			...mapState({
 				LoginStatus: state => (state as VuexMap).Auth.Session.LoginStatus
