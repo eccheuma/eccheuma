@@ -124,13 +124,13 @@
 			--color-mono-900: var(--mono-400);
 			--color-mono-1000: var(--mono-100);
 
-			transition-duration: .75s;
+			// transition-duration: .75s;
 			background-color: rgb(var(--color-mono-100));
 			color: rgb(var(--color-mono-900));
 
 		}
 		&-dark {
-			transition-duration: .75s;
+			// transition-duration: .75s;
 			background-color: rgb(var(--color-mono-100));
 		}
 	}
@@ -228,7 +228,9 @@
 
 		},
 		mounted() {
-			setTimeout(this.setRegNotification, 360_000)
+
+			setTimeout(this.setRegNotification, 360_000);
+
 		},
 		methods: {
 

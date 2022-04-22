@@ -17,15 +17,20 @@
 <style lang="scss">
 
 .user_profile-component {
+
+	height: 100%;
+
 	&-name_change {
+
+		text-align: center;
 
 		display: grid;
 		grid-template: {
 			columns: 1fr;
-			rows: 1fr
+			rows: min-content min-content
 		}
 
-		height: 60vh;
+		place-content: center;
 
 		span {
 			height: 3vh;

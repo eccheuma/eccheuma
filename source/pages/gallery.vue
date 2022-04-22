@@ -193,13 +193,6 @@
 
 			}
 		},
-		async fetch() {
-
-			const GalleryQuantity = await database.getLength('Gallery');
-
-			this.PageQuantity = Math.ceil( GalleryQuantity / Ranges.gallery );
-
-		},
 		head () {
 			return {
 				title: PageDescription.title,
@@ -209,8 +202,14 @@
 			}
 		},
 
-		mounted() {
+		async mounted() {
+
+			const GalleryQuantity = await database.getLength('Gallery');
+
+			this.PageQuantity = Math.ceil( GalleryQuantity / Ranges.gallery );
+
 			this.ChangePageQuantity(this.PageQuantity);
+
 		},
 
 		methods: {

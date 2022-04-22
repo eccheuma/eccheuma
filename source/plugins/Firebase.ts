@@ -1,7 +1,9 @@
-import { Context } from '@nuxt/types'
+import { Context } from '@nuxt/types';
 
-import { initializeApp, getApps, FirebaseApp } 	from 'firebase/app';
-import { getDatabase, Database } 								from 'firebase/database';
+import { utils } from '~/utils';
+
+import { initializeApp, FirebaseApp } 	from 'firebase/app';
+import { getDatabase, Database } 				from 'firebase/database';
 import { getAuth, Auth } from 'firebase/auth';
 
 declare global {
@@ -23,12 +25,8 @@ export default (context?: Context) => {
 		measurementId			: 'G-W49JBK6546',
 	};
 
-	// if ( getApps().length === 0 ) {
-
-		globalThis.firebaseClient ||= initializeApp(CONFIG);
-		globalThis.firebaseDB 		||= getDatabase(globalThis.firebaseClient);
-		globalThis.firebaseAuth		||= getAuth(globalThis.firebaseClient);
-
-	// };
+	globalThis.firebaseClient ||= initializeApp(CONFIG, utils.hashGenerator());
+	globalThis.firebaseDB 		||= getDatabase(globalThis.firebaseClient);
+	globalThis.firebaseAuth		||= getAuth(globalThis.firebaseClient);
 
 }

@@ -116,15 +116,6 @@ main {
 
 			}
 		},
-		async fetch() {
-
-			const PostsQuantity: number = await database.getLength('Posts');
-
-			this.PageQuantity = Math.ceil( PostsQuantity / Ranges.posts );
-
-			this.ChangePageQuantity(this.PageQuantity);
-
-		},
 		head () {
 			return {
 				title: PageDescription.title,
@@ -134,7 +125,11 @@ main {
 			}
 		},
 
-		mounted() {
+		async mounted() {
+
+			const PostsQuantity: number = await database.getLength('Posts');
+
+			this.PageQuantity = Math.ceil( PostsQuantity / Ranges.posts );
 
 			this.ChangePageQuantity(this.PageQuantity);
 
