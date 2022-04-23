@@ -11,17 +11,29 @@
 				
 			</section>
 
+			<popover target="ScrollMessage" position="left">
+				<div class="scroll_panel-messages-content">
+					<span>Последнее сообщение</span>
+					<hr>
+					<i>"{{ Messages[ Messages.length - 1 ] && Messages[ Messages.length - 1 ].message }}"</i>
+				</div>
+			</popover>
+
 			<hr v-once>
 
 		</template>
 
-		<section class="scroll_panel-mute">
+		<section class="scroll_panel-mute" id="ScrollMute">
 			<span
 				:class="[{ active: GlobalHowler.mute && !GlobalHowler.inChange }, { change: GlobalHowler.inChange }]"
 				@click="globalMute(!GlobalHowler.mute)"
 			>
 
 				<icon name="Mute" />
+
+				<popover target="ScrollMute" position="left">
+					Звук на интерфейса: {{ GlobalHowler.mute ? 'отключен' : 'включён' }}
+				</popover>
 
 			</span>
 		</section>
@@ -77,6 +89,8 @@
 		top: 0; 
 		left: 0;
 
+		z-index: 1010;
+
 		display: flex;
 		align-items: stretch;
 		flex-direction: column;
@@ -126,6 +140,17 @@
 			color: rgb(var(--color-mono-500)); 
 			font-weight: 700; 
 			font-size: var(--font-size-14);
+		}
+
+		&-content {
+
+			display: grid;
+			row-gap: 1vh;
+
+			span {
+				font-size: var(--font-size-18);
+			}
+
 		}
 
 	}
@@ -257,7 +282,12 @@
 			font-size: 1.5vw;
 
 			cursor: pointer;
-			transition-duration: 250ms;
+
+			svg {
+				path {
+					transition: fill 250ms;
+				}
+			}
 
 			&:hover {
 				fill: rgb(var(--color-mono-900));
@@ -284,9 +314,12 @@
 // VUEX
 	import { mapState, mapMutations, mapActions } from 'vuex'
 
+// UTILS
+	import { utils } from '~/utils';
+
 // COMPONENTS
-	// import Popover from '~/components/common/Popover.vue'
-	import Icon									from '~/components/common/Icon.vue'
+	import Popover 	from '~/components/common/Popover.vue'
+	import Icon			from '~/components/common/Icon.vue'
 
 // TYPES
 	import type { VuexMap } from '~/types/VuexMap'
@@ -298,7 +331,7 @@
 // MODULE
 	export default Vue.extend({
 		components: {
-			Icon
+			Icon, Popover
 		},
 		mixins: [ EmitSound ],
 		data() {

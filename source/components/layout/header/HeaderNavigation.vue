@@ -21,6 +21,7 @@
 					:key="prop.route" 
 					
 					class="main_navigation-item"
+					:id="`nav_item-${ prop.name }`"
 					:class="[
 						{ disabled: prop.disabled },
 						{ active: CurentRoute === prop.route }
@@ -35,7 +36,6 @@
 
 					<!-- prefetch -->
 					<nuxt-link 
-						:id="`nav_item-${ prop.name }`"
 						:to="prop.route"
 						:prefetch="routePrefetch"
 						@click="topScroll"
@@ -48,12 +48,14 @@
 
 					</nuxt-link>
 					
-					<popover v-if="!prop.disabled || !$isMobile" :target="`nav_item-${ prop.name }`">
-						<!-- <i class="fas fa-info-circle" /> -->
-						{{ prop.description }}
-					</popover>
+					
 
 				</div>
+
+				<popover v-if="!prop.disabled || !$isMobile" :target="`nav_item-${ prop.name }`" :key="index + 10">
+					<!-- <i class="fas fa-info-circle" /> -->
+					{{ prop.description }}
+				</popover>
 
 				<span :key="index" class="main_navigation-separator" />
 

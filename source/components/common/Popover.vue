@@ -1,10 +1,15 @@
 <template>
-	<div 
-		class="popover-container" 
-		:style="`top: ${ pop_position.y }px; left: ${ pop_position.x }px`"
-		>
+	<div class="popover-container" :style="`top: ${ pop_position.y }px; left: ${ pop_position.x }px`">
 		<transition name="PopoverTransition">
-			<div v-show="active" ref="popover" class="popover-wrap" :class="[{ 'utils::glassy': !$isMobile }]">
+			<div
+				v-show="active" 
+				key="popover-content" 
+				ref="popover" 
+				class="popover-wrap"
+				:style="`--w: ${ width / 2 }px`"
+				:class="[{ 'utils::glassy': !$isMobile }]" 
+				:data-pos="position"
+				>
 				<slot />
 			</div>
 		</transition>
@@ -15,25 +20,21 @@
 
 .PopoverTransition {
 	&-enter {
-		transform: translateY(30px);
 		opacity: 0;
 		&-active {
-			transition: all 500ms ease-in-out;			
+			transition: opacity 250ms ease-in-out;			
 		}
 		&-to {
 			opacity: 1;
-			transform: translateY(0px);		
 		}
 	}
 	&-leave {
-		transform: translateY(0px);
 		opacity: 1;		
 		&-active {
-			transition: all 500ms ease-in-out;
+			transition: opacity 250ms ease-in-out;
 		}
 		&-to {
 			opacity: 0;
-			transform: translateY(30px);		
 		}
 	}
 }
@@ -44,11 +45,8 @@
 		pointer-events: none;
 
 		position: absolute;
-
-		left: 50%;
-		height: 1px; width: 1px;
-
-		z-index: 9999;
+		height: 1px; 
+		width: 1px;
 
 		color: rgb(var(--mono-900)) !important;
 		// background: greenyellow;
@@ -58,16 +56,15 @@
 	}
 	&-wrap {
 
-		overflow: hidden;
-
 		position: absolute;
-		transform: translateX(-50%);
 
-		padding: 2vh 3vw;
+		left: calc(var(--w, 0) * -1);
+
+		padding: 2vh 1vw;
 
 		border-radius: var(--border-radius);
 
-		width: 40ch;
+		width: 35ch;
 
 		background: {
 			color: rgba(var(--mono-200), .75);
@@ -95,6 +92,38 @@
 
 		}
 
+		&[data-pos="top"] {
+			&:after {
+				--x: calc(50% - 5px);
+				--y: 100%;
+				--r: 180deg;
+			}
+		}
+
+		&[data-pos="left"] {
+			&:after {
+				--x: -10px;
+				--y: calc(50% - 5px);
+				--r: -90deg;
+			}
+		}
+
+		&:after {
+
+			content: '';
+			position: absolute;
+
+			top: var(--y, 0px);
+			left: var(--x, 0px);
+			transform: rotate(var(--r, 0deg));
+
+			height: 10px;
+			width: 10px;
+			background: var(--color-accent-edges-200);
+			clip-path: polygon(0% 100%, 50% 50%, 100% 100%);
+
+		}
+
 	}
 }
 
@@ -103,6 +132,8 @@
 <script lang="ts">
 
 	import Vue, { PropOptions } from 'vue'
+
+	const MARGIN = 20;
 
 	export default Vue.extend({
 		props: {
@@ -121,7 +152,7 @@
 			position: {
 				type: String,
 				default: 'top'
-			} as PropOptions<'top' | 'bottom' | undefined>
+			} as PropOptions<'top' | 'bottom' | 'left' | undefined>
 		},
 		data() {
 			return {
@@ -132,7 +163,9 @@
 				pop_position: {
 					x: 0,
 					y: 0,
-				}
+				},
+
+				width: 0,
 
 			}
 		},
@@ -151,47 +184,44 @@
 
 		},
 		methods: {
-			setPosition(): number {
+			setPosition() {
 
-				const TARGET 				= document.getElementById(this.target)!
-
-				const ParentRect 		= TARGET?.getBoundingClientRect();
+				const PopoverTarget = document.getElementById(this.target)!
+				const ParentRect 		= PopoverTarget?.getBoundingClientRect();
 				const PopoverRect 	= ( this.$refs.popover as HTMLElement )?.getBoundingClientRect();
 
-				const TargetMargin: number 	= TARGET.parentElement!.getBoundingClientRect().height - ParentRect.height;
+				requestAnimationFrame(() => {
+					
+					if ( PopoverTarget && PopoverRect && ParentRect ) {
 
-				return requestAnimationFrame(() => {
-
-					if ( TARGET && PopoverRect && ParentRect ) {
+						this.width = PopoverRect.width;
 	
 						const ParentCenter = {
-							x: TARGET.offsetLeft 	+ (ParentRect.width / 2),
-							y: TARGET.offsetTop 	+ (ParentRect.height / 2),
+							x: PopoverTarget.offsetLeft + (ParentRect.width / 2),
+							y: PopoverTarget.offsetTop  + (ParentRect.height / 2),
 						}
-	
-						const MARGIN = (mar: number = 20): number => {
-	
-							const U = (ParentRect.height / 2) + mar
-	
-							switch (this.position) {
-	
-								case 'top':
-									return -(ParentRect.height - (TargetMargin / 2) + PopoverRect.height + mar);
-	
-								case 'bottom':
-									return ParentRect.height 
-	
-								default: 
-									return ParentRect.top - mar - PopoverRect.height < 0 
-										? U 
-										: -(U + PopoverRect.height);
-	
+
+						switch (this.position) {
+							case 'left': {
+
+								this.pop_position.x = (ParentRect.width + MARGIN) + ( PopoverRect.width / 2 );
+								this.pop_position.y = ParentCenter.y - ( PopoverRect.height / 2 );
+
+							} break;
+
+							case 'top': {
+
+								this.pop_position.x = ParentCenter.x
+								this.pop_position.y = (MARGIN + PopoverRect.height) * -1;
+
+							} break;
+						
+							default: {
+								this.pop_position.x = ParentCenter.x;
+								this.pop_position.y = ParentCenter.y;
 							}
-	
-						};
-	
-						this.pop_position.x = ParentCenter.x;
-						this.pop_position.y = ParentCenter.y + MARGIN();
+
+						}
 	
 					}
 

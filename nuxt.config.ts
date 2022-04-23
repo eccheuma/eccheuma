@@ -21,10 +21,11 @@
 // TEMPLATESnp
   import HEAD_CONFIG      from './utils/defaultHead';
   import genearateName    from './utils/nameGenerator';
+  import { utils }        from './source/utils';
 
 // VARIABLES
   const inDevelopment = process.env.NODE_ENV === 'development';
-  const hash          = createHash('md5').update(Math.random().toString()).digest('hex').slice(-6);
+  const hash = utils.hashGenerator(12);
 
 // WRITE A VERSION
   writeFile('.version', hash, () => console.log(`≏ Hash build: ${ genearateName(4) }:${ hash }`))
@@ -53,7 +54,9 @@
 
     },
 
-    target: inDevelopment ? 'server' : 'static',
+    // target: inDevelopment ? 'server' : 'static',
+    target: 'static',
+    ssr: false,
 
     server: {
       port: 3000,

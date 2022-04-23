@@ -69,11 +69,11 @@
 
 						</client-only>
 
-					</button>
+						<popover :target="`LikePopOver-${ payload.ID }`" position="top">
+							{{ LoginStatus ? 'Поставить лайк' : 'Авторизируйтесь для оценки' }}
+						</popover>
 
-					<popover :target="`LikePopOver-${ payload.ID }`">
-						{{ LoginStatus ? 'Поставить лайк' : 'Авторизируйтесь для оценки' }}
-					</popover>
+					</button>
 
 					<button 
 						:id="`CommentPopOver-${ payload.ID }`" 
@@ -93,11 +93,11 @@
 
 						</client-only>
 
-					</button>
+						<popover :target="`CommentPopOver-${ payload.ID }`" position="top">
+							Открыть комметарий
+						</popover>
 
-					<popover :target="`CommentPopOver-${ payload.ID }`">
-						Открыть комметарий
-					</popover>
+					</button>
 
 				</section>
 
@@ -463,6 +463,8 @@
 		}
 
 		&-social {
+
+			position: relative;
 
 			@media screen and ( max-width: $mobile-breakpoint ) {
 				place-self: center;

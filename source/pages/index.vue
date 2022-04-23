@@ -451,7 +451,7 @@
 				file: 'Holl',
 				name: 'Ambient',
 				settings: { 
-					rate: 1, 
+					rate: .5, 
 					volume: .25, 
 					loop: true,
 				},

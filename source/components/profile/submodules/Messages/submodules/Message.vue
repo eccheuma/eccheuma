@@ -9,7 +9,6 @@
         {{ date.Day }} в {{ date.Time }}
       </span>
       <template v-if="payload.readed">
-        <hr>
         <span class="message-header-read">
           <icon name="Okay" /> Прочитанно
         </span>
@@ -78,7 +77,15 @@
 
       }
 
+      &-date {
+        height: min-content;
+        line-height: normal;
+        align-self: center;
+      }
+
       &-read {
+        
+        width: 100%;
         display: flex;
         justify-content: right;
         align-items: center;

@@ -20,7 +20,7 @@
     "baseUrl": ".",
     "resolveJsonModule": true,
     "paths": {
-      "~/*": ["source/*"],
+      "~/*": ["./source/*"],
       "path::root/*": ["./*"],
     },
     "types": [

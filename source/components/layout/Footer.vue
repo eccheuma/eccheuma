@@ -278,7 +278,7 @@
 
 				display: block; 
 				text-transform: uppercase;
-				color: var(--color-accent-edges-100);
+				color: rgb(var(--color-mono-400));
 
 				&:nth-child(1) {
 					font-weight: 500;
@@ -300,7 +300,7 @@
 			svg {
 				margin: auto;
 				height: 3vh;
-				fill: var(--color-accent-edges-100);
+				fill: rgb(var(--color-mono-300));
 			}
 		}
 		&-version {
@@ -308,10 +308,13 @@
 			justify-content: flex-end;
 			span {
 				align-self: center;
-				color: var(--color-accent-edges-100);
-				letter-spacing: .15ch;
-				font-size: var(--font-size-12);
+				color: rgb(var(--color-mono-500));
+				letter-spacing: 0.5ch;
+				font-size: var(--font-size-10);
 				font-weight: 900;
+				background: rgb(var(--color-mono-300));
+				padding: 1vh 2vh;
+				border-radius: var(--border-radius);
 			}
 		}
 	}
