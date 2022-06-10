@@ -514,8 +514,8 @@
 					{	
 						targets: this.$refs.LOGO_SVG,
 						filter: [
-							{ value: 'drop-shadow(0px 0px 3px #FFFFFF)', duration: 2000 },
-							{ value: 'drop-shadow(0px 0px 0px #FFFFFF)', duration: 5000 },
+							{ value: 'drop-shadow(0px 0px 6px #FFFFFF)', duration: 2000 },
+							{ value: 'drop-shadow(0px 0px 1px #FFFFFF)', duration: 5000 },
 						],
 						endDelay: 2000,
 						round: 100,

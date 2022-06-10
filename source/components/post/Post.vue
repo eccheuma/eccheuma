@@ -482,6 +482,10 @@
 
 			button {
 
+				* {
+					pointer-events: none;
+				}
+
 				display: inline-flex;
 				column-gap: 4px;
 

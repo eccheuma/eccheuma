@@ -64,7 +64,7 @@ import type { ActionTree, MutationTree } from 'vuex'
 
 				database.listen(`Users/${ uid }/state`, value => {
 					vuex.commit('User/State/setUserState', value, { root: true });
-				}, { change: true })
+				}, { mode: database.mode.whole })
 
 				return true;
 

@@ -9,10 +9,12 @@
   },
   "scripts": {
     "nuxt::dev": "nuxt dev",
-    "nuxt::build": "npm run vitest::test && nuxt build",
-    "nuxt::generate": "npm run vitest::test && nuxt generate",
+    "nuxt::build": "nuxt build",
+    "nuxt::start": "nuxt start",
+    "nuxt::generate": "nuxt generate",
     "vitest::test": "vitest --config vitest.config.ts",
-    "vitest::watch": "vitest --config --watch vitest.config.ts"
+    "vitest::watch": "vitest --config --watch vitest.config.ts",
+    "vercel::deploy": "npm run vitest::test && npm run nuxt::build"
   },
   "dependencies": {
     "@eccheuma/crusoris": "^1.1.16",

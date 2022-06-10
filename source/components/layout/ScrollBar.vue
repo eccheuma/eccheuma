@@ -23,35 +23,31 @@
 
 		</template>
 
-		<section class="scroll_panel-mute" id="ScrollMute">
-			<span
-				:class="[{ active: GlobalHowler.mute && !GlobalHowler.inChange }, { change: GlobalHowler.inChange }]"
-				@click="globalMute(!GlobalHowler.mute)"
-			>
+		<section id="ScrollMute" class="scroll_panel-mute" @click="globalMute(!GlobalHowler.mute)">
 
+			<span :class="[{ active: GlobalHowler.mute && !GlobalHowler.inChange }, { change: GlobalHowler.inChange }]">
 				<icon name="Mute" />
-
-				<popover target="ScrollMute" position="left">
-					Звук на интерфейса: {{ GlobalHowler.mute ? 'отключен' : 'включён' }}
-				</popover>
-
 			</span>
+
+			<popover target="ScrollMute" position="left">
+				Звук на интерфейса: {{ GlobalHowler.mute ? 'отключен' : 'включён' }}
+			</popover>
+
 		</section>
 
 		<hr v-once>
 
-		<section class="scroll_panel-switch">
+		<section id="ScrollTheme" class="scroll_panel-switch" @click="changeTheme(UI === 'light' ? 'dark' : 'light')">
 
 			<icon name="Theme" />
 
-			<div 
-				id="ScrollTheme" 
-				class="scroll_panel-switch-checker"
-				:class="{ active: UI === 'dark' }" 
-				@click="changeTheme(UI === 'light' ? 'dark' : 'light')"
-				>
+			<div class="scroll_panel-switch-checker" :class="{ active: UI === 'dark' }">
 				<span class="switch" />
 			</div>
+
+			<popover target="ScrollTheme" position="left">
+				Смена оформления сайта
+			</popover>
 
 		</section>
 
@@ -131,6 +127,10 @@
 
 		padding: 1vh 0;
 
+		* {
+			pointer-events: none;
+		}
+
 		i { 
 			@include icon-size(var(--size-36));
 			fill: rgb(var(--color-mono-500));
@@ -155,6 +155,10 @@
 
 	}
 	&-mute {
+
+		* {
+			pointer-events: none;
+		}
 
 		.change {
 			opacity: .25;
@@ -200,6 +204,10 @@
 		}
 	}
 	&-switch {
+
+		* {
+			pointer-events: none;
+		}
 
 		display: grid;
 		justify-content: center;

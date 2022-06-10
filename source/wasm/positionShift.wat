@@ -20,7 +20,7 @@
     ;; save norm result
     local.tee $b
     
-    ;; ease
+    ;; square ease
     f32.abs
     local.get $b
     f32.mul

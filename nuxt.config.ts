@@ -6,7 +6,7 @@
   import vitest from 'vitest';
 
 // ENV
-  import { environment }  from './utils/configEnvironment'
+  import { environment } from './utils/configEnvironment'
 
   const appEnvironment = environment.config([
     'SUPABASE_API_URL', 
@@ -24,7 +24,7 @@
   import { utils }        from './source/utils';
 
 // VARIABLES
-  const inDevelopment = process.env.NODE_ENV === 'development';
+  const inDevelopment = process.env.NODE_ENV === environment.node.development;
   const hash = utils.hashGenerator(12);
 
 // WRITE A VERSION
@@ -54,9 +54,8 @@
 
     },
 
-    // target: inDevelopment ? 'server' : 'static',
+    ssr: true,
     target: 'static',
-    ssr: false,
 
     server: {
       port: 3000,

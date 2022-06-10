@@ -182,13 +182,13 @@
 
 					switch (value) {
 						case loadStatus.start: 
-							this.animateIcon({ direction: 'reverse' }); console.log('start'); break;
+							this.animateIcon({ direction: 'reverse' }); break;
 						case loadStatus.pending: 
-							this.animateIcon({ direction: 'alternate', iterations: Infinity }); console.log('pending'); break;
+							this.animateIcon({ direction: 'alternate', iterations: Infinity }); break;
 						case loadStatus.error: 
-							this.animateIcon({ direction: 'normal', duration: 100, iterations: 3 }); console.log('error'); break;
+							this.animateIcon({ direction: 'normal', duration: 100, iterations: 3 }); break;
 						case loadStatus.done: 
-							this.animateIcon({ direction: 'normal', iterations: 1 }); console.log('done'); break;
+							this.animateIcon({ direction: 'normal', iterations: 1 }); break;
 					}
 
 				}

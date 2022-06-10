@@ -12,14 +12,14 @@ import type { DatabaseReference, EventType, Query, QueryConstraint } from 'fireb
 
 // TYPES
 type GetParams = {
-  change  : boolean
+  mode    : database.mode
   limit   : number
   start   : number
   end     : number
 }
 
 // INNER FUNCTIONS
-function defineQuery(ref: DatabaseReference, params: Partial<GetParams>): Query {
+function defineQuery(ref: DatabaseReference, params: Partial<GetParams> = Object()): Query {
 
   let QUERY = Array<QueryConstraint>();
 
@@ -41,15 +41,18 @@ export namespace database {
     denied = 'PERMISSION_DENIED',
   }
 
+  export const enum mode {
+    child,
+    whole,
+  }
+
   export function get<T extends object | string>(path: string, params?: Partial<GetParams>): Promise<T> {
 
     const REF = ref(globalThis.firebaseDB, path);
 
-    let getQuery: Query = query(REF);
+    const query: Query = defineQuery(REF, params);
 
-    if ( params ) getQuery = defineQuery(REF, params);
-
-    return firebaseGet(getQuery).then(snap => snap.val());
+    return firebaseGet(query).then(snap => snap.val());
   
   }
   
@@ -57,21 +60,18 @@ export namespace database {
   
     const REF = ref(globalThis.firebaseDB, path);
   
-    let getQuery: Query = query(REF);
-  
-    if ( params ) getQuery = defineQuery(REF, params);
+    const query: Query = defineQuery(REF, params);
 
-    const databaseEvent: EventType = params?.change 
-      ? 'child_changed' 
-      : 'value';
+    switch (params?.mode) {
 
-    switch (databaseEvent) {
+      case mode.child:
+        onChildChanged(query, (snap) => callback(snap.val())); break;
 
-      case 'child_changed':
-        onChildChanged(getQuery, snap  => callback(snap.val())); break;
+      case mode.whole: 
+        onValue(query, (snap) => callback(snap.val())); break;
 
-      case 'value': 
-        onValue(getQuery, snap => callback(snap.val())); break;
+      default:
+        onValue(query, (snap) => callback(snap.val())); break;
       
     }
   

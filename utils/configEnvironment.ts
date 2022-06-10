@@ -4,6 +4,11 @@ dotenv.config({ path: '../.env' });
 
 export namespace environment {
 
+  export const enum node {
+    docker = "production-docker",
+    development = "development",
+  }
+
   type env = {[ i: string ]: string } 
 
   export function config(keys: Array<string>): env {

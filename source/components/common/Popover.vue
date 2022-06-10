@@ -1,14 +1,15 @@
 <template>
 	<div class="popover-container" :style="`top: ${ pop_position.y }px; left: ${ pop_position.x }px`">
+		
 		<transition name="PopoverTransition">
 			<div
-				v-show="active" 
 				key="popover-content" 
 				ref="popover" 
 				class="popover-wrap"
-				:style="`--w: ${ width / 2 }px`"
 				:class="[{ 'utils::glassy': !$isMobile }]" 
+				:style="dynamicStyles"
 				:data-pos="position"
+				v-show="active" 
 				>
 				<slot />
 			</div>
@@ -131,7 +132,7 @@
 
 <script lang="ts">
 
-	import Vue, { PropOptions } from 'vue'
+	import Vue, { PropOptions, VNodeData } from 'vue'
 
 	const MARGIN = 20;
 
@@ -169,6 +170,13 @@
 
 			}
 		},
+		computed: {
+			dynamicStyles(): VNodeData['style'] {
+				return {
+					['--w']: `${ this.width / 2 }px`,
+				}
+			}
+		},
 		mounted() {
 
 			const T = document.getElementById(this.target)
@@ -189,43 +197,39 @@
 				const PopoverTarget = document.getElementById(this.target)!
 				const ParentRect 		= PopoverTarget?.getBoundingClientRect();
 				const PopoverRect 	= ( this.$refs.popover as HTMLElement )?.getBoundingClientRect();
-
-				requestAnimationFrame(() => {
 					
-					if ( PopoverTarget && PopoverRect && ParentRect ) {
+				if ( PopoverTarget && PopoverRect && ParentRect ) {
 
-						this.width = PopoverRect.width;
-	
-						const ParentCenter = {
-							x: PopoverTarget.offsetLeft + (ParentRect.width / 2),
-							y: PopoverTarget.offsetTop  + (ParentRect.height / 2),
-						}
+					this.width = PopoverRect.width;
 
-						switch (this.position) {
-							case 'left': {
-
-								this.pop_position.x = (ParentRect.width + MARGIN) + ( PopoverRect.width / 2 );
-								this.pop_position.y = ParentCenter.y - ( PopoverRect.height / 2 );
-
-							} break;
-
-							case 'top': {
-
-								this.pop_position.x = ParentCenter.x
-								this.pop_position.y = (MARGIN + PopoverRect.height) * -1;
-
-							} break;
-						
-							default: {
-								this.pop_position.x = ParentCenter.x;
-								this.pop_position.y = ParentCenter.y;
-							}
-
-						}
-	
+					const ParentCenter = {
+						x: PopoverTarget.offsetLeft + (ParentRect.width / 2),
+						y: PopoverTarget.offsetTop  + (ParentRect.height / 2),
 					}
 
-				})
+					switch (this.position) {
+						case 'left': {
+
+							this.pop_position.x = (ParentRect.width + MARGIN) + ( PopoverRect.width / 2 );
+							this.pop_position.y = ParentCenter.y - ( PopoverRect.height / 2 );
+
+						} break;
+
+						case 'top': {
+
+							this.pop_position.x = ParentCenter.x
+							this.pop_position.y = (MARGIN + PopoverRect.height) * -1;
+
+						} break;
+					
+						default: {
+							this.pop_position.x = ParentCenter.x;
+							this.pop_position.y = ParentCenter.y;
+						}
+
+					}
+
+				}
 
 			},
 			ChangeState(status: boolean) {
