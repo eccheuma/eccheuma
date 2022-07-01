@@ -37,29 +37,15 @@
 						<hr v-once>
 						<div class="user_profile-info-footer-list">
 
-							<span>
+							<span v-if="State.UserWallet">
 								<div>Баланс: </div>
-								<strong>{{ State.UserBalance }} ₽</strong>
+								<strong>{{ State.UserWallet[Currency] || 0 }} ₽</strong>
 							</span>
+
 							<span>
 								<div>Сообщений: </div>
 								<strong>{{ Messages.length }} ( Новых: {{ NewMessages }} )</strong>
 							</span>
-
-							<!-- <template v-if="ActiveRequest.length">
-								<span>
-									<div>Тип заказа:  </div>
-									<strong>{{ ActiveRequest[0].Service.Name || 'Не указан' }}</strong>
-								</span>
-								<span>
-									<div>Статус заказа: </div>
-									<strong>{{ DefineWorkStatus(ActiveRequest[0].Status) }}</strong>
-								</span>
-								<span>
-									<div>Цена заказа: </div>
-									<strong>{{ ActiveRequest[0].Service.Cost || 0 }} ₽</strong>
-								</span>
-							</template> -->
 
 							<span>
 								<div>Заказов в прогрессе: </div>
@@ -483,7 +469,7 @@
 	import type { VuexMap } 				from '~/types/VuexMap';
 
 	// UTILS
-	import { user } from '~/utils/status'
+	import { user } from '~/utils/status';
 
 	// ENUMS
 	import { User } from '~/types/User'
@@ -558,15 +544,13 @@
 		data() {
 			return {
 
-				CurentPreferencesComponent: 'Messages' as MODULES, 
+				CurentPreferencesComponent: 'Messages' as MODULES,
 
 				PreferencesArea: [
-
 					{ Component: 'Messages', 			Name: 'Сообщения' 		},
 					{ Component: 'IconChange', 		Name: 'Смена иконки'	},
 					{ Component: 'Orders', 				Name: 'Запросы'				},
 					{ Component: 'NameChange', 		Name: 'Изменить Имя'	},
-
 				] as Array<{ Component: MODULES, Name: string }>,
 
 				status: false,
@@ -581,6 +565,7 @@
 				LoginStatus			:	state => (state as VuexMap).Auth.Session.LoginStatus,
 				State						:	state	=> (state as VuexMap).User.State.State,
 				ProfileArea			:	state	=> (state as VuexMap).User.State.UserProfileArea,
+				Currency				: state => (state as VuexMap).User.State.Currency,
 				Messages				: state => (state as VuexMap).User.Messages.Data,
 				NewMessages			: state => (state as VuexMap).User.Messages.NewMessagesCount,
 				WorkRequest			: state => (state as VuexMap).User.WorkRequest,

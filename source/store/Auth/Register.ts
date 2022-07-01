@@ -7,6 +7,7 @@ import type { MutationTree, ActionTree } from 'vuex'
 
 // UTILS
 	import { utils } from '~/utils';
+	import { currencies, wallet } from '~/utils/currency';
 
 // TYPES
 	import type { VuexMap } from '~/types/VuexMap'
@@ -54,6 +55,8 @@ import type { MutationTree, ActionTree } from 'vuex'
 			};
 
 			const { uid, email } = response;
+
+			const userWallet 	= new wallet.Instance(currencies.DEFAULT);
 			
 			vuex.commit('Auth/Session/setUserState', { uid, email }, { root: true })
 			vuex.commit('Auth/Session/setAuthError', null, { root: true });
@@ -63,7 +66,7 @@ import type { MutationTree, ActionTree } from 'vuex'
 				UserEmail				:	email,
 				UserName				:	form.name,
 				UserStatus			:	User.status.User,
-				UserBalance			:	0,
+				UserWallet			:	userWallet.toJSON,
 				UserWorkStatus	: Purchase.status.None,
 				UserImageID			:	storage.reference('UserIcons/default.webp')
 			} as User.state)

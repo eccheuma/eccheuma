@@ -1,5 +1,6 @@
 // ENUMS
 import { Purchase } from '~/types/Services';
+import { currencies, wallet } from '~/utils/currency';
 
 export namespace User {
 
@@ -16,7 +17,7 @@ export namespace User {
 		UserEmail: string
 		UserName: string
 		UserStatus: status
-		UserBalance: number
+		UserWallet: wallet.contract
 		UserWorkStatus: Purchase.status
 		UserImageID: string
 	}

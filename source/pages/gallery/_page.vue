@@ -1,5 +1,5 @@
 <template>
-	<section ref="page" class="gallery-page" :key="Page" v-show="Ready">
+	<section ref="page" class="gallery-page" :key="Page" :style="dynamicStyles">
 
 		<template v-if="$isMobile">
 			<eccheuma-image
@@ -48,9 +48,17 @@
 	</section>
 </template>
 
+<style lang="scss">
+
+.gallery-page {
+	transition-duration: 250ms;
+}
+
+</style>
+
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue, { VNodeData } from 'vue'
 
 	// VUEX
 	import { mapActions, mapMutations, mapState } from 'vuex'
@@ -79,6 +87,8 @@
 	// COMPONENTS
 	import EccheumaImage 						from '~/components/image/Image.vue'
 	import IntesectionComponent from '~/components/functional/intersectionComponent.vue'
+
+	const PAGE_TRANSITION_TIME = 250;
 
 	// INTERSECTION_ANIMATION
 	const Animation: ANIMATION_PAYLOAD = {
@@ -165,6 +175,13 @@
 				Lang 		: state => (state as VuexMap).App.Lang
 			}),
 
+			dynamicStyles(): VNodeData['style'] {
+				return {
+					['--t']: `${ PAGE_TRANSITION_TIME }ms`,
+					opacity: Number(this.Ready)
+				}
+			}
+
 		},
 		created() {
 
@@ -174,11 +191,14 @@
 				this.getDatabaseData();
 			}
 
-		},
-		mounted() {
+			this.$router.beforeEach((to, from, next) => {
 
-			this.$nextTick().then(() => {
-				this.Ready = true
+				if (to.name !== 'gallery-page') return next();
+
+				this.Ready = false;
+
+				setTimeout(next, PAGE_TRANSITION_TIME);
+
 			})
 
 		},
@@ -205,7 +225,9 @@
 					}
 				}
 
-				await this.GetContent(PAYLOAD)
+				await this.GetContent(PAYLOAD);
+
+				this.Ready = true
 
 			},
 

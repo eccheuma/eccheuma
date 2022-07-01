@@ -125,7 +125,6 @@
 
 		display: grid;
 		row-gap: 2vh;
-
 		padding: 0 2vw 2vh;
 
 	}

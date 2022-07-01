@@ -27,7 +27,7 @@
 
 			<scroll-bar v-if="!$isMobile" />
 
-			<nuxt keep-alive :keep-alive-props="{ max: 2 }" class="content-container" />
+			<nuxt class="content-container" />
 
 		</section>
 

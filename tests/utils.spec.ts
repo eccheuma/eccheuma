@@ -2,15 +2,18 @@ import { expect, test, describe } from 'vitest';
 import { getLocale, languages, russian } from '~/lang'
 
 // UTILS
+import { utils }      from '~/utils';
 import { user, work } from '~/utils/status'
-import { validate } from '~/utils/validate';
-import { Opengraph } from '~/utils/opengraph';
+import { validate }   from '~/utils/validate';
+import { Opengraph }  from '~/utils/opengraph';
 
-import { User } from '~/types/User';
-import { Purchase } from '~/types/Services'
-import { utils } from '~/utils';
-import { Meta } from '~/utils/meta';
 import { navigation } from '~/types/Navigation';
+import { Purchase }   from '~/types/Services';
+import { User }       from '~/types/User';
+import { Meta }       from '~/utils/meta';
+
+// Vue
+import Vue from 'vue';
 
 // TESTS
 describe('utils::status', () => {

@@ -864,13 +864,13 @@
 
 				AuthorInfo: new Object() as User.state,
 
-				Message: '',
-				PrevMessage: '',
+				Message: String(),
+				PrevMessage: String(),
 				CharLimit: CHAR_LIMIT,
 
 				ContentSection: false,
 				CommentSection: false,
-
+				
 				prepareContent: false,
 
 				answerTo: null as User.state | null,

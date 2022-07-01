@@ -3,11 +3,13 @@
 
 // TYPES
 	import { User } from '~/types/User'
+	import { currencies } from '~/utils/currency'
 
 // STATE
 	export const state = () => ({
 
 		UserProfileArea: false,
+		Currency: currencies.Country.ru, 
 
 		State: new Object() as User.state
 

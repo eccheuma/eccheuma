@@ -270,7 +270,8 @@
 		computed: {
 			...mapState({
 
-				State		: state => (state as VuexMap).User.State.State,
+				State				: state => (state as VuexMap).User.State.State,
+				Currency		: state => (state as VuexMap).User.State.Currency,
 				NewMessages	: state => (state as VuexMap).User.Messages.NewMessagesCount,
 				Messages		: state => (state as VuexMap).User.Messages.Data,
 				Lang				: state => (state as VuexMap).App.Lang
@@ -284,9 +285,9 @@
 				const LastMessage = this.Messages.length ? [ ...this.Messages ].pop()?.message : ''
 
 				return {
-					UserBalance: {
+					UserWallet: {
 						title: 'Баланс',
-						value: `${ this.State.UserBalance } ₽`,
+						value: `${ this.State.UserWallet[this.Currency] } ₽`,
 						info: 'Ваш текущий баланс.',
 						icon: 'Service',
 					},

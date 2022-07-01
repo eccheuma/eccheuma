@@ -27,7 +27,7 @@ export namespace utils {
 
   export namespace types {
 
-    export type nominal<Type, Key extends string> = Type & {[ Symbol.species ]: Key }
+    export type nominal<Type, Key> = Type & {[ Symbol.species ]: Key }
 
     export type asIterableObject<Struct extends object> = {[ index: string ]: Struct };
 

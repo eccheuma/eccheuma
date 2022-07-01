@@ -1,7 +1,7 @@
 <template>
 	<section class="user_profile-component">
-		<div class="user_profile-component-name_change" :class="{ NonActive: nameValidation }">
 
+		<div class="user_profile-nameinput">
 			<span>Любое имя длинее одного символа</span>
 			<input 
 				v-model="NewName" 
@@ -9,33 +9,50 @@
 				:placeholder="`Текущее имя: ${ State.UserName }`"
 				@keypress.shift.enter="setUsername"
 			>
-
 		</div>
+
+		<hr>
+
+		<eccheuma-button>
+			Отправить
+		</eccheuma-button>
+
 	</section>
 </template>
 
 <style lang="scss">
 
-.user_profile-component {
+.user_profile {
 
-	height: 100%;
-
-	&-name_change {
-
+	&-component {
 		text-align: center;
-
+		height: 100%;
+	
 		display: grid;
 		grid-template: {
 			columns: 1fr;
-			rows: min-content min-content
+			rows: 1fr min-content auto
 		}
-
+	
 		place-content: center;
+		row-gap: 2vh;		
+	
+		button {
+			width: min-content;
+			height: min-content;
+			justify-self: center;
+			align-self: end;
+		}
+	}
+
+	&-nameinput {
+
+		margin: auto;
 
 		span {
-			height: 3vh;
+			line-height: 4vh;
 		}
-
+	
 		input {
 			margin: auto;
 			text-align: center;
@@ -48,7 +65,9 @@
 			border-radius: var(--border-radius);
 			width: 75%;
 		}
-	}	
+	}
+
+
 }
 
 </style>
@@ -58,16 +77,22 @@
 	import Vue from 'vue';
 
 	// VUEX
-	import { mapState } from 'vuex'
+	import { mapState } from 'vuex';
 
 	// API
 	import { database } from '~/api/database';
 
 	// VUEX MODULE TYPE MAP
-	import type { VuexMap } 				from '~/types/VuexMap'
+	import type { VuexMap } from '~/types/VuexMap';
+
+	// COMPONENTS
+	import EccheumaButton from '~/components/buttons/CommonButton.vue';
 
 	// MODULE
 	export default Vue.extend({
+		components: {
+			EccheumaButton
+		},
 		data() {
 			return {
 				NewName: '',

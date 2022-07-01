@@ -23,10 +23,10 @@
 				@keydown.ctrl.enter="sendMessage"
 			/>
 
-			<section>
+			<!-- <section>
 				<input id="messageNotificationChecker" v-model="MessageNotification" type="checkbox" name="Оповещать о сообщениях">
 				<label for="messageNotificationChecker">Оповещать о сообщениях</label>
-			</section>
+			</section> -->
 
 			<eccheuma-button @click.native="sendMessage">
 				Отправить
@@ -37,7 +37,7 @@
 	</section>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
 .user_profile-component {
 
