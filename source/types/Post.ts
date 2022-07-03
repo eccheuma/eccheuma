@@ -1,3 +1,5 @@
+// UTILS
+import { utils } from '~/utils'
 
 export namespace Post {
 
@@ -21,13 +23,31 @@ export namespace Post {
 		ID					: number
 		authorID		: string
 		description	: string
-		comments		: Array<comment>
+		likes				: utils.types.asIterableObject<like>
+		comments		: utils.types.asIterableObject<comment>
 		content			: Array<content>
-		likes				: Array<like>
 		image				: string
 		tags				: Array<string>
 		date				: number
 		title				: string
+	}
+
+	export function builder(): struct {
+		return {
+			ID: Number(),
+			content: [{ 
+				tag: 'h1', 
+				value: 'test' 
+			}],
+			authorID: String(),
+			comments: Object(),
+			likes: Object(),
+			date: Number(),
+			description: String(),
+			image: String(),
+			tags: Array(),
+			title: String(),
+		}
 	}
 
 }

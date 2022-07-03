@@ -110,4 +110,18 @@ export namespace utils {
 
   }
 
+  export function comparer<T extends Object>(struct: T, mock: T): boolean {
+
+    const mockKeys = Object.keys(mock)
+      .map(key => struct[key as keyof T])
+      .every(x => x !== undefined)
+  
+    const structKeys = Object.keys(struct)
+      .map(key => mock[key as keyof T])
+      .every(x => x !== undefined)
+  
+    return [ mockKeys, structKeys ].every(x => Boolean(x));
+  
+  }
+
 }

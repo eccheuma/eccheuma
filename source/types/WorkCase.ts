@@ -14,14 +14,33 @@ export namespace Workcase {
 		description		: string
 		images				: Array<Image.struct>
 	}
-	
+
 	export type struct = {
 		ID: number
 		content: content
 		properties: {
 			type: Portfolio.sections
 		}
-		rating: number
+		rating?: number
+	}
+
+	export function builder(): struct {
+		return {
+			ID: Number(),
+			content: {
+				images: [ Image.builder() ],
+				cost: Number(),
+				link: String(),
+				name: String(),
+				time: String(),
+				theme: String(),
+				description: String(),
+				tech_request: String(),
+			},
+			properties: {
+				type: Portfolio.sections.applications
+			},
+		}
 	}
 
 }

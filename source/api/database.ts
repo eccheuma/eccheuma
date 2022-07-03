@@ -46,7 +46,12 @@ export namespace database {
     whole,
   }
 
-  export function get<T extends object | string>(path: string, params?: Partial<GetParams>): Promise<T> {
+  /**
+   * @param path Путь к данным в базе.
+   * @param params Параметры запроса, будь то количество данных или их пложение.
+   * @returns 
+   */
+  export async function get<T extends object | string>(path: string, params?: Partial<GetParams>): Promise<T> {
 
     const REF = ref(globalThis.firebaseDB, path);
 
@@ -77,7 +82,7 @@ export namespace database {
   
   }
   
-  export function getLength(path: string): Promise<number> {
+  export async function getLength(path: string): Promise<number> {
 
     const Query: Query = query(ref(globalThis.firebaseDB, path));
 
@@ -105,7 +110,7 @@ export namespace database {
     
   }
   
-  export function remove(path: string): Promise<error | boolean> {
+  export async function remove(path: string): Promise<error | boolean> {
 
     return firebaseRemove(ref(globalThis.firebaseDB, path))
       .then(() => true)
@@ -113,7 +118,7 @@ export namespace database {
 
   }
   
-  export function update(path: string, data: any): Promise<error | boolean> {
+  export async function update(path: string, data: any): Promise<error | boolean> {
 
     return firebaseUpdate(ref(globalThis.firebaseDB, path), data)
       .then(() => true)

@@ -4,11 +4,22 @@ export namespace Message {
 
   export type struct = {
     ID: string
-    userID: User.state['UserID'] 
-    from: User.state['UserName']
+    userID: User.struct['UserID'] 
+    from: User.struct['UserName']
     date: number
     message: string
     readed: boolean
   }
+
+  export function builder(): struct {
+		return {
+			ID: String(),
+      userID: String(),
+      date: Number(),
+      from: String(),
+      message: String(),
+      readed: false,
+		}
+	}
 
 }

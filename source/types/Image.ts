@@ -42,9 +42,9 @@ export namespace Image {
 		ID: number,
 		content: {
 			path: string
-			date?: number
-			title?: string
-			description?: string
+			date: number
+			title: string
+			description: string
 		}
 		property?: {
 			type: 'promo' | 'gallery'
@@ -58,6 +58,18 @@ export namespace Image {
 	
 	export type formatsStruct = {
 		[ F in Partial<keyof typeof formats.output> ]: string
+	}
+
+	export function builder(): struct {
+		return {
+			ID: Number(),
+			content: {
+				path: String(),
+				date: Number(),
+				title: String(),
+				description: String(),
+			},
+		}
 	}
 
 }

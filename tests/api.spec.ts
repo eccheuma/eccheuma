@@ -119,7 +119,7 @@ describe('api::database', () => {
         : expect.fail('write permissions in a mess')
 
     // Check valid writes  
-      const validWrite = await database.update(`Users/${ uid }/state`, { UserName: userName } as Partial<User.state>);
+      const validWrite = await database.update(`Users/${ uid }/state`, { UserName: userName } as Partial<User.struct>);
 
       typeof validWrite === 'boolean'
         ? expect(validWrite).toBe(true)

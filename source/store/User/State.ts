@@ -11,7 +11,7 @@
 		UserProfileArea: false,
 		Currency: currencies.Country.ru, 
 
-		State: new Object() as User.state
+		State: new Object() as User.struct
 
 	})
 
@@ -27,7 +27,7 @@
 
 // MUTATIONS
 	export const mutations: MutationTree<CurentState> = {
-		setUserState(state, newUserState: User.state) {
+		setUserState(state, newUserState: User.struct) {
 			state.State = newUserState
 		},
 		toggleProfileArea(state) {

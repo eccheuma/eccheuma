@@ -69,7 +69,7 @@ import type { MutationTree, ActionTree } from 'vuex'
 				UserWallet			:	userWallet.toJSON,
 				UserWorkStatus	: Purchase.status.None,
 				UserImageID			:	storage.reference('UserIcons/default.webp')
-			} as User.state)
+			} as User.struct)
 
 			// ? Всё ещё стоит под вопросом. Нужно ли хранить данные касательно клиентских настроек вне браузера...
 			//	await database.set(`Users/${ uid  }/preferences`, {

@@ -12,9 +12,6 @@ import { Purchase }   from '~/types/Services';
 import { User }       from '~/types/User';
 import { Meta }       from '~/utils/meta';
 
-// Vue
-import Vue from 'vue';
-
 // TESTS
 describe('utils::status', () => {
 
@@ -172,8 +169,6 @@ describe('utils::hash', () => {
     const LENGTH = 24;
 
     const Hash = utils.hashGenerator(LENGTH);
-
-    console.log(Hash);
 
     expect(Hash.length).toBe(LENGTH);
 
