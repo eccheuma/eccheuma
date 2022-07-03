@@ -862,7 +862,7 @@
 
 				ImageURL: PLACEHOLDER,
 
-				AuthorInfo: new Object() as User.state,
+				AuthorInfo: new Object() as User.struct,
 
 				Message: String(),
 				PrevMessage: String(),
@@ -873,7 +873,7 @@
 				
 				prepareContent: false,
 
-				answerTo: null as User.state | null,
+				answerTo: null as User.struct | null,
 
 				PostDate: utils.getLocalTime(0),
 
@@ -1038,7 +1038,7 @@
 
 				return new Promise((resolve) => {
 					database.get(`Users/${ this.payload.authorID }/state`).then( response => {
-						this.AuthorInfo = response as User.state; resolve()
+						this.AuthorInfo = response as User.struct; resolve()
 					})
 				})
 
@@ -1146,9 +1146,7 @@
 
 			},
 
-			pickUser(User: User.state) {
-
-				console.log(User);
+			pickUser(User: User.struct) {
 
 				this.answerTo = User;
 

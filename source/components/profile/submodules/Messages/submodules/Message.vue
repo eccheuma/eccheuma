@@ -185,7 +185,7 @@
     methods: {
       async getUser() {
 
-        const { UserName, UserStatus } = await database.get<User.state>(`Users/${ this.payload.userID }/state`);
+        const { UserName, UserStatus } = await database.get<User.struct>(`Users/${ this.payload.userID }/state`);
 
         this.author = {
           name: UserName,

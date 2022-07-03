@@ -291,7 +291,7 @@
 			userID: {
 				type: String,
 				required: true,
-			} as PropOptions<User.state['UserID']>,
+			} as PropOptions<User.struct['UserID']>,
 			commentID: {
 				type: String,
 				required: true,
@@ -307,10 +307,10 @@
 
 				localeDate: utils.getLocalTime(0),
 
-				author: new Object() as User.state,
+				author: new Object() as User.struct,
 				comment: new Object() as Post.comment,
 
-				answerTo: undefined as User.state | undefined,
+				answerTo: undefined as User.struct | undefined,
 
 			}
 		},
@@ -377,13 +377,11 @@
 
 			async taggedUser() {
 
-				const users = await database.get<any>('Users');
+				const users = await database.get<utils.types.asIterableObject<User.state>>('Users');
 
-				Object.values(users).forEach((user: any) => {
+				Object.values(users).forEach(({ state }) => {
 
 					if ( this.answerTo ) return;
-
-					const state = user.state as User.state;
 
 					this.answerTo = new RegExp(`@${ state.UserName }`).test(this.comment.data)
 						? state
