@@ -133,10 +133,10 @@
 			background: rgb(var(--color-mono-300));
 			border: 1px solid var(--color-accent-edges-100);
 			border-radius: var(--border-radius);
+      
 			padding: 1vh 1vw 2vh .5vw;
-
 			margin: 2vh 0;
-
+      
 			code {
 				display: block;
 				white-space: pre-wrap;

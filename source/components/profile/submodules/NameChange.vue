@@ -1,7 +1,8 @@
 <template>
 	<section class="user_profile-component">
-
+  
 		<div class="user_profile-nameinput">
+
 			<span>Любое имя длинее одного символа</span>
 			<input 
 				v-model="NewName" 

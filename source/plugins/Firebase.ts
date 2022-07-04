@@ -4,6 +4,7 @@ import { utils } from '~/utils';
 
 import { initializeApp, FirebaseApp, getApps, deleteApp } 	from 'firebase/app';
 import { getDatabase, Database } from 'firebase/database';
+
 import { getAuth, Auth } from 'firebase/auth';
 
 declare global {
@@ -19,7 +20,6 @@ const DOMEN = 'escapefrommordorland';
 export default (context?: Context) => {
 
 	const applicationHash = utils.hashGenerator(12);
-
 	const CONFIG = {
 
 		appId							: context?.env.FIREBASE_API_APP || process.env.FIREBASE_API_APP,

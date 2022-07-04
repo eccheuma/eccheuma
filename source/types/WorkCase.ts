@@ -41,6 +41,7 @@ export namespace Workcase {
 				type: Portfolio.sections.applications
 			},
 		}
+
 	}
 
 }

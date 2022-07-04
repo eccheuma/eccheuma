@@ -121,7 +121,7 @@ export namespace utils {
       .every(x => x !== undefined)
   
     return [ mockKeys, structKeys ].every(x => Boolean(x));
-  
+
   }
 
 }

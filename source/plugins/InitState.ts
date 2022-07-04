@@ -21,8 +21,11 @@ export default ({ env, isDev }: Context) => {
 	}
 
 	if ( isDev && process.browser ) {
+  
 		console.log(`%cEccheuma | Build: ${ env.buildHash } | Слышу ZOV ебать AZOV`,
+
 		'background-color: #141418; padding: 4px 20px; border-radius: 4px; border: 1px solid #323236')
+    
 	}
 
 }
