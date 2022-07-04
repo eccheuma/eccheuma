@@ -69,18 +69,11 @@ export namespace database {
   
     if ( params ) getQuery = defineQuery(REF, params);
 
-    const databaseEvent: EventType = params?.change 
-      ? 'child_changed' 
-      : 'value';
-
-    switch (databaseEvent) {
-
-      case 'child_changed':
+    switch (params?.mode) {
+      case mode.child:
         onChildChanged(getQuery, snap  => callback(snap.val())); break;
-
-      case 'value': 
+      default: 
         onValue(getQuery, snap => callback(snap.val())); break;
-      
     }
   
   }
