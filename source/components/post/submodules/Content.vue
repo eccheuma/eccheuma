@@ -10,7 +10,11 @@
 					:class="{ EditableBlock: editableBlock == index }"
 					:content="{ path: item.value.url, description: item.value.alt }" 
 					:sections="{ date: false, description: false, zoom: true }" 
+<<<<<<< HEAD
 					:property="{ type: 'default' }"
+=======
+					:property="{ type: 'gallery' }"
+>>>>>>> master
 					>
 					{{ item.value.alt }}
 				</eccheuma-image>
@@ -133,9 +137,13 @@
 			background: rgb(var(--color-mono-300));
 			border: 1px solid var(--color-accent-edges-100);
 			border-radius: var(--border-radius);
+<<<<<<< HEAD
 			padding: 1vh 1vw 2vh .5vw;
 
 			margin: 2vh 0;
+=======
+			padding: 1vh 1.5vw 2vh;
+>>>>>>> master
 
 			code {
 				display: block;
@@ -150,7 +158,10 @@
 				color: rgb(var(--color-mono-500));
 				font-family: var(--decor-font);
 				font-size: var(--font-size-24);
+<<<<<<< HEAD
 				margin-bottom: -3vh;
+=======
+>>>>>>> master
 			}
 
 			.function {

@@ -1,5 +1,8 @@
+<<<<<<< HEAD
 // UTILS
 import { utils } from '~/utils'
+=======
+>>>>>>> master
 
 export namespace Post {
 
@@ -23,15 +26,22 @@ export namespace Post {
 		ID					: number
 		authorID		: string
 		description	: string
+<<<<<<< HEAD
 		likes				: utils.types.asIterableObject<like>
 		comments		: utils.types.asIterableObject<comment>
 		content			: Array<content>
+=======
+		comments		: Array<comment>
+		content			: Array<content>
+		likes				: Array<like>
+>>>>>>> master
 		image				: string
 		tags				: Array<string>
 		date				: number
 		title				: string
 	}
 
+<<<<<<< HEAD
 	export function builder(): struct {
 		return {
 			ID: Number(),
@@ -50,4 +60,6 @@ export namespace Post {
 		}
 	}
 
+=======
+>>>>>>> master
 }

@@ -51,7 +51,10 @@
   row-gap: 2vh;
 
   min-height: 40vh;
+<<<<<<< HEAD
   height: max-content;
+=======
+>>>>>>> master
 
   overflow: hidden;
   border-radius: var(--border-radius);

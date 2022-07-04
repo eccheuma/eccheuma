@@ -108,6 +108,7 @@ export namespace utils {
       .slice(0, words)
       .reduce((acc, cur) => `${ acc } ${ cur }`, String())
 
+<<<<<<< HEAD
   }
 
   export function comparer<T extends Object>(struct: T, mock: T): boolean {
@@ -122,6 +123,8 @@ export namespace utils {
   
     return [ mockKeys, structKeys ].every(x => Boolean(x));
   
+=======
+>>>>>>> master
   }
 
 }

@@ -6,7 +6,7 @@ import { ref,
 } from 'firebase/database';
 
 import { onValue, onChildChanged  } from 'firebase/database';
-import { query, startAt, endAt, limitToFirst, orderByKey } from 'firebase/database';
+import { query, startAt, endAt, limitToFirst } from 'firebase/database';
 
 import type { DatabaseReference, EventType, Query, QueryConstraint } from 'firebase/database';
 
@@ -19,14 +19,14 @@ type GetParams = {
 }
 
 // INNER FUNCTIONS
-function defineQuery(ref: DatabaseReference, params: Partial<GetParams> = Object()): Query {
+function defineQuery(ref: DatabaseReference, params?: Partial<GetParams>): Query {
 
   let QUERY = Array<QueryConstraint>();
 
   if ( params?.start ) 
-    QUERY.push(startAt(String(params.start)), orderByKey());
+    QUERY.push(startAt(params.start));
   if ( params?.end )
-    QUERY.push(endAt(String(params.end)), orderByKey());
+    QUERY.push(endAt(params.end));
   if ( params?.limit )
     QUERY.push(limitToFirst(params.limit));
 
@@ -65,18 +65,21 @@ export namespace database {
   
     const REF = ref(globalThis.firebaseDB, path);
   
-    const query: Query = defineQuery(REF, params);
+    let getQuery: Query = query(REF);
+  
+    if ( params ) getQuery = defineQuery(REF, params);
 
-    switch (params?.mode) {
+    const databaseEvent: EventType = params?.change 
+      ? 'child_changed' 
+      : 'value';
 
-      case mode.child:
-        onChildChanged(query, (snap) => callback(snap.val())); break;
+    switch (databaseEvent) {
 
-      case mode.whole: 
-        onValue(query, (snap) => callback(snap.val())); break;
+      case 'child_changed':
+        onChildChanged(getQuery, snap  => callback(snap.val())); break;
 
-      default:
-        onValue(query, (snap) => callback(snap.val())); break;
+      case 'value': 
+        onValue(getQuery, snap => callback(snap.val())); break;
       
     }
   

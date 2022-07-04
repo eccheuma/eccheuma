@@ -287,7 +287,11 @@
 					const CONTENT: NotificationOptions = {
 						body		: `${ from }: ${ message }`,
 						image		: require('~/assets/images/NotificationBadge.png'),
+<<<<<<< HEAD
 						icon		: await database.get<User.struct['UserImageID']>(`Users/${ userID }/state/UserImageID`),
+=======
+						icon		: await database.get<User.state['UserImageID']>(`Users/${ userID }/state/UserImageID`),
+>>>>>>> master
 						silent	: true,
 					}
 
