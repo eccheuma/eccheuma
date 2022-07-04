@@ -1,14 +1,9 @@
 import { Context } from '@nuxt/types';
 
-<<<<<<< HEAD
 import { utils } from '~/utils';
 
 import { initializeApp, FirebaseApp, getApps, deleteApp } 	from 'firebase/app';
 import { getDatabase, Database } from 'firebase/database';
-=======
-import { initializeApp, getApps, FirebaseApp } 	from 'firebase/app';
-import { getDatabase, Database } 								from 'firebase/database';
->>>>>>> master
 import { getAuth, Auth } from 'firebase/auth';
 
 declare global {
@@ -23,14 +18,10 @@ const DOMEN = 'escapefrommordorland';
 
 export default (context?: Context) => {
 
-<<<<<<< HEAD
 	const applicationHash = utils.hashGenerator(12);
 
 	const CONFIG = {
 
-=======
-	const CONFIG = {
->>>>>>> master
 		appId							: context?.env.FIREBASE_API_APP || process.env.FIREBASE_API_APP,
 		apiKey						: context?.env.FIREBASE_API_KEY || process.env.FIREBASE_API_KEY,
 
@@ -43,18 +34,8 @@ export default (context?: Context) => {
 
 	};
 
-<<<<<<< HEAD
 	globalThis.firebaseClient = defaultApp || initializeApp(CONFIG, applicationHash);
 	globalThis.firebaseDB 		= getDatabase(globalThis.firebaseClient);
 	globalThis.firebaseAuth		= getAuth(globalThis.firebaseClient);
-=======
-	// if ( getApps().length === 0 ) {
-
-		globalThis.firebaseClient ||= initializeApp(CONFIG);
-		globalThis.firebaseDB 		||= getDatabase(globalThis.firebaseClient);
-		globalThis.firebaseAuth		||= getAuth(globalThis.firebaseClient);
-
-	// };
->>>>>>> master
 
 }

@@ -3,10 +3,7 @@
 
 // TYPES
 	import { User } from '~/types/User'
-<<<<<<< HEAD
 	import { currencies } from '~/utils/currency'
-=======
->>>>>>> master
 
 // STATE
 	export const state = () => ({

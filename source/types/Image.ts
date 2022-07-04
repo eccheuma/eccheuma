@@ -58,7 +58,6 @@ export namespace Image {
 	
 	export type formatsStruct = {
 		[ F in Partial<keyof typeof formats.output> ]: string
-<<<<<<< HEAD
 	}
 
 	export function builder(): struct {
@@ -71,8 +70,6 @@ export namespace Image {
 				description: String(),
 			},
 		}
-=======
->>>>>>> master
 	}
 
 }

@@ -1,12 +1,7 @@
 <template>
 	<section class="user_profile-component">
-<<<<<<< HEAD
 
 		<div class="user_profile-nameinput">
-=======
-		<div class="user_profile-component-name_change" :class="{ NonActive: nameValidation }">
-
->>>>>>> master
 			<span>Любое имя длинее одного символа</span>
 			<input 
 				v-model="NewName" 
@@ -88,14 +83,10 @@
 	import { database } from '~/api/database';
 
 	// VUEX MODULE TYPE MAP
-<<<<<<< HEAD
 	import type { VuexMap } from '~/types/VuexMap';
 
 	// COMPONENTS
 	import EccheumaButton from '~/components/buttons/CommonButton.vue';
-=======
-	import type { VuexMap } 				from '~/types/VuexMap'
->>>>>>> master
 
 	// MODULE
 	export default Vue.extend({

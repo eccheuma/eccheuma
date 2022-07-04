@@ -1,12 +1,9 @@
 // ENUMS
 import { Purchase } from '~/types/Services';
-<<<<<<< HEAD
 import { currencies, wallet } from '~/utils/currency';
 
 // TYPES
 import { Message } from '~/types/Message';
-=======
->>>>>>> master
 
 export namespace User {
 
@@ -18,16 +15,11 @@ export namespace User {
 	}
 	
 	// INTERFACES
-<<<<<<< HEAD
 	export interface struct {
-=======
-	export interface state {
->>>>>>> master
 		UserID: string
 		UserEmail: string
 		UserName: string
 		UserStatus: status
-<<<<<<< HEAD
 		UserWallet: wallet.contract
 		UserWorkStatus: Purchase.status
 		UserImageID: string
@@ -58,11 +50,5 @@ export namespace User {
 			...struct,
 		}
 	}
-=======
-		UserBalance: number
-		UserWorkStatus: Purchase.status
-		UserImageID: string
-	}
->>>>>>> master
 	
 }

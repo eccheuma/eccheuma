@@ -7,18 +7,10 @@ import { user, work } from '~/utils/status'
 import { validate }   from '~/utils/validate';
 import { Opengraph }  from '~/utils/opengraph';
 
-<<<<<<< HEAD
 import { navigation } from '~/types/Navigation';
 import { Purchase }   from '~/types/Services';
 import { User }       from '~/types/User';
 import { Meta }       from '~/utils/meta';
-=======
-import { User } from '~/types/User';
-import { Purchase } from '~/types/Services'
-import { utils } from '~/utils';
-import { Meta } from '~/utils/meta';
-import { navigation } from '~/types/Navigation';
->>>>>>> master
 
 // TESTS
 describe('utils::status', () => {
@@ -178,11 +170,6 @@ describe('utils::hash', () => {
 
     const Hash = utils.hashGenerator(LENGTH);
 
-<<<<<<< HEAD
-=======
-    console.log(Hash);
-
->>>>>>> master
     expect(Hash.length).toBe(LENGTH);
 
   })
