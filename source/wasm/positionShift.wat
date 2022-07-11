@@ -1,8 +1,10 @@
 (module
   ;; fucntion posShift(1440, 720 | 1440, 1440 | 1440, 0) => 0 | 1 | -1
-  (func $positionShift (export "posShift") (param $w f32) (param $pos f32) (result f32)
+  (func $positionShift (export "posShift") 
 
+    (param $w f32) (param $pos f32) 
     (local $b f32)
+    (result f32)
     
     ;; get center of window
     local.get $w

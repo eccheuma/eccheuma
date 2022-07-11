@@ -109,9 +109,7 @@ export namespace wallet {
 		currencies: Record<currencies.Country, currencies.Currency>
 	}
 
-	export type contract = {
-		[ K in currencies.Country ]: number
-	}
+	export type contract = Record<currencies.Country, number>
 
 	export class Instance implements IWallet {
 

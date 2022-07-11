@@ -20,7 +20,7 @@ export namespace form {
     name        : string
   }
 
-  export type loginPass = {
+  export type session = {
     email: email,
     uid: string,
   }
@@ -53,7 +53,7 @@ export namespace auth {
       return {
         email: user.email,
         uid: user.uid,
-      } as form.loginPass
+      } as form.session
 
     } catch (e: any) {
       return e.code as auth.error
@@ -65,7 +65,7 @@ export namespace auth {
     return signOut(globalThis.firebaseAuth);
   }
 
-  export async function register(email: form.email, pass: string): Promise<auth.error | form.loginPass> {
+  export async function register(email: form.email, pass: string): Promise<auth.error | form.session> {
 
     try {
 

@@ -38,7 +38,7 @@ export namespace russian {
     User      : 'Пользователь',
   }
 
-  export const Routes: {[ key in keyof typeof navigation.routeSections ]: string } = {
+  export const Routes: Record<keyof typeof navigation.routeSections, string> = {
     recommendation  : 'Рекомендации',
     portfolio       : 'Работы',
     service         : 'Услуги',

@@ -63,7 +63,7 @@ describe('api::auth', () => {
 describe('api::database', () => {
 
   let userName = `TESTING 00${ Math.trunc(10 * Math.random()) }`;
-  let userAccount: form.loginPass; 
+  let userSession: form.session; 
 
   beforeAll(async () => {
     
@@ -71,7 +71,7 @@ describe('api::database', () => {
 
     if ( typeof response === 'string' ) throw Error(response);
 
-    userAccount = response;
+    userSession = response;
 
   })
 
@@ -87,15 +87,47 @@ describe('api::database', () => {
 
     expect(Posts).toHaveLength(POSTS_LIMIT);
 
-  })
+  });
 
-  test.concurrent('database::length', async () => {
+  test.concurrent('database::query', async () => {
 
-    const postLength = await database.getLength('Posts');
+    const Q_TARGET: number = 2;
 
-    expect(postLength).toBeTypeOf('number');
+    type DataType = 'objects' | 'array'
 
-  })
+    const PATHS: Record<DataType, string> = {
+      objects : 'Test/StructLike',
+      array   : 'Test/ArrayLike',
+    }
+
+    const QUANTITY: Record<DataType, number> = {
+      objects : await database.getLength(PATHS.objects),
+      array   : await database.getLength(PATHS.array),
+    }
+
+    let numbers: Array<number> = await database.get(PATHS.array, {
+      start: String(QUANTITY.array - Q_TARGET),
+      order: database.order.key   
+    });
+
+    let objects: Array<number> = await database.get(PATHS.objects, {
+      start: QUANTITY.objects - Q_TARGET,
+      order: database.order.child,
+      orderBy: "ID",  
+    });
+
+    let posts: Array<number> = await database.get("Gallery", {
+      start : "0",
+      end   : "4",
+      order : database.order.key
+    });
+
+    console.log(posts);
+
+    expect(numbers.filter(x => x)).toHaveLength(Q_TARGET);
+    expect(Object.values(objects)).toHaveLength(Q_TARGET);
+
+  });
 
   test.concurrent('database::remove', async () => {
 
@@ -109,7 +141,7 @@ describe('api::database', () => {
 
   test.concurrent('database::update', async () => {
 
-    const { uid } = userAccount;
+    const { uid } = userSession;
     
     // Check restricted writes
       const invalidWrite = await database.update('App', { __SELF_KEY__: userName });
