@@ -109,7 +109,7 @@
 
 				return await database
 					.get(`Cases/${ this.Type }`)
-					.then(data => Object.values(data || new Object()))
+					.then(data => Object.values(data || Object()))
 
 			},
 		}

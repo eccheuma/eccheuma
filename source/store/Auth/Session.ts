@@ -2,7 +2,7 @@
 	import type { MutationTree } from 'vuex'
 
 // AUTH
-	import { auth } from '~/api/auth';
+	import { auth, form } from '~/api/auth';
 
 // STATE
 	export const state = () => ({
@@ -14,7 +14,7 @@
 		CurentUser: {
 			email: String(),
 			uid: String(),
-		},
+		} as form.session,
 		
 	})
 
@@ -44,7 +44,7 @@
 			state.CurentUser = {
 				email	: String(),
 				uid		: String(),
-			}
+			} as form.session
 		}
 
 	}

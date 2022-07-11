@@ -3,32 +3,45 @@ import { ref,
   set as firebaseSet, 
   remove as firebaseRemove, 
   update as firebaseUpdate,
+  orderByKey,
+  orderByChild,
 } from 'firebase/database';
 
 import { onValue, onChildChanged  } from 'firebase/database';
-import { query, startAt, endAt, limitToFirst } from 'firebase/database';
+import { query, startAt, endAt, limitToFirst, orderByValue } from 'firebase/database';
 
 import type { DatabaseReference, EventType, Query, QueryConstraint } from 'firebase/database';
 
 // TYPES
-type GetParams = {
+
+
+
+export interface QueryParams<O extends database.order = database.order.NONE> extends database.QueryOrder<O> {
   mode    : database.mode
-  limit   : number
-  start   : number
-  end     : number
+  limit   : O extends database.order.key ? string : number
+  start   : O extends database.order.key ? string : number
+  end     : O extends database.order.key ? string : number
+  from    : O extends database.order.key ? string : number
+  to      : O extends database.order.key ? string : number
 }
 
 // INNER FUNCTIONS
-function defineQuery(ref: DatabaseReference, params?: Partial<GetParams>): Query {
+function defineQuery<O extends database.order>(ref: DatabaseReference, params?: Partial<QueryParams<O>>): Query {
 
   let QUERY = Array<QueryConstraint>();
+
+  switch ( params?.order ) {
+    case database.order.key: QUERY.push(orderByKey()); break;
+    case database.order.value: QUERY.push(orderByValue()); break;
+    case database.order.child: QUERY.push(orderByChild(params?.orderBy))
+  }
 
   if ( params?.start ) 
     QUERY.push(startAt(params.start));
   if ( params?.end )
     QUERY.push(endAt(params.end));
   if ( params?.limit )
-    QUERY.push(limitToFirst(params.limit));
+    QUERY.push(limitToFirst(params.limit as number));
 
   return query(ref, ...QUERY);
 
@@ -36,6 +49,18 @@ function defineQuery(ref: DatabaseReference, params?: Partial<GetParams>): Query
 
 // MODULE NAMESPACE
 export namespace database {
+
+  export const enum order {
+    NONE,
+    key,
+    value,
+    child,
+  }
+
+  export interface QueryOrder<O extends database.order = order.NONE> {
+    order   : O
+    orderBy : any
+  }
 
   export const enum error {
     denied = 'PERMISSION_DENIED',
@@ -51,7 +76,7 @@ export namespace database {
    * @param params Параметры запроса, будь то количество данных или их пложение.
    * @returns 
    */
-  export async function get<T extends object | string>(path: string, params?: Partial<GetParams>): Promise<T> {
+  export async function get<T = object, O extends order = order.NONE>(path: string, params?: Partial<QueryParams<O>>): Promise<T> {
 
     const REF = ref(globalThis.firebaseDB, path);
 
@@ -61,7 +86,10 @@ export namespace database {
   
   }
   
-  export function listen<C extends object | any>(path: string, callback: (value: C) => any, params?: Partial<GetParams>) {
+  export function listen<
+    C extends object | any, 
+    O extends order = order.NONE
+  >(path: string, callback: (value: C) => any, params?: Partial<QueryParams<O>>) {
   
     const REF = ref(globalThis.firebaseDB, path);
   

@@ -56,7 +56,7 @@ import type { MutationTree, ActionTree } from 'vuex'
 
 			const { uid, email } = response;
 
-			const userWallet 	= new wallet.Instance(currencies.DEFAULT);
+			const userWallet = new wallet.Instance(currencies.DEFAULT);
 			
 			vuex.commit('Auth/Session/setUserState', { uid, email }, { root: true })
 			vuex.commit('Auth/Session/setAuthError', null, { root: true });

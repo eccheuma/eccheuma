@@ -19,7 +19,7 @@ export namespace storage {
   }
 
   export const enum error {
-    path = 'Get of undefined or wrong path' 
+    path = 'Wrong path' 
   } 
 
   export function reference(path: string): string | null {

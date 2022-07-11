@@ -1,16 +1,17 @@
 import { ActionTree, MutationTree } from 'vuex'
 
 // API
-	import { database } from '~/api/database'
+	import { database, QueryParams } from '~/api/database'
 
 // UTILS
 	import { cache } from '~/utils/cache';
+	import { utils } from '~/utils';
 
 // INTERFACES & TYPES
-
 	import type { Post } 	from '~/types/Post'
 	import type { Image } from '~/types/Image'
 
+	
 	type REFS = 'Posts' | 'Gallery';
 
 	export type LOAD_PROPERTY = { 
@@ -24,6 +25,25 @@ import { ActionTree, MutationTree } from 'vuex'
 	}
 
 	export type PAYLOAD = { REF: REFS, LOAD_PROPERTY: LOAD_PROPERTY }
+
+// HELPERS
+	function getOrderQuery(ref: REFS) {
+
+		const query: database.QueryOrder<database.order> = Object();
+
+		switch (ref) {
+			case "Posts": { 
+				query.order 	= database.order.child;
+				query.orderBy = "ID";
+			}; break;
+			case "Gallery": {
+				query.order 	= database.order.key;
+			}; break;
+		}
+
+		return query;
+
+	}
 
 // STORE
 	export const state = () => ({
@@ -47,7 +67,7 @@ import { ActionTree, MutationTree } from 'vuex'
 	export const mutations: MutationTree<CurentState> = {
 
 		setContent(state, { data, to }: { data: any[], from: string, to: REFS }) {
-			state.Content[to] = Object.values(data); 
+			state.Content[to] = Object.values(data || Object()); 
 		},
 
 	}
@@ -77,9 +97,14 @@ import { ActionTree, MutationTree } from 'vuex'
 
 			} else {
 
+				const LP = payload.LOAD_PROPERTY.LoadPoint;
+
 				const DATA = await database.get(payload.REF, { 
 					limit: payload.LOAD_PROPERTY.LoadRange,
-					start: payload.LOAD_PROPERTY.LoadPoint, 
+					start: payload.REF === 'Posts' 
+						? Number(LP)
+						: String(LP),
+					...getOrderQuery(payload.REF),  
 				})
 
 				commit('setContent', { data: DATA, from: 'firebase', to: payload.REF });
@@ -99,12 +124,17 @@ import { ActionTree, MutationTree } from 'vuex'
 				
 			} else {
 
-				const DATA = await database.get(payload.REF, { 
-					limit: payload.LOAD_PROPERTY.LoadRange,
-					start: payload.LOAD_PROPERTY.LoadPoint, 
-				})
+				const LP = payload.LOAD_PROPERTY.LoadPoint;
 
-				commit('setContent', { data: Object.values(DATA), from: 'server', to: payload.REF });			
+				const response: utils.types.asIterableObject<Object> = await database.get(payload.REF, { 
+					limit: payload.LOAD_PROPERTY.LoadRange,
+					start: payload.REF === 'Posts' 
+						? Number(LP)
+						: String(LP),
+					...getOrderQuery(payload.REF), 
+				});
+
+				commit('setContent', { data: Object.values(response), from: 'server', to: payload.REF });			
 
 			} 
 

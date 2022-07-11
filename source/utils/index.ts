@@ -73,7 +73,7 @@ export namespace utils {
   export function getLocalTime(n: number = 0): LocaleDate 
   {
 
-    const Properties: {[T in keyof LocaleDate]: Intl.DateTimeFormatOptions } = {
+    const Properties: Record<keyof LocaleDate, Intl.DateTimeFormatOptions> = {
       Day: { year: 'numeric', month: 'long', day: 'numeric' },
       Time: { hour: '2-digit', minute: '2-digit' }
     }
