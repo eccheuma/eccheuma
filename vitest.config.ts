@@ -11,6 +11,9 @@ export default defineConfig({
     reporters: 'verbose',
     testTimeout: 12000,
     watch: false,
+    setupFiles: [
+      './vitest.setup.ts'
+    ]
   },
   resolve: {
     alias: {
@@ -21,5 +24,5 @@ export default defineConfig({
   clearScreen: true,
   esbuild: {
     target: 'ES6'
-  }
+  },
 })

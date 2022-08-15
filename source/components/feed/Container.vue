@@ -18,12 +18,14 @@
 .vk {
   &-container {
 
-    // display: grid;
-    // row-gap: 2vh;
-
-    > * {
-      margin-bottom: 2vh;
-    }
+    top: #{ $GLOBAL-HeaderHeight + 2vh };
+    position: sticky;
+    height: #{ 80vh + 2vh };
+    padding-right: .5vw;
+    overflow-y: scroll;
+    overflow-x: visible;
+    display: grid;
+    gap: 1vh;
 
   }
   &-header {
@@ -32,6 +34,9 @@
     @include component-shadow;
 
     @extend %pattern-lines;
+
+    position: sticky;
+    top: 0;
 
     padding: 2.5vh 2vw;
     border-radius: var(--border-radius);
@@ -79,18 +84,10 @@
 
   // API
   import { database } from '~/api/database';
-
-  // UTILS
-  import { utils } from '~/utils'
-
-  // DATA
-  import POSTS from '~/assets/json/vk_posts.json';
+  import { feed } from '~/api/feed';
 
   // COMPONENTS
   import Post, { Post as IPost } from './Post.vue'
-
-  // TYPES
-  type VK_POST = typeof POSTS.items[0];
 
   // MODULE
   export default Vue.extend({
@@ -103,13 +100,11 @@
       }
     },
     created() {
-
       if ( process.browser ) {
         database.get<string>('App/Cache/Vk').then((response) => {
           this.checkPosts(response);
         })
       }
-
     },
     methods: {
 
@@ -125,32 +120,12 @@
 
         } else {
 
-          this.Posts = await this.getPosts(); 
+          this.Posts = await feed.get();
 
           window.localStorage.setItem('VK_POSTS', JSON.stringify(this.Posts))
           window.localStorage.setItem('VK_HASH', SERVER_HASH)
 
         }
-
-      },
-
-      async getPosts(): Promise<Array<IPost>> {
-
-        const response = await database.get<utils.types.asIterableObject<VK_POST>>('VkPosts');
-
-        return Array.from(Object.values(response), post => {
-          return {
-            thumb: post.attachments[0].photo.sizes[4].url,
-            body: post.text,
-            date: utils.getLocalTime(Number(`${ post.date + '000' }`)),
-            link: `https://vk.com/club${ Math.abs(post.from_id) }?w=wall${ post.from_id }_${ post.id }`,
-            social: {
-              likes     : post.likes.count,
-              comments  : post.comments.count,
-              reposts   : post.reposts.count,
-            }
-          }
-        })
 
       },
 

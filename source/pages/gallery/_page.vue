@@ -76,7 +76,7 @@
 	import PageTransitionProperty 	from '~/assets/mixins/PageTransitionProperty'
 
 	// TYPES
-	import type { PAYLOAD } 					from '~/store/PageContent'
+	import type { PayloadQuery } 					from '~/store/PageContent'
 	import type { ANIMATION_PAYLOAD } from '~/assets/mixins/IntersectionObserver'
 
 	import { navigation } from '~/types/Navigation';
@@ -217,15 +217,15 @@
 
 				const REM: number = QUANTITY - ( this.LoadRange * this.Page )
 
-				const PAYLOAD: PAYLOAD = {
-					REF: 'Gallery',
-					LOAD_PROPERTY: {
+				const Query: PayloadQuery = {
+					ref: 'Gallery',
+					loadQuery: {
 						LoadRange: REM < 0 ? this.LoadRange + REM : this.LoadRange,
 						LoadPoint: REM < 0 ? 0 : REM
 					}
 				}
 
-				await this.GetContent(PAYLOAD);
+				await this.GetContent(Query);
 
 				this.Ready = true
 

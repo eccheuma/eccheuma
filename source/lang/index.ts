@@ -1,5 +1,6 @@
 
 import { navigation } from '~/types/Navigation';
+import { math } from '~/utils/math';
 
 export const enum languages {
   Russian = 'ru_RU',
@@ -8,7 +9,7 @@ export const enum languages {
 
 export namespace russian {
 
-  // ! Пока это только для Дательного падежа. Надо будут переделать...
+  // Numeric
   const suffix = ['ой', 'ух', 'ёх', 'ми', 'ти']
 
   export function getSuffix(num: number): string {
@@ -20,7 +21,7 @@ export namespace russian {
     if ( num < 10 || num > 20 ) {
 
       if ( rem === 2 ) return suffix[1]
-      if ( rem > 1 && rem < 5 ) return suffix[2];
+      if ( math.int.inRange(1,rem,5) ) return suffix[2];
       if ( rem === 7 || rem === 8 ) return suffix[3];
 
     }
