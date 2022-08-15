@@ -8,7 +8,6 @@ import {
 
 import { getLocale, languages } from '~/lang';
 
-
 export namespace form {
 
   export type email = `${ string }@${ string }.${ string }`
@@ -56,7 +55,7 @@ export namespace auth {
       } as form.session
 
     } catch (e: any) {
-      return e.code as auth.error
+      return e?.code as auth.error
     }
 
   }

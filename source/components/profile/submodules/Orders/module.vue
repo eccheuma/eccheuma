@@ -52,6 +52,10 @@
 		display: grid;
 		overflow-y: scroll;
 
+		// !ASAP
+		// !todo Remove magic number  
+		height: 47.5vh;
+
 		gap: 2vh;
 
 		padding-right: #{ $GLOBAL-ScrollWidth };
@@ -88,38 +92,38 @@
 	// eslint-disable-next-line import/order
 	import Order 				from './submodules/Order.vue'
 
-	// // DEFAULT ORDER SAMPLE 
-	// const DEFAULT_ORDER: Purchase.order<'Application'> = {
-	// 	ID					: utils.hashGenerator(),
-	// 	status			: Purchase.status.Process,
-	// 	accepted		: 1_645_096_000_000,
-	// 	recived			: 1_644_664_000_000,
-	// 	delivery		: 432_000_000,
-	// 	declined		: false,
-	// 	cost				: 21_000,
-	// 	category		: Product.Application,
-	// 	type				: Product.Application.Multipage,
-	// 	name				: 'Приложение на vue.js',
-	// 	about				: 'Тестовое приложение',
-	// 	single			: true,
-	// 	quantity		: 1,
-	// } 
+	// DEFAULT ORDER SAMPLE 
+	const DEFAULT_ORDER: Purchase.order<'Application'> = {
+		ID					: utils.hashGenerator(),
+		status			: Purchase.status.Process,
+		accepted		: 1_645_096_000_000,
+		recived			: 1_644_664_000_000,
+		delivery		: 432_000_000,
+		declined		: false,
+		cost				: 21_000,
+		category		: Product.Application,
+		type				: Product.Application.Multipage,
+		name				: 'Приложение на vue.js',
+		about				: 'Тестовое приложение',
+		single			: true,
+		quantity		: 1,
+	} 
 
-	// const LOGO_ORDER: Purchase.order<'Graphic'> = {
-	// 	ID					: utils.hashGenerator(),
-	// 	status			: Purchase.status.Queue,
-	// 	accepted		: 0,
-	// 	recived			: Date.now(),
-	// 	delivery		: 64_800_000,
-	// 	declined		: false,
-	// 	cost				: 5_000,
-	// 	category		: Product.Graphic,
-	// 	type				: Product.Graphic.Logo,
-	// 	name				: 'Логотип для "Рога и копыта"',
-	// 	about				: 'Лого',
-	// 	single			: true,
-	// 	quantity		: 1,
-	// } 
+	const LOGO_ORDER: Purchase.order<'Graphic'> = {
+		ID					: utils.hashGenerator(),
+		status			: Purchase.status.Queue,
+		accepted		: 0,
+		recived			: Date.now(),
+		delivery		: 64_800_000,
+		declined		: false,
+		cost				: 5_000,
+		category		: Product.Graphic,
+		type				: Product.Graphic.Logo,
+		name				: 'Логотип для "Рога и копыта"',
+		about				: 'Лого',
+		single			: true,
+		quantity		: 1,
+	} 
 
 	export default Vue.extend({
 		components: {
@@ -134,14 +138,14 @@
 		computed: {
 
 			...mapState({
-				Orders		: state => ( state as VuexMap ).User.WorkRequest.Orders,
-				State	: state => ( state as VuexMap ).User.State.State,
+				Orders	: state => ( state as VuexMap ).User.WorkRequest.Orders,
+				State		: state => ( state as VuexMap ).User.State.State,
 			}),
 
 		},
 		created() {
-			// // ! This is default orders. Not for production release
-			// this.setOrders([LOGO_ORDER, DEFAULT_ORDER])
+			// ! This is default orders. Not for production release
+			this.setOrders([LOGO_ORDER, DEFAULT_ORDER])
 		},
 		mounted() {
 			this.setRequestContent(this.State.UserID)

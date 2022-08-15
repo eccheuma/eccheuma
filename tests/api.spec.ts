@@ -116,14 +116,6 @@ describe('api::database', () => {
       orderBy: "ID",  
     });
 
-    let posts: Array<number> = await database.get("Gallery", {
-      start : "0",
-      end   : "4",
-      order : database.order.key
-    });
-
-    console.log(posts);
-
     expect(numbers.filter(x => x)).toHaveLength(Q_TARGET);
     expect(Object.values(objects)).toHaveLength(Q_TARGET);
 

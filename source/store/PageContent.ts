@@ -1,4 +1,4 @@
-import { ActionTree, MutationTree } from 'vuex'
+import { ActionTree, MutationTree, ActionContext } from 'vuex'
 
 // API
 	import { database, QueryParams } from '~/api/database'
@@ -12,9 +12,9 @@ import { ActionTree, MutationTree } from 'vuex'
 	import type { Image } from '~/types/Image'
 
 	
-	type REFS = 'Posts' | 'Gallery';
+	type Reference = 'Posts' | 'Gallery';
 
-	export type LOAD_PROPERTY = { 
+	export type LoadQuery = { 
 		LoadRange: number
 		LoadPoint: number
 	}
@@ -24,32 +24,50 @@ import { ActionTree, MutationTree } from 'vuex'
 		Gallery: Image.struct[]
 	}
 
-	export type PAYLOAD = { REF: REFS, LOAD_PROPERTY: LOAD_PROPERTY }
+	export type PayloadQuery = { ref: Reference, loadQuery: LoadQuery }
 
 // HELPERS
-	function getOrderQuery(ref: REFS) {
+	namespace helpers {
 
-		const query: database.QueryOrder<database.order> = Object();
+		export function getOrderQuery(ref: Reference) {
 
-		switch (ref) {
-			case "Posts": { 
-				query.order 	= database.order.child;
-				query.orderBy = "ID";
-			}; break;
-			case "Gallery": {
-				query.order 	= database.order.key;
-			}; break;
+			const query: database.QueryOrder<database.order> = Object();
+
+			switch (ref) {
+				case "Posts": { 
+					query.order 	= database.order.child;
+					query.orderBy = "ID";
+				}; break;
+				case "Gallery": {
+					query.order 	= database.order.key;
+				}; break;
+			}
+
+			return query;
+
 		}
 
-		return query;
+		export async function getContentSlice(payload: PayloadQuery): Promise<Object> {
+
+			const LP = payload.loadQuery.LoadPoint;
+
+			return await database.get(payload.ref, { 
+				limit: payload.loadQuery.LoadRange,
+				start: payload.ref === 'Posts' 
+					? Number(LP)
+					: String(LP),
+				...helpers.getOrderQuery(payload.ref), 
+			});
+
+		}		
 
 	}
 
 // STORE
 	export const state = () => ({
 		Content: {
-			Gallery: [],
-			Posts: []
+			Gallery	: Array(),
+			Posts		: Array()
 		} as CONTENT
 	})
 
@@ -58,15 +76,13 @@ import { ActionTree, MutationTree } from 'vuex'
 
 // DECALARE MODULE
 	declare module '~/types/VuexMap' {
-		interface VuexMap {
-			PageContent: CurentState
-		}
+		interface VuexMap { PageContent: CurentState }
 	}
 
 // MUTATIONS
 	export const mutations: MutationTree<CurentState> = {
 
-		setContent(state, { data, to }: { data: any[], from: string, to: REFS }) {
+		setContent(state, { data, to }: { data: any[], from: string, to: Reference }) {
 			state.Content[to] = Object.values(data || Object()); 
 		},
 
@@ -75,17 +91,17 @@ import { ActionTree, MutationTree } from 'vuex'
 // ACTIONS
 	export const actions: ActionTree<CurentState, CurentState> = {
 		
-		async checkCachedData({ commit }, payload: PAYLOAD) {
+		async checkCachedData({ commit }, payload: PayloadQuery) {
 
-			const HASH_KEY 					= `${ payload.REF.toUpperCase() }_DATA_HASH`
-			const LOAD_PROPERTY_KEY = `${ payload.LOAD_PROPERTY.LoadPoint }_${ payload.LOAD_PROPERTY.LoadRange }`
+			const HASH_KEY 					= `${ payload.ref.toUpperCase() }_DATA_HASH`
+			const LOAD_PROPERTY_KEY 	= `${ payload.loadQuery.LoadPoint }_${ payload.loadQuery.LoadRange }`
 
 			const Hashes = {
-				server: await database.get(`App/Cache/${ payload.REF }`),
+				server: await database.get(`App/Cache/${ payload.ref }`),
 				cashed: cache.get(HASH_KEY)
 			}
 
-			const CACHE_KEY = `${ Hashes.server }_${ payload.REF.toUpperCase() }_${ LOAD_PROPERTY_KEY }`
+			const CACHE_KEY = `${ Hashes.server }_${ payload.ref.toUpperCase() }_${ LOAD_PROPERTY_KEY }`
 
 			// --------------------------------
 
@@ -93,50 +109,43 @@ import { ActionTree, MutationTree } from 'vuex'
 
 			if ( CACHED_DATA && Hashes.cashed && Hashes.cashed === Hashes.server ) {
 
-				commit('setContent', { data: JSON.parse(CACHED_DATA), from: 'cache', to: payload.REF  })
+				commit('setContent', { data: JSON.parse(CACHED_DATA), from: 'cache', to: payload.ref  })
 
 			} else {
 
-				const LP = payload.LOAD_PROPERTY.LoadPoint;
+				const data = await helpers.getContentSlice(payload);
 
-				const DATA = await database.get(payload.REF, { 
-					limit: payload.LOAD_PROPERTY.LoadRange,
-					start: payload.REF === 'Posts' 
-						? Number(LP)
-						: String(LP),
-					...getOrderQuery(payload.REF),  
-				})
+				commit('setContent', { 
+					data, 
+					from: 'server', 
+					to: payload.ref 
+				});	
 
-				commit('setContent', { data: DATA, from: 'firebase', to: payload.REF });
-
-				cache.set(CACHE_KEY, DATA);
+				cache.set(CACHE_KEY, data);
 				cache.set(HASH_KEY, Hashes.server);
 
 			}
 
 		},
 
-		async GetContent({ commit, dispatch }, payload: PAYLOAD) {
+		async GetContent(vuex, payload: PayloadQuery) {
 
 			if ( process.browser ) {
 
-				await dispatch('checkCachedData', payload);	
+				await vuex.dispatch('checkCachedData', payload);	
 				
 			} else {
 
-				const LP = payload.LOAD_PROPERTY.LoadPoint;
-
-				const response: utils.types.asIterableObject<Object> = await database.get(payload.REF, { 
-					limit: payload.LOAD_PROPERTY.LoadRange,
-					start: payload.REF === 'Posts' 
-						? Number(LP)
-						: String(LP),
-					...getOrderQuery(payload.REF), 
-				});
-
-				commit('setContent', { data: Object.values(response), from: 'server', to: payload.REF });			
+				vuex.commit('setContent', { 
+					data: await helpers.getContentSlice(payload), 
+					from: 'server', 
+					to: payload.ref 
+				});			
 
 			} 
 
 		},
+
 	}
+
+	

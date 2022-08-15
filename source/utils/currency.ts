@@ -1,4 +1,6 @@
+
 import { utils } from '~/utils'
+import { currency } from '~/api/currency'
 
 export namespace currencies {
 
@@ -49,7 +51,7 @@ export namespace currencies {
 
 	}
 
-	export function Fabric<C extends Country>(country: C, cof: number = db?.getCoefficient(country) || 0) {
+	export function Fabric<C extends Country>(country: C, cof: number) {
 		return class extends Currency<C> implements ICurrency {
 
 			static coefficient: number = cof;
@@ -64,36 +66,11 @@ export namespace currencies {
 
 }
 
-export namespace db {
-
-	export const enum ModuleError {
-		REJECT = "Transaction reject"
-	}
-
-	// !todo Get external valid coefficients...
-	export function getCoefficient(country: currencies.Country) {
-
-		// relative per USD 
-		switch (country) { 
-			case currencies.Country.ru: return 50; 
-			case currencies.Country.ch: return 5;
-			case currencies.Country.en: return 1;
-			default: return 0
-		}
-
-	}
-
-	// !todo Mock of bank procedure validation
-	export async function validateOperation(): Promise<boolean> {
-		return Promise.resolve(true);
-	}
-
-}
-
 export namespace wallet {
 
 	// Limit in rubles as target currency
 	const WALLET_LIMIT: number = 50_000;
+
 	const DEFAULT_JSON: contract = {
 		ch: Number(0),
 		en: Number(0),
@@ -115,16 +92,6 @@ export namespace wallet {
 
 		public currencies: Record<currencies.Country, currencies.Currency> = Object();
 
-		constructor(cur: Array<currencies.Country>) {
-			cur.forEach(country => {
-
-				const currency = currencies.Fabric(country, db.getCoefficient(country));
-
-				this.currencies[country] = new currency();
-
-			})
-		}
-
 		get wallets(): Array<currencies.Country> {
 			return Object.keys(this.currencies).map(key => {
 				return currencies.Country[key as keyof typeof currencies.Country]
@@ -143,6 +110,18 @@ export namespace wallet {
 
 		}
 
+		public async setCurrencies(cur: Array<currencies.Country>) {
+
+			cur.forEach(async (country)  => {
+
+				const instance = currencies.Fabric(country, await currency.getCoefficient(country));
+
+				this.currencies[country] = new instance();
+
+			})
+
+		}
+
 		public async send<Cur extends currencies.Currency>(cur: Cur, wallet_type: currencies.Country): Promise<number | Error> {
 
 			const wallet = this.currencies[wallet_type];
@@ -150,9 +129,9 @@ export namespace wallet {
 
 			if ( wallet.value + value > WALLET_LIMIT ) return Error(ModuleError.WALLET_LIMIT);
 		
-			return await db.validateOperation() 
+			return await currency.validateOperation() 
 				? wallet.add(value)
-				: Error(db.ModuleError.REJECT)
+				: Error(currency.errors.REJECT)
 
 		}
 		public async take<Cur extends currencies.Currency>(cur: Cur, wallet_type: currencies.Country): Promise<number | Error> {
@@ -162,9 +141,9 @@ export namespace wallet {
 
 			if ( wallet.value < value ) return Error(ModuleError.WALLET_OUT);
 
-			return await db.validateOperation() 
+			return await currency.validateOperation() 
 				? wallet.grab(value)
-				: Error(db.ModuleError.REJECT)
+				: Error(currency.errors.REJECT)
 
 		}
 

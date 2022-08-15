@@ -87,7 +87,7 @@ export namespace database {
   }
   
   export function listen<
-    C extends object | any, 
+    C extends object, 
     O extends order = order.NONE
   >(path: string, callback: (value: C) => any, params?: Partial<QueryParams<O>>) {
   

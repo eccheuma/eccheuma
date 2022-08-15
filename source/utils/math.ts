@@ -23,6 +23,33 @@ export namespace math {
 
     }
 
+    export function inRange(min: number, val: number, max: number): boolean {
+      return min <= val && val <= max;
+    }
+
+    export function range<MIN extends number, MAX extends number, R extends intRange<MIN, MAX>>(min: MIN, max: MAX): Array<R> {
+      return Array(max)
+        .fill(min)
+        .map((x, i) => (x + i) as R);
+    };
+
+    export type intRange<
+      Min extends number = 0, 
+      Max extends number = 1,
+      List extends Array<unknown> = [],
+      Result extends number = Min,
+      Filled extends boolean = false,
+      > = Filled extends true
+          ? List extends { length: Max }
+              ? Result | Max
+              : List extends { length: infer I }
+                  // @ts-ignore
+                  ? intRange<Min, Max, [ unknown, ...List ], Result | I, Filled>
+                  : never
+          : List extends { length: Min }
+              ? intRange<Min, Max, List, Result, true>
+              : intRange<Min, Max, [ unknown, ...List ], Result, false>
+
   }
 
 }

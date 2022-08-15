@@ -40,8 +40,12 @@
 		setQuantity(state, prop) {
 			state.RequestQuantity = prop;
 		},
-		setOrders(state, prop) {
-			state.Orders = prop
+		setOrders(state, prop: Array<Purchase.order<any>>) {
+
+			if ( prop.length ) {
+				state.Orders = prop;
+			}
+
 		},
 		setActiveOrder(state, prop) {
 			state.ActiveOrders = prop
@@ -97,7 +101,9 @@
 
 			const { UserID } = vuex.rootState.User.State.State
 
-			vuex.commit('setOrders', await database.get(`Users/${ UserID }/work_requests`)) 
+			vuex.commit('setOrders', await database.get<Array<Purchase.order<any>>>(`Users/${ UserID }/work_requests`));
+
+
 		},
 
 		async setRequestQuantity(vuex) {
