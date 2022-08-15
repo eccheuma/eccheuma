@@ -91,6 +91,11 @@ export namespace wallet {
 	export class Instance implements IWallet {
 
 		public currencies: Record<currencies.Country, currencies.Currency> = Object();
+		private countries: Array<currencies.Country> = Array();
+
+		constructor(countries: Array<currencies.Country> = currencies.DEFAULT) {
+			this.countries = countries
+		}
 
 		get wallets(): Array<currencies.Country> {
 			return Object.keys(this.currencies).map(key => {
@@ -112,7 +117,7 @@ export namespace wallet {
 
 		public async setCurrencies(cur: Array<currencies.Country>) {
 
-			cur.forEach(async (country)  => {
+			this.countries.forEach(async (country)  => {
 
 				const instance = currencies.Fabric(country, await currency.getCoefficient(country));
 
@@ -148,4 +153,5 @@ export namespace wallet {
 		}
 
 	}
+
 }
