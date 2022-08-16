@@ -67,12 +67,12 @@ export namespace feed {
     ]
 
     const feed: Array<IFeed> = Array();
-    const response = await fetch(vk.constructQuery(vk.wall.methods.GET, params));
-
-    console.log(response);
+    const response = await fetch(vk.constructQuery(vk.wall.methods.GET, params), {
+      mode: process.env.NODE_ENV === 'development' ? 'no-cors' : 'cors',
+    });
 
     // todo: Cделать более стоящий обработчик ошибок.
-    if ( response.status !== 200 ) throw Error();
+    if ( response.status !== 200 ) return feed;
 
     const data: { response: WallGetResponse } = await response.json();
 
