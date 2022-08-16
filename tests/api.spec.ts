@@ -13,6 +13,7 @@ import { utils } from '~/utils'
 // MODULES
 import { database } from '~/api/database';
 import { auth, form } from '~/api/auth';
+import { feed } from '~/api/feed';
 
 import { Post } from '~/types/Post';
 import { User } from '~/types/User';
@@ -160,14 +161,30 @@ describe('api::database', () => {
 
 })
 
-describe.todo('api::storage', () => {
+describe('api::storage', () => {
 
-  test.concurrent.todo('storage::set');
+  test.todo('storage::set');
   
-  test.concurrent.todo('storage::get');
+  test.todo('storage::get');
 
-  test.concurrent.todo('storage::update');
+  test.todo('storage::update');
 
-  test.concurrent.todo('storage::remove');
+  test.todo('storage::remove');
 
 });
+
+describe('api::feed', () => {
+
+  test('feed::get', async () => {
+
+    // const SELF = String(42590087);
+
+    const posts = await feed.get();
+
+    posts.forEach(post => {
+      expect(post.body).exist;
+    })
+
+  })
+
+})

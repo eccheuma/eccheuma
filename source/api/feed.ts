@@ -1,4 +1,7 @@
 import type { WallGetResponse } from 'vk-io/lib/api/schemas/responses';
+import type { WallWallpostAttachmentType, WallWallpostAttachment } from 'vk-io/lib/api/schemas/objects';
+
+// UTILS
 import { LocaleDate, utils } from '~/utils'
 
 export namespace vk {
@@ -21,7 +24,22 @@ export namespace vk {
   }
 
   export function constructQuery(method: wall.methods, params: Array<wall.query>): string {
-    return `${ process.env.VK_API_URL }/${ method }?${ TOKEN }?${ VERSION }?${ params.join("?") }`
+    return `${ process.env.VK_API_URL }/${ method }?${ TOKEN }&${ VERSION }&${ params.join("&") }`
+  }
+
+  export function pickThumbnail(attachments: Array<WallWallpostAttachment> = []): string | undefined {
+
+    if ( attachments.length === 0 ) return;
+
+    const FIRST_ATTACHMENT: WallWallpostAttachment = attachments[0];
+
+    switch (FIRST_ATTACHMENT.type as WallWallpostAttachmentType) {
+      case 'photo': 
+        return FIRST_ATTACHMENT[ FIRST_ATTACHMENT.type ].sizes[4].url;
+      case 'link':
+        return FIRST_ATTACHMENT[ FIRST_ATTACHMENT.type ].sizes[4].url;
+    }
+
   }
 
 }
@@ -31,7 +49,7 @@ export namespace feed {
   const GROUD_ID: string = String(process.env.VK_API_GROUP_ID);
 
   export type IFeed = {
-    thumb: string,
+    thumb ?: string,
     body: string,
     date: LocaleDate,
     link: string
@@ -42,35 +60,39 @@ export namespace feed {
     }
   }
 
-  export async function get(): Promise<Array<IFeed>> {
+  export async function get(from: string = GROUD_ID): Promise<Array<IFeed>> {
 
     const params: Array<vk.wall.query> = [
-      `${ vk.wall.params.ID }=${ GROUD_ID }`
+      `${ vk.wall.params.ID }=${ from }`
     ]
 
-    const data: Array<IFeed> = Array();
+    const feed: Array<IFeed> = Array();
     const response = await fetch(vk.constructQuery(vk.wall.methods.GET, params));
+
+    console.log(response);
 
     // todo: Cделать более стоящий обработчик ошибок.
     if ( response.status !== 200 ) throw Error();
 
-    const { items }: WallGetResponse = await response.json();
+    const data: { response: WallGetResponse } = await response.json();
 
-    items.forEach(post => {
-      data.push({
-        thumb: post.attachments![0].photo.sizes[4].url,
-        body: String(post.text),
-        date: utils.getLocalTime(Number(post.date) * 1000),
-        link: `https://vk.com/club${ Math.abs(post.from_id || 0) }?w=wall${ post.from_id }_${ post.id }`,
+    data.response.items.forEach(post => {
+
+      feed.push({
+        thumb : vk.pickThumbnail(post.attachments),
+        body  : String(post.text),
+        date  : utils.getLocalTime(Number(post.date) * 1000),
+        link  : `https://vk.com/club${ Math.abs(post.from_id || 0) }?w=wall${ post.from_id }_${ post.id }`,
         social: {
-          likes     : Number(post.likes.count || Number()),
-          comments  : Number(post.comments.count || Number()),
-          reposts   : Number(post.reposts.count || Number()),
+          likes    : Number(post.likes.count || Number()),
+          comments : Number(post.comments.count || Number()),
+          reposts  : Number(post.reposts.count || Number()),
         }
       })
+
     })
 
-    return data;
+    return feed;
 
   }
 

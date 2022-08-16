@@ -1,9 +1,5 @@
 import { describe, test, expect } from 'vitest';
 
-
-// ENV
-require('dotenv').config();
-
 // PLUGINS
 import Firebase from '~/plugins/Firebase'; Firebase();
 

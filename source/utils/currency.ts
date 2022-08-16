@@ -14,7 +14,7 @@ export namespace currencies {
 
 	export const DEFAULT = [ currencies.Country.ru ]
 
-	export const sign: Readonly<Record<Country, string>> = {
+	export const signDict: Readonly<Record<Country, string>> = {
 		[ Country.ru ]: "₽",
 		[ Country.en ]: "$",
 		[ Country.ch ]: "¥"
@@ -77,7 +77,7 @@ export namespace wallet {
 		ru: Number(0),
 	}
 
-	const enum ModuleError {
+	const enum errors {
 		WALLET_OUT = "Not enough on balance",
 		WALLET_LIMIT = "Wallet size limit",
 	}
@@ -91,10 +91,9 @@ export namespace wallet {
 	export class Instance implements IWallet {
 
 		public currencies: Record<currencies.Country, currencies.Currency> = Object();
-		private countries: Array<currencies.Country> = Array();
 
-		constructor(countries: Array<currencies.Country> = currencies.DEFAULT) {
-			this.countries = countries
+		constructor(contries: Array<currencies.Country> = currencies.DEFAULT) {
+			// this.setCurrencies(contries);
 		}
 
 		get wallets(): Array<currencies.Country> {
@@ -117,13 +116,13 @@ export namespace wallet {
 
 		public async setCurrencies(cur: Array<currencies.Country>) {
 
-			this.countries.forEach(async (country)  => {
+			for await ( const country of cur ) {
 
 				const instance = currencies.Fabric(country, await currency.getCoefficient(country));
 
 				this.currencies[country] = new instance();
 
-			})
+			}
 
 		}
 
@@ -132,7 +131,7 @@ export namespace wallet {
 			const wallet = this.currencies[wallet_type];
 			const value = cur.convert(wallet);
 
-			if ( wallet.value + value > WALLET_LIMIT ) return Error(ModuleError.WALLET_LIMIT);
+			if ( wallet.value + value > WALLET_LIMIT ) return Error(errors.WALLET_LIMIT);
 		
 			return await currency.validateOperation() 
 				? wallet.add(value)
@@ -144,7 +143,7 @@ export namespace wallet {
 			const wallet = this.currencies[wallet_type];
 			const value = cur.convert(wallet);
 
-			if ( wallet.value < value ) return Error(ModuleError.WALLET_OUT);
+			if ( wallet.value < value ) return Error(errors.WALLET_OUT);
 
 			return await currency.validateOperation() 
 				? wallet.grab(value)

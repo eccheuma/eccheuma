@@ -1,3 +1,4 @@
+import { utils } from '~/utils';
 
 export namespace Product {
 
@@ -66,5 +67,25 @@ export namespace Purchase {
 		recived		: number
 		declined	: boolean
 	}
+
+}
+
+export namespace defaultStructs {
+
+	export const DEFAULT_ORDER: Purchase.order<'Application'> = {
+		ID					: utils.hashGenerator(),
+		status			: Purchase.status.Process,
+		accepted		: 1_645_096_000_000,
+		recived			: 1_644_664_000_000,
+		delivery		: 432_000_000,
+		declined		: false,
+		cost				: 21_000,
+		category		: Product.Application,
+		type				: Product.Application.Multipage,
+		name				: 'Приложение на vue.js',
+		about				: 'Тестовое приложение',
+		single			: true,
+		quantity		: 1,
+	} 
 
 }

@@ -87,7 +87,7 @@
   import { feed } from '~/api/feed';
 
   // COMPONENTS
-  import Post, { Post as IPost } from './Post.vue'
+  import Post from './Post.vue'
 
   // MODULE
   export default Vue.extend({
@@ -96,14 +96,19 @@
     },  
     data() {
       return {
-        Posts: [] as Array<IPost>,
+        Posts: Array<feed.IFeed>(),
       }
     },
     created() {
       if ( process.browser ) {
-        database.get<string>('App/Cache/Vk').then((response) => {
-          this.checkPosts(response);
-        })
+        // database.get<string>('App/Cache/Vk').then((response) => {
+        //   this.checkPosts(response);
+        // })
+      }
+    },
+    async mounted() {
+      if ( process.browser ) {
+        this.Posts = await feed.get();
       }
     },
     methods: {
@@ -111,21 +116,21 @@
       // TODO | Использовать внутренние утилиты для работы с хранилищем.
       async checkPosts(SERVER_HASH: string) {
 
-        const LOCAL_HASH = window.localStorage.getItem('VK_HASH');
-        const LOCAL_DATA = window.localStorage.getItem('VK_POSTS');
+        // const LOCAL_HASH = window.localStorage.getItem('VK_HASH');
+        // const LOCAL_DATA = window.localStorage.getItem('VK_POSTS');
 
-        if ( LOCAL_HASH && LOCAL_DATA && LOCAL_HASH === SERVER_HASH ) {
+        // if ( LOCAL_HASH && LOCAL_DATA && LOCAL_HASH === SERVER_HASH ) {
 
-          this.Posts = JSON.parse(LOCAL_DATA); 
+        //   this.Posts = JSON.parse(LOCAL_DATA); 
 
-        } else {
+        // } else {
 
-          this.Posts = await feed.get();
+        //   this.Posts = await feed.get();
 
-          window.localStorage.setItem('VK_POSTS', JSON.stringify(this.Posts))
-          window.localStorage.setItem('VK_HASH', SERVER_HASH)
+        //   window.localStorage.setItem('VK_POSTS', JSON.stringify(this.Posts))
+        //   window.localStorage.setItem('VK_HASH', SERVER_HASH)
 
-        }
+        // }
 
       },
 

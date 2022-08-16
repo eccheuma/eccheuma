@@ -9,10 +9,21 @@
   import { environment } from './utils/configEnvironment'
 
   const appEnvironment = environment.config([
+    
     'SUPABASE_API_URL', 
     'SUPABASE_API_KEY', 
+
     'FIREBASE_API_APP', 
-    'FIREBASE_API_KEY'
+    'FIREBASE_API_KEY',
+
+    "CURRENCY_API_URL",
+    "CURRENCY_API_KEY",
+
+    "VK_API_URL",
+    "VK_API_TOKEN",
+    "VK_API_GROUP_ID",
+    "VK_API_VERSION",
+
   ])
 
 // TYPES
@@ -194,7 +205,7 @@
       { src: '~/plugins/Cursor.ts',     mode: 'client' },
       // Client plugins
       { src: '~/plugins/DragScroll.js',         mode: 'client' },
-      { src: '~/plugins/YandexMetrica.js',      mode: 'client' }
+      { src: '~/plugins/YandexMetrica.js',      mode: 'client' },
     ],
   }
 

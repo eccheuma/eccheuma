@@ -1,33 +1,29 @@
-import { describe, test, expect } from 'vitest';
+import { describe, test, expect, beforeEach } from 'vitest';
 
 import { currencies, wallet } from '~/utils/currency';
-
-// ENV
-require('dotenv').config();
 
 // TEST MODULE
 describe("wallet::operations", async () => {
 
   const WALLET_TARGET = currencies.Country.ru;
 
-  const CURRENCIES = [ 
-    currencies.Country.ru, 
-    currencies.Country.en, 
-    currencies.Country.ch, 
-  ];
-
   const userWallet: wallet.Instance = new wallet.Instance();
-  await userWallet.setCurrencies(CURRENCIES);
 
   const RUB = currencies.Fabric(currencies.Country.ru, 50);
   const YAN = currencies.Fabric(currencies.Country.ch, 5);
   const USD = currencies.Fabric(currencies.Country.en, 1);
 
+  beforeEach(() => {
+    userWallet.currencies[currencies.Country.ru] = new RUB();
+    userWallet.currencies[currencies.Country.ch] = new YAN();
+    userWallet.currencies[currencies.Country.en] = new USD();
+  })
+
   test("operations::create", () => {
 
-    console.log(userWallet, userWallet.currencies);
+    const { ru, ch, en } = currencies.Country;
 
-    CURRENCIES.forEach(currency_type => {
+    [ ru, ch, en ].forEach(currency_type => {
       expect(userWallet.currencies[currency_type]).exist
     })
 
