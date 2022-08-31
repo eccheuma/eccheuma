@@ -15,8 +15,8 @@
           },
         }, 
         context?.children
-      )
+      );
     }
-  })
+  });
 
 </script>

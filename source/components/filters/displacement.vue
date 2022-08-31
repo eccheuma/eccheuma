@@ -65,10 +65,10 @@
 
 <script lang="ts">
 
-  import Vue from 'vue'
+  import Vue from 'vue';
 
   // TYPES
-  import type { AnimeAnimParams } from 'animejs'
+  import type { AnimeAnimParams } from 'animejs';
 
   // MODULE
   export default Vue.extend({
@@ -85,12 +85,12 @@
     data() {
       return {
         updatedScale: 0,
-      }
+      };
     },
     watch: {
       status: {
         handler() {
-          this.animate(100 + Math.trunc(50 * Math.random()))
+          this.animate(100 + Math.trunc(50 * Math.random()));
         }
       }
     },
@@ -109,11 +109,11 @@
 
             ...params
 
-          })
-        })
+          });
+        });
 
       }
     }
-  })
+  });
 
 </script>

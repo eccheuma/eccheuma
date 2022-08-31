@@ -28,12 +28,12 @@ export interface QueryParams<O extends database.order = database.order.NONE> ext
 // INNER FUNCTIONS
 function defineQuery<O extends database.order>(ref: DatabaseReference, params?: Partial<QueryParams<O>>): Query {
 
-  let QUERY = Array<QueryConstraint>();
+  const QUERY = Array<QueryConstraint>();
 
   switch ( params?.order ) {
     case database.order.key: QUERY.push(orderByKey()); break;
     case database.order.value: QUERY.push(orderByValue()); break;
-    case database.order.child: QUERY.push(orderByChild(params?.orderBy))
+    case database.order.child: QUERY.push(orderByChild(params?.orderBy));
   }
 
   if ( params?.start ) 
@@ -130,7 +130,7 @@ export namespace database {
 
       }
 
-    })
+    });
     
   }
   

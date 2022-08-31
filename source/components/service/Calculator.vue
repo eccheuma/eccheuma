@@ -329,16 +329,16 @@
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from 'vue';
 
 // API
-	import { database } from '~/api/database'
+	import { database } from '~/api/database';
 
 // TYPES
-	import type { Categories, Purchase } from '~/types/Services'
+	import type { Categories, Purchase } from '~/types/Services';
 
 // COMPONENTS 
-	import CaptionCard from '~/components/common/Caption.vue'
+	import CaptionCard from '~/components/common/Caption.vue';
 
 	type SERVICE_TYPE_SELECT = {
 		[C in Categories]: {
@@ -375,7 +375,7 @@
 
 				cost: 0,
 
-			}
+			};
 		},
 		computed: {
 
@@ -394,20 +394,20 @@
 						title: 'Вёрстка'
 					}
 
-				}
+				};
 			},
 
 			_cost(): Readonly<number> {
 				
 				const PurchaseAdditionsCost = this.form.addictions?.map(add => add.cost).reduce((prev, cur) => prev + cur, 0) || 0;
-				const ServiceCost		= this.form.service?.cost || 0
+				const ServiceCost		= this.form.service?.cost || 0;
 
 				return (( PurchaseAdditionsCost + ServiceCost ) * this.quantity ) * this.tax;
 
 			},
 
 			_delivery(): Readonly<number>  {
-				return Math.round( this._cost / 300 )
+				return Math.round( this._cost / 300 );
 			}
 
 		},
@@ -421,7 +421,7 @@
 						round: 1,
 						easing: 'easeInOutQuad',
 						duration: 500,
-					})
+					});
 
 				}
 			},
@@ -449,6 +449,6 @@
 				return n?.toLocaleString('de-DE') || n.toString(); 
 			}
 		}
-	})
+	});
 
 </script>

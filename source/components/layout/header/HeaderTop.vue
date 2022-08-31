@@ -35,13 +35,13 @@
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from 'vue';
 
 	// VUEX
-	import { mapState, mapMutations, mapActions } from 'vuex'
+	import { mapState, mapMutations, mapActions } from 'vuex';
 
 	// COMPONENTS
-	import EccheumaButton		from '~/components/buttons/CommonButton.vue'
+	import EccheumaButton		from '~/components/buttons/CommonButton.vue';
 
 	// MODULE
 	export default Vue.extend({
@@ -51,7 +51,7 @@
 		data() {
 			return {
 				Notification: true
-			}
+			};
 		},
 		computed: {
 			...mapState({
@@ -63,7 +63,7 @@
 		mounted() {
 
 			if ( !this.$isMobile ) {
-				this.AnimateLogo()
+				this.AnimateLogo();
 			}
 
 		},
@@ -74,7 +74,7 @@
 			}),
 
 			GoToHoll() {
-				this.$router.push({ path: '/' })
+				this.$router.push({ path: '/' });
 			},
 			AnimateLogo() {
 
@@ -93,7 +93,7 @@
 
 			},
 		},
-	})
+	});
 </script>
 
 <style lang="scss">

@@ -5,9 +5,9 @@ export let currencyData: currency.CurrencyResponse;
 export namespace currency {
 	
 	export const enum errors {
-		REJECT = "Transaction reject",
-		REST_UNDEFINED = "Rest API  URL is undefined",
-		UNREACHABLE = "Rest enter point is unreacheable"
+		REJECT = 'Transaction reject',
+		REST_UNDEFINED = 'Rest API  URL is undefined',
+		UNREACHABLE = 'Rest enter point is unreacheable'
 	}
 
   const enum CurrencyPairs {
@@ -15,8 +15,8 @@ export namespace currency {
 		CNY = 'CNYRUB'
 	}
 
-	const REST_URL: string 	= String(process.env.CURRENCY_API_URL);
-	const API_POINT: string = `${ REST_URL }/?get=rates&pairs=${ CurrencyPairs.RUB },${ CurrencyPairs.CNY }&key=${ process.env.CURRENCY_API_KEY }`;
+	const REST_URL 	= String(process.env.CURRENCY_API_URL);
+	const API_POINT = `${ REST_URL }/?get=rates&pairs=${ CurrencyPairs.RUB },${ CurrencyPairs.CNY }&key=${ process.env.CURRENCY_API_KEY }`;
 
   export interface CurrencyResponse {
 		status: number,
@@ -42,14 +42,17 @@ export namespace currency {
 
 			if ( data instanceof Error ) return 0;
 
-			currencyData = data
+			currencyData = data;
 		
 		}
 
 		switch (country) { 
-			case currencies.Country.ru: return parseFloat(currencyData?.data?.USDRUB || String()); 
-			case currencies.Country.ch: return parseFloat(currencyData?.data?.CNYRUB || String());
-			default: return 1
+			case currencies.Country.ru: 
+				return parseFloat(currencyData?.data?.USDRUB || String()); 
+			case currencies.Country.ch: 
+				return parseFloat(currencyData?.data?.CNYRUB || String());
+			default: 
+				return 1;
 		}
 
 	}

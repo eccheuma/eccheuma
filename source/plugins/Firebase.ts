@@ -38,4 +38,4 @@ export default (context?: Context) => {
 	globalThis.firebaseDB 		= getDatabase(globalThis.firebaseClient);
 	globalThis.firebaseAuth		= getAuth(globalThis.firebaseClient);
 
-}
+};

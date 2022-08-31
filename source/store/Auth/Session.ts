@@ -1,5 +1,5 @@
 // VUEX
-	import type { MutationTree } from 'vuex'
+	import type { MutationTree } from 'vuex';
 
 // AUTH
 	import { auth, form } from '~/api/auth';
@@ -16,7 +16,7 @@
 			uid: String(),
 		} as form.session,
 		
-	})
+	});
 
 // CURENT STATE
 	export type CurentState = ReturnType<typeof state>
@@ -31,20 +31,20 @@
 // MUTATIONS	
 	export const mutations: MutationTree<CurentState> = {
 		setLoginStatus(state, prop: boolean) {
-			state.LoginStatus = prop
+			state.LoginStatus = prop;
 		},
 		setAuthError(state, prop: auth.error) {
-			state.AuthError = prop
+			state.AuthError = prop;
 		},
 		setUserState(state, { email, uid }: CurentState['CurentUser']) {
-			state.CurentUser = { email, uid }
+			state.CurentUser = { email, uid };
 		},
 
 		resetUser(state) {
 			state.CurentUser = {
 				email	: String(),
 				uid		: String(),
-			} as form.session
+			} as form.session;
 		}
 
-	}
+	};

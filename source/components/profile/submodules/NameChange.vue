@@ -97,7 +97,7 @@
 		data() {
 			return {
 				NewName: '',
-			}
+			};
 		},
 		computed: {
 			...mapState({
@@ -112,10 +112,10 @@
 		methods: {
 			setUsername() {
 				
-				database.update(`Users/${ this.State.UserID }/state`, { UserName: this.NewName })
+				database.update(`Users/${ this.State.UserID }/state`, { UserName: this.NewName });
 
 			},
 		}
-	})
+	});
 
 </script>

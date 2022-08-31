@@ -80,14 +80,14 @@
 
 <script lang="ts">
 
-  import Vue from 'vue'
+  import Vue from 'vue';
 
   // API
   import { database } from '~/api/database';
   import { feed } from '~/api/feed';
 
   // COMPONENTS
-  import Post from './Post.vue'
+  import Post from './Post.vue';
 
   // MODULE
   export default Vue.extend({
@@ -97,7 +97,7 @@
     data() {
       return {
         Posts: Array<feed.IFeed>(),
-      }
+      };
     },
     created() {
       if ( process.browser ) {
@@ -135,6 +135,6 @@
       },
 
     }
-  })
+  });
 
 </script>

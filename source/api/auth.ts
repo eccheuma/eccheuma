@@ -38,7 +38,7 @@ export namespace auth {
   }
 
   export function defineError(e: error, lang: languages) {
-    return getLocale(lang).authError[e]
+    return getLocale(lang).authError[e];
   }
 
   export async function login(email: form.email, pass: string) {
@@ -52,10 +52,10 @@ export namespace auth {
       return {
         email: user.email,
         uid: user.uid,
-      } as form.session
+      } as form.session;
 
     } catch (e: any) {
-      return e?.code as auth.error
+      return e?.code as auth.error;
     }
 
   }
@@ -84,11 +84,11 @@ export namespace auth {
   }
 
   export async function applyPassword(code: string, pass: string) {
-    return await confirmPasswordReset(globalThis.firebaseAuth, code, pass)
+    return await confirmPasswordReset(globalThis.firebaseAuth, code, pass);
   }
 
   export async function requirePassword(email: form.email) {
-    return await sendPasswordResetEmail(globalThis.firebaseAuth, email)
+    return await sendPasswordResetEmail(globalThis.firebaseAuth, email);
   }
 
 }

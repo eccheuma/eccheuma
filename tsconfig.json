@@ -10,6 +10,7 @@
       "ESNext.AsyncIterable",
       "WebWorker",
       "WebWorker.ImportScripts",
+      "DOM.Iterable",
     ],
     "esModuleInterop": true,
     "allowJs": true,

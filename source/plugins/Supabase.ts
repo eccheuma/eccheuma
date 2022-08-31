@@ -1,8 +1,8 @@
 
-import { Context } from '@nuxt/types'
+import { Context } from '@nuxt/types';
 
 import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import type { SupabaseStorageClient } from '@supabase/storage-js'
+import type { SupabaseStorageClient } from '@supabase/storage-js';
 
 declare global {
   var supabase: {
@@ -23,4 +23,4 @@ export default (context?: Context) => {
   
   global.supabase.storage = storage;
  
-}
+};

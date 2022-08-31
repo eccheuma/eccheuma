@@ -49,7 +49,7 @@
 
 <script lang="ts">
 
-  import Vue from 'vue'
+  import Vue from 'vue';
 
   export default Vue.extend({
     props: {
@@ -61,7 +61,7 @@
     data() {
       return {
         seed: 1,
-      }
+      };
     },
     mounted() {
       // this.updateSeed(); 
@@ -70,9 +70,9 @@
       updateSeed() {
         requestAnimationFrame(() => {
           this.seed = Math.trunc(Math.random() * 100); this.updateSeed();
-        })
+        });
       }
     }
-  })
+  });
 
 </script>

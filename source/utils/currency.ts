@@ -1,6 +1,6 @@
 
-import { utils } from '~/utils'
-import { currency } from '~/api/currency'
+import { utils } from '~/utils';
+import { currency } from '~/api/currency';
 
 export namespace currencies {
 
@@ -10,14 +10,14 @@ export namespace currencies {
 		ru = 'ru',
 		en = 'en', 
 		ch = 'ch',
-	};
+	}
 
-	export const DEFAULT = [ currencies.Country.ru ]
+	export const DEFAULT = [ currencies.Country.ru ];
 
 	export const signDict: Readonly<Record<Country, string>> = {
-		[ Country.ru ]: "₽",
-		[ Country.en ]: "$",
-		[ Country.ch ]: "¥"
+		[ Country.ru ]: '₽',
+		[ Country.en ]: '$',
+		[ Country.ch ]: '¥'
 	};
 
 	export interface ICurrency {
@@ -46,7 +46,7 @@ export namespace currencies {
 		}
 
 		public grab(value: number) {
-			this.value = this.value - value as utils.types.nominal<number, C>; return value
+			this.value = this.value - value as utils.types.nominal<number, C>; return value;
 		}
 
 	}
@@ -57,11 +57,11 @@ export namespace currencies {
 			static coefficient: number = cof;
 			static country: Country = country;
 
-			constructor(value: number = 0) { 
+			constructor(value = 0) { 
 				super(value as utils.types.nominal<number, C>, cof);
 			}
 
-		}
+		};
 	}
 
 }
@@ -69,17 +69,17 @@ export namespace currencies {
 export namespace wallet {
 
 	// Limit in rubles as target currency
-	const WALLET_LIMIT: number = 50_000;
+	const WALLET_LIMIT = 50_000;
 
 	const DEFAULT_JSON: contract = {
 		ch: Number(0),
 		en: Number(0),
 		ru: Number(0),
-	}
+	};
 
 	const enum errors {
-		WALLET_OUT = "Not enough on balance",
-		WALLET_LIMIT = "Wallet size limit",
+		WALLET_OUT = 'Not enough on balance',
+		WALLET_LIMIT = 'Wallet size limit',
 	}
 
 	interface IWallet {
@@ -93,12 +93,12 @@ export namespace wallet {
 		public currencies: Record<currencies.Country, currencies.Currency> = Object();
 
 		constructor(contries: Array<currencies.Country> = currencies.DEFAULT) {
-			// this.setCurrencies(contries);
+			this.setCurrencies(contries);
 		}
 
 		get wallets(): Array<currencies.Country> {
 			return Object.keys(this.currencies).map(key => {
-				return currencies.Country[key as keyof typeof currencies.Country]
+				return currencies.Country[key as keyof typeof currencies.Country];
 			});
 		}
 
@@ -107,8 +107,8 @@ export namespace wallet {
 			const result: contract = DEFAULT_JSON;
 
 			this.wallets.forEach(key => {
-				result[key] = this.currencies[key].value
-			})
+				result[key] = this.currencies[key].value;
+			});
 
 			return result;
 
@@ -135,7 +135,7 @@ export namespace wallet {
 		
 			return await currency.validateOperation() 
 				? wallet.add(value)
-				: Error(currency.errors.REJECT)
+				: Error(currency.errors.REJECT);
 
 		}
 		public async take<Cur extends currencies.Currency>(cur: Cur, wallet_type: currencies.Country): Promise<number | Error> {
@@ -147,7 +147,7 @@ export namespace wallet {
 
 			return await currency.validateOperation() 
 				? wallet.grab(value)
-				: Error(currency.errors.REJECT)
+				: Error(currency.errors.REJECT);
 
 		}
 

@@ -132,7 +132,7 @@
 
 <script lang="ts">
 
-	import Vue, { PropOptions, VNodeData } from 'vue'
+	import Vue, { PropOptions, VNodeData } from 'vue';
 
 	const MARGIN = 20;
 
@@ -168,18 +168,18 @@
 
 				width: 0,
 
-			}
+			};
 		},
 		computed: {
 			dynamicStyles(): VNodeData['style'] {
 				return {
 					['--w']: `${ this.width / 2 }px`,
-				}
+				};
 			}
 		},
 		mounted() {
 
-			const T = document.getElementById(this.target)
+			const T = document.getElementById(this.target);
 
 			if ( !this.init ) {
 
@@ -194,7 +194,7 @@
 		methods: {
 			setPosition() {
 
-				const PopoverTarget = document.getElementById(this.target)!
+				const PopoverTarget = document.getElementById(this.target)!;
 				const ParentRect 		= PopoverTarget?.getBoundingClientRect();
 				const PopoverRect 	= ( this.$refs.popover as HTMLElement )?.getBoundingClientRect();
 					
@@ -205,7 +205,7 @@
 					const ParentCenter = {
 						x: PopoverTarget.offsetLeft + (ParentRect.width / 2),
 						y: PopoverTarget.offsetTop  + (ParentRect.height / 2),
-					}
+					};
 
 					switch (this.position) {
 						case 'left': {
@@ -217,7 +217,7 @@
 
 						case 'top': {
 
-							this.pop_position.x = ParentCenter.x
+							this.pop_position.x = ParentCenter.x;
 							this.pop_position.y = (MARGIN + PopoverRect.height) * -1;
 
 						} break;
@@ -241,9 +241,9 @@
 						this.$nextTick(this.setPosition);
 					}
 
-				}, status ? this.startDelay : this.endDelay )
+				}, status ? this.startDelay : this.endDelay );
 			},
 		},
-	})
+	});
 
 </script>

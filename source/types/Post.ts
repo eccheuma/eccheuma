@@ -1,5 +1,5 @@
 // UTILS
-import { utils } from '~/utils'
+import { utils } from '~/utils';
 
 export namespace Post {
 
@@ -45,9 +45,9 @@ export namespace Post {
 			date: Number(),
 			description: String(),
 			image: String(),
-			tags: Array(),
+			tags: [],
 			title: String(),
-		}
+		};
 	}
 
 }

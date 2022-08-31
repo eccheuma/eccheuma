@@ -157,26 +157,26 @@
 	⣿⣿⣿⣶⣶⣮⣥⣒⠲⢮⣝⡿⣿⣿⡆⣿⡿⠃⠄⠄⠄⠄⠄⠄⠄⣠⣴⣿⣿⣿
 */
 
-	import Vue from 'vue'
+	import Vue from 'vue';
 
 	// VUEX
-	import { mapState, mapActions, mapMutations } from 'vuex'
+	import { mapState, mapActions, mapMutations } from 'vuex';
 
 	// COMPONENTS
-	import HeaderCarousel from '~/components/layout/header/HeaderCarousel.vue'
-	import HeaderTop 			from '~/components/layout/header/HeaderTop.vue'
-	import Loader, { LoadStage } from '~/components/common/Loader.vue'
+	import HeaderCarousel from '~/components/layout/header/HeaderCarousel.vue';
+	import HeaderTop 			from '~/components/layout/header/HeaderTop.vue';
+	import Loader, { LoadStage } from '~/components/common/Loader.vue';
 
 	// FUNCTIONAL COMPONENTS
 	import HardwareAccelerationDecorator 	from '~/components/functional/HardwareAcceleration.vue';
 	import TransitionWrapper 							from '~/components/functional/TransitionWrapper.vue';
 
 	// TYPES
-	import type { Notification } from '~/types/Notification'
+	import type { Notification } from '~/types/Notification';
 
-	import type { VuexMap } from '~/types/VuexMap'
+	import type { VuexMap } from '~/types/VuexMap';
 	
-	Vue.component('TransitionWrapper', TransitionWrapper)
+	Vue.component('TransitionWrapper', TransitionWrapper);
 
 	// MODULE
 	export default Vue.extend({ 
@@ -217,7 +217,7 @@
 					{ LoadPoint: 80, 	Message: 'Остаточная компоновка элементов' },
 					{ LoadPoint: 100, Message: 'Готово!' },
 				] as Array<LoadStage>
-			}
+			};
 		},
 		computed: {
 
@@ -250,7 +250,7 @@
 					const C: Notification.struct = {
 						message: 'Если вы ещё не зарегистрированны - То сейчас самое лучшее время!',
 						description: 'Благодаря регистрации на сайте, вы получите личный кабинет с возможностью мониторинга состояния заказа, просмотр заявок, и возможность коментиривания и оценки контента.',
-					}
+					};
 				
 					this.createNotification(C);
 
@@ -259,6 +259,6 @@
 			}
 
 		}
-	})
+	});
 
 </script>

@@ -101,16 +101,16 @@ $h: 10vh;
  
 <script lang="ts">
 
-	import Vue, { PropOptions } from 'vue'
+	import Vue, { PropOptions } from 'vue';
 
 	// VUEX
-	import { mapState } from 'vuex'
+	import { mapState } from 'vuex';
 
 	// VUEX MAP
-	import type { VuexMap } from '~/types/VuexMap'
+	import type { VuexMap } from '~/types/VuexMap';
 
 	// UTILS
-	import { getLocale, languages, russian } from '~/lang'
+	import { getLocale, languages, russian } from '~/lang';
 
 	// TYPES
 	type PageSelectorProperty = {
@@ -138,13 +138,13 @@ $h: 10vh;
 
 				const next = this.PageSelector.Page + 1 >= this.PageSelector.PageQuantity
 					? locale.last
-					: locale.next
+					: locale.next;
 
 				const prev = 2 >= this.PageSelector.Page
 					? locale.first
-					: locale.prev
+					: locale.prev;
 
-				return { next, prev }
+				return { next, prev };
 
 			}
 
@@ -153,19 +153,19 @@ $h: 10vh;
 
 			getPath(page: number) {
 
-				const QUERY_PARAMS = this.payload.params ? `?${ this.payload.params }` : ''
+				const QUERY_PARAMS = this.payload.params ? `?${ this.payload.params }` : '';
 
-				return `/${ this.payload.section }/page_${ page }${ QUERY_PARAMS }`
+				return `/${ this.payload.section }/page_${ page }${ QUERY_PARAMS }`;
 
 			},
 
 			getSuffix(value: number) {
 				switch (this.Lang) {
-					case languages.Russian: return russian.getSuffix(value)
+					case languages.Russian: return russian.getSuffix(value);
 				}
 			}
 
 		},
-	})
+	});
 
 </script>

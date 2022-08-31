@@ -68,7 +68,7 @@
   import Vue from 'vue';
 
   // COMPONENTS
-  import HardwareAccelerationDecorator from '~/components/functional/HardwareAcceleration.vue'
+  import HardwareAccelerationDecorator from '~/components/functional/HardwareAcceleration.vue';
 
   const enum Mode {
     DARK  = 'dark',
@@ -91,6 +91,6 @@
         default: Mode.DARK,
       }
     }
-  })
+  });
 
 </script>

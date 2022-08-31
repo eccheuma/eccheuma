@@ -459,10 +459,10 @@
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from 'vue';
 
 	// VUEX
-	import { mapState, mapActions } from 'vuex'
+	import { mapState, mapActions } from 'vuex';
 
 	// TYPES
 	import type { AnimeAnimParams } from 'animejs';
@@ -472,12 +472,12 @@
 	import { user } from '~/utils/status';
 
 	// ENUMS
-	import { User } from '~/types/User'
+	import { User } from '~/types/User';
 
 	// COMPONENTS
-	import CommonButton	from '~/components/buttons/CommonButton.vue'
-	import Collapse 		from '~/components/common/Collapse.vue'
-	import Tag 					from '~/components/common/Tag.vue'
+	import CommonButton	from '~/components/buttons/CommonButton.vue';
+	import Collapse 		from '~/components/common/Collapse.vue';
+	import Tag 					from '~/components/common/Tag.vue';
 
 	// FUNCTION COMPONENTS
 	import TransitionWrapper from '~/components/functional/TransitionWrapper.vue';
@@ -487,7 +487,7 @@
 
 	type COMPONENT_HEADER = {
 		Title: string,
-		Sub: String
+		Sub: string
 	}
 
 	const enum Title {
@@ -525,7 +525,7 @@
 			duration: 250,
 			easing: 'easeInOutCubic',
 		}
-	}
+	};
 
 	// MODULE
 	export default Vue.extend({
@@ -555,7 +555,7 @@
 
 				status: false,
 				
-			}
+			};
 		},
 
 		computed: {
@@ -580,27 +580,27 @@
 					case 'Messages': return {
 						Title: Title.messages,
 						Sub: Notation.send,
-					}
+					};
 
 					case 'NameChange': return {
 						Title: Title.name,
 						Sub: Notation.confirm,
-					}
+					};
 
 					case 'IconChange': return {
 						Title: Title.icon,
 						Sub: Notation.confirm,
-					}
+					};
 
 					case 'Orders': return {
 						Title: Title.orders,
 						Sub: Notation.avail,
-					}
+					};
 
 					default: return {
 						Title: 'Название для компонента',
 						Sub: 'Явно что-то пошло не так...'
-					}
+					};
 
 				}
 
@@ -618,13 +618,13 @@
 
 			GetRequestsQuantity: {
 				handler() {
-					this.$store.dispatch('User/WorkRequest/setActiveRequest')
+					this.$store.dispatch('User/WorkRequest/setActiveRequest');
 				}
 			},
 
 			status: {
 				handler() {
-					this.AnimateUserIcon('init')
+					this.AnimateUserIcon('init');
 				}
 			},
 
@@ -676,11 +676,11 @@
 			},
 
 			defineStatus(status: User.status) {
-				return user.defineStatus(status, this.Lang)
+				return user.defineStatus(status, this.Lang);
 			},
 
 		},
 
-	})
+	});
 
 </script>

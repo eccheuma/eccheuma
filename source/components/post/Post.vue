@@ -764,10 +764,10 @@
 
 <script lang="ts">
 
-	import Vue, { PropOptions } from 'vue'
+	import Vue, { PropOptions } from 'vue';
 
 	// VUEX
-	import { mapActions, mapState, mapMutations } from 'vuex'
+	import { mapActions, mapState, mapMutations } from 'vuex';
 
 	// API
 	import { database } from '~/api/database';
@@ -777,19 +777,19 @@
 	import { validate } from '~/utils/validate';
 
 	// MIXINS
-	import EmitSound 						from '~/assets/mixins/EmitSound'
-	import IntersectionCooler 	from '~/assets/mixins/IntersectionCooler'
+	import EmitSound 						from '~/assets/mixins/EmitSound';
+	import IntersectionCooler 	from '~/assets/mixins/IntersectionCooler';
 
 	// COMPONETS
-	import Collapse 						from '~/components/common/Collapse.vue'
-	import Popover 							from '~/components/common/Popover.vue'
-	import Tag 									from '~/components/common/Tag.vue'
-	import Icon									from '~/components/common/Icon.vue'
+	import Collapse 						from '~/components/common/Collapse.vue';
+	import Popover 							from '~/components/common/Popover.vue';
+	import Tag 									from '~/components/common/Tag.vue';
+	import Icon									from '~/components/common/Icon.vue';
 	import CommonButton 				from '~/components/buttons/CommonButton.vue';
 
 	// FUNCTIONAL COMPONENTS
 	import HardwareAccelerationDecorator 	from '~/components/functional/HardwareAcceleration.vue';
-	import IntesectionComponent 					from '~/components/functional/intersectionComponent.vue'
+	import IntesectionComponent 					from '~/components/functional/intersectionComponent.vue';
 
 	// ? С фильтрами происходит что-то не совсем ясное. 
 	// ? Нормально работают в хроме, но лиса отказывается с ними адекватно дружить.
@@ -799,14 +799,14 @@
 	// import NoiseFilter					from '~/components/filters/noise.vue'
 
 	// VUEX MODULE TYPE MAP
-	import type { VuexMap } from '~/types/VuexMap'
+	import type { VuexMap } from '~/types/VuexMap';
 
 	// NAMESPACES
-	import { Post } from '~/types/Post'
-	import { User } from '~/types/User'
+	import { Post } from '~/types/Post';
+	import { User } from '~/types/User';
 
 	// TYPES & INTERFACES
-	import type { Image } from '~/types/Image'
+	import type { Image } from '~/types/Image';
 
 	type SECTIONS = 'Likes' | 'Comments' | 'Content'
 
@@ -814,7 +814,7 @@
 	const PLACEHOLDER: Pick<Image.formatsStruct, 'avif' | 'webp'> = {
 		avif: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=avif').src,
 		webp: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src
-	}
+	};
 
 	const CHAR_LIMIT = 600;
 
@@ -883,19 +883,19 @@
 
 				IntersectionAnimation: undefined as Animation | undefined
 
-			}
+			};
 		},
 
 		async fetch() {
 
-			this.PostDate = utils.getLocalTime(this.payload.date)
+			this.PostDate = utils.getLocalTime(this.payload.date);
 
 			if ( process.server ) {
 				await this.getAuthor();
 			}
 
 			if ( this.opened ) {
-				this.Content = await database.get(`Posts/PostID-${ this.payload.ID }/content`)
+				this.Content = await database.get(`Posts/PostID-${ this.payload.ID }/content`);
 			}
 
 		},
@@ -909,23 +909,23 @@
 			}),
 
 			charLimit(): number {
-				return CHAR_LIMIT - this.Message.length
+				return CHAR_LIMIT - this.Message.length;
 			},
 
 			userLiked(): boolean {
 
 				return this.Likes 
 					? Reflect.has(this.Likes, this.StoreUser.UserID)
-					: false
+					: false;
 
 			},
 
 			sortedComments(): Array<Post.comment> {
-				return Object.values(this.Comments || {}).sort((a, b) => a.date - b.date)
+				return Object.values(this.Comments || {}).sort((a, b) => a.date - b.date);
 			},
 
 			validation(): boolean {
-				return validate.sentence(this.Message, ['something'], { minLength: 6 })
+				return validate.sentence(this.Message, ['something'], { minLength: 6 });
 			}
 			
 		},
@@ -933,7 +933,7 @@
 		watch: {
 			'payload.image': {
 				handler() {
-					this.$nextTick().then(() => this.updateImage())
+					this.$nextTick().then(() => this.updateImage());
 				},
 			},
 			Message: {
@@ -961,7 +961,7 @@
 						this.updateImage(); 						
 						this.getAuthor();
 						
-						watchCooledStatus(); console.debug('[Post]: watchCooledStatus | init')
+						watchCooledStatus(); console.debug('[Post]: watchCooledStatus | init');
 
 					}
 				}); 
@@ -971,7 +971,7 @@
 					this.setSounds([
 						{ file: 'Off', name: 'Input::Increment', settings: { rate: 0.65, volume: .25 } },
 						{ file: 'Off', name: 'Input::Decrement', settings: { rate: 0.50, volume: .25 } },
-					])
+					]);
 	
 					watchCommentSection();
 
@@ -982,8 +982,10 @@
 				});
 
 				const watchIntersection 	= this.$watch('IntersectionAnimation', () => {
-					this.IntersectionAnimation!.reverse(); watchIntersection();
-				})
+					if ( this.IntersectionAnimation ) {
+						this.IntersectionAnimation.reverse(); watchIntersection();
+					}
+				});
 
 			}
 
@@ -999,7 +1001,7 @@
 			if ( process.browser ) {
 
 				this.initCooler(this.$el, (cooled: boolean) => {
-					this.Cooled = cooled
+					this.Cooled = cooled;
 				});
 
 				this.IntersectionAnimation = (this.$refs.post as HTMLElement).animate([
@@ -1009,7 +1011,7 @@
 					easing: 'ease-in-out',
 					duration: 1000,
 					fill: 'both',
-				})
+				});
 
 				this.setSounds([
 					{ file: 'Off', 	name: 'Element::Action', settings: { rate: 0.50 } },
@@ -1038,19 +1040,19 @@
 
 				return new Promise((resolve) => {
 					database.get(`Users/${ this.payload.authorID }/state`).then( response => {
-						this.AuthorInfo = response as User.struct; resolve()
-					})
-				})
+						this.AuthorInfo = response as User.struct; resolve();
+					});
+				});
 
 			},
 
 			async listenDataSnapshots(section: SECTIONS) {
 
-				console.debug(`[Post]: listenDataSnapshots | ${ section }`)
+				console.debug(`[Post]: listenDataSnapshots | ${ section }`);
 
 				const PATH = `Posts/PostID-${ this.payload.ID }/${ section.toLowerCase() }`;
 
-				database.listen(PATH, (data: any) => { this[section] = data })
+				database.listen(PATH, (data: any) => { this[section] = data; });
 
 			}, 
 
@@ -1064,15 +1066,15 @@
 
 			async updateImage(width?: number): Promise<void> {
 
-				const IMAGE_CONTAINER = this.$refs.ImageHolder as HTMLElement
+				const IMAGE_CONTAINER = this.$refs.ImageHolder as HTMLElement;
 
 				const URL: Image.formatsStruct = await this.getImageURL({ 
 					path: this.payload.image,
 					size: width || IMAGE_CONTAINER.offsetWidth * window.devicePixelRatio
-				})
+				});
 
 				if ( this.application.context.browser && this.application.gpu.available() ) {
-					this.prepareAnimations(IMAGE_CONTAINER, URL)
+					this.prepareAnimations(IMAGE_CONTAINER, URL);
 				} else {
 					this.ImageURL = URL;
 				}
@@ -1097,7 +1099,7 @@
 				], {
 					duration: 250,
 					fill: 'both',
-				})
+				});
 
 				animation.onfinish = () => {
 					
@@ -1107,7 +1109,7 @@
 
 					this.ImageURL = url;
 
-				}
+				};
 
 			},
 
@@ -1117,14 +1119,14 @@
 
 					this.PrevMessage = this.Message;
 
-					const HASH = utils.hashGenerator()
+					const HASH = utils.hashGenerator();
 
 					const COMMENT: Post.comment = {
 						ID: HASH,
 						date: Date.now(),
 						data: this.Message,
 						userID: this.StoreUser.UserID,
-					}
+					};
 
 					database.set(`Posts/PostID-${ this.payload.ID }/comments/Hash-${ HASH }`, COMMENT);
 
@@ -1142,7 +1144,7 @@
 
 				this.userLiked 
 					? database.remove(PATH) 
-					: database.set(PATH, { hash: utils.hashGenerator() })
+					: database.set(PATH, { hash: utils.hashGenerator() });
 
 			},
 
@@ -1152,12 +1154,12 @@
 
 				this.Message = this.answerTo
 					? `@${ this.answerTo?.UserName }, ${ this.Message }`
-					: this.Message
+					: this.Message;
 
 			}
 
 		},
 
-	})
+	});
 
 </script>

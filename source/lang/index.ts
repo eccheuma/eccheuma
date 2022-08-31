@@ -10,7 +10,7 @@ export const enum languages {
 export namespace russian {
 
   // Numeric
-  const suffix = ['ой', 'ух', 'ёх', 'ми', 'ти']
+  const suffix = ['ой', 'ух', 'ёх', 'ми', 'ти'];
 
   export function getSuffix(num: number): string {
 
@@ -20,7 +20,7 @@ export namespace russian {
 
     if ( num < 10 || num > 20 ) {
 
-      if ( rem === 2 ) return suffix[1]
+      if ( rem === 2 ) return suffix[1];
       if ( math.int.inRange(1,rem,5) ) return suffix[2];
       if ( rem === 7 || rem === 8 ) return suffix[3];
 
@@ -30,14 +30,14 @@ export namespace russian {
 
   }
 
-  export const blacklist: Array<string> = ['аниме']
+  export const blacklist: Array<string> = ['аниме'];
 
   export const userStatus = {
     Admin     : 'Администратор',
     Moderator : 'Модератор',
     Support   : 'Поддержка',
     User      : 'Пользователь',
-  }
+  };
 
   export const Routes: Record<keyof typeof navigation.routeSections, string> = {
     recommendation  : 'Рекомендации',
@@ -45,7 +45,7 @@ export namespace russian {
     service         : 'Услуги',
     gallery         : 'Галерея',
     home            : 'Главная',
-  }
+  };
 
   export const Pagination = {
     page  : 'Страница',
@@ -53,7 +53,7 @@ export namespace russian {
     prev  : 'Предыдущая',
     last  : 'Последняя',
     first : 'Начальная',
-  }
+  };
 
   export const PurchaseStatus = {
     None    : 'Отсутствует',
@@ -63,12 +63,12 @@ export namespace russian {
     Ready   : 'Ожидает проверку',
     Done    : 'Выполнен',
     Denied  : 'Отменён'
-  }
+  };
 
   export const Application = {
 		Landing   : 'Лэндинг',
 		Multipage : 'Многостраничник',
-	}
+	};
 
   export const authError = {
     'auth/network-request-failed'	: 'Ошибка соединения',
@@ -77,27 +77,27 @@ export namespace russian {
     'auth/wrong-password'					: 'Неверный пароль',
     'auth/email-already-in-use' 	: 'Данная почта занята другим пользователем',
     'auth/weak-password'          : 'Слабый пароль',
-  }
+  };
 
   export const fileInput = {
     sizeStrict  : 'Загружаемый размер файла привышает 1.5МБ: Размер вашего изображения:',
     sendError   : 'При отправке изображения произошла ошибка',
     loadError   : 'При загрузке изображения произошла ошибка',
-  }
+  };
 
 }
 
 export namespace english {
   export const fileInput = {
     FilesizeStrict: 'File size limit is 1.5MB. Your is:'
-  }
+  };
 }
 
 export function getLocale(lang: languages) {
   switch (lang) {
     case languages.Russian: 
-      return russian
+      return russian;
     default: 
-      return russian
+      return russian;
   }
 }

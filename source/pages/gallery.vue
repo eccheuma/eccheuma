@@ -143,30 +143,30 @@
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from 'vue';
 
 // VUEX
-	import { mapMutations } from 'vuex'
+	import { mapMutations } from 'vuex';
 
 // API
-	import { database } from '~/api/database'
+	import { database } from '~/api/database';
 	
 // LOAD POLITIC
-	import { Ranges } from '~/config/LoadPolitic'
+	import { Ranges } from '~/config/LoadPolitic';
 
 // COMPONENTS
-	import PromoBanner 		from '~/components/promo/PromoBanner.vue'
-	import SectionHeader 	from '~/components/common/SectionHeader.vue'
+	import PromoBanner 		from '~/components/promo/PromoBanner.vue';
+	import SectionHeader 	from '~/components/common/SectionHeader.vue';
 
 // PAGE DESCRIPTION
-	import { Opengraph } from '~/utils/opengraph'
+	import { Opengraph } from '~/utils/opengraph';
 
 	export const PageDescription: Opengraph.struct = {
 		title				: 'Eccheuma | Галерея',
 		description	: 'Галлерея изображений. Начиная от логотипов и полноценных макетов, заканчивая всякими набросками и непринятыми вариантами работ.',
 		url					: '',
 		image				: require('~/assets/images/NotificationBadge.png?resize&size=600').src,
-	}
+	};
 
 // MODULE
 	export default Vue.extend({ 
@@ -190,7 +190,7 @@
 
 				PageQuantity: 0,
 
-			}
+			};
 		},
 		head () {
 			return {
@@ -198,7 +198,7 @@
 				meta: [
 					...new Opengraph.Meta(PageDescription).buildMeta()
 				],
-			}
+			};
 		},
 
 		async mounted() {
@@ -218,6 +218,6 @@
 			}),
 
 		},
-	})
+	});
 
 </script>

@@ -67,36 +67,36 @@ main {
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from 'vue';
 
 // VUEX
-	import { mapMutations, mapState } from 'vuex'
+	import { mapMutations, mapState } from 'vuex';
 
 // API
-	import { database } from '~/api/database'
+	import { database } from '~/api/database';
 
 // MIXINS
-	import TransitionProperty from '~/assets/mixins/PageTransitionProperty'
+	import TransitionProperty from '~/assets/mixins/PageTransitionProperty';
 
 // COMPONENTS
-	import Pagination 			from '~/components/common/Pagination.vue'
-	import Auth 						from '~/components/auth/Auth.vue'
+	import Pagination 			from '~/components/common/Pagination.vue';
+	import Auth 						from '~/components/auth/Auth.vue';
 
 // TYPES
-	import type { VuexMap } from '~/types/VuexMap'
+	import type { VuexMap } from '~/types/VuexMap';
 
 // LOAD POLITIC
-	import { Ranges } from '~/config/LoadPolitic'
+	import { Ranges } from '~/config/LoadPolitic';
 
 // PAGE DESCRIPTION
-	import { Opengraph } from '~/utils/opengraph'
+	import { Opengraph } from '~/utils/opengraph';
 
 	export const PageDescription: Opengraph.struct = {
 		title				: 'Eccheuma | Главная',
 		description	: 'Главная страница. Тут собраны статьи на завязанные на профильную тему.',
 		url					: '',
 		image				: require('~/assets/images/NotificationBadge.png?resize&size=600').src,
-	}
+	};
 
 // MODULE
 	export default Vue.extend({ 
@@ -114,7 +114,7 @@ main {
 				Title: 'Главная',
 				PageQuantity: 0,
 
-			}
+			};
 		},
 		head () {
 			return {
@@ -122,7 +122,7 @@ main {
 				meta: [
 					...new Opengraph.Meta(PageDescription).buildMeta()
 				],
-			}
+			};
 		},
 
 		async mounted() {
@@ -145,6 +145,6 @@ main {
 				ChangePageQuantity: 'PageSelector/ChangePageQuantity'
 			})
 		},
-	})
+	});
 
 </script>

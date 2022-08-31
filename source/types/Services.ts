@@ -86,6 +86,6 @@ export namespace defaultStructs {
 		about				: 'Тестовое приложение',
 		single			: true,
 		quantity		: 1,
-	} 
+	}; 
 
 }

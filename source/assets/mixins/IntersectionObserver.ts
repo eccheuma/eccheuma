@@ -1,4 +1,4 @@
-	import Vue from 'vue'
+	import Vue from 'vue';
 
 // TYPES
 
@@ -38,7 +38,7 @@ export default Vue.extend({
 		return {
 			ObserversMap: 	new Map() as Map<Element, IntersectionObserver>,
 			AnimationState: new Map() as Map<Element, boolean>,
-		}
+		};
 	},
 	methods: {
 
@@ -51,8 +51,8 @@ export default Vue.extend({
 					? 'in' 
 					: 'out', 
 				payload._options?.animation_target || payload.el, 
-				payload.animation)
-			}
+				payload.animation);
+			};
 	
 			const OPTIONS = {
 				threshold: payload._threshold ?? this.$isMobile ? 0 : .25
@@ -63,22 +63,22 @@ export default Vue.extend({
 				const observer = entry.pop();
 
 				if ( observer ) {
-					payload._cb ? payload._cb(entry) : DEF_CB(observer.isIntersecting)
+					payload._cb ? payload._cb(entry) : DEF_CB(observer.isIntersecting);
 				}
 
 
 			}, OPTIONS);
 
 			this.ObserversMap.set(payload.el, OBSERVER);
-			this.AnimationState.set(payload.el, false)
+			this.AnimationState.set(payload.el, false);
 
-			OBSERVER.observe(payload.el)
+			OBSERVER.observe(payload.el);
 
 		},
 
 		animateElement(mode: ANIMATION_MODE, el: Element, animation: ANIMATION_PAYLOAD) {
 
-			const AS = this.AnimationState
+			const AS = this.AnimationState;
 
 			const DUR = 500;
 
@@ -90,21 +90,21 @@ export default Vue.extend({
 				...animation[mode],
 
 				begin: () => {
-					AS.set(el, true)
+					AS.set(el, true);
 				},
 				complete: () => {
 					setTimeout(() => {
-						AS.set(el, false)
+						AS.set(el, false);
 					}, 250);
 				}
 
-			})
+			});
 
 			if ( AS.get(el) === false ) {
-				ANIMATION.play() 
+				ANIMATION.play(); 
 			}
 
 		}
 
 	}
-})
+});

@@ -35,19 +35,19 @@
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from 'vue';
 
 	// VUEX
-	import { mapState } from 'vuex'
+	import { mapState } from 'vuex';
 
 	// COMPONENTS
-	import Loader, { LoadStage } from '~/components/common/Loader.vue'
+	import Loader, { LoadStage } from '~/components/common/Loader.vue';
 
-	import AuthLogin 			from '~/components/auth/submodules/Login.vue'
-	import AuthProfile 		from '~/components/auth/submodules/Profile.vue'
+	import AuthLogin 			from '~/components/auth/submodules/Login.vue';
+	import AuthProfile 		from '~/components/auth/submodules/Profile.vue';
 
 	// TYPES
-	import type { VuexMap } from '~/types/VuexMap'
+	import type { VuexMap } from '~/types/VuexMap';
 
 	// MODULE
 	export default Vue.extend({
@@ -66,7 +66,7 @@
 					{ LoadPoint: 100, Message: 'Вход' },
 				] as LoadStage[],
 
-			}
+			};
 		},
 		computed: {
 
@@ -94,6 +94,6 @@
 			}
 		},
 
-	})
+	});
 	
 </script>

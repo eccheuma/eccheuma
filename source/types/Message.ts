@@ -1,4 +1,4 @@
-import { User } from '~/types/User'
+import { User } from '~/types/User';
 
 export namespace Message {
 
@@ -19,7 +19,7 @@ export namespace Message {
       date: Number(),
       message: String(),
       readed: false,
-		}
+		};
 	}
 
 }

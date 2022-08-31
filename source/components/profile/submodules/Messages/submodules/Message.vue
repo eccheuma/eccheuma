@@ -122,7 +122,7 @@
 
 <script lang="ts">
 
-  import Vue, { PropOptions } from 'vue'
+  import Vue, { PropOptions } from 'vue';
 
   // API
   import { database } from '~/api/database';
@@ -131,11 +131,11 @@
   import { utils } from '~/utils';
 
   // COMPONENTS
-  import Icon from '~/components/common/Icon.vue'
+  import Icon from '~/components/common/Icon.vue';
 
   // TYPE | INTERFACES | NAMESPACES
   import { Message }  from '~/types/Message';
-  import { User }     from '~/types/User'
+  import { User }     from '~/types/User';
 
   // MODULE
   export default Vue.extend({
@@ -158,7 +158,7 @@
 
         date: utils.getLocalTime(0)
 
-      }
+      };
     },
     created() {
       this.date = utils.getLocalTime(this.payload.date);
@@ -190,10 +190,10 @@
         this.author = {
           name: UserName,
           status: UserStatus
-        }
+        };
 
       }
     }
-  })
+  });
 
 </script>

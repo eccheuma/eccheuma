@@ -3,4 +3,4 @@ export default {
 		name: 'opacity-transition',
 		mode: 'out-in',
 	}
-}
+};

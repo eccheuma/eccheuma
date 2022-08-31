@@ -4,7 +4,7 @@ export namespace math {
 
   export namespace vector {
     export function invert(x: number): number {  
-      return (1 - Math.abs(x)) * Math.sign(x)
+      return (1 - Math.abs(x)) * Math.sign(x);
     }
     
   }
@@ -13,13 +13,13 @@ export namespace math {
 
     export function mean(set: Array<number>): number {
 
-      return set.reduce((acc, cur) => acc + cur, 0) / set.length
+      return set.reduce((acc, cur) => acc + cur, 0) / set.length;
 
     }
 
     export function median(set: Array<number>): Array<number> {
       
-      return set.slice((set.length - 1) / 2, (set.length - 1) / 2 * -1)
+      return set.slice((set.length - 1) / 2, (set.length - 1) / 2 * -1);
 
     }
 
@@ -31,7 +31,7 @@ export namespace math {
       return Array(max)
         .fill(min)
         .map((x, i) => (x + i) as R);
-    };
+    }
 
     export type intRange<
       Min extends number = 0, 

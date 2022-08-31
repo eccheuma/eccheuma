@@ -1,9 +1,9 @@
 // VUEX
-	import type { MutationTree } from 'vuex'
+	import type { MutationTree } from 'vuex';
 
 // TYPES
-	import { User } from '~/types/User'
-	import { currencies } from '~/utils/currency'
+	import { User } from '~/types/User';
+	import { currencies } from '~/utils/currency';
 
 // STATE
 	export const state = () => ({
@@ -13,7 +13,7 @@
 
 		State: new Object() as User.struct
 
-	})
+	});
 
 // CURENT STATE
 	export type CurentState = ReturnType<typeof state>
@@ -28,9 +28,9 @@
 // MUTATIONS
 	export const mutations: MutationTree<CurentState> = {
 		setUserState(state, newUserState: User.struct) {
-			state.State = newUserState
+			state.State = newUserState;
 		},
 		toggleProfileArea(state) {
-			state.UserProfileArea = !state.UserProfileArea
+			state.UserProfileArea = !state.UserProfileArea;
 		}
-	}
+	};

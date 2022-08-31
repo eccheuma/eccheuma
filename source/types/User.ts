@@ -38,7 +38,7 @@ export namespace User {
 		UserStatus: status.User,
 		UserWallet: new wallet.Instance(currencies.DEFAULT).toJSON,
 		UserWorkStatus: Purchase.status.None
-	}
+	};
 
 	/**
 	 * Возвращает макет обхекта со значениями по умолчанию.
@@ -48,7 +48,7 @@ export namespace User {
 		return {
 			...DEFAULT,
 			...struct,
-		}
+		};
 	}
 	
 }

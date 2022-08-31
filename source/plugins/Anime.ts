@@ -1,9 +1,9 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
-import animeJS from 'animejs'
+import animeJS from 'animejs';
 
 declare module 'animejs' {
-	let suspendWhenDocumentHidden: boolean
+	let suspendWhenDocumentHidden: boolean;
 }
 
 animeJS.suspendWhenDocumentHidden = false;

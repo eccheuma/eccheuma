@@ -83,17 +83,17 @@
 
 <script lang="ts">
 
-import Vue from 'vue'
+import Vue from 'vue';
 
 // API
-import { database } from '~/api/database'
+import { database } from '~/api/database';
 
 // MIXINS
-import EmitSound from '~/assets/mixins/EmitSound'
+import EmitSound from '~/assets/mixins/EmitSound';
 
 // Namespaces
-import { Portfolio } from '~/types/Portfolio'
-import { Workcase  } from '~/types/WorkCase'
+import { Portfolio } from '~/types/Portfolio';
+import { Workcase  } from '~/types/WorkCase';
 
 export default Vue.extend({
 	components: {
@@ -112,7 +112,7 @@ export default Vue.extend({
 
 			Works: new Object() as {[ KEY in Portfolio.sections ]: Array<Workcase.struct> },
 
-		}
+		};
 	},
   created() {
     this.GetCases();
@@ -127,10 +127,10 @@ export default Vue.extend({
 
         this.Ready = true;
 
-			})
+			});
 
 		}
 
 	}
-})
+});
 </script>

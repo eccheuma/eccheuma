@@ -40,7 +40,7 @@ export namespace Workcase {
 			properties: {
 				type: Portfolio.sections.applications
 			},
-		}
+		};
 
 	}
 

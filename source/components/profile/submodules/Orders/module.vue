@@ -73,17 +73,17 @@
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from 'vue';
 
 	// VUEX
-	import { mapActions, mapState, mapMutations } from 'vuex'
+	import { mapActions, mapState, mapMutations } from 'vuex';
 
 	// VUEX MODULE TYPE MAP
-	import type { VuexMap } from '~/types/VuexMap'
+	import type { VuexMap } from '~/types/VuexMap';
 
 	// COMPONENTS
 	import CommonButton	from '~/components/buttons/CommonButton.vue';
-	import Order 				from './submodules/Order.vue'
+	import Order 				from './submodules/Order.vue';
 
 	export default Vue.extend({
 		components: {
@@ -95,7 +95,7 @@
 
 				orderModal: false,
 
-			}
+			};
 		},
 		computed: {
 
@@ -120,6 +120,6 @@
 			}),
 
 		},
-	})
+	});
 
 </script>

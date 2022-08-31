@@ -223,7 +223,7 @@
   import Vue, { PropOptions } from 'vue';
 
   // API
-  import { feed } from '~/api/feed'
+  import { feed } from '~/api/feed';
 
   // UTILS
   import { utils } from '~/utils';
@@ -233,8 +233,8 @@
   const DEFAULT_AVATAR    = require('~/assets/images/GroupAvatar.jpg').src as string;
 
   // COMPONENTS
-	import Icon	          from '~/components/common/Icon.vue'
-  import CommonButton   from '~/components/buttons/CommonButton.vue'
+	import Icon	          from '~/components/common/Icon.vue';
+  import CommonButton   from '~/components/buttons/CommonButton.vue';
 
   // MODULE
   export default Vue.extend({
@@ -252,7 +252,7 @@
 
         SourceIcon: DEFAULT_AVATAR,
 
-      }
+      };
     },
     computed: {
 
@@ -261,6 +261,6 @@
       }
 
     }
-  })
+  });
 
 </script>

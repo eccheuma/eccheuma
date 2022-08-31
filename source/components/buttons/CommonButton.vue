@@ -102,10 +102,10 @@
 
 <script lang="ts"> 
 
-	import Vue from 'vue'
+	import Vue from 'vue';
 
 	// MIXINS
-	import EmitSound      from '~/assets/mixins/EmitSound'
+	import EmitSound      from '~/assets/mixins/EmitSound';
 	
 	// MODULE
 	export default Vue.extend({
@@ -145,7 +145,7 @@
 
 				soundHash: ''
 
-			}
+			};
 		},
 		created() {
 
@@ -153,7 +153,7 @@
 				this.setSounds([
 					{ file: 'On', name: 'Element::Action', 	settings: { rate: 0.50 } },
 					{ file: 'On', name: 'Element::Hover', 	settings: { rate: 0.25 } }
-				])
+				]);
 			}
 
 		},
@@ -162,7 +162,7 @@
 			const ELEMENT = this.$refs.button as HTMLElement;
 
 			if ( this.type === 'a' ) {
-				ELEMENT.setAttribute('href', this.link)
+				ELEMENT.setAttribute('href', this.link);
 			}
 
 			if ( this.sound ) {
@@ -171,6 +171,6 @@
 			}
 
 		}
-	})
+	});
 
 </script>

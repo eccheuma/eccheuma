@@ -1,4 +1,4 @@
-import { ActionTree, MutationTree } from 'vuex'
+import { ActionTree, MutationTree } from 'vuex';
 
 // API
 	import { storage, references } from '~/api/storage';
@@ -15,7 +15,7 @@ import { ActionTree, MutationTree } from 'vuex'
 // STATE
 	export const state = () => ({
 		AVIF_SUPPORT: false,
-	})
+	});
 
 // CURENT STATE
 	export type CurentState = ReturnType<typeof state>
@@ -32,7 +32,7 @@ import { ActionTree, MutationTree } from 'vuex'
 		setAVIF( state, status: boolean ) {
 			state.AVIF_SUPPORT = status;
 		}
-	}
+	};
 
 // ACTIONS
 	export const actions: ActionTree<CurentState, CurentState> = {
@@ -52,14 +52,14 @@ import { ActionTree, MutationTree } from 'vuex'
 
 				if ( REF ) imageStruct[format] = REF;
 
-			})
+			});
 
 			if ( process.browser ) {
 
 				const cacheKey = `${ params.path }-${ matchedSize }`;
 
 				if ( cache.check(cacheKey) ) {
-					return cache.get(cacheKey) as Image.formatsStruct
+					return cache.get(cacheKey) as Image.formatsStruct;
 				}
 
 				cache.set(cacheKey, imageStruct);
@@ -70,4 +70,4 @@ import { ActionTree, MutationTree } from 'vuex'
 
 		}
 
-	}
+	};

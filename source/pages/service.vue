@@ -95,16 +95,16 @@
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from 'vue';
 
 	// COMPONENTS
-	import SectionHeader 		from '~/components/common/SectionHeader.vue'
-	import ServiceCard 			from '~/components/service/ServiceCard.vue'
-	import PromoBanner      from '~/components/promo/PromoBanner.vue'
+	import SectionHeader 		from '~/components/common/SectionHeader.vue';
+	import ServiceCard 			from '~/components/service/ServiceCard.vue';
+	import PromoBanner      from '~/components/promo/PromoBanner.vue';
 	// import Calculator				from '~/components/service/Calculator.vue'
 
 	// TYPES 
-	import type { Categories, Purchase } from '~/types/Services'
+	import type { Categories, Purchase } from '~/types/Services';
 
 	interface CardStruct extends Purchase.Description {
 		category : Categories,
@@ -113,14 +113,14 @@
 	// 'Услуги. Перечень оказываемых услуг, калькулятор стоимости, и форма обратной связи.'
 
 	// PAGE DESCRIPTION
-	import { Opengraph } from '~/utils/opengraph'
+	import { Opengraph } from '~/utils/opengraph';
 
 	export const PageDescription: Opengraph.struct = {
 		title				: 'Eccheuma | Услуги',
 		description	: 'Услуги. Перечень оказываемых услуг, калькулятор стоимости, и форма обратной связи.',
 		url					: '',
 		image				: require('~/assets/images/NotificationBadge.png?resize&size=600').src,
-	}
+	};
 
 	// MODULE
 	export default Vue.extend({
@@ -159,7 +159,7 @@
 
 				Categories: ['Application', 'Graphic', 'FrontEnd'] as Array<Categories>,
 
-			}
+			};
 		},
 		head () {
 			return {
@@ -167,8 +167,8 @@
 				meta: [
 					...new Opengraph.Meta(PageDescription).buildMeta()
 				],
-			}
+			};
 		},
-	})
+	});
 
 </script>

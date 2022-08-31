@@ -36,17 +36,17 @@
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from 'vue';
 
 	// PAGE DESCRIPTION
-	import { Opengraph } from '~/utils/opengraph'
+	import { Opengraph } from '~/utils/opengraph';
 
 	export const PageDescription: Opengraph.struct = {
 		title				: 'Eccheuma | Рекомендации',
 		description	: 'Раздел связан с обслуживанием и заметками касательно содержания проектов',
 		url					: '',
 		image				: require('~/assets/images/NotificationBadge.png?resize&size=600').src,
-	}
+	};
 
 	// MODULE
 	export default Vue.extend({
@@ -59,8 +59,8 @@
 				meta: [
 					...new Opengraph.Meta(PageDescription).buildMeta()
 				],
-			}
+			};
 		},
-	})
+	});
 
 </script>

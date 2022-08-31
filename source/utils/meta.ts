@@ -19,7 +19,7 @@ export namespace Meta {
 
     const pagePrefix = typeof prop.page === 'number'
       ? `${ prop.page } ${ pageType }`
-      : `${ prop.page }`
+      : `${ prop.page }`;
 
     return `Eccheuma | ${ pageName } | ${ pagePrefix }`;
 

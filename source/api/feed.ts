@@ -2,12 +2,12 @@ import type { WallGetResponse } from 'vk-io/lib/api/schemas/responses';
 import type { WallWallpostAttachmentType, WallWallpostAttachment } from 'vk-io/lib/api/schemas/objects';
 
 // UTILS
-import { LocaleDate, utils } from '~/utils'
+import { LocaleDate, utils } from '~/utils';
 
 export namespace vk {
 
-  const TOKEN: string = `access_token=${ process.env.VK_API_TOKEN }`;
-  const VERSION: string = `v=${ process.env.VK_API_VERSION }`;
+  const TOKEN = `access_token=${ process.env.VK_API_TOKEN }`;
+  const VERSION = `v=${ process.env.VK_API_VERSION }`;
 
   export namespace wall {
 
@@ -24,7 +24,7 @@ export namespace vk {
   }
 
   export function constructQuery(method: wall.methods, params: Array<wall.query>): string {
-    return `${ process.env.VK_API_URL }/${ method }?${ TOKEN }&${ VERSION }&${ params.join("&") }`
+    return `${ process.env.VK_API_URL }/${ method }?${ TOKEN }&${ VERSION }&${ params.join('&') }`;
   }
 
   export function pickThumbnail(attachments: Array<WallWallpostAttachment> = []): string | undefined {
@@ -46,7 +46,7 @@ export namespace vk {
 
 export namespace feed {
 
-  const GROUD_ID: string = String(process.env.VK_API_GROUP_ID);
+  const GROUD_ID = String(process.env.VK_API_GROUP_ID);
 
   export type IFeed = {
     thumb ?: string,
@@ -64,9 +64,9 @@ export namespace feed {
 
     const params: Array<vk.wall.query> = [
       `${ vk.wall.params.ID }=${ from }`
-    ]
+    ];
 
-    const feed: Array<IFeed> = Array();
+    const feed: Array<IFeed> = [];
     const response = await fetch(vk.constructQuery(vk.wall.methods.GET, params), {
       mode: process.env.NODE_ENV === 'development' ? 'no-cors' : 'cors',
     });
@@ -88,9 +88,9 @@ export namespace feed {
           comments : Number(post.comments.count || Number()),
           reposts  : Number(post.reposts.count || Number()),
         }
-      })
+      });
 
-    })
+    });
 
     return feed;
 

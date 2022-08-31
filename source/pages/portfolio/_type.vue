@@ -28,7 +28,7 @@
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from 'vue';
 
 	// VUEX
 	import { mapState } from 'vuex';
@@ -77,11 +77,11 @@
 		data() {
 			return {
 
-				Case: new Array() as Array<Workcase.struct>,
+				Case: [] as Array<Workcase.struct>,
 
 				Type: Portfolio.sections.landings,
 
-			}
+			};
 		},
 		computed: {
 
@@ -98,7 +98,7 @@
 					page: this.Type, 
 					section: navigation.routeSections.portfolio
 				}),
-			}
+			};
 
 		},
 		async mounted() {
@@ -109,10 +109,10 @@
 
 				return await database
 					.get(`Cases/${ this.Type }`)
-					.then(data => Object.values(data || Object()))
+					.then(data => Object.values(data || Object()));
 
 			},
 		}
-	})
+	});
 
 </script>

@@ -221,8 +221,8 @@
   import Vue, { PropOptions } from 'vue';
 
   // VUEX
-	import { mapState, mapMutations, mapActions } from 'vuex'
-	import type { VuexMap } from '~/types/VuexMap'
+	import { mapState, mapMutations, mapActions } from 'vuex';
+	import type { VuexMap } from '~/types/VuexMap';
 
   // UTILS
   import { utils } from '~/utils';
@@ -235,7 +235,7 @@
     import CommonButton	from '~/components/buttons/CommonButton.vue';
 
   // Namespace
-  import { Purchase } from '~/types/Services'
+  import { Purchase } from '~/types/Services';
 
   type WAITING_TIME_FORMAT = {
     days: number
@@ -280,7 +280,7 @@
           '--l': `${ Math.trunc(Math.random() * 100) }%`,
         }
 
-      }
+      };
     },
     computed: {
 
@@ -293,7 +293,7 @@
       },
 
       acceptDate(): number {
-        return this.payload.recived + QUEUE_TIME
+        return this.payload.recived + QUEUE_TIME;
       }
 
     },
@@ -309,9 +309,9 @@
             duration: 750,
             easing: 'easeInOutQuad',
             complete: timerWatcher
-          })
+          });
   
-        })
+        });
 
       }
 
@@ -334,7 +334,7 @@
     beforeDestroy() {
 
       if ( this.ticker ) {
-        clearInterval(this.ticker)
+        clearInterval(this.ticker);
       }
 
     },
@@ -350,7 +350,7 @@
 
       getAwaitTime(awaitDate: number): WAITING_TIME_FORMAT {
 
-        const DAYS    = ( awaitDate - Date.now() ) / 86_400_000
+        const DAYS    = ( awaitDate - Date.now() ) / 86_400_000;
         const HOURS   = ( DAYS  % 1 ) * 24;
         const MINUTES = ( HOURS % 1 ) * 60;
 
@@ -358,12 +358,12 @@
           days: Math.trunc(DAYS),
           hours: Math.trunc(HOURS),
           minutes: Math.trunc(MINUTES),
-        }
+        };
 
       },
 
       setVisiableStatus(status: boolean): void {
-        this.visiableStatus = status
+        this.visiableStatus = status;
       },
 
       // TODO | Refactor keys with enums
@@ -377,7 +377,7 @@
           { name: 'Дата заказа',        value: `${ Day } в ${ Time }` },
           { name: 'Тип Заказа',         value: this.getOrderType(this.payload.type) },
           { name: 'Индификатор заказа', value: this.payload.ID, type: 'id' },
-        ]
+        ];
 
       },
 
@@ -391,7 +391,7 @@
           case 1: return variants[0];
 
           default: {
-            return variants[Remainder < 5 ? 1 : 2]  
+            return variants[Remainder < 5 ? 1 : 2];  
           }
 
         }
@@ -403,6 +403,6 @@
       }
 
     }
-  })
+  });
 
 </script>

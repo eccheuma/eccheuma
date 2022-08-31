@@ -1,5 +1,5 @@
 // VUEX
-	import type { ActionTree, MutationTree } from 'vuex'
+	import type { ActionTree, MutationTree } from 'vuex';
 
 // UTILS
 	import { utils } from '~/utils';
@@ -8,8 +8,8 @@
 	import { database } from '~/api/database';
 
 // TYPES
-	import type { VuexMap } from '~/types/VuexMap'
-	import type { Message } from '~/types/Message'
+	import type { VuexMap } from '~/types/VuexMap';
+	import type { Message } from '~/types/Message';
 
 // STATE
 	export const state = () => ({
@@ -18,7 +18,7 @@
 
 		NewMessagesCount: 0
 		
-	})
+	});
 
 // CURENT STATE
 	export type CurentState = ReturnType<typeof state>
@@ -34,14 +34,14 @@
 	export const mutations: MutationTree<CurentState> = {
 
 		setUnreadedQuanity(state, q: number) {
-			state.NewMessagesCount = q
+			state.NewMessagesCount = q;
 		},
 
 		setMessages(state, messages: Array<Message.struct>) {
 			state.Data = messages.sort((a, b) => a.date - b.date);
 		},
 		
-	}
+	};
 
 // ACTIONS
 	export const actions: ActionTree<CurentState, VuexMap>  = {
@@ -59,11 +59,11 @@
 	
 					dispatch('checkUnreaded');
 
-					resolve(true)
+					resolve(true);
 	
-				})
+				});
 
-			})
+			});
 
 			
 
@@ -74,7 +74,7 @@
 			// Получение ID пользователя
 			const { State } = vuex.rootState.User.State;
 
-			return database.set(`Users/${ State.UserID }/messages/Hash_${prop.ID}`, prop) 
+			return database.set(`Users/${ State.UserID }/messages/Hash_${prop.ID}`, prop); 
 
 		},
 
@@ -82,7 +82,7 @@
 
 			const { State } = vuex.rootState.User.State;
 
-			return database.remove(`Users/${ State.UserID }/messages/Hash_${ ID }`)
+			return database.remove(`Users/${ State.UserID }/messages/Hash_${ ID }`);
 
 		},
 
@@ -91,7 +91,7 @@
 			// Получение ID пользователя
 			const { State } = vuex.rootState.User.State;
 
-			return database.update(`Users/${ State.UserID }/messages/Hash_${ ID }`, { readed: true } as Partial<Message.struct>)
+			return database.update(`Users/${ State.UserID }/messages/Hash_${ ID }`, { readed: true } as Partial<Message.struct>);
 
 		},
 
@@ -100,11 +100,11 @@
 			const { State } = vuex.rootState.User.State;
 
 			const { length } = vuex.state.Data.filter(message => {
-				return message.readed === false && message.userID !== State.UserID
-			})
+				return message.readed === false && message.userID !== State.UserID;
+			});
 			
 			vuex.commit('setUnreadedQuanity', length);
 
 		},
 		
-	}
+	};

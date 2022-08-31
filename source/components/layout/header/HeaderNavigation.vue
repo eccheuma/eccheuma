@@ -305,13 +305,13 @@ $TransitionDuration: 250ms;
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from 'vue';
 
 	// VUEX
 	import { mapState } from 'vuex';
 
 	// VUEX MAP
-	import { VuexMap } from '~/types/VuexMap'
+	import { VuexMap } from '~/types/VuexMap';
 
 	// LANG
 	import { getLocale } from '~/lang';
@@ -320,11 +320,11 @@ $TransitionDuration: 250ms;
 	import { utils } from '~/utils';
 
 	// MIXINS
-	import EmitSound from '~/assets/mixins/EmitSound'
+	import EmitSound from '~/assets/mixins/EmitSound';
 
 	// COMPONENTS
-	import Popover 		from '~/components/common/Popover.vue'
-	import Icon				from '~/components/common/Icon.vue'
+	import Popover 		from '~/components/common/Popover.vue';
+	import Icon				from '~/components/common/Icon.vue';
 
 	import { PageDescription as HomePage } from '~/pages/home.vue';
 	import { PageDescription as GalleryPage } from '~/pages/gallery.vue';
@@ -332,7 +332,7 @@ $TransitionDuration: 250ms;
 	import { PageDescription as ServicePage } from '~/pages/service.vue';
 
 	// TYPES
-	import { navigation } from '~/types/Navigation'
+	import { navigation } from '~/types/Navigation';
 
 	type HeaderMenuItem = {
 		disabled		: boolean,
@@ -379,7 +379,7 @@ $TransitionDuration: 250ms;
 			icon: 'Service',
 			description: ServicePage.description
 		},
-	]
+	];
 
 	// MODULE
 	export default Vue.extend({
@@ -413,7 +413,7 @@ $TransitionDuration: 250ms;
 
 				HeaderMenu: HeaderRoutes,	
 
-			}
+			};
 		},
 		computed: {
 
@@ -422,7 +422,7 @@ $TransitionDuration: 250ms;
 			}),
 
 			CurentRoute(): string { // Текущий рут
-				return this.$route.matched?.[0].path
+				return this.$route.matched?.[0].path;
 			},
 		},
 		mounted() {
@@ -431,7 +431,7 @@ $TransitionDuration: 250ms;
 				this.setSounds([
 					{ file: 'On', name: 'Element::Action', 	settings: { rate: 0.50 } },
 					{ file: 'On', name: 'Element::Hover', 	settings: { rate: 0.25 } }
-				])
+				]);
 			}
 
 		},
@@ -441,14 +441,14 @@ $TransitionDuration: 250ms;
 				window.scrollTo({
 					top: this.$el.scrollTop,
 					behavior: 'smooth',
-				})
+				});
 			},
 
 			getLocale(route: navigation.routeSections): string {
-				return getLocale(this.Lang).Routes[ utils.enums.toString(navigation.routeSections, route) ]
+				return getLocale(this.Lang).Routes[ utils.enums.toString(navigation.routeSections, route) ];
 			}
 			
 		}
-	})
+	});
 
 </script>

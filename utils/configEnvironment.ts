@@ -5,8 +5,8 @@ dotenv.config({ path: '../.env' });
 export namespace environment {
 
   export const enum node {
-    docker = "production-docker",
-    development = "development",
+    development = 'development',
+    docker      = 'production-docker',
   }
 
   type env = {[ i: string ]: string } 
@@ -17,7 +17,7 @@ export namespace environment {
 
     keys.forEach(key => {
       env[key] = process.env[key] as string;
-    })
+    });
   
     return env;
   

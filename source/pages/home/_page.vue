@@ -36,18 +36,18 @@
 	import type { VuexMap } from '~/types/VuexMap';
 
 	// MIXINS
-	import PageTransitionProperty 	from '~/assets/mixins/PageTransitionProperty'
+	import PageTransitionProperty 	from '~/assets/mixins/PageTransitionProperty';
 
 	// TYPES
 	import type { PayloadQuery } from '~/store/PageContent';
-	import { navigation } from '~/types/Navigation'
+	import { navigation } from '~/types/Navigation';
 
 	// COMPONENTS
 	import PromoBanner 					from '~/components/promo/PromoBanner.vue';
 	import Post 								from '~/components/post/Post.vue';
 
 	// LOAD POLITIC
-	import { Ranges } from '~/config/LoadPolitic'
+	import { Ranges } from '~/config/LoadPolitic';
 	
 	// UTILS
 	import { Meta } from '~/utils/meta';
@@ -61,13 +61,13 @@
 		mixins: [ PageTransitionProperty ],
 		async middleware({ params, query, redirect }) {
 
-			const Page 			= Number( params.page.slice(-1) ) // page_1 => 1
+			const Page 			= Number( params.page.slice(-1) ); // page_1 => 1
 			const LOADRANGE = Number( query.range || Ranges.posts );
 			const QUANTITY 	= await database.getLength('Posts');
 
-			const OutRange = QUANTITY + LOADRANGE < Page * LOADRANGE 
+			const OutRange = QUANTITY + LOADRANGE < Page * LOADRANGE; 
 
-			if ( OutRange ) { redirect('/error') }
+			if ( OutRange ) { redirect('/error'); }
 
     },
 		//
@@ -78,10 +78,10 @@
 		//
 		asyncData({ params, query }) {
 
-			const Page 				= Number( params.page.slice(-1) ) || 1 // page_1 => 1
-			const LOAD_RANGE 	= Number( query.range || Ranges.posts )
+			const Page 				= Number( params.page.slice(-1) ) || 1; // page_1 => 1
+			const LOAD_RANGE 	= Number( query.range || Ranges.posts );
 
-			return { Page, LOAD_RANGE }
+			return { Page, LOAD_RANGE };
 
 		},
 		data() {
@@ -93,7 +93,7 @@
 				Page: 1,
 				LOAD_RANGE: Ranges.posts,
 
-			}
+			};
 		},
 		async fetch() {
 
@@ -107,7 +107,7 @@
 					page: this.Page, 
 					section: navigation.routeSections.home
 				}),
-			}
+			};
 
 		},
 		computed: {
@@ -142,7 +142,7 @@
 
 				const QUANTITY = await database.getLength('Posts');
 
-				const REM: number = QUANTITY - ( this.LOAD_RANGE * this.Page )
+				const REM: number = QUANTITY - ( this.LOAD_RANGE * this.Page );
 
 				const Query: PayloadQuery = {
 					ref: 'Posts',
@@ -150,13 +150,13 @@
 						LoadRange: REM < 0 ? this.LOAD_RANGE + REM : this.LOAD_RANGE,
 						LoadPoint: REM < 0 ? 0 : REM
 					}
-				}
+				};
 
-				await this.GetContent(Query)
+				await this.GetContent(Query);
 
 			}
 
 		},
-	})
+	});
 	
 </script>

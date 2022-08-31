@@ -149,30 +149,30 @@
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from 'vue';
 
 	// VUEX
 	import { mapState, mapActions } from 'vuex';
 	import type { VuexMap } from '~/types/VuexMap';
 
 	// API
-	import { database } from '~/api/database'
+	import { database } from '~/api/database';
 
 	// UTILS
-	import { utils } from '~/utils'
+	import { utils } from '~/utils';
 
 	// MIXINS
 	import EmitSound from '~/assets/mixins/EmitSound';
 
 	// COMPONENTS
-	import EccheumaButton		from '~/components/buttons/CommonButton.vue'
-	import MessageComponent from './submodules/Message.vue'
+	import EccheumaButton		from '~/components/buttons/CommonButton.vue';
+	import MessageComponent from './submodules/Message.vue';
 
-	import IntesectionComponent from '~/components/functional/intersectionComponent.vue'
+	import IntesectionComponent from '~/components/functional/intersectionComponent.vue';
 
 	// TYPES
 	import type { Message as MessageNamespace } from '~/types/Message';
-	import type { User } from '~/types/User'
+	import type { User } from '~/types/User';
 
 	// MODULE
 	export default Vue.extend({
@@ -191,7 +191,7 @@
 				MessageNotification: false,
 				ReadyToRead: false,
 
-			}
+			};
 		},
 		computed: {
 
@@ -205,7 +205,7 @@
 			Messages: {
 				handler() {
 					if ( this.MessageNotification ) {
-						this.sendNotification(this.Messages[this.Messages.length - 1])
+						this.sendNotification(this.Messages[this.Messages.length - 1]);
 					}
 				}
 			},
@@ -227,11 +227,11 @@
 			this.setSounds([
 				{ file: 'Off', name: 'Input::Increment', settings: { rate: 0.65, volume: .25 } },
 				{ file: 'Off', name: 'Input::Decrement', settings: { rate: 0.50, volume: .25 } },
-			])
+			]);
 
 		},
 		mounted() {
-			this.$nextTick(() => { this.ReadyToRead = true });
+			this.$nextTick(() => { this.ReadyToRead = true; });
 		},
 		methods: {
 
@@ -264,9 +264,9 @@
 						from			: this.UserState.UserName,
 						message		: this.UserMessage,
 						readed		: false
-					}
+					};
 	
-					this.vuex_sendMessage(M)
+					this.vuex_sendMessage(M);
 
 					this.UserPrevMessage 	= this.UserMessage; 
 					this.UserMessage 			= '';
@@ -276,8 +276,8 @@
 
 			requestNotificationPermission() {
 				Notification.requestPermission().then((perm) => {
-					this.MessageNotification = perm === 'granted'
-				})
+					this.MessageNotification = perm === 'granted';
+				});
 			},
 
 			async sendNotification({ message, userID, from, readed }: MessageNamespace.struct ) {
@@ -289,15 +289,15 @@
 						image		: require('~/assets/images/NotificationBadge.png'),
 						icon		: await database.get<User.struct['UserImageID']>(`Users/${ userID }/state/UserImageID`),
 						silent	: true,
-					}
+					};
 
-					new Notification('Eccheuma | Новое сообщение', CONTENT)
+					new Notification('Eccheuma | Новое сообщение', CONTENT);
 
 				}
 
 			}
 
 		}
-	})
+	});
 
 </script>

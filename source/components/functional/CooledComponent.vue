@@ -1,6 +1,6 @@
 <script lang="ts">
 
-  import Vue from 'vue'
+  import Vue from 'vue';
 
   // MODULE
   export default Vue.extend({
@@ -13,6 +13,6 @@
     render() {
       return this.$slots.default![0];
     }    
-  })
+  });
 
 </script>
