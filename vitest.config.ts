@@ -20,4 +20,4 @@ export default defineConfig({
       'path::root': path.resolve(__dirname, '.')
     }
   },
-})
+});

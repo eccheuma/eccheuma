@@ -91,6 +91,7 @@ export namespace wallet {
 	export class Instance implements IWallet {
 
 		public currencies: Record<currencies.Country, currencies.Currency> = Object();
+		private countries: Array<currencies.Country> = Array();
 
 		constructor(contries: Array<currencies.Country> = currencies.DEFAULT) {
 			this.setCurrencies(contries);

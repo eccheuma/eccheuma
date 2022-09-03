@@ -9,8 +9,6 @@ import {
 import { getLocale, languages } from '~/lang';
 import { Result } from '~/utils';
 
-import { FirebaseError } from './external.errors';
-
 export namespace form {
 
   export type email = `${ string }@${ string }.${ string }`
@@ -73,7 +71,7 @@ export namespace auth {
       };
 
     } catch (e) {
-      return Error((e as FirebaseError).code);
+      return Error((e as any).code);
     }
 
   }

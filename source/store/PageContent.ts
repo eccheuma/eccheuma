@@ -5,6 +5,7 @@ import { ActionTree, MutationTree } from 'vuex';
 
 // UTILS
 	import { cache } from '~/utils/cache';
+	import { utils } from '~/utils';
 
 // INTERFACES & TYPES
 	import type { Post } 	from '~/types/Post';
