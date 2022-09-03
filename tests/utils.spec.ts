@@ -1,9 +1,9 @@
 import { expect, test, describe } from 'vitest';
-import { getLocale, languages, russian } from '~/lang'
+import { getLocale, languages, russian } from '~/lang';
 
 // UTILS
 import { utils }      from '~/utils';
-import { user, work } from '~/utils/status'
+import { user, work } from '~/utils/status';
 import { validate }   from '~/utils/validate';
 import { Opengraph }  from '~/utils/opengraph';
 
@@ -29,7 +29,7 @@ describe('utils::status', () => {
     expect(user.defineStatus(User.status.User, languages.Russian))
       .toBe(russian.userStatus.User);
 
-  })
+  });
 
   test('status::work', () => {
 
@@ -54,25 +54,25 @@ describe('utils::status', () => {
     expect(work.defineStatus(Purchase.status.Review, languages.Russian))
       .toBe(russian.PurchaseStatus.Review);
 
-  })
+  });
 
-})
+});
 
 describe('utils::validate', () => {
 
   test('validate::email', () => {
 
-    expect(validate.email('someone@gmail.com')).toBe(true)
-    expect(validate.email('госпочта@почта.рф')).toBe(true)
+    expect(validate.email('someone@gmail.com')).toBe(true);
+    expect(validate.email('госпочта@почта.рф')).toBe(true);
   
     expect(validate.email('someone@.com'))
-      .toBe(false)
+      .toBe(false);
     expect(validate.email('someone@gmail'))
-      .toBe(false)
+      .toBe(false);
     expect(validate.email('@gmail.com'))
-      .toBe(false)
+      .toBe(false);
   
-  })
+  });
   
   test('validate::sentence', () => {
   
@@ -88,16 +88,16 @@ describe('utils::validate', () => {
     ];
   
     validSentences.forEach(sentence => {
-      expect(validate.sentence(sentence, banWords)).toBe(true)
-    })
+      expect(validate.sentence(sentence, banWords)).toBe(true);
+    });
   
     invalidSentences.forEach(sentence => {
-      expect(validate.sentence(sentence, banWords)).toBe(false)
-    })
+      expect(validate.sentence(sentence, banWords)).toBe(false);
+    });
   
-  })
+  });
 
-})
+});
 
 describe('utils::meta', () => {
   test('meta::opengraph', () => {
@@ -126,7 +126,7 @@ describe('utils::meta', () => {
       { property: Opengraph.Meta.setPreffix('url'),         
         content : meta.url },
   
-    ]
+    ];
   
     // ! Это будет работать только при одинарной вложенности. Вложенные объекты сравнить не получиться.
     target.forEach(targetMeta => {
@@ -135,11 +135,11 @@ describe('utils::meta', () => {
         if ( targetMeta.property === resultMeta.property ) {
           expect(targetMeta.content).toBe(resultMeta.content); 
         }
-      })
+      });
   
-    })
+    });
   
-  })
+  });
 
   describe('meta::head', () => {
 
@@ -149,18 +149,18 @@ describe('utils::meta', () => {
       const section = navigation.routeSections.service;
 
       const pageType = getLocale(languages.Russian).Pagination.page;
-      const pageName = getLocale(languages.Russian).Routes[ utils.enums.toString(navigation.routeSections, section) ]
+      const pageName = getLocale(languages.Russian).Routes[ section ];
 
       const result = Meta.conctructTitle(languages.Russian, { page, section });
       const target = `Eccheuma | ${ pageName } | ${ page } ${ pageType }`;
 
-      expect(result).toBe(target)
+      expect(result).toBe(target);
 
-    })
+    });
 
-  })
+  });
 
-}) 
+});
 
 describe('utils::hash', () => {
 
@@ -168,11 +168,10 @@ describe('utils::hash', () => {
 
     const LENGTH = 24;
 
-    const Hash = utils.hashGenerator(LENGTH);
+    const Hash = utils.randHashGenerator(LENGTH);
 
     expect(Hash.length).toBe(LENGTH);
 
-  })
+  });
 
-})
-
+});

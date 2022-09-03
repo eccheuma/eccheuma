@@ -4,7 +4,7 @@ import { readFileSync } from 'fs';
 const modules = {
   test: readFileSync('./source/wasm/compiled/module.wasm'),
   positionShift: readFileSync('./source/wasm/compiled/positionShift.wasm')
-}
+};
 
 type ExportFuncTypes = {
   testModule  : (val: number, add: number, div: number) => number,
@@ -18,11 +18,11 @@ describe('wasm::modules', () => {
 
     const { instance } = await WebAssembly.instantiate(modules.test);
 
-    const testModule = (instance.exports as ExportFuncTypes).testModule
+    const testModule = (instance.exports as ExportFuncTypes).testModule;
 
     expect(testModule(10,4,2)).toBe(7);
 
-  })
+  });
 
   test('module::positionShift', async () => {
 
@@ -43,6 +43,6 @@ describe('wasm::modules', () => {
     expect(posShift(1440,0))
       .toBe(-1);
 
-  })
+  });
 
-})
+});

@@ -3,7 +3,7 @@ import { describe, test, expect, beforeEach } from 'vitest';
 import { currencies, wallet } from '~/utils/currency';
 
 // TEST MODULE
-describe("wallet::operations", async () => {
+describe('wallet::operations', async () => {
 
   const WALLET_TARGET = currencies.Country.ru;
 
@@ -17,19 +17,19 @@ describe("wallet::operations", async () => {
     userWallet.currencies[currencies.Country.ru] = new RUB();
     userWallet.currencies[currencies.Country.ch] = new YAN();
     userWallet.currencies[currencies.Country.en] = new USD();
-  })
+  });
 
-  test("operations::create", () => {
+  test('operations::create', () => {
 
     const { ru, ch, en } = currencies.Country;
 
     [ ru, ch, en ].forEach(currency_type => {
-      expect(userWallet.currencies[currency_type]).exist
-    })
+      expect(userWallet.currencies[currency_type]).exist;
+    });
 
-  })
+  });
 
-  test("operations::transform", () => {
+  test('operations::transform', () => {
 
     if ( !userWallet ) expect.fail();
 
@@ -39,9 +39,9 @@ describe("wallet::operations", async () => {
     expect(value.convert(YAN)).toBe(10);
     expect(value.convert(RUB)).toBe(100);
     
-  })
+  });
 
-  test("operations::send", async () => {
+  test('operations::send', async () => {
 
     if ( !userWallet ) expect.fail();
 
@@ -56,9 +56,9 @@ describe("wallet::operations", async () => {
     await userWallet.send(new YAN(10), WALLET_TARGET);
     expect(currencyWallet.value).toBe(610);
 
-  })
+  });
 
-  test("operations::take", async () => {
+  test('operations::take', async () => {
 
     if ( !userWallet ) expect.fail();
 
@@ -67,6 +67,6 @@ describe("wallet::operations", async () => {
 
     expect(userWallet.currencies[WALLET_TARGET].value).toBe(4000);
     
-  })
+  });
 
-})
+});
