@@ -2,12 +2,10 @@ import nodeFetch from 'node-fetch';
 
 export default async function handler(req, res) {
   
-  const response = await nodeFetch(req.query.url)
+  const response  = await nodeFetch(req.query.url);
+  const data      = await response.json();
   
   console.log(response);
-
-  const data = await response.json();
-
   console.log(data);
 
   res.statusCode = 200
