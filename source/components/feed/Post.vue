@@ -9,8 +9,10 @@
       <a href="https://vk.com/eccheuma" :style="`background-image: url(${ SourceIcon })`" />
     </header>
     <section class="vk-post-body">
-      <img :src="post.thumb" alt="">
-      <hr v-once>
+      <template v-if="post.thumb">
+        <img :src="post.thumb" alt="">
+        <hr v-once>
+      </template>
       <p>
         {{ textPreview }}
       </p>
@@ -220,29 +222,19 @@
 
   import Vue, { PropOptions } from 'vue';
 
-  // UTILS
-  import { utils, LocaleDate } from '~/utils';
+  // API
+  import { feed } from '~/api/feed';
 
-  // TYPES
-  export type Post = {
-    thumb: string,
-    body: string,
-    date: LocaleDate,
-    link: string
-    social: {
-      likes: number,
-      comments: number,
-      reposts: number
-    }
-  }
+  // UTILS
+  import { utils } from '~/utils';
 
   // CONST
   const BODY_WORD_LENGTH  = 75;
   const DEFAULT_AVATAR    = require('~/assets/images/GroupAvatar.jpg').src as string;
 
   // COMPONENTS
-	import Icon	          from '~/components/common/Icon.vue'
-  import CommonButton   from '~/components/buttons/CommonButton.vue'
+	import Icon	          from '~/components/common/Icon.vue';
+  import CommonButton   from '~/components/buttons/CommonButton.vue';
 
   // MODULE
   export default Vue.extend({
@@ -250,7 +242,7 @@
       post: {
         type: Object,
         required: true,
-      } as PropOptions<Post>
+      } as PropOptions<feed.IFeed>
     },
     components: {
       Icon, CommonButton
@@ -260,7 +252,7 @@
 
         SourceIcon: DEFAULT_AVATAR,
 
-      }
+      };
     },
     computed: {
 
@@ -269,6 +261,6 @@
       }
 
     }
-  })
+  });
 
 </script>

@@ -1,18 +1,18 @@
-import type { ActionTree, MutationTree } from 'vuex'
+import type { ActionTree, MutationTree } from 'vuex';
 
 // API
-	import { database } 	from '~/api/database'
-	import { auth, form } from '~/api/auth'
+	import { database } 	from '~/api/database';
+	import { auth, form } from '~/api/auth';
 
 // TYPES
-	import type { CurentState as SessionState } from '~/store/Auth/Session'
-	import type { VuexMap } 	from '~/types/VuexMap'
-	import type { User } from '~/types/User'
+	import type { CurentState as SessionState } from '~/store/Auth/Session';
+	import type { VuexMap } 	from '~/types/VuexMap';
+	import type { User } from '~/types/User';
 
 // STATE
 	export const state = () => ({
 		inAction: false as boolean
-	})
+	});
 
 // CURENT STATE
 	export type CurentState = ReturnType<typeof state>
@@ -27,9 +27,9 @@ import type { ActionTree, MutationTree } from 'vuex'
 // MUTATIONS
 	export const mutations: MutationTree<CurentState> = {
 		setAction(state, value: boolean) {
-			state.inAction = value
+			state.inAction = value;
 		}
-	}
+	};
 
 // ACTIONS
 	export const actions: ActionTree<CurentState, VuexMap> = {
@@ -37,21 +37,21 @@ import type { ActionTree, MutationTree } from 'vuex'
 
 				vuex.commit('setAction', true);
 
-				const response = await auth.login(form.email, form.password);
+				const responseResult = await auth.login(form.email, form.password);
 
-				if ( typeof response === 'string' ) {
+				if ( responseResult instanceof Error ) {
 
-					vuex.commit('Auth/Session/setAuthError', response, { root: true });
+					vuex.commit('Auth/Session/setAuthError', responseResult, { root: true });
 
-					return false
+					return false;
 
 				}
 
-				const { uid, email } = response;
+				const { uid, email } = responseResult;
 
-				const userData: SessionState['CurentUser'] = { uid, email }
+				const userData: SessionState['CurentUser'] = { uid, email };
 				
-				vuex.commit('Auth/Session/setUserState', userData, { root: true })
+				vuex.commit('Auth/Session/setUserState', userData, { root: true });
 
 				// Загрузка стейта пользователя из Firebase
 				const userState: User.struct = await database.get(`Users/${ uid }/state`);
@@ -64,9 +64,9 @@ import type { ActionTree, MutationTree } from 'vuex'
 
 				database.listen(`Users/${ uid }/state`, value => {
 					vuex.commit('User/State/setUserState', value, { root: true });
-				}, { mode: database.mode.whole })
+				}, { mode: database.mode.whole });
 
 				return true;
 
 		}
-	}
+	};

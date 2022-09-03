@@ -1,9 +1,12 @@
+import { Hash } from '~/types/Nominals';
+
+// Relust type placeholder
+export type Result<R,E extends Error> = R | E;
+
 export type LocaleDate = {
   Day: string
   Time: string
 }
-
-export type Hash = utils.types.nominal<string,'__HASH__'>;
 
 export namespace utils {
 
@@ -15,21 +18,22 @@ export namespace utils {
 
   }
 
-  export namespace enums {
-
-    // Так как обычный реверсивный маппинг енамов не даёт типов, приходится пользоваться жуткими обёртками.
-    // Для примера enum[enum] вернёт строку, хотя, по идее, он должен вернуть тип по ключю этого enum'а.
-    export function toString<E, K extends number>(enumLike: E, key: K) {
-      return (enumLike as unknown as {[ index: number ]: keyof E })[key];
-    }
-
-  }
-
   export namespace types {
+
+    type listKeys<A extends Readonly<Array<Record<string, unknown>>>> = A extends Readonly<Array<Record<infer K, unknown>>> ? K : never
 
     export type nominal<Type, Key> = Type & {[ Symbol.species ]: Key }
 
     export type asIterableObject<Struct extends object> = {[ index: string ]: Struct };
+
+    export type propertyListValue<
+      A extends Readonly<Array<Record<string, unknown>>>, 
+      K extends listKeys<A>
+    > = A extends Readonly<Array<infer O>>
+      ? O extends Partial<Record<K, unknown>>
+        ? O[K]
+        : never
+      : never
 
   }
 
@@ -58,7 +62,7 @@ export namespace utils {
           if ( splited.length > 2 ) return Error(error.dot);
       }
 
-      const [ _name, ext ] = splited.filter(x => x.length);
+      const [ , ext ] = splited.filter(x => x.length);
 
       if ( !ext ) return Error(error.name);
 
@@ -70,24 +74,24 @@ export namespace utils {
 
   }
 
-  export function getLocalTime(n: number = 0): LocaleDate 
+  export function getLocalTime(n = 0): LocaleDate 
   {
 
     const Properties: Record<keyof LocaleDate, Intl.DateTimeFormatOptions> = {
       Day: { year: 'numeric', month: 'long', day: 'numeric' },
       Time: { hour: '2-digit', minute: '2-digit' }
-    }
+    };
     
     const DATA = {
       Day: 	Intl.DateTimeFormat('ru-RU', Properties.Day).format(n),
       Time: Intl.DateTimeFormat('ru-RU', Properties.Time).format(n)
-    }
+    };
 
     return DATA;
 
   }
 
-  export function hashGenerator(length: number = 12): Hash 
+  export function randHashGenerator(length = 12): Hash 
   {
 
     const randomChar = () => Math.floor(36 * Math.random()).toString(36);
@@ -96,29 +100,29 @@ export namespace utils {
       .fill(String()) 
       .map(randomChar)
       .reduce((acc, cur) => {
-        return acc + cur.toUpperCase()
+        return acc + cur.toUpperCase();
       }, '') as Hash;
 
   }
 
-  export function cutText(text: string, words: number = 45): string {
+  export function cutText(text: string, words = 45): string {
 
     return text
       .split(' ')
       .slice(0, words)
-      .reduce((acc, cur) => `${ acc } ${ cur }`, String())
+      .reduce((acc, cur) => `${ acc } ${ cur }`, String());
 
   }
 
-  export function comparer<T extends Object>(struct: T, mock: T): boolean {
+  export function comparer<T extends object>(struct: T, mock: T): boolean {
 
     const mockKeys = Object.keys(mock)
       .map(key => struct[key as keyof T])
-      .every(x => x !== undefined)
+      .every(x => x !== undefined);
   
     const structKeys = Object.keys(struct)
       .map(key => mock[key as keyof T])
-      .every(x => x !== undefined)
+      .every(x => x !== undefined);
   
     return [ mockKeys, structKeys ].every(x => Boolean(x));
 

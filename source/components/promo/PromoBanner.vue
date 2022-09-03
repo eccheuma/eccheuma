@@ -136,7 +136,7 @@
 
 <script lang="ts">
 
-	import Vue, { PropOptions } from 'vue'
+	import Vue, { PropOptions } from 'vue';
 
 	// MIXINS
 	// import IntersectionCooler from '~/assets/mixins/IntersectionCooler'
@@ -217,11 +217,11 @@
 						}	
 					}
 				} as {[T in MODULES]: CONTENT} 
-			}
+			};
 		},
 		computed: {
 			moduleContent(): CONTENT {
-				return this.PromoContent[this.PromoType]
+				return this.PromoContent[this.PromoType];
 			}
 		},
 		mounted() {
@@ -229,9 +229,9 @@
 		},
 		methods: {
 			routeTo(path: string) {
-				this.$router.push({ path })
+				this.$router.push({ path });
 			}
 		}
-	})
+	});
 
 </script>

@@ -57,10 +57,10 @@
 
 <script lang="ts">
 
-  import Vue from 'vue'
+  import Vue from 'vue';
 
   // COMPONENTS
-  import PostContent from '~/components/post/submodules/Content.vue'
+  import PostContent from '~/components/post/submodules/Content.vue';
 
   // API
   import { database } from '~/api/database';
@@ -76,7 +76,7 @@
 	const PLACEHOLDER: Pick<Image.formatsStruct, 'avif' | 'webp'> = {
 		avif: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=avif').src,
 		webp: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src
-	}
+	};
 
   // MODULE
   export default Vue.extend({
@@ -87,22 +87,22 @@
 
     async asyncData({ params, redirect, store }) {
 
-      const Post: Post.struct = await database.get(`Posts/PostID-${ params.id }`)
+      const Post: Post.struct = await database.get(`Posts/PostID-${ params.id }`);
 
       if ( !Post ) redirect('/error'); 
 
       const ImageURL = await store.dispatch('Images/getImageURL', { 
         path: Post.image,
         size: 1440,
-      })
+      });
 
       const PageDescription = {
         title				: `Eccheuma | ${ Post.title }`,
         description	: Post.description,
         image				: ImageURL.webp,
-      }
+      };
 
-      return { Post, ImageURL, PageDescription }
+      return { Post, ImageURL, PageDescription };
 
     },
 
@@ -114,7 +114,7 @@
 
         PageDescription: Object() as Opengraph.struct,
 
-      }
+      };
     },
 
     head () {
@@ -122,9 +122,9 @@
 				meta: [
 					...new Opengraph.Meta(this.$data.PageDescription).buildMeta()
 				],
-			}
+			};
 		},
 
-  })
+  });
 
 </script>

@@ -4,7 +4,7 @@ import { describe, test, expect, beforeAll, afterAll } from 'vitest';
 import { utils } from '~/utils';
 
 // API
-import { auth, form } from '~/api/auth';
+import { auth } from '~/api/auth';
 import { database } from '~/api/database';
 
 // PLUGINS
@@ -15,7 +15,7 @@ import Firebase from '~/plugins/Firebase'; Firebase();
 import Vuex from 'vuex';
 import Vue from 'vue';
 
-Vue.use(Vuex as any);
+Vue.use(Vuex);
 
 // TEST USER
 import { userForm } from 'path::root/utils/defaultUser';
@@ -29,7 +29,7 @@ import * as UserStateStore    from '~/store/User/State';
 
 import * as AuthSessionStore  from '~/store/Auth/Session';
 import * as AuthLoginStore    from '~/store/Auth/Login';
-import * as AuthLogoutStore   from '~/store/Auth/Logout'
+import * as AuthLogoutStore   from '~/store/Auth/Logout';
 
 // TYPES
 import { Notification } from '~/types/Notification';
@@ -76,7 +76,7 @@ const virtualStore = new Vuex.Store({
 			}
 		}
 	}
-})
+});
 
 
 // TESTS
@@ -87,23 +87,23 @@ describe('store::notification', () => {
 		actions   : NotificationStore.actions,
 		mutations : NotificationStore.mutations,
 		strict    : true,
-	})
+	});
 
 	test('notification::set', async () => {
 
 		const struct: Notification.struct = {
 			description: 'Gedränge',
 			message: 'Busen schmerz  ihr euch und, freundschaft mich euch glück gleich. Die ich wird besitze stillen die wahn ich sich. Um versuch fühlt der euren.'
-		}
+		};
 
 		await store.dispatch('createNotification', struct);
 
 		expect(store.state.status).toBe(true);
 		expect(store.state.content).toEqual(struct);
 
-	})
+	});
 
-})
+});
 
 describe('store::image', () => {
 
@@ -112,7 +112,7 @@ describe('store::image', () => {
 		actions   : ImageStore.actions,
 		mutations : ImageStore.mutations,
 		strict    : true,
-	})
+	});
 
 	test('image::getImageURL', async () => {
 
@@ -125,7 +125,7 @@ describe('store::image', () => {
 		const actualURLS: Pick<Image.formatsStruct, 'avif' | 'webp'> = {
 			webp: `https://${ subabaseDomen }/storage/v1/object/public/main/images/${ imagePath }/webp/${ targetSize }.webp`,
 			avif: `https://${ subabaseDomen }/storage/v1/object/public/main/images/${ imagePath }/avif/${ targetSize }.avif`,
-		}
+		};
 
 		const struct: Image.formatsStruct = await store.dispatch('getImageURL', { path: imagePath, size: virtualSize });
 
@@ -134,9 +134,9 @@ describe('store::image', () => {
 
 		expect(struct).toStrictEqual(actualURLS);
 
-	})
+	});
 
-})
+});
 
 describe('store::auth', () => {
 
@@ -155,9 +155,9 @@ describe('store::auth', () => {
 		expect(response).toBe(true);
 
 		expect(State.UserEmail).toBe(userForm.email);
-		expect(State.UserID).toBe(CurentUser.uid)
+		expect(State.UserID).toBe(CurentUser.uid);
 		
-	})
+	});
 
 	test('auth::logout', async () => {
 
@@ -176,17 +176,16 @@ describe('store::auth', () => {
 			.toBeFalsy();
 
 		Object.values(CurentUser).forEach(value => {
-			expect(value.length).toBe(0)
-		})
+			expect(value.length).toBe(0);
+		});
 
-	})
+	});
 
-})
+});
 
 describe('store::user', async () => {
 
-	let loginStatus : boolean;
-	let messageID   : string;
+	let messageID: string;
 
 	beforeAll(async () => {
 
@@ -194,14 +193,13 @@ describe('store::user', async () => {
 
 		if ( typeof response === 'string' ) throw new Error(response);
 
-		loginStatus = response;
-		messageID		= utils.hashGenerator();
+		messageID		= utils.randHashGenerator();
 
 	});
 
 	afterAll(async () => {
 		await virtualStore.dispatch('Auth/Logout/Logout');
-	})
+	});
 
 	test('user::message::send', async () => {
 
@@ -212,7 +210,7 @@ describe('store::user', async () => {
 			message: 'Dreams that forgotten shorn distant perched door floating, i for a whose before the has...',
 			readed: false,
 			userID: virtualStore.state.User.State.State.UserID
-		}
+		};
 
 		const response: Error | boolean = await virtualStore.dispatch('User/Messages/sendMessage', newMessage);
 
@@ -221,23 +219,23 @@ describe('store::user', async () => {
 		// EXPECT
 		expect(response).toBe(true);
 
-	})
+	});
 
 	test('user::message::check', async () => {
 
 		await virtualStore.dispatch('User/Messages/checkUnreaded');
 
 		const { NewMessagesCount, Data } = virtualStore.state.User.Messages;
-		const { State } = virtualStore.state.User.State
+		const { State } = virtualStore.state.User.State;
 
 		// EXPECT
 		expect(NewMessagesCount).toBe(0);
 
 		Data.forEach(mess => {
 			expect(mess.userID).toBe(State.UserID);
-		})
+		});
 
-	})
+	});
 
 	test('user::message::mark', async () => {
 
@@ -245,7 +243,7 @@ describe('store::user', async () => {
 
 		const { Data } = virtualStore.state.User.Messages;
 
-		const [ newMessage, emptyMessage ] = Data.filter(({ ID }) => ID === messageID)
+		const [ newMessage, emptyMessage ] = Data.filter(({ ID }) => ID === messageID);
 
 		// EXPECT
 
@@ -255,7 +253,7 @@ describe('store::user', async () => {
 		expect(emptyMessage)
 			.toBeUndefined();
 
-	})
+	});
 
 	test('user::message::remove', async () => {
 
@@ -265,9 +263,9 @@ describe('store::user', async () => {
 
 		typeof response === 'string'
 			? expect(response).toBe(database.error.denied)
-			: expect(response).toBe(true)
+			: expect(response).toBe(true);
 
-	})
+	});
 
-})
+});
 

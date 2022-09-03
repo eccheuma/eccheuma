@@ -58,10 +58,10 @@
 
 <script lang="ts">
 
-	import Vue, { VNodeData } from 'vue'
+	import Vue, { VNodeData } from 'vue';
 
 	// VUEX
-	import { mapActions, mapMutations, mapState } from 'vuex'
+	import { mapActions, mapMutations, mapState } from 'vuex';
 	
 	// VUEX MAP
 	import type { VuexMap } from '~/types/VuexMap';
@@ -73,20 +73,20 @@
 	import { Meta } from '~/utils/meta';
 
 	// MIXINS
-	import PageTransitionProperty 	from '~/assets/mixins/PageTransitionProperty'
+	import PageTransitionProperty 	from '~/assets/mixins/PageTransitionProperty';
 
 	// TYPES
-	import type { PayloadQuery } 					from '~/store/PageContent'
-	import type { ANIMATION_PAYLOAD } from '~/assets/mixins/IntersectionObserver'
+	import type { PayloadQuery } 					from '~/store/PageContent';
+	import type { ANIMATION_PAYLOAD } from '~/assets/mixins/IntersectionObserver';
 
 	import { navigation } from '~/types/Navigation';
 
 	// LOAD POLITIC
-	import { Ranges } from '~/config/LoadPolitic'
+	import { Ranges } from '~/config/LoadPolitic';
 
 	// COMPONENTS
-	import EccheumaImage 						from '~/components/image/Image.vue'
-	import IntesectionComponent from '~/components/functional/intersectionComponent.vue'
+	import EccheumaImage 						from '~/components/image/Image.vue';
+	import IntesectionComponent from '~/components/functional/intersectionComponent.vue';
 
 	const PAGE_TRANSITION_TIME = 250;
 
@@ -102,7 +102,7 @@
 			translateY: [0, 100],
 			duration: () => 500 + 500 * Math.random(),
 		}
-	}
+	};
 
 	// MODULE
 	export default Vue.extend({
@@ -121,7 +121,7 @@
 
 			const Range: number = typeof query.range === 'string'
 				? parseInt(query.range)
-				: Ranges.gallery
+				: Ranges.gallery;
 
 			const Quantity: number = await database.getLength('Gallery');
 
@@ -139,7 +139,7 @@
 			const Page 			= Number( params.page.slice(-1) ); // page_1 => 1
 			const LoadRange = Number( query.range );
 			
-			return { Page, LoadRange }
+			return { Page, LoadRange };
 
 		},
 		data() {
@@ -151,7 +151,7 @@
 				LoadRange: Ranges.gallery,
 				BasePoint: 0,
 
-			}
+			};
 		},
 		async fetch() {
 
@@ -165,7 +165,7 @@
 					page: this.Page, 
 					section: navigation.routeSections.gallery
 				}),
-			}
+			};
 			
 		},
 		computed: {
@@ -179,7 +179,7 @@
 				return {
 					['--t']: `${ PAGE_TRANSITION_TIME }ms`,
 					opacity: Number(this.Ready)
-				}
+				};
 			}
 
 		},
@@ -199,7 +199,7 @@
 
 				setTimeout(next, PAGE_TRANSITION_TIME);
 
-			})
+			});
 
 		},
 		methods: {
@@ -213,9 +213,9 @@
 
 			async getDatabaseData() {
 
-				const QUANTITY = await database.getLength('Gallery')
+				const QUANTITY = await database.getLength('Gallery');
 
-				const REM: number = QUANTITY - ( this.LoadRange * this.Page )
+				const REM: number = QUANTITY - ( this.LoadRange * this.Page );
 
 				const Query: PayloadQuery = {
 					ref: 'Gallery',
@@ -223,11 +223,11 @@
 						LoadRange: REM < 0 ? this.LoadRange + REM : this.LoadRange,
 						LoadPoint: REM < 0 ? 0 : REM
 					}
-				}
+				};
 
 				await this.GetContent(Query);
 
-				this.Ready = true
+				this.Ready = true;
 
 			},
 
@@ -239,11 +239,11 @@
 
 					...Animation[intersection ? 'in' : 'out']
 
-				})
+				});
 
 			}
 
 		},
-	})
+	});
 	
 </script>

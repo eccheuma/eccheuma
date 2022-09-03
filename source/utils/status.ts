@@ -9,7 +9,7 @@
 export namespace work {
 
   export function defineStatus(status: Purchase.status, lang: languages): string {
-		return Object.values(getLocale(lang).PurchaseStatus)[status]
+		return Object.values(getLocale(lang).PurchaseStatus)[status];
 	}
 
 }
@@ -17,7 +17,7 @@ export namespace work {
 export namespace user {
 
   export function defineStatus(status: User.status, lang: languages): string {
-		return Object.values(getLocale(lang).userStatus)[status]
+		return Object.values(getLocale(lang).userStatus)[status];
 	}
 
 }

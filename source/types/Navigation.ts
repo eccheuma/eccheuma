@@ -1,11 +1,11 @@
 export namespace navigation {
 
   export enum routeSections {
-    home,
-    gallery,
-    recommendation,
-    portfolio,
-    service,
+    home = 'home',
+    gallery = 'gallery',
+    recommendation = 'recommendation',
+    portfolio = 'portfolio',
+    service = 'service',
   }
 
 }

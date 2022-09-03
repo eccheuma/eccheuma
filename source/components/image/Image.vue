@@ -274,39 +274,39 @@
 	import Vue, { PropOptions } from 'vue';
 
 	// VUEX
-	import { mapActions, mapState } from 'vuex'
+	import { mapActions, mapState } from 'vuex';
 
 	// UTILS
-	import { utils } from '~/utils'
+	import { utils } from '~/utils';
 
 	// TYPES
-	import { Image } from '~/types/Image'
+	import { Image } from '~/types/Image';
 
 	// VUEX MAP
-	import type { VuexMap } from '~/types/VuexMap'
+	import type { VuexMap } from '~/types/VuexMap';
 
 	// COMPONENTS
 	import Icon 			from '~/components/common/Icon.vue';
-	import Tag				from '~/components/common/Tag.vue'
+	import Tag				from '~/components/common/Tag.vue';
 	
 	// MIXINS
-	import EmitSound from '~/assets/mixins/EmitSound'
+	import EmitSound from '~/assets/mixins/EmitSound';
 
 	// VARS
 	const PLACEHOLDER: Image.formatsStruct = {
 		avif: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src,
 		webp: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src
-	}
+	};
 
 	const defaultSections: Image.struct['sections'] = {
 		date: false,
 		description: false,
 		zoom: true,
-	}
+	};
 
 	const defaultProperty: Image.struct['property'] = {
 		type: 'gallery',
-	}
+	};
 
 	// MODULE
 	export default Vue.extend({
@@ -318,8 +318,8 @@
 		mixins: [ EmitSound ],
 		props: {
 			content: 	{ type: Object, required: true  } as PropOptions<Image.struct['content']>,
-			property: { type: Object, required: false, default() { return defaultProperty } } as PropOptions<Image.struct['property']>,
-			sections: { type: Object, required: false, default() { return defaultSections } } as PropOptions<Image.struct['sections']>,
+			property: { type: Object, required: false, default() { return defaultProperty; } } as PropOptions<Image.struct['property']>,
+			sections: { type: Object, required: false, default() { return defaultSections; } } as PropOptions<Image.struct['sections']>,
 		},
 		data() {
 			return {
@@ -331,7 +331,7 @@
 				Modal: false,
 				ImageFocus: false,
 
-			}
+			};
 		},
 
 		computed: {
@@ -345,7 +345,7 @@
 		watch: {
 			'content.path': {
 				handler() {
-					this.$nextTick(this.getImage)
+					this.$nextTick(this.getImage);
 				}
 			},
 		},
@@ -362,7 +362,7 @@
 						interesection.unobserve(this.$el as HTMLElement);
 						
 					}
-				})
+				});
 
 				interesection.observe(this.$el as HTMLElement);
 
@@ -377,16 +377,16 @@
 
 			async getImage(): Promise<void> {
 
-				const IMAGE_CONTAINER = this.$refs.holder as Element
+				const IMAGE_CONTAINER = this.$refs.holder as Element;
 				const { width } = IMAGE_CONTAINER?.getBoundingClientRect();
 
 				const URL: Image.formatsStruct = await this.getImageURL({ 
 					path: this.content.path,
 					size: width * window.devicePixelRatio
-				})
+				});
 
 				if ( this.application.context.browser && this.application.gpu.available() ) {
-					this.prepareAnimations(IMAGE_CONTAINER, URL)
+					this.prepareAnimations(IMAGE_CONTAINER, URL);
 				} else {
 					this.Source = URL;
 				}
@@ -401,7 +401,7 @@
 				], {
 					duration: 250,
 					fill: 'both',
-				})
+				});
 
 				animation.onfinish = () => {
 
@@ -411,12 +411,12 @@
 
 					(this.$refs.image as HTMLImageElement).onload = () => animation.reverse();
 
-				}
+				};
 
 			},
 
 		},
 
-	})
+	});
 
 </script>

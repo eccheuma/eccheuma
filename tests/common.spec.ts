@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest';
 
 // UTILS
 import { gpu } from '~/utils/gpu';
-import { utils } from '~/utils/index'
+import { utils } from '~/utils/index';
 
 // MODULES
 import { Image } from '~/types/Image';
@@ -67,20 +67,20 @@ describe('images::helpers', () => {
         ? expect(response.message).toBe(error)
         : expect.fail();
 
-    })
+    });
     
-  })
+  });
 
-}) 
+}); 
 
 describe('gpu::checks', () => {
 
   // @vitest-environment jsdom
   test('checks::available', () => {
     expect(gpu.available()).toBe(false);
-  })
+  });
 
-})
+});
 
 
 

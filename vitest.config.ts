@@ -10,7 +10,6 @@ export default defineConfig({
     exclude: ['node_modules', 'source', 'utils', 'app'],
     reporters: 'verbose',
     testTimeout: 12000,
-    watch: false,
     setupFiles: [
       './vitest.setup.ts'
     ]
@@ -21,8 +20,4 @@ export default defineConfig({
       'path::root': path.resolve(__dirname, '.')
     }
   },
-  clearScreen: true,
-  esbuild: {
-    target: 'ES6'
-  },
-})
+});

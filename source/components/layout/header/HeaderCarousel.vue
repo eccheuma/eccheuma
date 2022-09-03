@@ -317,11 +317,11 @@
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from 'vue';
 
 	// API
-		import { mapActions, mapState } from 'vuex'
-		import { database } from '~/api/database'
+		import { mapActions, mapState } from 'vuex';
+		import { database } from '~/api/database';
 
 	// VUEX
 	
@@ -335,10 +335,10 @@
 		import Tag 			from '~/components/common/Tag.vue';
 	
 	// MIXINS
-		import EmitSound from '~/assets/mixins/EmitSound'
+		import EmitSound from '~/assets/mixins/EmitSound';
 
 	// LOAD POLITIC
-		import { Ranges } from '~/config/LoadPolitic'
+		import { Ranges } from '~/config/LoadPolitic';
 
 	// TYPES
 		import type { Image } from '~/types/Image';
@@ -353,7 +353,7 @@
 		}
 
 	// VARS
-		const PLACEHOLDER_L = `${ require('~/assets/images/ImagePlaceholder.png?resize&size=600')}`
+		const PLACEHOLDER_L = `${ require('~/assets/images/ImagePlaceholder.png?resize&size=600')}`;
 	
 	// MODULE
 	export default Vue.extend({
@@ -383,7 +383,7 @@
 
 				Slides: Array<HeaderSlide>(0),
 
-			}
+			};
 		},
 		async fetch() {
 
@@ -422,11 +422,11 @@
 								path: image,
 								size: 1440,
 							})
-						} as HeaderSlide
+						} as HeaderSlide;
 
-					})
+					});
 
-				this.Slides = await Promise.all(formatedSlides)
+				this.Slides = await Promise.all(formatedSlides);
 				
 			},
 
@@ -444,7 +444,7 @@
 					window.scrollTo({
 						top: targetPosition,
 						behavior: 'smooth'
-					})
+					});
 				}
 
 				switch (this.$route.name) {
@@ -457,6 +457,6 @@
 
 			},
 		},
-	})
+	});
 
 </script>

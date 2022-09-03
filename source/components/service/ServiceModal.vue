@@ -133,19 +133,19 @@
 
 <script lang="ts">
 
-	import Vue, { PropOptions } from 'vue'
+	import Vue, { PropOptions } from 'vue';
 
 // VUEX
-	import { mapState, mapActions } from 'vuex'
+	import { mapState, mapActions } from 'vuex';
 
 // COMPONENTS
-	import Calculator from '~/components/service/Calculator.vue'
+	import Calculator from '~/components/service/Calculator.vue';
 	// import Loader 	from '~/components/common/Loader.vue'
 
 // TYPES
-	import type { VuexMap } from '~/types/VuexMap'
+	import type { VuexMap } from '~/types/VuexMap';
 
-	import type { Purchase, Categories } from '~/types/Services'
+	import type { Purchase, Categories } from '~/types/Services';
 
 // MODULE
 	export default Vue.extend({
@@ -164,7 +164,7 @@
 
 				selectedPurchase: {} as Purchase.struct<any>
 
-			}
+			};
 		},
 		computed: {
 			...mapState({
@@ -181,12 +181,12 @@
 			}),
 
 			SetSelectedService(purchase: Purchase.struct<any>) {
-				this.selectedPurchase = purchase 
+				this.selectedPurchase = purchase; 
 			},
 
 			CloseModal() {
 
-				this.$emit('close-modal')
+				this.$emit('close-modal');
 
 			},
 
@@ -194,10 +194,10 @@
 
 				this.CloseModal();
 
-				this.sendWorkRequest(this.selectedPurchase)
+				this.sendWorkRequest(this.selectedPurchase);
 
 			}
 			
 		}
-	})
+	});
 </script>

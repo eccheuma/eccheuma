@@ -1,20 +1,32 @@
+import { Hash } from '~/types/Nominals';
+import { Result, utils } from '.';
+
+interface ICacheContainer<D> {
+  hash: Hash,
+  data: D,
+}
 
 // MODULE NAMESPACE
 export namespace cache {
 
-  export function set(key: string, value: any) {
-    window.localStorage.setItem(key, JSON.stringify(value))
+  export function set<D>(key: string, data: D) {
+
+    const container: ICacheContainer<D> = {
+      hash: utils.randHashGenerator(),
+      data: data,
+    };
+
+    window.localStorage.setItem(key, JSON.stringify(container));
+
   }
 
-  export function get(key: string) {
+  export function get<D>(key: string): Result<ICacheContainer<D>, Error> {
 
     const item = window.localStorage.getItem(key);
 
-    if ( item?.charAt(0) === '{' ) {
-      return JSON.parse(item);
-    }
+    if ( item?.charAt(0) !== '{' ) return Error('Cache miss');
 
-    return item;
+    return JSON.parse(item);
 
   }
 

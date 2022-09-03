@@ -34,7 +34,7 @@
 
 <script lang="ts">
 
-  import Vue, { PropOptions } from 'vue'
+  import Vue, { PropOptions } from 'vue';
 
   export default Vue.extend({
     props: {
@@ -49,8 +49,8 @@
         domProps: {
           innerHTML: require(`~/assets/icons/Icon=${ this.name }.svg?include`)
         },
-      })
+      });
     },
-  })
+  });
 
 </script>

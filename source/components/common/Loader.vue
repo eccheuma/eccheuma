@@ -158,15 +158,15 @@
 
 <script lang="ts">
 
-	import Vue, { PropOptions } from 'vue'
+	import Vue, { PropOptions } from 'vue';
 
 	// TYPES
-	import type { AnimeParams } from 'animejs'
+	import type { AnimeParams } from 'animejs';
 
 	export type LoadStage = { LoadPoint: number, Message: string }
 
 	// VARIABLES
-	const ICON_COLOR_VARIABLE = 'rgb(var(--color-mono-900))'
+	const ICON_COLOR_VARIABLE = 'rgb(var(--color-mono-900))';
 
 	// MODULE
 	export default Vue.extend({
@@ -177,7 +177,7 @@
 					return [
 						{ LoadPoint: 0, 	Message: 'Подготовка' },
 						{ LoadPoint: 100, Message: 'Готово' },
-					]
+					];
 				}
 			} as PropOptions<Array<LoadStage>>,
 			controllable: {
@@ -213,7 +213,7 @@
 
 				ashed: false,
 
-			} 
+			}; 
 		},
 		computed: {
 
@@ -224,7 +224,7 @@
 			},
 
 			segmentLength(): number {
-				return this.dash / this.stages.length
+				return this.dash / this.stages.length;
 			},
 
 			segmentCoord(): [number, number] {
@@ -232,7 +232,7 @@
 				return [
 					this.segmentLength * ( this.stages.length - ( this.curentStage / 2 )),
 					this.segmentLength * ( this.stages.length - ( this.nextStage / 2 ))
-				]
+				];
 
 			}
 
@@ -256,14 +256,14 @@
 							if (value) {
 								queueMicrotask(() => this.changeStage(stage)); idleWathcer();
 							}
-						})
+						});
 					}
 
 				}
 			},
 			active: {
 				handler() {
-					setTimeout(() => { this.active = false }, this.timeLimit );
+					setTimeout(() => { this.active = false; }, this.timeLimit );
 				}
 			}
 		},
@@ -280,7 +280,7 @@
 		},
 		methods: {
 
-			async changeStage(stage: number = 0) {
+			async changeStage(stage = 0) {
 
 				this.idle = false;
 
@@ -344,11 +344,11 @@
 
 						...params
 						
-					})
+					});
 
 					animation.onfinish = () => resolve(true);
 
-				})
+				});
 
 			},
 
@@ -367,9 +367,9 @@
 
 						complete: () => resolve(true),
 						
-					})
+					});
 
-				})
+				});
 
 			},
 
@@ -392,17 +392,17 @@
 
 						...params,
 
-					})
+					});
 
 					animation.onfinish = () => {
 						resolve(true);
 					};
 
-				}) 
+				}); 
 
 			}
 
 		}
-	})
+	});
 
 </script>

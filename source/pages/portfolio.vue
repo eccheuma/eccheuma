@@ -51,7 +51,7 @@
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from 'vue';
 
 // MIXINS
 	import EmitSound 				from '~/assets/mixins/EmitSound';
@@ -60,17 +60,17 @@
 	import { Portfolio } from '~/types/Portfolio';
 
 // COMPONENTS
-	import SectionHeader 		from '~/components/common/SectionHeader.vue'
+	import SectionHeader 		from '~/components/common/SectionHeader.vue';
 
 // PAGE DESCRIPTION
-	import { Opengraph } from '~/utils/opengraph'
+	import { Opengraph } from '~/utils/opengraph';
 
 	export const PageDescription: Opengraph.struct = {
 		title				: 'Eccheuma | Портфолио',
 		description	: 'Предложения по оказанию услуг. В зависимости от сезона и нагруженности тут появляются выгодные предложения на разные виды услуг.',
 		url					: '',
 		image				: require('~/assets/images/NotificationBadge.png?resize&size=600').src,
-	}
+	};
 
 // MODULE
 	export default Vue.extend({
@@ -127,8 +127,8 @@
 				meta: [
 					...new Opengraph.Meta(PageDescription).buildMeta()
 				],
-			}
+			};
 		},
-	})
+	});
 
 </script>

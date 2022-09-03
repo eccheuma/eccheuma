@@ -72,5 +72,5 @@
 		components: {
 			EccheumaImage: () => import('~/components/image/Image.vue'),
 		},
-	}
+	};
 </script>

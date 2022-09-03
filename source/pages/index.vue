@@ -364,25 +364,25 @@
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from 'vue';
 
 // VUEX
-	import { mapState, mapMutations, mapActions } from 'vuex'
+	import { mapState, mapMutations, mapActions } from 'vuex';
 
 // UTILS
 	import { gpu } from '~/utils/gpu';
 
 // TYPES
-	import type { AnimeInstance, AnimeAnimParams } 	from 'animejs'
-	import type { VuexMap } 										from '~/types/VuexMap'
+	import type { AnimeInstance, AnimeAnimParams } 	from 'animejs';
+	import type { VuexMap } 										from '~/types/VuexMap';
 
 // MIXINS
-	import EmitSound from '~/assets/mixins/EmitSound'
+	import EmitSound from '~/assets/mixins/EmitSound';
 
 // COMPONENTS
-	import HeaderNavigation from '~/components/layout/header/HeaderNavigation.vue'
+	import HeaderNavigation from '~/components/layout/header/HeaderNavigation.vue';
 	import CanvasComponent	from '~/components/Canvas.vue';
-	import Icon 						from '~/components/common/Icon.vue'
+	import Icon 						from '~/components/common/Icon.vue';
 
 // MODULE
 	export default Vue.extend({
@@ -418,7 +418,7 @@
 
 				AnimeInstance: [] as AnimeInstance[],
 				
-			}
+			};
 		},
 		computed: {
 
@@ -438,7 +438,7 @@
 						duration: 3000,
 						easing: 'ease-in-out',
 						fill: 'forwards',
-					})
+					});
 
 				}
 			},
@@ -455,13 +455,13 @@
 					volume: .25, 
 					loop: true,
 				},
-			}])
+			}]);
 
 			window.onload = () => {
 				if ( ! gpu.available() ) {
 					this.CanvasReady = undefined;
 				}
-			}
+			};
 
 		},
 		mounted() {
@@ -471,8 +471,8 @@
 				const Ambient = this.Sounds.get('Ambient')!;
 
 				Ambient.volume(0);
-				this.playSound(this.Sounds.get('Ambient'))
-				Ambient.fade(0, 1, 3000)
+				this.playSound(this.Sounds.get('Ambient'));
+				Ambient.fade(0, 1, 3000);
 
 				this.changeQuote();
 
@@ -485,7 +485,7 @@
 
 			this.AnimeInstance.forEach((anim) => {
 				anim.pause();
-			})
+			});
 
 			if ( HOWL ) HOWL.fade(HOWL.volume(), 0, 5e3);
 
@@ -506,7 +506,7 @@
 
 				this.CanvasReady = true;
 
-				const LOOP: boolean = true;
+				const LOOP = true;
 
 				const COLOR = `rgb(${ getComputedStyle(document.body).getPropertyValue('--mono-800').trim() })`;
 
@@ -551,17 +551,17 @@
 						easing: 'linear',
 						direction: 'alternate',
 					}
-				]
+				];
 
 				ANIMATIONS.forEach((item) => {
-					this.AnimeInstance.push(this.$AnimeJS(item))
-				})
+					this.AnimeInstance.push(this.$AnimeJS(item));
+				});
 
 			},
 
 			changeQuote() {
 
-				this.CurentQuoteIndex = Math.trunc(Math.random() * this.Quotes.length)
+				this.CurentQuoteIndex = Math.trunc(Math.random() * this.Quotes.length);
 
 				const textAnimation = (this.$refs.quote as HTMLElement).animate([
 					{ opacity: 0 },
@@ -570,16 +570,16 @@
 					duration: 750,
 					endDelay: 5000,
 					fill: 'both',
-				})
+				});
 
 				textAnimation.onfinish = () => {
 					textAnimation.onfinish = () => this.changeQuote();
 					textAnimation.reverse();
-				}
+				};
 				
 			}
 
 		},
-	})
+	});
 
 </script>

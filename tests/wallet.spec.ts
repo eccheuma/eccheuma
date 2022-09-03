@@ -1,39 +1,35 @@
-import { describe, test, expect } from 'vitest';
+import { describe, test, expect, beforeEach } from 'vitest';
 
 import { currencies, wallet } from '~/utils/currency';
 
-// ENV
-require('dotenv').config();
-
 // TEST MODULE
-describe("wallet::operations", async () => {
+describe('wallet::operations', async () => {
 
   const WALLET_TARGET = currencies.Country.ru;
 
-  const CURRENCIES = [ 
-    currencies.Country.ru, 
-    currencies.Country.en, 
-    currencies.Country.ch, 
-  ];
-
   const userWallet: wallet.Instance = new wallet.Instance();
-  await userWallet.setCurrencies(CURRENCIES);
 
   const RUB = currencies.Fabric(currencies.Country.ru, 50);
   const YAN = currencies.Fabric(currencies.Country.ch, 5);
   const USD = currencies.Fabric(currencies.Country.en, 1);
 
-  test("operations::create", () => {
+  beforeEach(() => {
+    userWallet.currencies[currencies.Country.ru] = new RUB();
+    userWallet.currencies[currencies.Country.ch] = new YAN();
+    userWallet.currencies[currencies.Country.en] = new USD();
+  });
 
-    console.log(userWallet, userWallet.currencies);
+  test('operations::create', () => {
 
-    CURRENCIES.forEach(currency_type => {
-      expect(userWallet.currencies[currency_type]).exist
-    })
+    const { ru, ch, en } = currencies.Country;
 
-  })
+    [ ru, ch, en ].forEach(currency_type => {
+      expect(userWallet.currencies[currency_type]).exist;
+    });
 
-  test("operations::transform", () => {
+  });
+
+  test('operations::transform', () => {
 
     if ( !userWallet ) expect.fail();
 
@@ -43,9 +39,9 @@ describe("wallet::operations", async () => {
     expect(value.convert(YAN)).toBe(10);
     expect(value.convert(RUB)).toBe(100);
     
-  })
+  });
 
-  test("operations::send", async () => {
+  test('operations::send', async () => {
 
     if ( !userWallet ) expect.fail();
 
@@ -60,9 +56,9 @@ describe("wallet::operations", async () => {
     await userWallet.send(new YAN(10), WALLET_TARGET);
     expect(currencyWallet.value).toBe(610);
 
-  })
+  });
 
-  test("operations::take", async () => {
+  test('operations::take', async () => {
 
     if ( !userWallet ) expect.fail();
 
@@ -71,6 +67,6 @@ describe("wallet::operations", async () => {
 
     expect(userWallet.currencies[WALLET_TARGET].value).toBe(4000);
     
-  })
+  });
 
-})
+});

@@ -1,3 +1,5 @@
+import { utils } from '~/utils';
+import { Hash } from './Nominals';
 
 export namespace Product {
 
@@ -22,29 +24,47 @@ export namespace Product {
 
 }
 
-export type Categories 	= keyof typeof Product;
-export type Products 		= Product.Application | Product.FrontEnd | Product.Graphic;
+export type Products = typeof Product;
+export type Categories 	= keyof Products;
+
+export interface SharedField<T> {
+	ID					: Hash
+	type				: T
+	single			: boolean
+	cost				: number
+	delivery		: number
+}
+
+export namespace Additions {
+
+	export interface struct extends SharedField<string> {
+		name: string,
+	}
+
+	export const DEFAULT: struct = {
+		ID				: utils.randHashGenerator(),
+		type			: 'Default',
+		cost			: Number(),
+		name			: String(),
+		delivery	: Number(),
+		single		: true,
+	}; 
+
+}
 
 export namespace Purchase {
 
-	interface Timing {
-		delivery : number
-	}
 
 	export interface Description {
 		about				: string
 		description	: string
 		name				: string
-		time				: string
 	}
 
-	// That TS mess on Type field, should return keys of Product enums. 
-	// As is TS namespaces can't be used as types, "We have what we have". I gonna to leave it as it is, until I found a better approach...
-	export interface struct<C extends Categories | 'Application'> extends Timing, Partial<Description> {
-		category		: typeof Product[Categories]
-		type				: typeof Product[C][keyof typeof Product[C]]
-		single			: boolean
-		cost				: number
+	export interface struct<
+		C extends Categories = 'Application'
+	> extends Partial<Description>, SharedField<string> {
+		category		: typeof Product[C]
 		quantity		: number
 	}
 	
@@ -59,12 +79,28 @@ export namespace Purchase {
 	}
 	
 	export interface order<C extends Categories> extends Purchase.struct<C> {
-		ID				: string,
+		ID				: Hash,
 		status		: status
 		delivery	: number
 		accepted	: number
 		recived		: number
 		declined	: boolean
 	}
+
+	export const DEFAULT: Purchase.order<'Application'> = {
+		ID					: utils.randHashGenerator(),
+		status			: Purchase.status.Process,
+		accepted		: 1_645_096_000_000,
+		recived			: 1_644_664_000_000,
+		delivery		: 432_000_000,
+		declined		: false,
+		cost				: 21_000,
+		category		: Product.Application,
+		type				: Product.Application.Multipage.toString(),
+		name				: 'Приложение на vue.js',
+		about				: 'Тестовое приложение',
+		single			: true,
+		quantity		: 1,
+	}; 
 
 }

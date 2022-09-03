@@ -1,6 +1,6 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
-import VueYandexMetrika from 'vue-yandex-metrika'  
+import VueYandexMetrika from 'vue-yandex-metrika';  
 
 export default (context) => {
 
@@ -9,7 +9,7 @@ export default (context) => {
 			id: 87558820,
 			router: context.app.router,
 			env: process.env.NODE_ENV,
-		})
-	}
+		});
+	};
 
-}
+};

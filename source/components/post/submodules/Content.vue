@@ -178,16 +178,16 @@
 
 <script lang="ts">
 
-	import Vue, { PropOptions } from 'vue'
+	import Vue, { PropOptions } from 'vue';
 
 	// PRISM
 	import Prism 		from 'prismjs';
 
 	// TYPES
-	import type { Post } from '~/types/Post'
+	import type { Post } from '~/types/Post';
 
 	// COMPONENTS
-	import Icon from '~/components/common/Icon.vue'
+	import Icon from '~/components/common/Icon.vue';
 
 	// MODULE
   export default Vue.extend({
@@ -214,24 +214,24 @@
 		data() {
 			return {
 				PickedBlock: null 
-			}
+			};
 		},
 		mounted() {
 			
 			if ( this.editorMode ) {
 
-				const WRAP_NODE = this.$refs.content as Element
+				const WRAP_NODE = this.$refs.content as Element;
 
 				WRAP_NODE.childNodes.forEach((node, i) => {
-					node.addEventListener('dblclick', () => this.PickBlock(i))
-				})
+					node.addEventListener('dblclick', () => this.PickBlock(i));
+				});
 
 			}
 
 		},
 		methods: {
-			PickBlock(index: number = 0) {
-				this.$emit('curent-block', index )
+			PickBlock(index = 0) {
+				this.$emit('curent-block', index );
 			},
 
 			prismHighlight(code: string, lang: string) {
@@ -243,7 +243,7 @@
 			},
 
 		}
-  })
+  });
 
 </script>
 

@@ -10,10 +10,10 @@ namespace Sentence {
 
   export const params = {
     minLength: 0
-  }
+  };
 
   export function applyPattern(value: string): string {
-    return `\\S*${ value.toLowerCase() }.?[а-яa-z]`
+    return `\\S*${ value.toLowerCase() }.?[а-яa-z]`;
   }
 
 }
@@ -44,14 +44,14 @@ export namespace validate {
 
           return new RegExp(Sentence.applyPattern(banned)).test(word);
 
-        })
-      })
+        });
+      });
 
     }
   
     if ( params.minLength > sentence.length ) return false;
   
-    return Boolean(sentence.length)
+    return Boolean(sentence.length);
   
   }
 

@@ -2,10 +2,10 @@
 import Vue from 'vue';
 
 // Mixin for sound emit in Howler.js via store
-import 			{ mapActions, mapState } 	from 'vuex'
-import type { Howl, HowlOptions } from 'howler'
+import 			{ mapActions, mapState } 	from 'vuex';
+import type { Howl, HowlOptions } from 'howler';
 
-import type { VuexMap } from '~/types/VuexMap'
+import type { VuexMap } from '~/types/VuexMap';
 
 // TYPES
 export type FILE_NAME = 'Holl' 
@@ -74,17 +74,17 @@ export default Vue.extend({
 				file: sound.file,
 				name: sound.name, 
 				settings: { ...DEFAULT_SETTINGS, ...sound.settings } 
-			}
+			};
 
 		},
 
 		setSounds(sounds_arr: SoundInstance[]) {
 
 			sounds_arr.forEach((sound) => {
-				this.registerSound(this.predefineProperty(sound))
-			})
+				this.registerSound(this.predefineProperty(sound));
+			});
 
 		}
 
 	}
-})
+});

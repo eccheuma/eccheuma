@@ -187,13 +187,13 @@
 
 <script lang="ts">
 
-	import Vue, { PropOptions } from 'vue'
+	import Vue, { PropOptions } from 'vue';
 
 	// VUEX
-	import { mapActions } from 'vuex'
+	import { mapActions } from 'vuex';
 	
 	// NAMESPACES
-	import { Image } from '~/types/Image'
+	import { Image } from '~/types/Image';
 
 	// TYPES
 	// type PREVIEW_MODE = 'cover' | 'contain' | 'zoom'
@@ -202,7 +202,7 @@
 	const PLACEHOLDER: Pick<Image.formatsStruct, 'avif' | 'webp'> = {
 		avif: require('~/assets/images/ImagePlaceholder.png?resize&size=1000&format=avif').src,
 		webp: require('~/assets/images/ImagePlaceholder.png?resize&size=1000&format=webp').src,
-	}
+	};
 
 	const zoomStep = 20;
 
@@ -241,7 +241,7 @@
 				Zoom: false,
 				ZoomRate: 150,
 
-			}
+			};
 		},
 		computed: {
 			zoomStyle(): { height: string, width: string } {
@@ -251,7 +251,7 @@
 				return {
 					height: perc,
 					width: perc,
-				}
+				};
 
 			}
 		},
@@ -260,7 +260,7 @@
 				this.URL = await this.getImageURL({ 
 					path: this.path,
 					size: 1440,
-				}) as Image.formatsStruct
+				}) as Image.formatsStruct;
 			}
 		},
 		methods: {
@@ -280,22 +280,22 @@
 						: zoom
 					: zoom < 50
 						? Math.max(50, zoom)
-						: zoom
+						: zoom;
 
 			},
 
 			toggleModal() {
-				this.$emit('toggle-modal', !this.modalState)
+				this.$emit('toggle-modal', !this.modalState);
 			},
 
 			grab(value: boolean) {
 
 				if ( this.Zoom ) {
-					this.Grabbing = value
+					this.Grabbing = value;
 				}
 
 			}
 
 		},
-	})
+	});
 </script>

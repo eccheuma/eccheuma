@@ -1,12 +1,12 @@
 import type { MetaPropertyProperty, MetaPropertyName } from 'vue-meta';
 import { utils } from '~/utils';
-import { languages } from '~/lang'
+import { languages } from '~/lang';
 
 export type OpengraphMetaObject = MetaPropertyProperty | MetaPropertyName
 
 export namespace Opengraph {
 
-  const PREFIX: string = 'og'
+  const PREFIX = 'og';
 
   export type struct = {
     title       : string
@@ -31,15 +31,12 @@ export namespace Opengraph {
     static readonly predefined: 
       predefinedMeta = {
         locale  : languages.Russian,
-        website : './'
+        website : globalThis.location?.origin || './'
       };
 
     constructor(meta: struct, opt?: Partial<predefinedMeta>) {
 
-      this.struct.title        = meta.title;
-      this.struct.url          = meta.url;
-      this.struct.image        = meta.image;
-      this.struct.description  = meta.description;
+      Object.assign(this.struct, meta);
 
       if ( opt ) {
         Meta.predefined.website ||= opt.website;
@@ -49,7 +46,7 @@ export namespace Opengraph {
     }
 
     static setPreffix(type: keyof struct | keyof predefinedMeta): string {
-      return `${ PREFIX }:${ type }`
+      return `${ PREFIX }:${ type }`;
     }
 
     public buildMeta(): Array<OpengraphMetaObject> {
@@ -57,20 +54,20 @@ export namespace Opengraph {
       const meta: Array<OpengraphMetaObject> = Array();
 
       utils.object.getTypedKeys(this.struct).forEach(key => {
-        meta.push({ property: Meta.setPreffix(key), content: this.struct[key] })
-      })
+        meta.push({ property: Meta.setPreffix(key), content: this.struct[key] });
+      });
 
       utils.object.getTypedKeys(Meta.predefined).forEach(key => {
 
         const value = Meta.predefined[key];
 
         if ( value ) {
-          meta.push({ property: Meta.setPreffix(key), content: value })
+          meta.push({ property: Meta.setPreffix(key), content: value });
         }
 
-      })
+      });
 
-      return meta
+      return meta;
 
     }
 

@@ -165,11 +165,11 @@
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from 'vue';
 
-	import { mapMutations, mapState } from 'vuex'
+	import { mapMutations, mapState } from 'vuex';
 
-	import type { VuexMap } from '~/types/VuexMap'
+	import type { VuexMap } from '~/types/VuexMap';
 
 	// COMPONENTS 
 	import Icon 									from '~/components/common/Icon.vue';
@@ -189,6 +189,6 @@
 				changeStatus: 'Notification/changeStatus' 
 			})
 		}
-	})
+	});
 
 </script>

@@ -324,14 +324,14 @@
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from 'vue';
 
 	// COMPONENTS
-	import SearchBar 	from '~/components/common/SearchBar.vue'
-	import Icon				from '~/components/common/Icon.vue'
+	import SearchBar 	from '~/components/common/SearchBar.vue';
+	import Icon				from '~/components/common/Icon.vue';
 
 	// MIXINS
-	import IntersectionCooler from '~/assets/mixins/IntersectionCooler'
+	import IntersectionCooler from '~/assets/mixins/IntersectionCooler';
 
 	// TYPES
 	type LINK = {
@@ -386,13 +386,13 @@
 					]
 				} as {[K in FOOTER_SECTIONS]: LINK[]}
 
-			}
+			};
 		},
 		mounted() {
 
-			this.initCooler(this.$el, (cooled: boolean) => { this.Cooled = cooled })
+			this.initCooler(this.$el, (cooled: boolean) => { this.Cooled = cooled; });
 
 		}
-	})
+	});
 
 </script>

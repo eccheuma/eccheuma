@@ -202,22 +202,22 @@
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from 'vue';
 
 // VUEX
-	import { mapState, mapMutations, mapActions } from 'vuex'
-	import type { VuexMap } from '~/types/VuexMap'
+	import { mapState, mapMutations, mapActions } from 'vuex';
+	import type { VuexMap } from '~/types/VuexMap';
 
 // TYPES & INTERFACES & ENUMS
 	import { auth, form } from '~/api/auth';
 
 // COMPONENTS
-	import Loader 			from '~/components/common/Loader.vue'
+	import Loader 			from '~/components/common/Loader.vue';
 	import CommonButton from '~/components/buttons/CommonButton.vue';
 
 	// SUBMODULES
 	// eslint-disable-next-line import/order
-	import RegistrationForm from './submodules/Form.vue'
+	import RegistrationForm from './submodules/Form.vue';
 
 // MODULE
 	export default Vue.extend({
@@ -240,7 +240,7 @@
 					{ LoadPoint: 100, Message: 'Переходим к следующему шагу' },
 				]
 
-			}
+			};
 		},
 		computed: {
 
@@ -255,7 +255,7 @@
 		watch: {
 			LoginStatus: {
 				handler() {
-					this.toggleRegisterModal(false)
+					this.toggleRegisterModal(false);
 				},
 				deep: true
 			}
@@ -272,7 +272,7 @@
 			}),
 
 			defineError(e: auth.error): string {
-				return auth.defineError(e, this.Lang)
+				return auth.defineError(e, this.Lang);
 			},
 			
 			async sendForm(form: form.registration) {
@@ -290,6 +290,6 @@
 			},
 
 		}
-	})
+	});
 
 </script>

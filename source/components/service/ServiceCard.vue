@@ -215,21 +215,21 @@
 
 <script lang="ts">
 
-	import Vue, { PropOptions } from 'vue'
+	import Vue, { PropOptions } from 'vue';
 
 	// VUEX
-	import { mapState, mapMutations } from 'vuex'
+	import { mapState, mapMutations } from 'vuex';
 
 	// API
 	import { database } from '~/api/database';
 
 	// COMPONENTS
-	import ServiceModal from '~/components/service/ServiceModal.vue'
-	import CaptionCard 	from '~/components/common/Caption.vue'
+	import ServiceModal from '~/components/service/ServiceModal.vue';
+	import CaptionCard 	from '~/components/common/Caption.vue';
 
 	// TYPES 
-	import type { Purchase } from '~/types/Services'
-	import type { VuexMap } from '~/types/VuexMap'
+	import type { Purchase } from '~/types/Services';
+	import type { VuexMap } from '~/types/VuexMap';
 
 	// MODULE
 	export default Vue.extend({
@@ -257,7 +257,7 @@
 
 				Modal: false,
 
-			}
+			};
 		},
 
 		async fetch() {
@@ -277,7 +277,7 @@
 			}),
 
 			ToggleModal(value: boolean) {
-				this.Modal = value
+				this.Modal = value;
 			},
 
 			async getDatabaseData(): Promise<Array<Purchase.struct<any>>> {
@@ -289,6 +289,6 @@
 			}
 
 		},
-	})
+	});
 
 </script>

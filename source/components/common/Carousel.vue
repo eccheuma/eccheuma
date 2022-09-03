@@ -80,7 +80,7 @@
 
 <script lang="ts">
 
-import Vue, { PropOptions } from 'vue'
+import Vue, { PropOptions } from 'vue';
 
 // TYPES AND INTERFACES
 	type Options = {
@@ -98,7 +98,7 @@ import Vue, { PropOptions } from 'vue'
 		indicators: false,
 		auto: false,
 		interval: 8000,
-	}
+	};
 
 // MODULE
 	export default Vue.extend({
@@ -106,7 +106,7 @@ import Vue, { PropOptions } from 'vue'
 			options: {
 				type: Object,
 				required: false,
-				default() { return DefaultConfiguration }
+				default() { return DefaultConfiguration; }
 			} as PropOptions<Options>,
 			forcedIndex: {
 				type: Number,
@@ -137,14 +137,14 @@ import Vue, { PropOptions } from 'vue'
 				ContainerWidth: 0,
 				Quantity: 0,
 
-			}
+			};
 		},
 		watch: {
 			'mouseData.hoverPosition': {
-				handler() { this.UpdateStyles() }
+				handler() { this.UpdateStyles(); }
 			},
 			'ActiveIndex': {
-				handler() { this.UpdateStyles(); this.$emit('active-index', this.ActiveIndex) }
+				handler() { this.UpdateStyles(); this.$emit('active-index', this.ActiveIndex); }
 			},
 			'forcedIndex': {
 				handler() {
@@ -166,25 +166,25 @@ import Vue, { PropOptions } from 'vue'
 		},
 		destroyed() {
 			if ( this.ticker ) {
-				clearInterval(this.ticker)
+				clearInterval(this.ticker);
 			}
 		},
 		methods: {
 			getRelativeWindowSize(px: number): number {
 
-				return 100 / ( window.innerWidth / px )
+				return 100 / ( window.innerWidth / px );
 
 			},
 			slotChecker(): void {
 
 				if ( this.slotChecks === 10 ) {
-					console.warn("Swiper content may be empty, and it can't be mounted."); return
+					console.warn('Swiper content may be empty, and it can\'t be mounted.'); return;
 				}
 				setTimeout(() => {
 					( this.$refs.swiperContent as Element ).childElementCount 
 						? this.$nextTick().then(this.Init)
 						: this.$nextTick().then(this.slotChecker);
-				}, 250)
+				}, 250);
 
 				this.slotChecks += 1;
 
@@ -200,21 +200,21 @@ import Vue, { PropOptions } from 'vue'
 				// CSS HOUDINI SUPPORT 
 				if ( window.CSS && CSS.number !== undefined ) {
 
-					const Y = (this.ContainerWidth * this.ActiveIndex) + SHIFT
+					const Y = (this.ContainerWidth * this.ActiveIndex) + SHIFT;
 
 					const TRANSFORM = new CSSTransformValue([
 						new CSSTranslate(CSS.vw(-Y), CSS.px(0), CSS.px(0))
-					])
+					]);
 
-					contentNode.attributeStyleMap.set('transform', TRANSFORM)
-					contentNode.attributeStyleMap.set('transition-duration', CSS.ms( MD.isDown ? 0 : DURATION ))
+					contentNode.attributeStyleMap.set('transform', TRANSFORM);
+					contentNode.attributeStyleMap.set('transition-duration', CSS.ms( MD.isDown ? 0 : DURATION ));
 
 				} else {
 
 					contentNode.setAttribute('style', `
 						transition-duration: ${ MD.isDown ? 0 : DURATION }ms;
 						transform: translate3D( -${ (this.ContainerWidth * this.ActiveIndex) + SHIFT }vw, 0px, 0px );
-					`)
+					`);
 
 				}
 
@@ -231,25 +231,25 @@ import Vue, { PropOptions } from 'vue'
 
 				Object.values( contentNode.children ).forEach((el) => {
 
-					const DefaultClasses = el.getAttribute('class')
+					const DefaultClasses = el.getAttribute('class');
 					
-					el.setAttribute('class', `${ DefaultClasses || '' } swiper-item`.trim() )
-					el.setAttribute('style', `width: ${ this.ContainerWidth }vw`)
+					el.setAttribute('class', `${ DefaultClasses || '' } swiper-item`.trim() );
+					el.setAttribute('style', `width: ${ this.ContainerWidth }vw`);
 
-				})
+				});
 
 				this.TouchEvents(containerNode);
 
 				if ( this.Configuration.buttons ) {
-					this.ButtonEvents()
-				};
+					this.ButtonEvents();
+				}
 
 				if ( this.Configuration.indicators ) {
 					this.DotsEvents();
-				};
+				}
 
 				if ( this.Configuration.auto ) {
-					this.AutoChange()
+					this.AutoChange();
 				}
 
 				this.wasInit = true;
@@ -261,7 +261,7 @@ import Vue, { PropOptions } from 'vue'
 					if ( !this.mouseData.isHover ) {
 						this.ChangeSlide('NEXT');
 					}
-				}
+				};
 
 				this.ticker = setInterval(cb, 8000);
 
@@ -273,10 +273,10 @@ import Vue, { PropOptions } from 'vue'
 				this.$nextTick().then(() => {
 
 					Object.values( IndicatorsElement.children ).forEach((el, i) => {
-						el.addEventListener('click', () => { this.ActiveIndex = i })
-					})
+						el.addEventListener('click', () => { this.ActiveIndex = i; });
+					});
 
-				})
+				});
 
 			},
 			ButtonEvents() {
@@ -286,19 +286,19 @@ import Vue, { PropOptions } from 'vue'
 				const prevButton = buttonContainer.children[0];
 				const nextButton = buttonContainer.children[1];
 
-				prevButton.addEventListener('click', () => this.ChangeSlide('PREV'))
-				nextButton.addEventListener('click', () => this.ChangeSlide('NEXT'))
+				prevButton.addEventListener('click', () => this.ChangeSlide('PREV'));
+				nextButton.addEventListener('click', () => this.ChangeSlide('NEXT'));
 
 			},
 			TouchEvents(el: HTMLElement) {
 
-				const LISTENERS_OPTIONS = { passive: true, capture: false }
+				const LISTENERS_OPTIONS = { passive: true, capture: false };
 
 				el.addEventListener('touchmove', 	(e: TouchEvent) => {
 					
 					requestAnimationFrame( () => {
-						this.mouseData.hoverPosition = e.changedTouches[0].clientX 
-					})
+						this.mouseData.hoverPosition = e.changedTouches[0].clientX; 
+					});
 
 				}, LISTENERS_OPTIONS);
 
@@ -319,10 +319,10 @@ import Vue, { PropOptions } from 'vue'
 					MD.isDown	= false;
 
 					if ( Math.abs( MD.clickPosition - POS) > MD.offset ) {
-						this.ChangeSlide( DIFFERNCE > 0 ? 'NEXT' : 'PREV' )
+						this.ChangeSlide( DIFFERNCE > 0 ? 'NEXT' : 'PREV' );
 					}
 
-				}, LISTENERS_OPTIONS)
+				}, LISTENERS_OPTIONS);
 
 			},
 			MouseHover(e: Event) {
@@ -346,11 +346,11 @@ import Vue, { PropOptions } from 'vue'
 
 				this.mouseData.isDown 				= false;
 
-				const DIFFERNCE = this.mouseData.clickPosition - e.x
-				const OFFSET 		= this.mouseData.offset
+				const DIFFERNCE = this.mouseData.clickPosition - e.x;
+				const OFFSET 		= this.mouseData.offset;
 
 				if ( Math.abs(this.mouseData.clickPosition - e.x) > OFFSET ) {
-					this.ChangeSlide( DIFFERNCE > 0 ? 'NEXT' : 'PREV' )
+					this.ChangeSlide( DIFFERNCE > 0 ? 'NEXT' : 'PREV' );
 				}
 
 			},
@@ -360,21 +360,21 @@ import Vue, { PropOptions } from 'vue'
 					this.UpdateStyles(); return;
 				}	
 
-				const lastIndex = this.Quantity - 1
+				const lastIndex = this.Quantity - 1;
 
 				switch (direction) {
 
 					case 'NEXT': if ( this.ActiveIndex === lastIndex ) { 
-						this.ActiveIndex = 0 
-					} else { this.ActiveIndex += 1 } break;
+						this.ActiveIndex = 0; 
+					} else { this.ActiveIndex += 1; } break;
 
 					case 'PREV': if ( !this.ActiveIndex ) { 
-						this.ActiveIndex = lastIndex 
-					} else { this.ActiveIndex -= 1 } break;
+						this.ActiveIndex = lastIndex; 
+					} else { this.ActiveIndex -= 1; } break;
 				}
 
 			},
 		},
-	})
+	});
 
 </script>

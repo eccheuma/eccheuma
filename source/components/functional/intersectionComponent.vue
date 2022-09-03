@@ -29,30 +29,30 @@
 
 				inView: false as boolean,
 
-			}
+			};
 		},
 		watch: {
 			inView: {
 				handler() {
-					this.$emit('isIntersecting', this.inView, this.$slots.default![0].elm)
+					this.$emit('isIntersecting', this.inView, this.$slots.default![0].elm);
 				}
 			},
 			ready: {
 				async handler() {
-					this.setObserver(await this.createObserver())
+					this.setObserver(await this.createObserver());
 				}
 			},
 		},
 		async mounted() {
 
 			if ( this.ignite ) {
-				this.setObserver(await this.createObserver())
+				this.setObserver(await this.createObserver());
 			}
 
 		},
 		destroyed() {
 
-			this.ObserverInstance?.unobserve(this.$el)
+			this.ObserverInstance?.unobserve(this.$el);
 
 		},
 		methods: {
@@ -67,10 +67,10 @@
 				return new Promise((resolve) => {
 					resolve(new IntersectionObserver(( entry ) => {
 						
-						this.defaultCB(entry)
+						this.defaultCB(entry);
 
-					}, OPTIONS))
-				})
+					}, OPTIONS));
+				});
 
 			},
 
@@ -84,7 +84,7 @@
 
 			defaultCB( entry: IntersectionObserverEntry[] ) {
 
-				this.inView = entry[0].isIntersecting
+				this.inView = entry[0].isIntersecting;
 
 			} 
 
@@ -92,12 +92,12 @@
 		render(h): any {
 
 			if ( this.wrap ) {
-				return h('div', { staticClass: 'itersection::wrapper' }, this.$slots.default)
+				return h('div', { staticClass: 'itersection::wrapper' }, this.$slots.default);
 			}
 
-			return this.$slots.default
+			return this.$slots.default;
 			
 		},
-	})
+	});
 	
 </script>

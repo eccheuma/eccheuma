@@ -154,13 +154,13 @@
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from 'vue';
 
 	// MIXINS
-	import EmitSound from '~/assets/mixins/EmitSound'
+	import EmitSound from '~/assets/mixins/EmitSound';
 
 	// COMPONENTS
-	import Icon			from '~/components/common/Icon.vue'
+	import Icon			from '~/components/common/Icon.vue';
 
 	// MODULE
 	export default Vue.extend({
@@ -180,7 +180,7 @@
 
 				hash: Math.random().toString(36).substr(2),
 
-			}
+			};
 		},
 		watch: {
 			userRequest: {
@@ -191,8 +191,8 @@
 			result: {
 				handler() {
 					setTimeout(() => {
-						this.result = null
-					}, 15000)
+						this.result = null;
+					}, 15000);
 				}
 			}
 		},
@@ -203,11 +203,11 @@
 				this.setSounds([
 					{ file: 'On', 	name: 'Input::Increment',  settings: { rate: 1.00, volume: 0.25 } },
 					{ file: 'Off', 	name: 'Input::Decrement',  settings: { rate: 1.00, volume: 0.25 } },
-				])
+				]);
 
 				watcherPrepared();
 
-			})
+			});
 	
 		},
 		methods: {
@@ -222,12 +222,12 @@
 	
 					setTimeout(() => {
 						this.result = 'NOTHING'; this.inProcess = false;
-					}, 5000)
+					}, 5000);
 					
 				}
 
 			}
 		}
-	})
+	});
 
 </script>

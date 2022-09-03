@@ -34,7 +34,7 @@ export namespace Image {
 			Image.sizes.full 
 		];
 
-		return Sizes.find(x => Math.max(x, size) === x) || sizes.medium
+		return Sizes.find(x => Math.max(x, size) === x) || sizes.medium;
 
 	}
 	
@@ -69,7 +69,7 @@ export namespace Image {
 				title: String(),
 				description: String(),
 			},
-		}
+		};
 	}
 
 }

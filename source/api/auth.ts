@@ -3,10 +3,11 @@ import {
   signInWithEmailAndPassword,
   sendPasswordResetEmail,
   confirmPasswordReset,
-  signOut 
+  signOut,
 } from 'firebase/auth';
 
 import { getLocale, languages } from '~/lang';
+import { Result } from '~/utils';
 
 export namespace form {
 
@@ -38,25 +39,19 @@ export namespace auth {
   }
 
   export function defineError(e: error, lang: languages) {
-    return getLocale(lang).authError[e]
+    return getLocale(lang).authError[e];
   }
 
-  export async function login(email: form.email, pass: string) {
+  export async function login(email: form.email, pass: string): Promise<Result<form.session, Error>>  {
 
-    try {
+    const { user } = await signInWithEmailAndPassword(globalThis.firebaseAuth, email, pass);
 
-      const { user } = await signInWithEmailAndPassword(globalThis.firebaseAuth, email, pass);
-  
-      if ( user === null ) throw new Error();
-  
-      return {
-        email: user.email,
-        uid: user.uid,
-      } as form.session
+    if ( user === null ) return Error(error.notUser);
 
-    } catch (e: any) {
-      return e?.code as auth.error
-    }
+    return {
+      email: user.email,
+      uid: user.uid,
+    } as form.session;
 
   }
 
@@ -64,31 +59,29 @@ export namespace auth {
     return signOut(globalThis.firebaseAuth);
   }
 
-  export async function register(email: form.email, pass: string): Promise<auth.error | form.session> {
+  export async function register(email: form.email, pass: string): Promise<Result<form.session, Error>> {
 
     try {
 
       const { user } = await createUserWithEmailAndPassword(globalThis.firebaseAuth, email, pass);
 
-      if (!user) throw new Error(auth.error.notUser);
-
       return {
-        email: user.email as form.email,
-        uid: user.uid,
+        email : user.email as form.email,
+        uid   : user.uid,
       };
 
-    } catch (e: any) {
-      return e?.code as auth.error;
+    } catch (e) {
+      return Error((e as any).code);
     }
 
   }
 
   export async function applyPassword(code: string, pass: string) {
-    return await confirmPasswordReset(globalThis.firebaseAuth, code, pass)
+    return await confirmPasswordReset(globalThis.firebaseAuth, code, pass);
   }
 
   export async function requirePassword(email: form.email) {
-    return await sendPasswordResetEmail(globalThis.firebaseAuth, email)
+    return await sendPasswordResetEmail(globalThis.firebaseAuth, email);
   }
 
 }

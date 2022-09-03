@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Vue from 'vue';
 
 // TYPES
 import type { Context } from '@nuxt/types';
@@ -18,17 +18,17 @@ export default ({ env, isDev }: Context) => {
 			browser	: process.browser,
 			server	: process.server,
 		},
-	}
+	};
 
 	if ( isDev && process.browser ) {
   
 		console.log(`%cEccheuma | Build: ${ env.buildHash } | Слышу ZOV ебать AZOV`,
 
-		'background-color: #141418; padding: 4px 20px; border-radius: 4px; border: 1px solid #323236')
+		'background-color: #141418; padding: 4px 20px; border-radius: 4px; border: 1px solid #323236');
     
 	}
 
-}
+};
 
 declare module 'vue/types/vue' {
 	interface Vue {

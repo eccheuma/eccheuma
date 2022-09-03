@@ -4,7 +4,7 @@ export namespace Portfolio {
     logo          = 'Logo',
     landings      = 'Landings',
     mockups       = 'Mockups',
-    applications  = "Applications"
+    applications  = 'Applications'
   }
 
 }

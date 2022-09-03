@@ -234,24 +234,24 @@
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from 'vue';
 
 // VUEX
-	import { mapState, mapActions } from 'vuex'
+	import { mapState, mapActions } from 'vuex';
 
 // UTILS
-	import { user, work } from '~/utils/status'
+	import { user, work } from '~/utils/status';
 
 // COMPONENTS
 	import EccheumaButton from '~/components/buttons/CommonButton.vue';
 	import Tag 						from '~/components/common/Tag.vue';
-	import Icon						from '~/components/common/Icon.vue'
+	import Icon						from '~/components/common/Icon.vue';
 
 // TYPES
-	import type { VuexMap } from '~/types/VuexMap'
+	import type { VuexMap } from '~/types/VuexMap';
 
 // NAMESPACE
-	import { User } from '~/types/User'
+	import { User } from '~/types/User';
 
 	type PROFILE_AREA = {
 		title: string
@@ -281,7 +281,7 @@
 			profileAreas(): { [ K in keyof User.struct ]?: PROFILE_AREA } | { Messages: PROFILE_AREA } {
 
 				// ! Refactor target.
-				const LastMessage = this.Messages.length ? [ ...this.Messages ].pop()?.message : ''
+				const LastMessage = this.Messages.length ? [ ...this.Messages ].pop()?.message : '';
 
 				return {
 					UserWallet: {
@@ -302,7 +302,7 @@
 						info: `Последнее сообщенее: "${ LastMessage?.slice(0, 65) }"`,
 						icon: 'Message',
 					}
-				}
+				};
 			}
 
 		},
@@ -317,6 +317,6 @@
 			}
 
 		}
-	})
+	});
 
 </script>

@@ -317,24 +317,24 @@
  
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from 'vue';
 
 // VUEX
-	import { mapState, mapMutations, mapActions } from 'vuex'
+	import { mapState, mapMutations, mapActions } from 'vuex';
 
 // UTILS
 	import { utils } from '~/utils';
 
 // COMPONENTS
-	import Popover 	from '~/components/common/Popover.vue'
-	import Icon			from '~/components/common/Icon.vue'
+	import Popover 	from '~/components/common/Popover.vue';
+	import Icon			from '~/components/common/Icon.vue';
 
 // TYPES
-	import type { VuexMap } from '~/types/VuexMap'
-	import type { APP_THEME } 	from '~/types/App'
+	import type { VuexMap } from '~/types/VuexMap';
+	import type { APP_THEME } 	from '~/types/App';
 
 // MIXINS
-	import EmitSound from '~/assets/mixins/EmitSound'
+	import EmitSound from '~/assets/mixins/EmitSound';
 
 // MODULE
 	export default Vue.extend({
@@ -345,7 +345,7 @@
 		data() {
 			return {
 				LocalStatusOfTumbler: false,
-			}
+			};
 		},
 		computed: {
 
@@ -367,11 +367,11 @@
 					{ file: 'Off', 	name: 'Switch::Off', 			settings: { rate: 1.00 } },
 					{ file: 'On', 	name: 'Element::Action', 	settings: { rate: 0.50 } },
 					{ file: 'On', 	name: 'Element::Hover', 	settings: { rate: 0.25 } }
-				])
+				]);
 
 				window.matchMedia('(prefers-color-scheme: light)').matches 
 					? this.setUI('light' as APP_THEME)
-					: this.setUI('dark' as APP_THEME)
+					: this.setUI('dark' as APP_THEME);
 
 			}
 
@@ -388,7 +388,7 @@
 
 			scrollPage(to: 0 | 9999) {
 
-				this.playSound(this.Sounds.get('Element::Action'))
+				this.playSound(this.Sounds.get('Element::Action'));
 
 				window.scrollTo({
 					top: to,
@@ -414,6 +414,6 @@
 			},
 
 		},
-	})
+	});
 
 </script>

@@ -275,7 +275,7 @@
 	import type { VuexMap } 			from '~/types/VuexMap';
 
 	// COMPONENTS
-	import CommonButton from '~/components/buttons/CommonButton.vue'
+	import CommonButton from '~/components/buttons/CommonButton.vue';
 
 	// MODULE
 	export default Vue.extend({
@@ -312,7 +312,7 @@
 
 				answerTo: undefined as User.struct | undefined,
 
-			}
+			};
 		},
 		computed: {
 
@@ -344,7 +344,7 @@
 			if ( process.browser ) {
 				this.setSounds([
 					{ file: 'Tap', name: 'Element::Action', settings: { rate: 0.50 } }
-				])
+				]);
 			}
 			
 		},
@@ -356,7 +356,7 @@
 
 			this.taggedUser();
 
-			this.localeDate = utils.getLocalTime(this.comment.date)
+			this.localeDate = utils.getLocalTime(this.comment.date);
 
 		},
 		methods: {
@@ -371,7 +371,7 @@
 
 			pickUser() {
 
-				this.$emit('picked-user', this.author)
+				this.$emit('picked-user', this.author);
 
 			},
 
@@ -385,13 +385,13 @@
 
 					this.answerTo = new RegExp(`@${ state.UserName }`).test(this.comment.data)
 						? state
-						: undefined
+						: undefined;
 
-				})
+				});
 
 			}
 
 		},
-	})
+	});
 
 </script>

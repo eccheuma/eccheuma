@@ -123,10 +123,10 @@
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from 'vue';
 
 	// VUEX
-	import { mapState } from 'vuex'
+	import { mapState } from 'vuex';
 	import type { VuexMap } from '~/types/VuexMap';
 
 	// API
@@ -134,13 +134,13 @@
 	import { database } from '~/api/database';
 
 	// UTILS
-	import { utils } from '~/utils'
+	import { utils } from '~/utils';
 
 	// LANG
-	import { getLocale } from '~/lang'
+	import { getLocale } from '~/lang';
 
 	// COMPONENT
-	import CommonButton from '~/components/buttons/CommonButton.vue'
+	import CommonButton from '~/components/buttons/CommonButton.vue';
 
 	const enum loadStatus {
 		start,
@@ -166,7 +166,7 @@
 
 				SelectableIcon: Array<string>(),
 
-			}
+			};
 		},
 		computed: {
 			...mapState({
@@ -196,7 +196,7 @@
 		},
 		async mounted() {
 
-			this.SelectableIcon = await this.getDefaultIcons()
+			this.SelectableIcon = await this.getDefaultIcons();
 
 		},
 		methods: {
@@ -224,7 +224,7 @@
 
 				const EXTENSION = utils.extension.define(value, ['png', 'jpg', 'webp']);
 
-				if ( typeof EXTENSION !== 'string' ) throw EXTENSION;
+				if ( EXTENSION instanceof Error ) throw EXTENSION;
 
 				const FILE = new File([ files[0] ], this.State.UserID);
 				const DIST = `UserIcons/ID/${ FILE.name }::${ FILE.size.toString(36).toUpperCase() }.${ EXTENSION }`;
@@ -249,7 +249,7 @@
 
 				this.Loading = loadStatus.pending;
 
-				await storage.upload(path, file, { contentType: file.type })
+				await storage.upload(path, file, { contentType: file.type });
 
 				// TS can't correct work with logical assigment...
 				this.NewIcon ||= storage.reference(path) as string;
@@ -262,11 +262,11 @@
 
 			},
 
-			animateIcon(params: KeyframeAnimationOptions) {
+			animateIcon(params: EffectTiming) {
 
 				const element = (this.$refs.iconPreview as HTMLElement);
 
-				element.getAnimations().forEach(animation => animation.cancel())
+				element.getAnimations().forEach(animation => animation.cancel());
 
 				element.animate([
 					{ opacity: 0 },
@@ -277,11 +277,12 @@
 
 					...params,
 
-				})
+				});
 
 			}
 			
 		},
-	})
+
+	});
 
 </script>
