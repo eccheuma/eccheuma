@@ -7,7 +7,6 @@
 #
 app
 container
-functions
 
 # Node Modules
 node_modules
