@@ -30,6 +30,7 @@
 	"rules": {
 
 		"no-inner-declarations": 0,
+		"no-var": 0,
 		
 		"@typescript-eslint/no-var-requires": 0,
 		"@typescript-eslint/no-namespace": 0,

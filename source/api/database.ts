@@ -10,11 +10,10 @@ import { ref,
 import { onValue, onChildChanged  } from 'firebase/database';
 import { query, startAt, endAt, limitToFirst, orderByValue } from 'firebase/database';
 
-import type { DatabaseReference, EventType, Query, QueryConstraint } from 'firebase/database';
+import type { DatabaseReference, Query, QueryConstraint } from 'firebase/database';
 
-// TYPES
-
-
+// Utils
+import { Result } from '~/utils';
 
 export interface QueryParams<O extends database.order = database.order.NONE> extends database.QueryOrder<O> {
   mode    : database.mode
@@ -30,10 +29,14 @@ function defineQuery<O extends database.order>(ref: DatabaseReference, params?: 
 
   const QUERY = Array<QueryConstraint>();
 
-  switch ( params?.order ) {
-    case database.order.key: QUERY.push(orderByKey()); break;
-    case database.order.value: QUERY.push(orderByValue()); break;
-    case database.order.child: QUERY.push(orderByChild(params?.orderBy));
+  if ( params?.order ) {
+    switch ( params.order ) {
+      case database.order.key: QUERY.push(orderByKey()); break;
+      case database.order.value: QUERY.push(orderByValue()); break;
+      case database.order.child: {
+        if ( params.orderBy ) QUERY.push(orderByChild(params.orderBy));
+      }
+    }
   }
 
   if ( params?.start ) 
@@ -59,7 +62,7 @@ export namespace database {
 
   export interface QueryOrder<O extends database.order = order.NONE> {
     order   : O
-    orderBy : any
+    orderBy : string
   }
 
   export const enum error {
@@ -88,8 +91,9 @@ export namespace database {
   
   export function listen<
     C extends object, 
-    O extends order = order.NONE
-  >(path: string, callback: (value: C) => any, params?: Partial<QueryParams<O>>) {
+    O extends order  = order.NONE,
+    R extends object = object,
+  >(path: string, callback: (value: C) => R, params?: Partial<QueryParams<O>>) {
   
     const REF = ref(globalThis.firebaseDB, path);
   
@@ -114,39 +118,27 @@ export namespace database {
 
   }
   
-  export async function set(path: string, data: any): Promise<Error | boolean> {
+  export async function set<D extends object>(path: string, data: D): Promise<Result<boolean, Error>> {
   
-    return new Promise((res, rej) => {
-
-      const REF = ref(globalThis.firebaseDB, path);
-
-      try {
-        
-        firebaseSet(REF, data); res(true);
-
-      } catch (error) {
-
-        rej(error);
-
-      }
-
-    });
+    return firebaseSet(ref(globalThis.firebaseDB, path), data)
+      .then(() => true)
+      .catch(() => new Error(error.denied));
     
   }
   
-  export async function remove(path: string): Promise<error | boolean> {
+  export async function remove(path: string): Promise<Result<boolean, Error>> {
 
     return firebaseRemove(ref(globalThis.firebaseDB, path))
       .then(() => true)
-      .catch(e => e.code as error);
+      .catch(() => new Error(error.denied));
 
   }
   
-  export async function update(path: string, data: any): Promise<error | boolean> {
+  export async function update<D extends object>(path: string, data: D): Promise<Result<boolean, Error>> {
 
     return firebaseUpdate(ref(globalThis.firebaseDB, path), data)
       .then(() => true)
-      .catch(e => e.code as error);
+      .catch(() => new Error(error.denied));
 
   }
 

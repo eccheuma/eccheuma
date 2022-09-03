@@ -445,7 +445,7 @@ $TransitionDuration: 250ms;
 			},
 
 			getLocale(route: navigation.routeSections): string {
-				return getLocale(this.Lang).Routes[ utils.enums.toString(navigation.routeSections, route) ];
+				return getLocale(this.Lang).Routes[ route ];
 			}
 			
 		}

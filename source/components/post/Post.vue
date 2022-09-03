@@ -1119,7 +1119,7 @@
 
 					this.PrevMessage = this.Message;
 
-					const HASH = utils.hashGenerator();
+					const HASH = utils.randHashGenerator();
 
 					const COMMENT: Post.comment = {
 						ID: HASH,
@@ -1144,7 +1144,7 @@
 
 				this.userLiked 
 					? database.remove(PATH) 
-					: database.set(PATH, { hash: utils.hashGenerator() });
+					: database.set(PATH, { hash: utils.randHashGenerator() });
 
 			},
 

@@ -69,6 +69,7 @@
 
 		},
 
+		// TODO #17 : Переработать мутации объеденив их в одну. DRY никто не отменял. @Scarlatum 
 		sendMessage(vuex, prop: Message.struct) {
 
 			// Получение ID пользователя
@@ -86,7 +87,7 @@
 
 		},
 
-		markAsReaded(vuex, ID: Message.struct['ID']): Promise<database.error | boolean> {
+		markAsReaded(vuex, ID: Message.struct['ID']): Promise<Error | boolean> {
 
 			// Получение ID пользователя
 			const { State } = vuex.rootState.User.State;

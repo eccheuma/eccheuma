@@ -31,7 +31,7 @@ export namespace Opengraph {
     static readonly predefined: 
       predefinedMeta = {
         locale  : languages.Russian,
-        website : './'
+        website : globalThis.location?.origin || './'
       };
 
     constructor(meta: struct, opt?: Partial<predefinedMeta>) {

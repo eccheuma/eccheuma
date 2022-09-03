@@ -1,12 +1,8 @@
 // NODE LIBRARIES
   import { writeFile }  from 'fs';
-  import { createHash } from 'crypto';
-
-// TESTING
-  import vitest from 'vitest';
 
 // ENV
-  import { environment } from './utils/configEnvironment'
+  import { environment } from './utils/configEnvironment';
 
   const appEnvironment = environment.config([
     
@@ -16,15 +12,15 @@
     'FIREBASE_API_APP', 
     'FIREBASE_API_KEY',
 
-    "CURRENCY_API_URL",
-    "CURRENCY_API_KEY",
+    'CURRENCY_API_URL',
+    'CURRENCY_API_KEY',
 
-    "VK_API_URL",
-    "VK_API_TOKEN",
-    "VK_API_GROUP_ID",
-    "VK_API_VERSION",
+    'VK_API_URL',
+    'VK_API_DEV_TOKEN',
+    'VK_API_GROUP_ID',
+    'VK_API_VERSION',
 
-  ])
+  ]);
 
 // TYPES
   import { NuxtConfig } from '@nuxt/types';
@@ -36,10 +32,10 @@
 
 // VARIABLES
   const inDevelopment = process.env.NODE_ENV === environment.node.development;
-  const hash = utils.hashGenerator(12);
+  const hash = utils.randHashGenerator(12);
 
 // WRITE A VERSION
-  writeFile('.version', hash, () => console.log(`≏ Hash build: ${ genearateName(4) }:${ hash }`))
+  writeFile('.version', hash, () => console.log(`≏ Hash build: ${ genearateName(4) }:${ hash }`));
 
 // CONFIG
   const config: NuxtConfig = {
@@ -147,7 +143,7 @@
           config.entry = {
             // pixi: 'pixi.js',
             // firebase: 'firebase/database',
-          }
+          };
         }
       },
 
@@ -169,7 +165,7 @@
               // ! Из-за того что бабель пытается настырно пережевать все асинхронные методы в генераторы, 
               // ! часть асинхронных методов внезапно прерывается другими вызовами. Ошибка ли это Nuxt, Vue, или других прослоек - Я не знаю.
               // ! Но я как-то не собираюсь ебать себе голову на счёт этого. И сделаю всё это крайне нахально...
-              "@babel/plugin-transform-async-to-generator"
+              '@babel/plugin-transform-async-to-generator'
             ]
           }]
         ],
@@ -207,6 +203,6 @@
       { src: '~/plugins/DragScroll.js',         mode: 'client' },
       { src: '~/plugins/YandexMetrica.js',      mode: 'client' },
     ],
-  }
+  };
 
   export default config;

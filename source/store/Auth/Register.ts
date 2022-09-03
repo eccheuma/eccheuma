@@ -44,17 +44,17 @@ import type { MutationTree, ActionTree } from 'vuex';
 
 		async Register(vuex, form: form.registration): Promise<auth.error | boolean> {
 
-			const response = await auth.register(form.email, form.password);
+			const responseResult = await auth.register(form.email, form.password);
 
-			if ( typeof response === 'string' ) {
+			if ( responseResult instanceof Error ) {
 
-				vuex.commit('Auth/Session/setAuthError', response, { root: true });
+				vuex.commit('Auth/Session/setAuthError', responseResult, { root: true });
 
 				return false;
 
 			}
 
-			const { uid, email } = response;
+			const { uid, email } = responseResult;
 
 			const userWallet = new wallet.Instance(currencies.DEFAULT);
 			
@@ -78,7 +78,7 @@ import type { MutationTree, ActionTree } from 'vuex';
 			// 	})
 
 			const Message: Message.struct = {
-				ID			: utils.hashGenerator(),
+				ID			: utils.randHashGenerator(),
 				date		: Date.now(),
 				from		: 'Eccheuma',
 				userID	: 'SUPPORT',

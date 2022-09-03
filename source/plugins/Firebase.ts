@@ -2,7 +2,7 @@ import { Context } from '@nuxt/types';
 
 import { utils } from '~/utils';
 
-import { initializeApp, FirebaseApp, getApps, deleteApp } 	from 'firebase/app';
+import { initializeApp, FirebaseApp, getApps } from 'firebase/app';
 import { getDatabase, Database } from 'firebase/database';
 
 import { getAuth, Auth } from 'firebase/auth';
@@ -19,7 +19,7 @@ const DOMEN = 'escapefrommordorland';
 
 export default (context?: Context) => {
 
-	const applicationHash = utils.hashGenerator(12);
+	const applicationHash = utils.randHashGenerator(12);
 	const CONFIG = {
 
 		appId							: context?.env.FIREBASE_API_APP || process.env.FIREBASE_API_APP,

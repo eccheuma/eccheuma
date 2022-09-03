@@ -258,7 +258,7 @@
 				if ( this.UserPrevMessage !== this.UserMessage ) {
 
 					const M: MessageNamespace.struct = {
-						ID				: utils.hashGenerator(),
+						ID				: utils.randHashGenerator(),
 						userID		: this.UserState.UserID,
 						date			: Date.now(),
 						from			: this.UserState.UserName,

@@ -6,7 +6,7 @@ import { LocaleDate, utils } from '~/utils';
 
 export namespace vk {
 
-  const TOKEN = `access_token=${ process.env.VK_API_TOKEN }`;
+  const TOKEN = `access_token=${ process.env.VK_API_DEV_TOKEN }`;
   const VERSION = `v=${ process.env.VK_API_VERSION }`;
 
   export namespace wall {
@@ -44,6 +44,8 @@ export namespace vk {
 
 }
 
+// TODO: #18 Проблема с парсингом вариаций миниатюр поста. Сделать адекватный обработчик, в случае отказа, и подгружать заглушку извне. @Scarlatum
+// TODO: #19 Добавить логику на бэк для постоянного обновления токена, в случае его просрочки. Возможно реализоваться всё через WS. @Scarlatum  
 export namespace feed {
 
   const GROUD_ID = String(process.env.VK_API_GROUP_ID);

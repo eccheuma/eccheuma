@@ -1,9 +1,12 @@
+import { Hash } from '~/types/Nominals';
+
+// Relust type placeholder
+export type Result<R,E extends Error> = R | E;
+
 export type LocaleDate = {
   Day: string
   Time: string
 }
-
-export type Hash = utils.types.nominal<string,'__HASH__'>;
 
 export namespace utils {
 
@@ -11,16 +14,6 @@ export namespace utils {
 
     export function getTypedKeys<GenObject extends object>(object: GenObject): Array<keyof GenObject> {
       return Object.keys(object) as Array<keyof GenObject>;
-    }
-
-  }
-
-  export namespace enums {
-
-    // Так как обычный реверсивный маппинг енамов не даёт типов, приходится пользоваться жуткими обёртками.
-    // Для примера enum[enum] вернёт строку, хотя, по идее, он должен вернуть тип по ключю этого enum'а.
-    export function toString<E, K extends number>(enumLike: E, key: K) {
-      return (enumLike as unknown as {[ index: number ]: keyof E })[key];
     }
 
   }
@@ -98,7 +91,7 @@ export namespace utils {
 
   }
 
-  export function hashGenerator(length = 12): Hash 
+  export function randHashGenerator(length = 12): Hash 
   {
 
     const randomChar = () => Math.floor(36 * Math.random()).toString(36);

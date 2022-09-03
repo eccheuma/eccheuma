@@ -12,9 +12,7 @@ export namespace Meta {
 
   export function conctructTitle(lang: languages, prop: PageTitle) {
 
-    const route = utils.enums.toString(navigation.routeSections, prop.section);
-
-    const pageName = getLocale(lang).Routes[ route ];
+    const pageName = getLocale(lang).Routes[ prop.section ];
     const pageType = getLocale(lang).Pagination.page;
 
     const pagePrefix = typeof prop.page === 'number'

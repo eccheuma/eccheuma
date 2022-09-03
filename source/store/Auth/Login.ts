@@ -37,17 +37,17 @@ import type { ActionTree, MutationTree } from 'vuex';
 
 				vuex.commit('setAction', true);
 
-				const response = await auth.login(form.email, form.password);
+				const responseResult = await auth.login(form.email, form.password);
 
-				if ( typeof response === 'string' ) {
+				if ( responseResult instanceof Error ) {
 
-					vuex.commit('Auth/Session/setAuthError', response, { root: true });
+					vuex.commit('Auth/Session/setAuthError', responseResult, { root: true });
 
 					return false;
 
 				}
 
-				const { uid, email } = response;
+				const { uid, email } = responseResult;
 
 				const userData: SessionState['CurentUser'] = { uid, email };
 				
