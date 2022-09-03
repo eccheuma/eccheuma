@@ -1,5 +1,7 @@
 import { currencies } from '~/utils/currency';
 
+import { Result } from '~/utils';
+
 export let currencyData: currency.CurrencyResponse;
 
 export namespace currency {
@@ -38,7 +40,7 @@ export namespace currency {
 
 		if ( !currencyData ) {
 
-			const data = await getData();
+			const data: Result<CurrencyResponse, Error> = await getData();
 
 			if ( data instanceof Error ) return 0;
 
@@ -48,9 +50,9 @@ export namespace currency {
 
 		switch (country) { 
 			case currencies.Country.ru: 
-				return parseFloat(currencyData?.data?.USDRUB || String()); 
+				return parseFloat(currencyData.data.USDRUB || String()); 
 			case currencies.Country.ch: 
-				return parseFloat(currencyData?.data?.CNYRUB || String());
+				return parseFloat(currencyData.data.CNYRUB || String());
 			default: 
 				return 1;
 		}

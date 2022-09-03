@@ -19,7 +19,7 @@
 		</section>
 
 		<!-- // ! Refactor calc  -->
-		<!-- <section class="service-calculator">
+		<section class="service-calculator">
 
 			<section-header>
 				<template #header>	
@@ -32,7 +32,7 @@
 
 			<calculator />
 
-		</section> -->
+		</section>
 
 		<section class="service-products">
 
@@ -101,7 +101,7 @@
 	import SectionHeader 		from '~/components/common/SectionHeader.vue';
 	import ServiceCard 			from '~/components/service/ServiceCard.vue';
 	import PromoBanner      from '~/components/promo/PromoBanner.vue';
-	// import Calculator				from '~/components/service/Calculator.vue'
+	import Calculator				from '~/components/service/Calculator.vue';
 
 	// TYPES 
 	import type { Categories, Purchase } from '~/types/Services';
@@ -128,7 +128,7 @@
 			SectionHeader,
 			ServiceCard,
 			PromoBanner,
-			// Calculator,
+			Calculator,
 		}, 
 		layout: 'Application',
 		scrollToTop: false,  
