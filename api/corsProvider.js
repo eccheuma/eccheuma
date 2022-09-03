@@ -1,6 +1,8 @@
+const nodeFetch = require('node-fetch')
+
 export default async function handler(req, res) {
   
-  const response = await fetch(req.query.url)
+  const response = await nodeFetch(req.query.url)
   
   res.statusCode = 200
   res.setHeader('Content-Type', 'application/json')
