@@ -83,7 +83,6 @@
   import Vue from 'vue';
 
   // API
-  import { database } from '~/api/database';
   import { feed } from '~/api/feed';
 
   // COMPONENTS
@@ -99,42 +98,15 @@
         Posts: Array<feed.IFeed>(),
       };
     },
-    created() {
-      if ( process.browser ) {
-        // database.get<string>('App/Cache/Vk').then((response) => {
-        //   this.checkPosts(response);
-        // })
-      }
-    },
     async mounted() {
       if ( process.browser ) {
-        this.Posts = await feed.get();
+        
+        const test = await feed.get();
+
+        console.log('feed::get ', test);
+
       }
     },
-    methods: {
-
-      // TODO | Использовать внутренние утилиты для работы с хранилищем.
-      async checkPosts(SERVER_HASH: string) {
-
-        // const LOCAL_HASH = window.localStorage.getItem('VK_HASH');
-        // const LOCAL_DATA = window.localStorage.getItem('VK_POSTS');
-
-        // if ( LOCAL_HASH && LOCAL_DATA && LOCAL_HASH === SERVER_HASH ) {
-
-        //   this.Posts = JSON.parse(LOCAL_DATA); 
-
-        // } else {
-
-        //   this.Posts = await feed.get();
-
-        //   window.localStorage.setItem('VK_POSTS', JSON.stringify(this.Posts))
-        //   window.localStorage.setItem('VK_HASH', SERVER_HASH)
-
-        // }
-
-      },
-
-    }
   });
 
 </script>

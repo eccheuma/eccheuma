@@ -4,6 +4,9 @@ import type { WallWallpostAttachmentType, WallWallpostAttachment } from 'vk-io/l
 // UTILS
 import { LocaleDate, utils } from '~/utils';
 
+// CloudFunctions 
+import { externalFetch } from '~/api/cloudFunctions';
+
 export namespace vk {
 
   const TOKEN = `access_token=${ process.env.VK_API_DEV_TOKEN }`;
@@ -69,9 +72,11 @@ export namespace feed {
     ];
 
     const feed: Array<IFeed> = [];
-    const response = await fetch(vk.constructQuery(vk.wall.methods.GET, params), {
-      mode: process.env.NODE_ENV === 'development' ? 'no-cors' : 'cors',
-    });
+
+    const response = await Promise.race([
+      // fetch(vk.constructQuery(vk.wall.methods.GET, params)),
+      externalFetch(vk.constructQuery(vk.wall.methods.GET, params)),
+    ]);
 
     // todo: Cделать более стоящий обработчик ошибок.
     if ( response.status !== 200 ) return feed;
