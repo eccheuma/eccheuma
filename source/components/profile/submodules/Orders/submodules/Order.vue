@@ -375,7 +375,7 @@
           { name: 'Состояние',          value: work.defineStatus(this.payload.status, this.Lang) },
           { name: 'Цена',               value: `${ this.payload.cost } ₽` },
           { name: 'Дата заказа',        value: `${ Day } в ${ Time }` },
-          { name: 'Тип Заказа',         value: this.getOrderType(this.payload.type) },
+          { name: 'Тип Заказа',         value: this.payload.type.toString() },
           { name: 'Индификатор заказа', value: this.payload.ID, type: 'id' },
         ];
 
@@ -397,11 +397,7 @@
         }
 
       },
-
-      getOrderType(type: number): string {
-        return this.payload.category[type];
-      }
-
+      
     }
   });
 
