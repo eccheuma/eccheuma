@@ -4,5 +4,5 @@
 const CLOUD_FUNCTION_HOSTING_URL = globalThis.location?.origin;
 
 export async function externalFetch(url: string): Promise<Response> {
-  return await fetch(`${ CLOUD_FUNCTION_HOSTING_URL }/api/fetch?url=${ url }`);
+  return await fetch(`${ CLOUD_FUNCTION_HOSTING_URL }/api/fetch?url=${ encodeURIComponent(url) }`);
 }
