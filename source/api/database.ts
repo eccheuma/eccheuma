@@ -92,8 +92,7 @@ export namespace database {
   export function listen<
     C extends object, 
     O extends order  = order.NONE,
-    R extends object = object,
-  >(path: string, callback: (value: C) => R, params?: Partial<QueryParams<O>>) {
+  >(path: string, callback: (value: C) => void, params?: Partial<QueryParams<O>>) {
   
     const REF = ref(globalThis.firebaseDB, path);
   

@@ -108,11 +108,11 @@ import { ActionTree, MutationTree } from 'vuex';
 
 			// --------------------------------
 
-			const CACHED_DATA = cache.get(CACHE_KEY);
+			const CACHED_DATA = cache.get<RecordValues<CurentState['Content']>>(CACHE_KEY);
 
-			if ( CACHED_DATA && Hashes.cashed && Hashes.cashed === Hashes.server ) {
+			if ( !(CACHED_DATA instanceof Error) && Hashes.cashed && Hashes.cashed === Hashes.server ) {
 
-				commit('setContent', { data: JSON.parse(CACHED_DATA), from: 'cache', to: payload.ref  });
+				commit('setContent', { data: CACHED_DATA.data, from: 'cache', to: payload.ref  });
 
 			} else {
 

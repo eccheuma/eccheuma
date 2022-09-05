@@ -59,7 +59,13 @@ import { ActionTree, MutationTree } from 'vuex';
 				const cacheKey = `${ params.path }-${ matchedSize }`;
 
 				if ( cache.check(cacheKey) ) {
-					return cache.get(cacheKey) as Image.formatsStruct;
+					
+					const cacheResult = cache.get<Image.formatsStruct>(cacheKey);
+
+					return cacheResult instanceof Error
+						? imageStruct
+						: cacheResult.data;
+
 				}
 
 				cache.set(cacheKey, imageStruct);
