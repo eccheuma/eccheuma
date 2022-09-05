@@ -1,5 +1,6 @@
-import { currencies } from '~/utils/currency';
+import { externalFetch } from '~/api/cloudFunctions';
 
+import { currencies } from '~/utils/currency';
 import { Result } from '~/utils';
 
 export let currencyData: currency.CurrencyResponse;
@@ -26,13 +27,33 @@ export namespace currency {
 		data: Record<CurrencyPairs, string>
 	}
 
+	const CurrencyResponseMock: CurrencyResponse = {
+		data: {
+			CNYRUB: String(0),
+			USDRUB: String(0),
+		},
+		message	: 'CurrencyResponseMock',
+		status	: 0,
+	};
+
 	async function getData(): Promise<CurrencyResponse | Error> {
 
-		const response = await fetch(API_POINT);
+		const responses = await Promise.all([
+			fetch(API_POINT),
+			externalFetch(API_POINT),
+		]);
 
-		if ( response.status !== 200 ) return Error(errors.UNREACHABLE);
+		if ( responses.every(({ status }) => status !== 200) ) {
+			return Error(errors.UNREACHABLE);
+		}
 
-		return await response.json() as CurrencyResponse;
+		const validResponse = responses.find(x => x.status === 200);
+
+		console.debug('currency::getData', validResponse);
+
+		return validResponse
+			? await validResponse.json() as CurrencyResponse
+			: CurrencyResponseMock;
 
 	} 
 
