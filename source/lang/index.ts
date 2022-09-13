@@ -1,4 +1,6 @@
 
+import type { Categories } from '~/types/Services';
+
 import { navigation } from '~/types/Navigation';
 import { math } from '~/utils/math';
 
@@ -9,24 +11,15 @@ export const enum languages {
 
 export namespace russian {
 
-  // Numeric
-  const suffix = ['ой', 'ух', 'ёх', 'ми', 'ти'];
+  export function getSuffix(num: number, suffix: Array<string>): string {
 
-  export function getSuffix(num: number): string {
+    const rem = num % 20;
 
-    const rem = num % 10;
+    if ( rem === 0 || rem % 10 === 1 ) return suffix[0];
 
-    if ( rem === 1 && num !== 11 ) return suffix[0];
+    if ( math.int.inRange(2, rem, 4) ) return suffix[1];
 
-    if ( num < 10 || num > 20 ) {
-
-      if ( rem === 2 ) return suffix[1];
-      if ( math.int.inRange(1,rem,5) ) return suffix[2];
-      if ( rem === 7 || rem === 8 ) return suffix[3];
-
-    }
-
-    return suffix[4];
+    return suffix[2];
 
   }
 
@@ -83,6 +76,12 @@ export namespace russian {
     sizeStrict  : 'Загружаемый размер файла привышает 1.5МБ: Размер вашего изображения:',
     sendError   : 'При отправке изображения произошла ошибка',
     loadError   : 'При загрузке изображения произошла ошибка',
+  };
+
+  export const Categories: Record<Categories, string> = {
+    Application : 'Приложения',
+    FrontEnd    : 'Фронт-энд',
+    Graphic     : 'Графический дизайн',
   };
 
 }

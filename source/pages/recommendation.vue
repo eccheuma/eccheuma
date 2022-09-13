@@ -39,9 +39,9 @@
 	import Vue from 'vue';
 
 	// PAGE DESCRIPTION
-	import { Opengraph } from '~/utils/opengraph';
+	import { opengraph } from '~/utils/opengraph';
 
-	export const PageDescription: Opengraph.struct = {
+	export const PageDescription: opengraph.struct = {
 		title				: 'Eccheuma | Рекомендации',
 		description	: 'Раздел связан с обслуживанием и заметками касательно содержания проектов',
 		url					: '',
@@ -57,7 +57,7 @@
 			return {
 				title: PageDescription.title,
 				meta: [
-					...new Opengraph.Meta(PageDescription).buildMeta()
+					...new opengraph.Meta(PageDescription).buildMeta()
 				],
 			};
 		},

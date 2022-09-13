@@ -36,6 +36,7 @@
 		"@typescript-eslint/no-namespace": 0,
 		"@typescript-eslint/no-inferrable-types": 0,
 		"@typescript-eslint/no-array-constructor": 0,
+		"@typescript-eslint/ban-ts-comment": 0,
 		"no-new-object": 0,
 
 		"vue/multi-word-component-names": 0,

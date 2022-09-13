@@ -9,8 +9,10 @@
 
 .section-header {
 
-  height: 20vh;
   display: grid;
+
+  height: 15vh;
+  margin-bottom: 2vh;
 
   place-content: center;
   // background-color: rgb(var(--color-mono-200));

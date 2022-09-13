@@ -63,9 +63,9 @@
 	import SectionHeader 		from '~/components/common/SectionHeader.vue';
 
 // PAGE DESCRIPTION
-	import { Opengraph } from '~/utils/opengraph';
+	import { opengraph } from '~/utils/opengraph';
 
-	export const PageDescription: Opengraph.struct = {
+	export const PageDescription: opengraph.struct = {
 		title				: 'Eccheuma | Портфолио',
 		description	: 'Предложения по оказанию услуг. В зависимости от сезона и нагруженности тут появляются выгодные предложения на разные виды услуг.',
 		url					: '',
@@ -125,7 +125,7 @@
 			return {
 				title: PageDescription.title,
 				meta: [
-					...new Opengraph.Meta(PageDescription).buildMeta()
+					...new opengraph.Meta(PageDescription).buildMeta()
 				],
 			};
 		},

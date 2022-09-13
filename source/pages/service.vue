@@ -18,7 +18,6 @@
 
 		</section>
 
-		<!-- // ! Refactor calc  -->
 		<section class="service-calculator">
 
 			<section-header>
@@ -26,7 +25,7 @@
 					<span>Калькулятор стоимости</span>
 				</template>
 				<template #default>
-					<span>Lorem ipsum dolor sit amet consectetur adipisicing elit. Tempore sed aliquam rerum aspernatur enim quidem.</span>
+					<span>...</span>
 				</template>
 			</section-header>
 
@@ -113,9 +112,9 @@
 	// 'Услуги. Перечень оказываемых услуг, калькулятор стоимости, и форма обратной связи.'
 
 	// PAGE DESCRIPTION
-	import { Opengraph } from '~/utils/opengraph';
+	import { opengraph } from '~/utils/opengraph';
 
-	export const PageDescription: Opengraph.struct = {
+	export const PageDescription: opengraph.struct = {
 		title				: 'Eccheuma | Услуги',
 		description	: 'Услуги. Перечень оказываемых услуг, калькулятор стоимости, и форма обратной связи.',
 		url					: '',
@@ -165,7 +164,7 @@
 			return {
 				title: PageDescription.title,
 				meta: [
-					...new Opengraph.Meta(PageDescription).buildMeta()
+					...new opengraph.Meta(PageDescription).buildMeta()
 				],
 			};
 		},

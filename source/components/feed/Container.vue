@@ -83,10 +83,12 @@
   import Vue from 'vue';
 
   // API
-  import { feed } from '~/api/feed';
+  import { feed, vk } from '~/api/feed';
+  import { database } from '~/api/database';
 
   // COMPONENTS
   import Post from './Post.vue';
+import { utils } from '~/utils';
 
   // MODULE
   export default Vue.extend({
@@ -100,10 +102,22 @@
     },
     async mounted() {
       if ( process.browser ) {
-        
-        const test = await feed.get();
 
-        console.log('feed::get ', test);
+        const response = await database.get<Array<any>>('VkPosts');
+
+        this.Posts = response.map(post => {
+          return {
+            thumb : vk.pickThumbnail(post.attachments),
+            body  : String(post.text),
+            date  : utils.getLocalTime(Number(post.date) * 1000),
+            link  : `https://vk.com/club${ Math.abs(post.from_id || 0) }?w=wall${ post.from_id }_${ post.id }`,
+            social: {
+              likes    : Number(post.likes.count || Number()),
+              comments : Number(post.comments.count || Number()),
+              reposts  : Number(post.reposts.count || Number()),
+            }
+          };
+        });
 
       }
     },

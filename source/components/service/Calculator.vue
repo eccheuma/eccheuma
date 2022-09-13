@@ -14,13 +14,13 @@
 				<div class="calculator-main-input-type">
 					<span>Тип услуги</span>
 					<hr>
-					<select v-model="form.category" name="category">
+					<select v-model="form.category" name="category" :class="{ active: form.category }">
 						<option value="">
 							Тип услуги не выбран
 						</option>
 						<template v-for="item in SERVICE_TYPES">
 							<option :key="item" :value="item">
-								{{ item }}
+								{{ getCategoryName(item) || item }}
 							</option>
 						</template>
 					</select>
@@ -28,10 +28,10 @@
 
 				<!-- Type of service  -->
 				<transition name="opacity-transition">
-					<div v-if="form.category" class="calculator-main-input-service">
+					<div v-if="form.category && services.length" class="calculator-main-input-service">
 						<span>Услуга</span>
 						<hr>
-						<select v-model="form.service" name="service">
+						<select v-model="form.service" name="service" :class="{ active: form.service.ID }">
 							<option value="NONE">
 								Услуга не выбрана
 							</option>
@@ -46,13 +46,13 @@
 
 				<!-- Type of service  -->
 				<transition name="opacity-transition">
-					<div v-if="form.service" class="calculator-main-input-options">
+					<div v-if="form.service && additions.length" class="calculator-main-input-options">
 						<span>Дополнения</span>
 						<hr>
 						<template v-for="field in additions.length">
 							<div class="calculator-main-input-options-item" :key="field">
-								<select v-model="form.additions[field - 1]" name="service">
-									<option value="NONE">
+								<select v-model="form.additions[field - 1]" name="service" :class="{ active: form.additions[field - 1] && form.additions[field - 1] !== '' }">
+									<option value="">
 										Услуга не выбрана
 									</option>
 									<template v-for="(item, index) in additions">
@@ -69,7 +69,7 @@
 			</section>
 
 			<section v-if="form.service" class="calculator-main-description">
-				<big>Описание услуги</big>
+				<strong>Описание услуги</strong>
 				<hr>
 				<span>
 					{{ form.service.description }}
@@ -91,12 +91,12 @@
 				<ul v-if="cost.view !== 0">
 
 					<template v-if="form.service">
-						<li>{{ form.service.name }}: <strong> {{ form.service.cost }} ₽ ( {{ quantity.service }} шт. )</strong></li>	
+						<li>{{ form.service.name }}: <strong> {{ form.service.cost }} ₽ | В количестве {{ quantity.service }} шт.</strong></li>	
 					</template>
 
 					<template v-if="form.additions">
 						<li v-for="addition in filledAdditions" :key="addition.type">
-							{{ addition.name }}: <strong>{{ addition.cost }} ₽ - {{ quantity.additions[addition.ID] || 1 }} шт.</strong>
+							{{ addition.name }}: <strong>{{ addition.cost }} ₽ | В количестве {{ quantity.additions[addition.ID] || 1 }} шт.</strong>
 						</li>	
 					</template>
 
@@ -117,7 +117,7 @@
 						В основном это связанно либо с правками, или же с пересмотром технического задания.
 					</template>
 				</caption-card>
-				<span>{{ deliveryTime }} часов</span>
+				<span>{{ formatToDays(deliveryTime) }}</span>
 			</section>
 
 			<section class="calculator-aside-cost">
@@ -128,10 +128,10 @@
 						Цена учитывается с НДС в размере {{ Math.round((taxes.GLOBAL_TAX_INDEX - 1) * 100) }} %
 					</template>
 					<template #desc>
-						Если заказ идёт через фриланс площадку, то цена будет {{ resultCost }} ₽ за счёт их средних комиссии в 15-20%.
+						Если заказ идёт через фриланс площадку, то цена будет {{ formatCost(Math.round(resultCost * 1.20)) }} ₽ за счёт их средних комиссии в 15-20%.
 					</template>
 				</caption-card>
-				<span>{{ cost.view }} ₽</span>
+				<span>{{ formatCost(cost.view) }} ₽</span>
 			</section>
 		</div>
 
@@ -143,7 +143,7 @@
 	%calculator-header {
 
 		text-align: center;
-		padding: 2vh 2vw;
+		padding: 0vh 2vw 2vh;
 
 		@extend %pattern-lines;
 
@@ -179,6 +179,10 @@
 	.calculator {
 
 		&-container {
+
+			.active {
+				border: 1px solid var(--color-accent-pass);
+			}
 
 			display: grid;
 			grid-template: {
@@ -232,6 +236,8 @@
 					}
 				}
 
+				
+
 				select {
 
 					width: 100%;
@@ -255,7 +261,15 @@
 			}
 
 			&-description {
+
 				padding: 3vh 2vw;
+
+				strong {
+					font: {
+						size: var(--font-size-18);
+						weight: 800;
+					}
+				}
 
 				hr {
 					margin: 1vh 0;
@@ -331,26 +345,46 @@
 // Utils
 	import type { Result } from '~/utils';
 	import { cache } from '~/utils/cache';
+	import { currencies } from '~/utils/currency';
+
+// Lang
+	import { getLocale, languages, russian } from '~/lang';
 
 // TYPES
 	import type { Hash, Second } from '~/types/Nominals';
 	import type { Categories, Purchase, Additions } from '~/types/Services';
-
-// Helpers
-	function toHours(secs: Second): number {
-		return parseFloat(Number((secs / 60) / 60).toPrecision(3));
-	}
 
 // Components 
 	import CaptionCard from '~/components/common/Caption.vue';
 
 // Constants
 	// TODO #20 : Подключить API ЦБРФ для сбора индексов для конечных поборов. @Scarlatum
-	const GLOBAL_TAX_INDEX = 1.24;
-
-	const COMMON_DELIVERY_TIME = 864_000 as Second;
+	const GLOBAL_TAX_INDEX = 1.20;
 
 	const SERVICE_TYPES: Array<Categories> = ['Application', 'Graphic', 'FrontEnd'];
+
+	const CATEGORIES_LANG = getLocale(languages.Russian).Categories;
+
+	const BASIC_COF = 25; // h\c
+
+	const DAY = 5184000 as Second;
+
+// Currency
+	const RUB = currencies.Fabric(currencies.Country.ru, 60);
+	const USD = currencies.Fabric(currencies.Country.en, 1);
+
+// Helpers
+	function toHours(secs: Second) {
+		return parseFloat(Number((secs / 60) / 60).toPrecision(3));
+	}
+
+	function hourPayment(val: number) {
+
+		const Rouble = new RUB(val);
+
+		return Math.floor(((Rouble.convert(USD) / BASIC_COF) * 60) * 60) as Second;
+
+	}
 
 // Errors
 	const enum ERRORS {
@@ -446,12 +480,15 @@
 
 			deliveryTime(): number {
 
-				const serviceTime 	= Number(this.form.service.delivery) || COMMON_DELIVERY_TIME;
+				const serviceTime 	= Number(this.form.service.delivery) || hourPayment(this.form.service.cost);
+
 				const additionsTime = this.filledAdditions.reduce((acc, addition) => {
-					return acc + addition.delivery || COMMON_DELIVERY_TIME;
+					return acc + (addition.delivery || hourPayment(addition.cost));
 				}, 0);
 
-				return toHours((serviceTime + additionsTime) as Second);
+				const timeInSeconds = (serviceTime + additionsTime) as Second;
+
+				return Math.round(toHours(timeInSeconds));
 
 			},
 
@@ -471,6 +508,11 @@
 					console.debug('form.service handler');
 
 					await this.setAdditions(service);
+				}
+			},
+			additions: {
+				handler(newVal: Array<Additions.struct>) {
+					this.form.additions = Array(newVal.length);
 				}
 			},
 			resultCost: {
@@ -586,6 +628,32 @@
 						this.cost.view = innerCounter.data;
 					}
 				});
+
+			},
+			getCategoryName(category: Categories) {
+				return CATEGORIES_LANG[category];
+			},
+
+			formatCost(cost: number) {
+				return cost.toLocaleString('DE-de');
+			},
+
+			// Russian stuff
+			getRussianSuffix(val: number, word: string, suffixs: Array<string>) {
+				return word.concat(russian.getSuffix(val, suffixs));
+			},
+			formatToDays(hours: number): string {
+
+				const [ FullDays, Rem ] = [ Math.floor(hours / 24), hours % 24 ];
+
+				const fmt = this.getRussianSuffix;
+
+				const H = `${ Rem 		 } ${ fmt(Rem, 'час', ['','а','ов']) }`;
+				const D = `${ FullDays } ${ fmt(FullDays, 'д', ['ень','ня','ней']) }`;
+
+				return hours > DAY
+					? `${ D } и ${ H }`
+					: H;
 
 			},
 			

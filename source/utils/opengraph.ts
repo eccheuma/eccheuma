@@ -4,7 +4,7 @@ import { languages } from '~/lang';
 
 export type OpengraphMetaObject = MetaPropertyProperty | MetaPropertyName
 
-export namespace Opengraph {
+export namespace opengraph {
 
   const PREFIX = 'og';
 

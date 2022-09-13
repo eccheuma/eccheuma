@@ -70,7 +70,7 @@
   import { Image }  from '~/types/Image';
 
   // PAGE DESCRIPTION
-	import { Opengraph } from '~/utils/opengraph';
+	import { opengraph } from '~/utils/opengraph';
 
   // IMAGE PLACEHOLDER
 	const PLACEHOLDER: Pick<Image.formatsStruct, 'avif' | 'webp'> = {
@@ -112,7 +112,7 @@
         Post: undefined as Post.struct | undefined,
         ImageURL: PLACEHOLDER,
 
-        PageDescription: Object() as Opengraph.struct,
+        PageDescription: Object() as opengraph.struct,
 
       };
     },
@@ -120,7 +120,7 @@
     head () {
 			return {
 				meta: [
-					...new Opengraph.Meta(this.$data.PageDescription).buildMeta()
+					...new opengraph.Meta(this.$data.PageDescription).buildMeta()
 				],
 			};
 		},

@@ -1,12 +1,9 @@
 import { Hash } from '~/types/Nominals';
+import { math } from './math';
 
-// Relust type placeholder
-export type Result<R,E extends Error> = R | E;
+export type Result<R,E extends Error = Error> = R | E;
 
-export type LocaleDate = {
-  Day: string
-  Time: string
-}
+export type LocaleDate = Record<'Day' | 'Time', string>
 
 export namespace utils {
 
@@ -28,7 +25,7 @@ export namespace utils {
 
     export type propertyListValue<
       A extends Readonly<Array<Record<string, unknown>>>, 
-      K extends listKeys<A>
+      K extends listKeys<A> = listKeys<A>
     > = A extends Readonly<Array<infer O>>
       ? O extends Partial<Record<K, unknown>>
         ? O[K]
@@ -74,12 +71,47 @@ export namespace utils {
 
   }
 
+  export namespace string {
+
+    const DEFAULT_MANGLE_KEY = [1, 3, 5, 7, 13, 21];
+
+    export const enum MangleMode {
+      DECODE,
+      ENCODE,
+    }
+
+    export function mangle(str: string, mode: math.int.intRange<0,1> = MangleMode.DECODE, key: Array<number> = DEFAULT_MANGLE_KEY): string {
+
+      if ( str.length === 0 ) return str;
+
+      if ( mode >= 2 ) throw Error('Wrong mode');
+
+      const BASE = 700;
+
+      return str.split('')
+        .map(char => char.codePointAt(0) || 0)
+        .map((code, i) => {
+
+          const C = code + BASE;
+          const S = key[i % key.length];
+
+          switch ( mode ) {
+            case MangleMode.DECODE: return String.fromCharCode(C + S);
+            case MangleMode.ENCODE: return String.fromCharCode(C - S);
+          }
+
+        })
+        .join('');
+
+    }
+
+  }
   export function getLocalTime(n = 0): LocaleDate 
   {
 
     const Properties: Record<keyof LocaleDate, Intl.DateTimeFormatOptions> = {
-      Day: { year: 'numeric', month: 'long', day: 'numeric' },
-      Time: { hour: '2-digit', minute: '2-digit' }
+      Day   : { year: 'numeric', month: 'long', day: 'numeric' },
+      Time  : { hour: '2-digit', minute: '2-digit' }
     };
     
     const DATA = {
@@ -91,8 +123,7 @@ export namespace utils {
 
   }
 
-  export function randHashGenerator(length = 12): Hash 
-  {
+  export function randHashGenerator(length = 12): Hash {
 
     const randomChar = () => Math.floor(36 * Math.random()).toString(36);
 

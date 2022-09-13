@@ -7,9 +7,9 @@ export namespace currencies {
 	const GLOBAL_COF: number = 1;
 
 	export enum Country {
-		ru = 'ru',
-		en = 'en', 
-		ch = 'ch',
+		ru = 'RUB',
+		en = 'USD', 
+		ch = 'CHY',
 	}
 
 	export const DEFAULT = [ currencies.Country.ru ];
@@ -72,9 +72,9 @@ export namespace wallet {
 	const WALLET_LIMIT = 50_000;
 
 	const DEFAULT_JSON: contract = {
-		ch: Number(0),
-		en: Number(0),
-		ru: Number(0),
+		CHY: Number(0),
+		USD: Number(0),
+		RUB: Number(0),
 	};
 
 	const enum errors {
