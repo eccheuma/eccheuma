@@ -11,9 +11,27 @@ export const enum languages {
 
 export namespace russian {
 
-  export function getSuffix(num: number, suffix: Array<string>): string {
+  export namespace types  {
+    export type CustomPlural = Array<[number, string]>;
+  }
+
+  export function getSuffix(num: number, suffix: Array<string>, customNumerator?: types.CustomPlural): string {
 
     const rem = num % 20;
+
+    if ( customNumerator?.length ) {
+
+      let customSuffix = String();
+
+      customNumerator.forEach(([ n, str ]) => {
+        if ( rem === n ) {
+          customSuffix = str;
+        }
+      });
+
+      return customSuffix || getSuffix(num, suffix);
+
+    }
 
     if ( rem === 0 || rem % 10 === 1 ) return suffix[0];
 

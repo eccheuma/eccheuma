@@ -13,8 +13,7 @@
     "nuxt::start": "nuxt start",
     "nuxt::generate": "nuxt generate",
     "vitest::test": "vitest --config vitest.config.ts",
-    "vitest::watch": "vitest --watch --config vitest.config.ts",
-    "vercel::deploy": "npm run vitest::test && npm run nuxt::build"
+    "vitest::watch": "vitest --watch --config vitest.config.ts"
   },
   "dependencies": {
     "@eccheuma/crusoris": "^1.1.16",

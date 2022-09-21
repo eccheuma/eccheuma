@@ -216,7 +216,6 @@
 	import CommonButton from '~/components/buttons/CommonButton.vue';
 
 	// SUBMODULES
-	// eslint-disable-next-line import/order
 	import RegistrationForm from './submodules/Form.vue';
 
 // MODULE
@@ -281,11 +280,7 @@
 
 				this.LoaderStage += 1;
 
-				const response: boolean = await this.Register(form);
-
-				if ( typeof response === 'string' ) {
-
-				}
+				await this.Register(form);
 
 			},
 

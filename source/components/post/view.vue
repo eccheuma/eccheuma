@@ -13,8 +13,8 @@
 				>
 
 				<picture class="post-header-image">
-					<source :srcset="ImageURL.avif" type="image/avif">
-					<img ref="image" :src="ImageURL.webp" :alt="payload.description">
+					<source :srcset="Thumbnail.avif" type="image/avif">
+					<img ref="image" :src="Thumbnail.webp" :alt="payload.description">
 				</picture>
 
 				<section v-once class="post-header-tags">
@@ -32,7 +32,7 @@
 
 				<section class="post-header-time">
 					<tag theme="transparent">
-						{{ PostDate.Day }} в {{ PostDate.Time }}
+						{{ postDate.Day }} в {{ postDate.Time }}
 					</tag>
 				</section>
 
@@ -61,8 +61,8 @@
 
 						<client-only>
 							
-							<template v-if="Object.keys(Likes || {}).length">
-								<span>{{ Object.keys(Likes || {}).length }}</span>
+							<template v-if="Object.keys(likes || {}).length">
+								<span>{{ Object.keys(likes || {}).length }}</span>
 							</template>
 
 							<span slot="placeholder" />
@@ -116,11 +116,11 @@
 
 				<section class="post-footer-author">
 
-					<template v-if="AuthorInfo">
+					<template v-if="author">
 						<tag>
-							{{ AuthorInfo.UserName }}
+							{{ author.UserName }}
 						</tag>
-						<i :style="`background-image: url(${ AuthorInfo.UserImageID })`" />
+						<i :style="`background-image: url(${ author.UserImageID })`" />
 					</template>
 
 				</section>
@@ -143,7 +143,7 @@
 							<header class="post-content-header">
 								<h4>{{ payload.title }}</h4>
 								<h6>{{ payload.description }}</h6>
-								<span>{{ AuthorInfo ? AuthorInfo.UserName : '' }} | {{ PostDate.Day }} в {{ PostDate.Time }}</span>
+								<span>{{ author ? author.UserName : '' }} | {{ postDate.Day }} в {{ postDate.Time }}</span>
 							</header>
 
 							<template v-if="editContent">
@@ -151,7 +151,7 @@
 							</template>
 
 							<template v-else>
-								<content-component :source="Content" />
+								<content-component :source="content" />
 							</template>
 
 							<section v-once class="post-content-tags">
@@ -204,7 +204,7 @@
 										:userID="item.userID"
 										:postID="payload.ID" 
 										:commentID="item.ID"
-										@picked-user="pickUser"
+										@picked-user="pickAddressee"
 									/>
 								</transition-group>
 							</section>
@@ -214,12 +214,12 @@
 								<template v-if="LoginStatus">
 
 									<h5>Оставьте свой комментарий</h5>
-									<p>Не длинее {{ CharLimit }} символов и не менее 6. <strong>Лимит: {{ charLimit }}</strong></p>
+									<p>Не длинее {{ CHAR_LIMIT }} символов и не менее 6. <strong>Лимит: {{ charLimit }}</strong></p>
 
 									<textarea 
 										v-model="Message" 
 										name="comment_section" 
-										:maxlength="CharLimit" 
+										:maxlength="CHAR_LIMIT" 
 										placeholder="Напишите тут что-то в ответ." 
 									/>
 			
@@ -256,509 +256,509 @@
 
 <style lang="scss">
 
-.post {
-	&-container {
+	.post {
+		&-container {
 
-		@include gradient_border(block);
-		@include component-shadow;
-
-		border-radius: var(--border-radius);
-
-		.rounded {
+			@include gradient_border(block);
+			@include component-shadow;
 
 			border-radius: var(--border-radius);
 
-			&-top {
-				border-radius: 0 0 .7rem .7rem !important;
-			}
-			&-bottom {
-				border-radius: 0 0 .7rem .7rem !important;
-			}
-		}
+			.rounded {
 
-	}
-	&-header {
+				border-radius: var(--border-radius);
 
-		display: grid;
-		position: relative;
-
-		background-color: rgb(var(--color-mono-300));
-
-		border-radius: .7rem .7rem 0 0;
-		overflow: hidden;
-
-		background: {
-			size: cover;
-			position: center;
-			repeat: no-repeat;
-		}
-
-		grid-template: {
-			columns: 1fr;
-			rows: 10vh 20vh 10vh;
-		}
-
-		&:before {
-
-			content: "";
-
-			position: absolute; 
-			z-index: 1;
-			
-			top: 0; 
-			left: 0; 
-
-			width: 100%; 
-			height: 100%;
-
-			opacity: .75;
-
-			// Desktop
-			@media screen and ( min-width: $mobile-breakpoint ) {
-				background-image: url(~assets/images/Stripes.png?size=15);
+				&-top {
+					border-radius: 0 0 .7rem .7rem !important;
+				}
+				&-bottom {
+					border-radius: 0 0 .7rem .7rem !important;
+				}
 			}
 
 		}
+		&-header {
 
-		&:after {
-			content: "";
-			position: absolute; top: 0; left: 0; z-index: 2;
-			width: 100%; 
-			height: 100%;
-
-			// Desktop
-			@media screen and ( min-width: $mobile-breakpoint ) {
-				background: linear-gradient(180deg, rgb(var(--mono-200),.5) 80%, rgb(var(--mono-200)) 100%);
-			}
-
-			// Mobile
-			@media screen and ( max-width: $mobile-breakpoint ) {
-				background: linear-gradient(180deg, rgb(var(--mono-200),.5) 50%, rgb(var(--mono-200)) 100%);
-			}
-		}
-
-		&-image {
-			position: absolute;
-			display: block;
-			width: 100%;
-			height: 100%;
-			img {
-				position: relative;
-				width: 100%;
-				height: 100%;
-				object-fit: cover;
-			}
-		}
-
-		&-tags {
-
-			z-index: 3;
-
-			position: relative;
-			display: inline-flex;
-
-			width: 100%;
-			height: 100%;
-
-			align-items: center;
-			justify-content: center;
-
-			column-gap: calc(min(5px, .5vw));
-
-		}
-
-		&-title {
-
-			z-index: 3;
-
-			align-self: center;
-
-			padding: 0 40px;
-			color: rgb(var(--mono-800));
-
-			@media screen and ( max-width: $mobile-breakpoint ) {
-				text-align: center;
-			}
-
-			h4 {
-				font-weight: 900;
-				font-size: var(--font-size-42);
-				// width: clamp(min-content, 25ch, 100%);
-				width: 25ch;
-			}
-			h6 {
-				font-weight: 600;
-				font-size: var(--font-size-20);
-				// width: clamp(min-content, 65ch, 100%);
-				width: 65ch;
-			}
-
-		}
-
-		&-time {
-
-			z-index: 3;
-
-			position: relative;
 			display: grid;
+			position: relative;
 
-			width: 100%;
-			height: 100%;
+			background-color: rgb(var(--color-mono-300));
 
-			align-content: center;
-			justify-content: center;
+			border-radius: .7rem .7rem 0 0;
+			overflow: hidden;
 
-		}
+			background: {
+				size: cover;
+				position: center;
+				repeat: no-repeat;
+			}
 
-	}
-	&-footer {
-
-		transition: border-radius 250ms ease-in-out;
-
-		background-color: rgb(var(--color-mono-200));
-		border-top: 1px solid var(--color-accent-edges-100);
-
-		display: grid;
-
-		padding: 0 2vw;
-
-		grid-template: {
-			columns: 2fr min-content 2fr;
-			rows: 10vh;
-			areas: 'social collapse author'
-		}
-
-		// border-bottom: 1px solid rgba(var(--color-mono-900), .25);
-
-		@media screen and ( max-width: $mobile-breakpoint ) {
-
-			padding: 2vh 0;
-			row-gap: 2vh;
-
-			justify-content: center;
 			grid-template: {
 				columns: 1fr;
-				rows: auto;
-				areas: 	'author'
-								'social'
-								'collapse'
+				rows: 10vh 20vh 10vh;
+			}
+
+			&:before {
+
+				content: "";
+
+				position: absolute; 
+				z-index: 1;
+				
+				top: 0; 
+				left: 0; 
+
+				width: 100%; 
+				height: 100%;
+
+				opacity: .75;
+
+				// Desktop
+				@media screen and ( min-width: $mobile-breakpoint ) {
+					background-image: url(~assets/images/Stripes.png?size=15);
+				}
+
+			}
+
+			&:after {
+				content: "";
+				position: absolute; top: 0; left: 0; z-index: 2;
+				width: 100%; 
+				height: 100%;
+
+				// Desktop
+				@media screen and ( min-width: $mobile-breakpoint ) {
+					background: linear-gradient(180deg, rgb(var(--mono-200),.5) 80%, rgb(var(--mono-200)) 100%);
+				}
+
+				// Mobile
+				@media screen and ( max-width: $mobile-breakpoint ) {
+					background: linear-gradient(180deg, rgb(var(--mono-200),.5) 50%, rgb(var(--mono-200)) 100%);
+				}
+			}
+
+			&-image {
+				position: absolute;
+				display: block;
+				width: 100%;
+				height: 100%;
+				img {
+					position: relative;
+					width: 100%;
+					height: 100%;
+					object-fit: cover;
+				}
+			}
+
+			&-tags {
+
+				z-index: 3;
+
+				position: relative;
+				display: inline-flex;
+
+				width: 100%;
+				height: 100%;
+
+				align-items: center;
+				justify-content: center;
+
+				column-gap: calc(min(5px, .5vw));
+
+			}
+
+			&-title {
+
+				z-index: 3;
+
+				align-self: center;
+
+				padding: 0 40px;
+				color: rgb(var(--mono-800));
+
+				@media screen and ( max-width: $mobile-breakpoint ) {
+					text-align: center;
+				}
+
+				h4 {
+					font-weight: 900;
+					font-size: var(--font-size-42);
+					// width: clamp(min-content, 25ch, 100%);
+					width: 25ch;
+				}
+				h6 {
+					font-weight: 600;
+					font-size: var(--font-size-20);
+					// width: clamp(min-content, 65ch, 100%);
+					width: 65ch;
+				}
+
+			}
+
+			&-time {
+
+				z-index: 3;
+
+				position: relative;
+				display: grid;
+
+				width: 100%;
+				height: 100%;
+
+				align-content: center;
+				justify-content: center;
+
 			}
 
 		}
+		&-footer {
 
-		.active {
+			transition: border-radius 250ms ease-in-out;
 
-			background-color: rgb(var(--color-mono-900));
-			color: rgb(var(--color-mono-300));
+			background-color: rgb(var(--color-mono-200));
+			border-top: 1px solid var(--color-accent-edges-100);
 
-			i {
-				fill: rgb(var(--color-mono-300));
+			display: grid;
+
+			padding: 0 2vw;
+
+			grid-template: {
+				columns: 2fr min-content 2fr;
+				rows: 10vh;
+				areas: 'social collapse author'
 			}
 
-		}
-
-		.disabled {
-			pointer-events: none;
-			opacity: .25;
-		}
-
-		&-social {
-
-			position: relative;
+			// border-bottom: 1px solid rgba(var(--color-mono-900), .25);
 
 			@media screen and ( max-width: $mobile-breakpoint ) {
-				place-self: center;
+
+				padding: 2vh 0;
+				row-gap: 2vh;
+
+				justify-content: center;
+				grid-template: {
+					columns: 1fr;
+					rows: auto;
+					areas: 	'author'
+									'social'
+									'collapse'
+				}
+
 			}
 
-			justify-self: start;
-			align-self: center;
+			.active {
+
+				background-color: rgb(var(--color-mono-900));
+				color: rgb(var(--color-mono-300));
+
+				i {
+					fill: rgb(var(--color-mono-300));
+				}
+
+			}
+
+			.disabled {
+				pointer-events: none;
+				opacity: .25;
+			}
+
+			&-social {
+
+				position: relative;
+
+				@media screen and ( max-width: $mobile-breakpoint ) {
+					place-self: center;
+				}
+
+				justify-self: start;
+				align-self: center;
+				
+				grid: { 
+					row: 		social; 
+					column: social; 
+				}
+
+				column-gap: 2px;
+
+				button {
+
+					* {
+						pointer-events: none;
+					}
+
+					display: inline-flex;
+					column-gap: 4px;
+
+					@include push-button {
+
+						background-color: transparent;
+						color: rgb(var(--color-mono-900));
+
+						transition-duration: 250ms;
+
+						i {
+							fill: rgb(var(--color-mono-900));
+						}
+
+						span {
+							line-height: 21px;
+							padding: 0 4px;
+						}
+
+					}
+				}
+
+			}
 			
-			grid: { 
-				row: 		social; 
-				column: social; 
+			&-collapse {
+
+				@media screen and ( max-width: $mobile-breakpoint ) {
+					place-self: center;
+				}
+
+				justify-self: center;
+				align-self: center;
+				
+				grid: { 
+					row: 		collapse; 
+					column: collapse; 
+				}
+
 			}
 
-			column-gap: 2px;
+			&-author {
 
-			button {
+				$iconSize: 100px;
 
-				* {
-					pointer-events: none;
+				@media screen and ( max-width: $mobile-breakpoint ) {
+					transform: unset;
+					place-self: center;
+				}
+
+				z-index: 3;
+
+				display: inline-grid;
+				row-gap: 2vh;
+
+				transform: translateY(calc((#{ $iconSize } - 10vh) - (#{ $iconSize } / 2)));
+
+				justify: {
+					self: end;
+					items: center;
+				}
+
+				align: {
+					self: flex-end;
+				}
+				
+				grid: { 
+					row: 		author; 
+					column: author; 
+				}
+
+				i {
+
+					display: block;
+
+					background: {
+						size: cover;
+						position: center;
+						color: rgb(var(--color-mono-300));
+					}
+
+					border: 4px solid var(--color-accent-edges-100);
+					border-radius: 100%;
+
+					height: $iconSize; 
+					width: $iconSize;
+
+					box-shadow: 0px 1vh 0px 0px rgba(var(--color-mono-000), .25);
+
+				}
+
+			}
+		}
+		&-content {
+
+			transition: border-radius 250ms ease-in-out;
+
+			background-color: rgb(var(--color-mono-200));
+			color: rgb(var(--color-mono-900));
+			min-height: 50vh;
+			padding: 5vh 3vw;
+
+			display: grid;
+			row-gap: 2vh;
+
+			hr {
+				width: 100%;
+				background-color: rgb(var(--color-mono-400))
+			}
+
+			&-header {
+
+				color: rgb(var(--color-mono-900));
+
+				h4 {	
+					font: {
+						size: var(--font-size-36);
+						weight: 900;
+					}
+				}
+
+				h6 {
+					font: {
+						size: var(--font-size-18);
+						weight: 800;
+					}
+				}
+
+				span {
+
+					font: {
+						size: var(--font-size-14);
+						weight: 700;
+					}
+
+					color: rgb(var(--color-mono-500));
+
+				}
+
+			}
+
+			&-tags {
+
+				h6 {
+					margin-right: 1vw;
+					font-weight: 800;
+					font-size: var(--font-size-20);
 				}
 
 				display: inline-flex;
-				column-gap: 4px;
-
-				@include push-button {
-
-					background-color: transparent;
-					color: rgb(var(--color-mono-900));
-
-					transition-duration: 250ms;
-
-					i {
-						fill: rgb(var(--color-mono-900));
-					}
-
-					span {
-						line-height: 21px;
-						padding: 0 4px;
-					}
-
-				}
+				align-items: baseline;
+				column-gap: calc(min(5px, .5vw));
 			}
 
-		}
-		
-		&-collapse {
-
-			@media screen and ( max-width: $mobile-breakpoint ) {
+			&-comments {
 				place-self: center;
 			}
 
-			justify-self: center;
-			align-self: center;
-			
-			grid: { 
-				row: 		collapse; 
-				column: collapse; 
-			}
-
 		}
+		&-comments {
 
-		&-author {
+			transition: border-radius 250ms ease-in-out;
 
-			$iconSize: 100px;
-
-			@media screen and ( max-width: $mobile-breakpoint ) {
-				transform: unset;
-				place-self: center;
-			}
-
-			z-index: 3;
-
-			display: inline-grid;
-			row-gap: 2vh;
-
-			transform: translateY(calc((#{ $iconSize } - 10vh) - (#{ $iconSize } / 2)));
-
-			justify: {
-				self: end;
-				items: center;
-			}
-
-			align: {
-				self: flex-end;
-			}
-			
-			grid: { 
-				row: 		author; 
-				column: author; 
-			}
-
-			i {
-
-				display: block;
-
-				background: {
-					size: cover;
-					position: center;
-					color: rgb(var(--color-mono-300));
-				}
-
-				border: 4px solid var(--color-accent-edges-100);
-				border-radius: 100%;
-
-				height: $iconSize; 
-				width: $iconSize;
-
-				box-shadow: 0px 1vh 0px 0px rgba(var(--color-mono-000), .25);
-
-			}
-
-		}
-	}
-	&-content {
-
-		transition: border-radius 250ms ease-in-out;
-
-		background-color: rgb(var(--color-mono-200));
-		color: rgb(var(--color-mono-900));
-		min-height: 50vh;
-		padding: 5vh 3vw;
-
-		display: grid;
-		row-gap: 2vh;
-
-		hr {
-			width: 100%;
-			background-color: rgb(var(--color-mono-400))
-		}
-
-		&-header {
-
+			background-color: rgb(var(--color-mono-200));
 			color: rgb(var(--color-mono-900));
 
-			h4 {	
+			&-header {
+
+				display: grid;
+				margin: 2vh 0;
+
+				span {
+					font-size: var(--font-size-56);
+					font-family: var(--decor-font);
+					font-weight: 500;
+					text-align: center;
+				}
+
+				hr {
+					width: 75%;
+					margin: 1.75vh auto;
+					height: .5px;
+					background: var(--color-accent-edges-100);
+				}
+
+			}
+
+			&-first {
+
+				text-align: center;
+				padding-block: 5vh 6vh;
+
+				color: rgb(var(--color-mono-900));
 				font: {
 					size: var(--font-size-36);
-					weight: 900;
-				}
-			}
-
-			h6 {
-				font: {
-					size: var(--font-size-18);
-					weight: 800;
-				}
-			}
-
-			span {
-
-				font: {
-					size: var(--font-size-14);
-					weight: 700;
+					family: var(--decor-font);
+					weight: 500;
 				}
 
-				color: rgb(var(--color-mono-500));
+				border-bottom: 1px solid rgb(var(--color-mono-300));
+				border-top: 1px solid rgb(var(--color-mono-300));
 
 			}
 
-		}
-
-		&-tags {
-
-			h6 {
-				margin-right: 1vw;
-				font-weight: 800;
-				font-size: var(--font-size-20);
-			}
-
-			display: inline-flex;
-			align-items: baseline;
-			column-gap: calc(min(5px, .5vw));
-		}
-
-		&-comments {
-			place-self: center;
-		}
-
-	}
-	&-comments {
-
-		transition: border-radius 250ms ease-in-out;
-
-		background-color: rgb(var(--color-mono-200));
-		color: rgb(var(--color-mono-900));
-
-		&-header {
-
-			display: grid;
-			margin: 2vh 0;
-
-			span {
-				font-size: var(--font-size-56);
-				font-family: var(--decor-font);
-				font-weight: 500;
-				text-align: center;
-			}
-
-			hr {
-				width: 75%;
-				margin: 1.75vh auto;
-				height: .5px;
-				background: var(--color-accent-edges-100);
-			}
-
-		}
-
-		&-first {
-
-			text-align: center;
-			padding-block: 5vh 6vh;
-
-			color: rgb(var(--color-mono-900));
-			font: {
-				size: var(--font-size-36);
-				family: var(--decor-font);
-				weight: 500;
-			}
-
-			border-bottom: 1px solid rgb(var(--color-mono-300));
-			border-top: 1px solid rgb(var(--color-mono-300));
-
-		}
-
-		&-content {
-			display: inline-grid;
-			width: 100%;
-			padding-inline: 2vh;
-		}
-
-		&-answer {
-			border-top: 1px solid rgb(var(--color-mono-200));
-			padding: 2vh 3vw 5vh;
-
-			i {
-				@include icon-size(10vh);
-				margin-bottom: 1vh;
-				fill: rgb(var(--color-mono-400))
-			}
-
-			h5 {
-				color: rgb(var(--color-mono-900));
-				font-size: var(--font-size-24);
-				text-align: center;
-				font-weight: 800;
-			}
-			p {
-				white-space: pre-wrap;
-				text-align: center;
-				font-weight: 500;
-				font-size: var(--font-size-16);
-			}
-			textarea {
-				resize: none;
-				display: block;
+			&-content {
+				display: inline-grid;
 				width: 100%;
-				height: 20vh;
+				padding-inline: 2vh;
+			}
 
-				color: rgb(var(--color-mono-900));
-				background-color: rgb(var(--color-mono-200));
+			&-answer {
+				border-top: 1px solid rgb(var(--color-mono-200));
+				padding: 2vh 3vw 5vh;
 
-				border: {
-					style: solid;
-					width: 2px;
-					color: var(--color-accent-edges-100);
-					radius: var(--border-radius);
+				i {
+					@include icon-size(10vh);
+					margin-bottom: 1vh;
+					fill: rgb(var(--color-mono-400))
 				}
 
-				padding: 15px 20px;
-				font-size: 12px;
-				transition-duration: 500ms;
+				h5 {
+					color: rgb(var(--color-mono-900));
+					font-size: var(--font-size-24);
+					text-align: center;
+					font-weight: 800;
+				}
+				p {
+					white-space: pre-wrap;
+					text-align: center;
+					font-weight: 500;
+					font-size: var(--font-size-16);
+				}
+				textarea {
+					resize: none;
+					display: block;
+					width: 100%;
+					height: 20vh;
 
-				&:focus {
-					outline: none;
+					color: rgb(var(--color-mono-900));
+					background-color: rgb(var(--color-mono-200));
+
 					border: {
-						color: var(--color-accent-edges-300);
+						style: solid;
+						width: 2px;
+						color: var(--color-accent-edges-100);
+						radius: var(--border-radius);
+					}
+
+					padding: 15px 20px;
+					font-size: 12px;
+					transition-duration: 500ms;
+
+					&:focus {
+						outline: none;
+						border: {
+							color: var(--color-accent-edges-300);
+						}
+					}
+
+				}
+
+				&-button {
+					@include push-button {
+						background-color: transparent;
+					};
+
+					margin: {
+						top: 3vh !important;
 					}
 				}
-
+				
 			}
-
-			&-button {
-				@include push-button {
-					background-color: transparent;
-				};
-
-				margin: {
-					top: 3vh !important;
-				}
-			}
-			
 		}
 	}
-}
 
 </style>
 
@@ -779,6 +779,12 @@
 	// MIXINS
 	import EmitSound 						from '~/assets/mixins/EmitSound';
 	import IntersectionCooler 	from '~/assets/mixins/IntersectionCooler';
+
+	// Model 
+	import { PostModel } from './post.model';
+
+	// Helpers
+	import { helpers } from './post.helpers';
 
 	// COMPONETS
 	import Collapse 						from '~/components/common/Collapse.vue';
@@ -808,15 +814,17 @@
 	// TYPES & INTERFACES
 	import type { Image } from '~/types/Image';
 
-	type SECTIONS = 'Likes' | 'Comments' | 'Content'
+	type SECTIONS = 'likes' | 'comments' | 'content'
 
 	// IMAGE PLACEHOLDER
-	const PLACEHOLDER: Pick<Image.formatsStruct, 'avif' | 'webp'> = {
+	const IMAGE_PLACEHOLDER: Pick<Image.formatsStruct, 'avif' | 'webp'> = {
 		avif: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=avif').src,
 		webp: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src
 	};
 
 	const CHAR_LIMIT = 600;
+
+	const PostInstance = new PostModel();
 
 	// MODULE
 	export default Vue.extend({
@@ -858,44 +866,37 @@
 		data() {
 			return {
 
-				Cooled: undefined as undefined | boolean,
+				CHAR_LIMIT,
 
-				ImageURL: PLACEHOLDER,
-
-				AuthorInfo: new Object() as User.struct,
+				Thumbnail: IMAGE_PLACEHOLDER,
 
 				Message: String(),
 				PrevMessage: String(),
-				CharLimit: CHAR_LIMIT,
 
 				ContentSection: false,
 				CommentSection: false,
-				
 				prepareContent: false,
 
-				answerTo: null as User.struct | null,
+				Addressee: Array<User.struct['UserID']>(),
 
-				PostDate: utils.getLocalTime(0),
+				IntersectionAnimation: undefined as Animation | undefined,
+				Cooled: undefined as undefined | boolean,
 
-				Content: 	new Array<Post.content>(0),
-				Comments: new Object() as utils.types.asIterableObject<Post.comment>,
-				Likes: 		new Object() as utils.types.asIterableObject<Post.like>,
-
-				IntersectionAnimation: undefined as Animation | undefined
+				...PostInstance.objectRepresentation(),
 
 			};
 		},
 
 		async fetch() {
 
-			this.PostDate = utils.getLocalTime(this.payload.date);
+			this.postDate = utils.getLocalTime(this.payload.date);
 
 			if ( process.server ) {
 				await this.getAuthor();
 			}
 
 			if ( this.opened ) {
-				this.Content = await database.get(`Posts/PostID-${ this.payload.ID }/content`);
+				this.content = await database.get(`Posts/PostID-${ this.payload.ID }/content`);
 			}
 
 		},
@@ -903,9 +904,9 @@
 		computed: {
 
 			...mapState({
-				UI:						state => (state as VuexMap).App.UI,
-				LoginStatus: 	state => (state as VuexMap).Auth.Session.LoginStatus,
-				StoreUser:		state => (state as VuexMap).User.State.State,
+				UI					:	state => (state as VuexMap).App.UI,
+				LoginStatus	: state => (state as VuexMap).Auth.Session.LoginStatus,
+				StoreUser		:	state => (state as VuexMap).User.State.State,
 			}),
 
 			charLimit(): number {
@@ -914,14 +915,14 @@
 
 			userLiked(): boolean {
 
-				return this.Likes 
-					? Reflect.has(this.Likes, this.StoreUser.UserID)
+				return this.likes 
+					? Reflect.has(this.likes, this.StoreUser.UserID)
 					: false;
 
 			},
 
 			sortedComments(): Array<Post.comment> {
-				return Object.values(this.Comments || {}).sort((a, b) => a.date - b.date);
+				return Object.values(this.comments || {}).sort((a, b) => a.date - b.date);
 			},
 
 			validation(): boolean {
@@ -952,11 +953,11 @@
 
 			if ( process.browser ) {
 				
-				const watchCooledStatus 	= this.$watch('Cooled', (status) => {
+				const watchCooledStatus 	= this.$watch('Cooled', async (status) => {
 					if ( !status ) {
 
-						this.listenDataSnapshots('Comments');
-						this.listenDataSnapshots('Likes');
+						this.listenDataSnapshots('comments');
+						this.listenDataSnapshots('likes');
 
 						this.updateImage(); 						
 						this.getAuthor();
@@ -978,7 +979,7 @@
 				});
 	
 				const watchPrepareContent = this.$watch('prepareContent', () => {
-					this.listenDataSnapshots('Content'); watchPrepareContent();
+					this.listenDataSnapshots('content'); watchPrepareContent();
 				});
 
 				const watchIntersection 	= this.$watch('IntersectionAnimation', () => {
@@ -1028,6 +1029,13 @@
 
 		methods: {
 
+			pickAddressee(user: User.struct) {
+				this.Message = helpers.asAnswer({
+					user		: user,
+					message	: this.Message
+				});
+			},
+
 			...mapActions({
 				getImageURL: 	'Images/getImageURL',
 			}),
@@ -1036,13 +1044,13 @@
 				toggleRegisterModal: 'Auth/Register/toggleRegisterModal',
 			}),
 			
-			getAuthor(): Promise<void> {
+			async getAuthor() {
 
-				return new Promise((resolve) => {
-					database.get(`Users/${ this.payload.authorID }/state`).then( response => {
-						this.AuthorInfo = response as User.struct; resolve();
-					});
-				});
+				const result = await PostModel.getAuthor(this.payload.authorID);
+
+				this.author = result instanceof Error
+					? User.DEFAULT
+					: result;
 
 			},
 
@@ -1052,7 +1060,7 @@
 
 				const PATH = `Posts/PostID-${ this.payload.ID }/${ section.toLowerCase() }`;
 
-				database.listen(PATH, (data: any) => { this[section] = data; });
+				database.listen(PATH, data => { this[section] = data as any; });
 
 			}, 
 
@@ -1076,7 +1084,7 @@
 				if ( this.application.context.browser && this.application.gpu.available() ) {
 					this.prepareAnimations(IMAGE_CONTAINER, URL);
 				} else {
-					this.ImageURL = URL;
+					this.Thumbnail = URL;
 				}
 
 			},
@@ -1107,56 +1115,46 @@
 
 					(this.$refs.image as HTMLImageElement).onload = () => animation.reverse();
 
-					this.ImageURL = url;
+					this.Thumbnail = url;
 
 				};
 
 			},
 
-			sendComment(): void {
+			async sendComment() {
 
 				if ( this.validation && this.LoginStatus && this.PrevMessage !== this.Message ) {
 
-					this.PrevMessage = this.Message;
+					const sendResult = await PostModel.sendComment({ 
+						message		: this.Message,
+						postID		: this.payload.ID,
+						userID		: this.StoreUser.UserID,
+						addressee : await helpers.getAddresseeID(this.Message),
+					});
 
-					const HASH = utils.randHashGenerator();
+					if ( sendResult instanceof Error ) {
 
-					const COMMENT: Post.comment = {
-						ID: HASH,
-						date: Date.now(),
-						data: this.Message,
-						userID: this.StoreUser.UserID,
-					};
+						// TODO: Make error handling for UI
 
-					database.set(`Posts/PostID-${ this.payload.ID }/comments/Hash-${ HASH }`, COMMENT);
-
-					this.Message = String();
+					} else {
+						this.PrevMessage 	= this.Message;
+						this.Message 			= String();
+					}
 
 				}
 
 			},
 
-			sendLike(): void {
+			async sendLike() {
 
-				if ( this.LoginStatus === false ) return;
+				if ( !this.LoginStatus ) return;
 
-				const PATH = `Posts/PostID-${ this.payload.ID }/likes/${ this.StoreUser.UserID }`;
-
-				this.userLiked 
-					? database.remove(PATH) 
-					: database.set(PATH, { hash: utils.randHashGenerator() });
+				await PostModel.sendLike({
+					postID	: this.payload.ID,
+					userID	: this.StoreUser.UserID,
+				}, this.userLiked);
 
 			},
-
-			pickUser(User: User.struct) {
-
-				this.answerTo = User;
-
-				this.Message = this.answerTo
-					? `@${ this.answerTo?.UserName }, ${ this.Message }`
-					: this.Message;
-
-			}
 
 		},
 

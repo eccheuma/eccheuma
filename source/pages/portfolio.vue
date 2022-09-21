@@ -1,7 +1,7 @@
 <template>
   <main class="portfolio-container">
 
-    <promo-banner promo-type="Style" :order="0" />
+    <promo-banner promo-type="Stylistics" :order="0" />
 
 		<section class="portfolio-content">
 

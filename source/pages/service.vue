@@ -46,9 +46,18 @@
 
 			<div class="service-products-items">
 				<service-card v-for="(item, i) in Products" :key="i" :payload="item" />
-			</div>	
+			</div>
 
 		</section>
+
+		<caption-card>
+			<template #type>
+				Напоминание касательно примяго предоставление услуг.
+			</template>
+			<template #desc>
+				Большая часть услуг предоставляется посредством взаимодействия через сайта как сервис. И лишь в крайних случая минуя его, так как это мешает менеджменту заказов и вводит лишнюю сумятицу, что лишь усугубит сроки.
+			</template>
+		</caption-card>	
 
 	</main>
 </template>
@@ -97,10 +106,13 @@
 	import Vue from 'vue';
 
 	// COMPONENTS
-	import SectionHeader 		from '~/components/common/SectionHeader.vue';
-	import ServiceCard 			from '~/components/service/ServiceCard.vue';
 	import PromoBanner      from '~/components/promo/PromoBanner.vue';
-	import Calculator				from '~/components/service/Calculator.vue';
+
+	import SectionHeader 		from '~/components/common/SectionHeader.vue';
+	import CaptionCard 			from '~/components/common/Caption.vue';
+
+	import ServiceCard 			from '~/components/service/ServiceCard.vue';
+	import Calculator				from '~/components/service/Calculator/view.vue';
 
 	// TYPES 
 	import type { Categories, Purchase } from '~/types/Services';
@@ -128,6 +140,7 @@
 			ServiceCard,
 			PromoBanner,
 			Calculator,
+			CaptionCard,
 		}, 
 		layout: 'Application',
 		scrollToTop: false,  

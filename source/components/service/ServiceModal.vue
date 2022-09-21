@@ -12,7 +12,7 @@
 			<template v-if="LoginStatus">
 				<i :style="`background-image: url(${ State.UserImageID })`" />
 				<span>{{ State.UserName }}</span>
-				<span>{{ State.UserBalance }} ₽</span>
+				<span>{{ State.UserWallet.RUB }} ₽</span>
 			</template>
 		</section>
 		<section class="service_modal-calc">
@@ -139,7 +139,7 @@
 	import { mapState, mapActions } from 'vuex';
 
 // COMPONENTS
-	import Calculator from '~/components/service/Calculator.vue';
+	import Calculator from '~/components/service/Calculator/view.vue';
 	// import Loader 	from '~/components/common/Loader.vue'
 
 // TYPES

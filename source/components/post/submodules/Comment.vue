@@ -23,18 +23,18 @@
 		<section class="post-comment-item-content">
 			<hr v-once>
 			<p>
-				<span v-if="answerTo">
-					Ответ для: <strong>{{ this.answerTo.UserName }}</strong>
+				<span v-if="answerTo.length">
+					Ответ для: <strong v-for="user in answerTo" :key="user">{{ user }}</strong>
 				</span>
 				{{ comment.data }}
 			</p>
 			<hr v-once>
 			<common-button v-if="LoginStatus && canDelete" @click.native="RemoveComment">
 				Удалить комментарий 
-				<template v-if="State.UserStatus === 0">
+				<template v-if="State.UserStatus === roles.Admin">
 					от лица администратора
 				</template>
-				<template v-if="State.UserStatus === 1">
+				<template v-if="State.UserStatus === roles.Moderator">
 					от лица модератора
 				</template>
 			</common-button>
@@ -239,6 +239,7 @@
 				strong {
 					color: var(--color-accent-link);
 					text-decoration: underline;
+					margin-right: 4px;
 				}
 
 			}
@@ -272,7 +273,7 @@
 	import { User }	from '~/types/User';	
 
 	// TYPES
-	import type { VuexMap } 			from '~/types/VuexMap';
+	import type { VuexMap } from '~/types/VuexMap';
 
 	// COMPONENTS
 	import CommonButton from '~/components/buttons/CommonButton.vue';
@@ -310,15 +311,17 @@
 				author: new Object() as User.struct,
 				comment: new Object() as Post.comment,
 
-				answerTo: undefined as User.struct | undefined,
+				answerTo: Array<User.struct['UserName']>(),
+
+				roles: User.status,
 
 			};
 		},
 		computed: {
 
 			...mapState({
-				LoginStatus:	state => (state as VuexMap).Auth.Session.LoginStatus,
-				State: 		state => (state as VuexMap).User.State.State 
+				LoginStatus	:	state => (state as VuexMap).Auth.Session.LoginStatus,
+				State				: state => (state as VuexMap).User.State.State 
 			}),
 
 			canDelete(): boolean {
@@ -340,7 +343,7 @@
 
 		},
 		created() {
-
+			
 			if ( process.browser ) {
 				this.setSounds([
 					{ file: 'Tap', name: 'Element::Action', settings: { rate: 0.50 } }
@@ -350,11 +353,9 @@
 		},
 		async mounted() {
 
-			this.author = await database.get(`Users/${ this.userID }/state`);
-
-			this.comment = await database.get(`Posts/PostID-${ this.postID }/comments/Hash-${ this.commentID }`);
-
-			this.taggedUser();
+			this.author 	= await database.get(`Users/${ this.userID }/state`);
+			this.comment 	= await database.get(`Posts/PostID-${ this.postID }/comments/Hash-${ this.commentID }`);
+			this.answerTo = await this.taggedUser();
 
 			this.localeDate = utils.getLocalTime(this.comment.date);
 
@@ -375,19 +376,15 @@
 
 			},
 
-			async taggedUser() {
+			async taggedUser(): Promise<Array<User.struct['UserName']>> {
 
 				const users = await database.get<utils.types.asIterableObject<User.state>>('Users');
 
-				Object.values(users).forEach(({ state }) => {
+				if ( !this.comment.mention ) return [];
 
-					if ( this.answerTo ) return;
-
-					this.answerTo = new RegExp(`@${ state.UserName }`).test(this.comment.data)
-						? state
-						: undefined;
-
-				});
+				return Object.values(users).filter(user => {
+					return this.comment.mention?.some(id => id === user.state.UserID);
+				}).map(user => user.state.UserName);
 
 			}
 

@@ -374,7 +374,7 @@
 
 // TYPES
 	import type { AnimeInstance, AnimeAnimParams } 	from 'animejs';
-	import type { VuexMap } 										from '~/types/VuexMap';
+	import type { VuexMap } from '~/types/VuexMap';
 
 // MIXINS
 	import EmitSound from '~/assets/mixins/EmitSound';
@@ -383,6 +383,9 @@
 	import HeaderNavigation from '~/components/layout/header/HeaderNavigation.vue';
 	import CanvasComponent	from '~/components/Canvas.vue';
 	import Icon 						from '~/components/common/Icon.vue';
+
+// Анекдоты категории Б
+	import Anec from '~/assets/json/anetodes.json';
 
 // MODULE
 	export default Vue.extend({
@@ -403,15 +406,11 @@
 
 				Quotes: [
 					'Escape from Mordorland - Блог-портфолио ориентируемый на визуальный дизайн сайтов, логотипов, баннеров, и UI интерфейса. Предоставление услуг по работе с веб-дизайном и digital дизайном, фирменным стилем, и прочим графическим услугам',
-					'SPA - Что-то странное, но работает лучше.',
-					'Tilda это конечно быстро, но есть одна загвоздка...'
+					...Anec,
 				],
 
 				Links: [
-					{ link: 'https://vk.com/club158755478', icon: 'VK', title: 'ВКонтакте'},
 					{ link: 'https://github.com/Scarlatum', icon: 'URL', title: 'GitHub' },
-					// { link: 'https://facebook.com', 				icon: 'Facebook', 	title: 'FaceBook' 	},
-					// { link: 'https://telegramm.com', 				icon: 'Telegramm', 	title: 'Telegramm' 	},
 				],
 			
 				HollVolume: 0,
@@ -559,9 +558,19 @@
 
 			},
 
+			pickIndex(): number {
+					
+				const newIndex = Math.trunc(Math.random() * this.Quotes.length);
+
+				return newIndex === this.CurentQuoteIndex
+					? this.pickIndex()
+					: newIndex;
+
+			},
+
 			changeQuote() {
 
-				this.CurentQuoteIndex = Math.trunc(Math.random() * this.Quotes.length);
+				this.CurentQuoteIndex = this.pickIndex();
 
 				const textAnimation = (this.$refs.quote as HTMLElement).animate([
 					{ opacity: 0 },

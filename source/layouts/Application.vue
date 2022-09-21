@@ -23,6 +23,22 @@
 		<mobile-navigation v-if="$isMobile" />
 		<desktop-navigation v-else :search="true" :background="true" />
 
+		<client-only>
+			<section class="layout-mobile">
+				<template v-if="LoginStatus == true && !$isMobile">
+					<eccheuma-button @click.native="toggleProfileArea">
+						Личный кабинет
+					</eccheuma-button>
+				</template>
+
+				<template v-else>
+					<eccheuma-button @click.native="toggleRegisterModal">
+						Зарегистрироваться
+					</eccheuma-button>
+				</template>
+			</section>
+		</client-only>
+
 		<section class="content-wrapper">
 
 			<scroll-bar v-if="!$isMobile" />
@@ -70,6 +86,25 @@
 			cursor: pointer;
 
 		}
+
+	}
+
+	.layout-mobile {
+
+		display: none;
+
+		background: rgb(var(--color-mono-200));
+    width: 100%;
+    place-content: center;
+    padding-top: 2vh;
+
+		@media screen and ( max-width: $mobile-breakpoint ) {
+			display: grid;
+			grid-template: {
+				columns: 75vw;
+			};
+			margin: auto;
+		};
 
 	}
 
@@ -166,6 +201,7 @@
 	import HeaderCarousel from '~/components/layout/header/HeaderCarousel.vue';
 	import HeaderTop 			from '~/components/layout/header/HeaderTop.vue';
 	import Loader, { LoadStage } from '~/components/common/Loader.vue';
+	import EccheumaButton		from '~/components/buttons/CommonButton.vue';
 
 	// FUNCTIONAL COMPONENTS
 	import HardwareAccelerationDecorator 	from '~/components/functional/HardwareAcceleration.vue';
@@ -189,6 +225,7 @@
 			// PREDEFINED COMPONENTS //
 			Loader,
 			HeaderCarousel,
+			EccheumaButton,
 			HeaderTop,
 
 			// ASYNC COMPONENTS //
@@ -235,8 +272,10 @@
 		methods: {
 
 			...mapMutations({
-				setDeviceType: 						'setDeviceType',
-				changeStatus: 	'Notification/changeStatus',
+				setDeviceType				: 'setDeviceType',
+				changeStatus				: 'Notification/changeStatus',
+				toggleProfileArea		: 'User/State/toggleProfileArea',
+				toggleRegisterModal	: 'Auth/Register/toggleRegisterModal',
 			}),
 
 			...mapActions({

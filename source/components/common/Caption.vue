@@ -5,17 +5,18 @@
     </span>
     <hr v-once>
     <div class="caption-content">
-      <strong>
+      <span class="caption-content-type">
         <slot name="type" />
-      </strong>
-      <span>
+      </span>
+      <hr v-once>
+      <span class="caption-content-desc">
         <slot name="desc" />
       </span>
     </div>
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
 .caption {
   &-icon {
@@ -87,17 +88,27 @@
   }
   &-content {
 
-    strong {
+    &-type {
+      width: 45ch;
       color: var(--caption-card-color) !important;
+      line-height: var(--size-14);
       font: {
         size: var(--font-size-16);
         weight: 800;
       }
     }
 
-    span {
+    hr {
+      width: 100%;
+      background: var(--caption-card-color);
+      margin: 1vh 0;
+      opacity: .25; 
+    }
+
+    &-desc {
       display: flex;
       color: var(--caption-card-color) !important;
+      width: calc(min(100%, 75ch));
       font: {
         size: var(--font-size-14);
         weight: 700;

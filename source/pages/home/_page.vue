@@ -44,7 +44,7 @@
 
 	// COMPONENTS
 	import PromoBanner 					from '~/components/promo/PromoBanner.vue';
-	import Post 								from '~/components/post/Post.vue';
+	import Post 								from '~/components/post/view.vue';
 
 	// LOAD POLITIC
 	import { Ranges } from '~/config/LoadPolitic';
@@ -125,8 +125,6 @@
 				this.getDatabaseData();
 			}
 
-		},
-		beforeDestroy() {
 		},
 		methods: {
 

@@ -141,7 +141,7 @@ $TransitionDuration: 250ms;
 			z-index: 1000;
 
 			@media screen and ( max-width: $mobile-breakpoint ) {
-				display: inline-flex;
+				// display: inline-flex;
 				font-size: var(--font-size-20);
 			}
 

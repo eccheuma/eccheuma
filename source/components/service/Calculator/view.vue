@@ -32,7 +32,7 @@
 						<span>Услуга</span>
 						<hr>
 						<select v-model="form.service" name="service" :class="{ active: form.service.ID }">
-							<option value="NONE">
+							<option value="">
 								Услуга не выбрана
 							</option>
 							<template v-for="item in services">
@@ -339,89 +339,19 @@
 
 	import Vue from 'vue';
 
-// API
-	import { database } from '~/api/database';
+// Global Types
+	import type { Second } from '~/types/Nominals';
+	import type { Purchase, Additions } from '~/types/Services';
 
-// Utils
-	import type { Result } from '~/utils';
-	import { cache } from '~/utils/cache';
-	import { currencies } from '~/utils/currency';
-
-// Lang
-	import { getLocale, languages, russian } from '~/lang';
-
-// TYPES
-	import type { Hash, Second } from '~/types/Nominals';
-	import type { Categories, Purchase, Additions } from '~/types/Services';
+// Inner Types
+	import { IPurchaseForm } from './calc.types';
+// Model
+	import { CalculatorModel } from './calc.model';
+// Helpers
+	import { FormatHelpres } from './calc.helpers';
 
 // Components 
 	import CaptionCard from '~/components/common/Caption.vue';
-
-// Constants
-	// TODO #20 : Подключить API ЦБРФ для сбора индексов для конечных поборов. @Scarlatum
-	const GLOBAL_TAX_INDEX = 1.20;
-
-	const SERVICE_TYPES: Array<Categories> = ['Application', 'Graphic', 'FrontEnd'];
-
-	const CATEGORIES_LANG = getLocale(languages.Russian).Categories;
-
-	const BASIC_COF = 25; // h\c
-
-	const DAY = 5184000 as Second;
-
-// Currency
-	const RUB = currencies.Fabric(currencies.Country.ru, 60);
-	const USD = currencies.Fabric(currencies.Country.en, 1);
-
-// Helpers
-	function toHours(secs: Second) {
-		return parseFloat(Number((secs / 60) / 60).toPrecision(3));
-	}
-
-	function hourPayment(val: number) {
-
-		const Rouble = new RUB(val);
-
-		return Math.floor(((Rouble.convert(USD) / BASIC_COF) * 60) * 60) as Second;
-
-	}
-
-// Errors
-	const enum ERRORS {
-		SERVICES_EMPTY 	= 'Services category is empty',
-		ADDITIONS_EMPTY	= 'Addition for this service is not available',
-	}
-
-// Models
-	interface IPurchaseForm {
-		category	: Categories 
-		service		: Purchase.struct,
-		additions	: Array<Additions.struct['type']>
-	}
-
-	interface ICost {
-		raw		: number
-		view	: number
-	}
-
-	interface IQuantity {
-		service		: number,
-		additions	: Record<Hash, number>,
-	}
-	
-	namespace CacheContainer {
-
-		export interface IService {
-			category	: Categories,
-			services	: Array<Purchase.struct>,
-		}
-	
-		export interface IAddition {
-			serviceID	: Purchase.struct['ID'],
-			additions	: Array<Additions.struct>,
-		}
-
-	}
 
 // Module
 	export default Vue.extend({
@@ -434,29 +364,15 @@
 				alerts: undefined,
 
 				taxes: {
-					GLOBAL_TAX_INDEX
+					GLOBAL_TAX_INDEX: CalculatorModel.GLOBAL_TAX_INDEX
 				},
 
-				SERVICE_TYPES,
+				SERVICE_TYPES: CalculatorModel.SERVICE_TYPES,
 
 				services	: Array<Purchase.struct>(),
 				additions	: Array<Additions.struct>(),
 
-				form: {
-					category	: String(),
-					service		: Object(),
-					additions	: Array(),
-				} as IPurchaseForm,
-
-				quantity: {
-					service		: 1,
-					additions	: Object(),
-				} as IQuantity,
-
-				cost: {
-					raw		: Number(),
-					view	: Number(),
-				} as ICost,
+				...CalculatorModel.createForm()
 
 			};
 		},
@@ -474,21 +390,21 @@
 				const rawCost = this.form.service.cost + additionsCost;
 
 				// ? | Тут желательно вообще использовать адекватные библиотеки а не простой floor.
-				return Math.floor(rawCost * GLOBAL_TAX_INDEX);
+				return Math.floor(rawCost * CalculatorModel.GLOBAL_TAX_INDEX);
 
 			},
 
 			deliveryTime(): number {
 
-				const serviceTime 	= Number(this.form.service.delivery) || hourPayment(this.form.service.cost);
+				const serviceTime 	= Number(this.form.service.delivery) || CalculatorModel.hourPayment(this.form.service.cost);
 
 				const additionsTime = this.filledAdditions.reduce((acc, addition) => {
-					return acc + (addition.delivery || hourPayment(addition.cost));
+					return acc + (addition.delivery || CalculatorModel.hourPayment(addition.cost));
 				}, 0);
 
 				const timeInSeconds = (serviceTime + additionsTime) as Second;
 
-				return Math.round(toHours(timeInSeconds));
+				return Math.round(CalculatorModel.toHours(timeInSeconds));
 
 			},
 
@@ -499,7 +415,8 @@
 
 					console.debug('form.category handler');
 
-					await this.setServices(category);
+					this.services = await CalculatorModel.setServices(category);
+
 				}
 			},
 			'form.service': {
@@ -507,7 +424,8 @@
 
 					console.debug('form.service handler');
 
-					await this.setAdditions(service);
+					this.additions = await CalculatorModel.setAdditions(service);
+
 				}
 			},
 			additions: {
@@ -522,94 +440,6 @@
 			}
 		},
 		methods: {
-
-			// Getters
-			async getSerives(category: Categories): Promise<Result<Array<Purchase.struct>, Error>> {
-
-				const response: Array<IPurchaseForm['service']> = await database.get(`Service/${ category }`);
-
-				console.debug(response);
-
-				cache.set<CacheContainer.IService>(`services::${ category }`, {
-					category,
-					services: response,
-				});
-
-				return response.length
-					? response
-					: Error(ERRORS.SERVICES_EMPTY);
-
-			},
-			async getAdditions(type: string, ID: Hash): Promise<Result<Array<Additions.struct>, Error>> {
-
-				const response: Array<Additions.struct> = await database.get(`Service/Addictions/${ type }`);
-
-				console.debug(response, type, ID);
-
-				cache.set<CacheContainer.IAddition>(`additions::${ type }`, {
-					serviceID: ID,
-					additions: response
-				});
-
-				return response?.length
-					? response
-					: Error(ERRORS.ADDITIONS_EMPTY);
-
-			},
-
-			// Setters
-			async setServices(category: Categories) {
-
-				const cachedData = cache.get<CacheContainer.IService>(`services::${ category }`);
- 
-				if ( cachedData instanceof Error ) {
-
-					const responseResult = await this.getSerives(category);
-
-					console.debug('setServices::responseResult:', responseResult);
-
-					this.services = responseResult instanceof Error
-						? []
-						: responseResult;
-
-				} else {
-
-					console.debug('setServices::cachedData:', cachedData);
-
-					this.services = cachedData.data.services;	
-
-				}
-
-			},
-			async setAdditions({ type, ID }: Purchase.struct) {
-
-				const cachedData = cache.get<CacheContainer.IAddition>(`additions::${ type }`);
-
-				if ( cachedData instanceof Error ) {
-
-					const responseResult = await this.getAdditions(type, ID);
-
-					console.debug('setAdditions::responseResult:', responseResult);
-
-					this.additions = responseResult instanceof Error
-						? []
-						: responseResult;
-
-				} else {
-
-					console.debug('setAdditions::cachedData:', cachedData);
-
-					this.additions = ID === cachedData.data.serviceID
-						? cachedData.data.additions
-						: await this.getAdditions(type, ID).then(data => {
-								return data instanceof Error
-									? []
-									: data;
-							});
-
-				}
-
-			},
 
 			// Helpers
 			animateCostCounter([ from, to ]: [ number, number ]) {
@@ -630,32 +460,8 @@
 				});
 
 			},
-			getCategoryName(category: Categories) {
-				return CATEGORIES_LANG[category];
-			},
-
-			formatCost(cost: number) {
-				return cost.toLocaleString('DE-de');
-			},
-
-			// Russian stuff
-			getRussianSuffix(val: number, word: string, suffixs: Array<string>) {
-				return word.concat(russian.getSuffix(val, suffixs));
-			},
-			formatToDays(hours: number): string {
-
-				const [ FullDays, Rem ] = [ Math.floor(hours / 24), hours % 24 ];
-
-				const fmt = this.getRussianSuffix;
-
-				const H = `${ Rem 		 } ${ fmt(Rem, 'час', ['','а','ов']) }`;
-				const D = `${ FullDays } ${ fmt(FullDays, 'д', ['ень','ня','ней']) }`;
-
-				return hours > DAY
-					? `${ D } и ${ H }`
-					: H;
-
-			},
+			
+			...FormatHelpres
 			
 		}
 	});

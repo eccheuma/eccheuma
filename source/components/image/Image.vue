@@ -71,8 +71,9 @@
 			}
 
 			.type\:\:promo {
-				width: clamp(340px, 100%, 40vw) !important;
-				margin: auto !important;
+				// width: clamp(340px, 100%, 40vw) !important;
+				width: 100%;
+				margin: auto;
 				aspect-ratio: 16/9;
 			}
 

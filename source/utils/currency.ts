@@ -49,6 +49,10 @@ export namespace currencies {
 			this.value = this.value - value as utils.types.nominal<number, C>; return value;
 		}
 
+		public dry() {
+			this.value = 0 as utils.types.nominal<number, C>;
+		}
+
 	}
 
 	export function Fabric<C extends Country>(country: C, cof: number) {
@@ -150,6 +154,10 @@ export namespace wallet {
 				? wallet.grab(value)
 				: Error(currency.errors.REJECT);
 
+		}
+
+		public dry(wallet_type: currencies.Country) {
+			this.currencies[wallet_type].dry();
 		}
 
 	}

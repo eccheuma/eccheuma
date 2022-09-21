@@ -286,12 +286,12 @@
 				return {
 					UserWallet: {
 						title: 'Баланс',
-						value: `${ this.State.UserWallet[this.Currency] } ₽`,
+						value: `${ this.State.UserWallet[this.Currency] || 0 } ₽`,
 						info: 'Ваш текущий баланс.',
 						icon: 'Service',
 					},
 					UserWorkStatus: {
-						title: 'Статус заказа',
+						title: 'Статус последнего заказа',
 						value: work.defineStatus(this.State.UserWorkStatus, this.Lang),
 						info: 'Текущий статус последнего заказа заказа',
 						icon: 'Fire',
@@ -299,7 +299,7 @@
 					Messages: {
 						title: 'Сообщения',
 						value: this.NewMessages,
-						info: `Последнее сообщенее: "${ LastMessage?.slice(0, 65) }"`,
+						info: `Последнее сообщение: "${ LastMessage?.slice(0, 65) }"`,
 						icon: 'Message',
 					}
 				};

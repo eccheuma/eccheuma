@@ -44,16 +44,8 @@
 				</div>
 			</template>
 		</section>
-		<caption-card>
-			<template #type>
-				Lorem ipsum.
-			</template>
-			<template #desc>
-				Dreary disaster ghastly whispered nepenthe lore, echo word my on there soul. And the sainted air from, and into once.
-			</template>
-		</caption-card>
 		<section class="service-card-footer">
-			<common-button @click.native="() => Modal = true">
+			<common-button @click.native="() => Modal = true" :class="{ disabled: !LoginStatus }">
 				Заказать
 			</common-button>
 		</section>
@@ -97,7 +89,6 @@
 						'desc'
 						'cost'
 						'time'
-						'note'
 						'foot'
 	}
 	row-gap: 1vh;
@@ -177,9 +168,6 @@
 	&-timeframe {
 		grid-area: time;
 	}
-	&-notice {
-		grid-area: note;
-	}
 	&-footer {
 
 		@include gradient_border;
@@ -204,7 +192,7 @@
 		areas: 	'head head'
 						'desc cost'
 						'desc time'
-						'note foot'
+						'desc foot'
 	}
 
 	gap: 1vw;
@@ -225,7 +213,7 @@
 
 	// COMPONENTS
 	import ServiceModal from '~/components/service/ServiceModal.vue';
-	import CaptionCard 	from '~/components/common/Caption.vue';
+	// import CaptionCard 	from '~/components/common/Caption.vue';
 
 	// TYPES 
 	import type { Purchase } from '~/types/Services';
@@ -234,7 +222,7 @@
 	// MODULE
 	export default Vue.extend({
 		components: {
-			CaptionCard,
+			// CaptionCard,
 			ServiceModal,
 			CommonButton: () => import('~/components/buttons/CommonButton.vue')
 		},

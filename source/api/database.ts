@@ -15,6 +15,14 @@ import type { DatabaseReference, Query, QueryConstraint } from 'firebase/databas
 // Utils
 import { Result } from '~/utils';
 
+const enum API_BRANCH {
+  depricated = 'dep',
+  main = 'v1',
+  dev = 'dev',
+}
+
+const ROOT: API_BRANCH = API_BRANCH.depricated;
+
 export interface QueryParams<O extends database.order = database.order.NONE> extends database.QueryOrder<O> {
   mode    : database.mode
   limit   : O extends database.order.key ? string : number
@@ -50,6 +58,10 @@ function defineQuery<O extends database.order>(ref: DatabaseReference, params?: 
 
 }
 
+function applyRoot(path: string, root: API_BRANCH = ROOT) {
+  return `${ root }/${ path }`;
+}
+
 // MODULE NAMESPACE
 export namespace database {
 
@@ -81,20 +93,21 @@ export namespace database {
    */
   export async function get<T = object, O extends order = order.NONE>(path: string, params?: Partial<QueryParams<O>>): Promise<T> {
 
-    const REF = ref(globalThis.firebaseDB, path);
+    const REF = ref(globalThis.firebaseDB, applyRoot(path));
 
     const query: Query = defineQuery(REF, params);
 
-    return firebaseGet(query).then(snap => snap.val());
+    return firebaseGet(query)
+      .then(snap => snap.val());
   
   }
   
   export function listen<
     C extends object, 
-    O extends order  = order.NONE,
+    O extends order = order.NONE,
   >(path: string, callback: (value: C) => void, params?: Partial<QueryParams<O>>) {
   
-    const REF = ref(globalThis.firebaseDB, path);
+    const REF = ref(globalThis.firebaseDB, applyRoot(path));
   
     let getQuery: Query = query(REF);
   
@@ -111,7 +124,7 @@ export namespace database {
   
   export async function getLength(path: string): Promise<number> {
 
-    const Query: Query = query(ref(globalThis.firebaseDB, path));
+    const Query: Query = query(ref(globalThis.firebaseDB, applyRoot(path)));
 
     return firebaseGet(Query).then(snap => snap.size);
 
@@ -119,7 +132,7 @@ export namespace database {
   
   export async function set<D extends object>(path: string, data: D): Promise<Result<boolean, Error>> {
   
-    return firebaseSet(ref(globalThis.firebaseDB, path), data)
+    return firebaseSet(ref(globalThis.firebaseDB, applyRoot(path)), data)
       .then(() => true)
       .catch(() => new Error(error.denied));
     
@@ -127,7 +140,7 @@ export namespace database {
   
   export async function remove(path: string): Promise<Result<boolean, Error>> {
 
-    return firebaseRemove(ref(globalThis.firebaseDB, path))
+    return firebaseRemove(ref(globalThis.firebaseDB, applyRoot(path)))
       .then(() => true)
       .catch(() => new Error(error.denied));
 
@@ -135,7 +148,9 @@ export namespace database {
   
   export async function update<D extends object>(path: string, data: D): Promise<Result<boolean, Error>> {
 
-    return firebaseUpdate(ref(globalThis.firebaseDB, path), data)
+    console.log(path, data);
+
+    return firebaseUpdate(ref(globalThis.firebaseDB, applyRoot(path)), data)
       .then(() => true)
       .catch(() => new Error(error.denied));
 

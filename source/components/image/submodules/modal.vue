@@ -46,6 +46,11 @@
 				</div>
 
 			</div>
+
+			<notion>
+				Подсказка: Используйте двойной левый клик для приблежения.
+			</notion>
+
 		</div>
 
 	</portal>
@@ -68,24 +73,29 @@
 		background:
 			radial-gradient(farthest-side, rgb(var(--color-mono-200), .5) 0%, rgb(var(--color-mono-200), .9) 85%), 
 			url(~assets/images/Stripes.png?size=15);
-		display: flex;
+
+		display: grid;
+		grid-template-rows: 95vh 1fr;
+
 	}
 	&-container {
 
+		$headerH: 5vh;
+
 		display: grid;
-		
+		margin: $headerH auto 0;
+
     grid-template: {
 			columns: 1fr;
 			rows: minmax(10vh, min-content) 8fr auto;
 		}
 
     overflow: hidden;
-    height: 95vh;
+    height: calc(100% - #{ $headerH });
 		aspect-ratio: 16/9;
     background-color: rgb(var(--color-mono-300));
     border: 1px solid rgb(var(--color-mono-400));
     border-radius: var(--border-radius);
-    margin: auto;
 
 	}
 	&-header {
@@ -209,7 +219,8 @@
 	// MODULE
 	export default Vue.extend({
 		components: {
-			CommonButton: () => import('~/components/buttons/CommonButton.vue')
+			CommonButton	: () => import('~/components/buttons/CommonButton.vue'),
+			Notion				: () => import('~/components/common/Notion.vue')
 		},
 		props: {
 			modalState: { 

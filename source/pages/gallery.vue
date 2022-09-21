@@ -55,9 +55,12 @@
 
 			<pagination :payload="PaginationParams" />
 
-			<span class="gallery-notion">
-				Aptly at my purple gently dreaming on out what ghost burden. He craven here mystery doubtless evilprophet pallas guessing and linking, evermore then tell angels have this a agreeing all, above tis rare be this and it me, my unbrokenquit it and no flirt curtain.
-			</span>
+			<notion lang="ru">
+				Все представленные изображения в данной секции являются интеллектуальной собственностью. В следствии чего, любое их коммерческое использование юр.лицами без согласования с их владельцем - Несёт за собой юридические последствия.
+				<a href="http://kodeks.systecs.ru/gk_rf/gk_glava69/gk_st1252.html" target="_blank">ст. 1252 ГК РФ.</a>
+				<br>
+				TLDR: Не воруй. А если и воруешь, хотя бы признавайся.
+			</notion>
 
 		</section>
 
@@ -102,11 +105,10 @@
 		&-body {
 
 			display: grid;
-			grid-template: {
-				columns: 1fr 1fr
-			};
+			grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
 
 			column-gap: 1vw;
+			row-gap: 2vh;
 
 			width: 100%;
 			max-width: 1210px;
@@ -127,14 +129,6 @@
 		row-gap: 2vh;
 		padding: 0 2vw 2vh;
 
-	}
-
-	&-notion {
-		width: 114ch;
-    margin: 0 auto;
-    text-align: center;
-    font-size: var(--font-size-12);
-    color: rgb(var(--color-mono-500));
 	}
 
 }
@@ -175,6 +169,7 @@
 			SectionHeader,
 			Pagination		: () => import('~/components/common/Pagination.vue'),
 			EccheumaImage	: () => import('~/components/image/Image.vue'),
+			Notion        : () => import('~/components/common/Notion.vue'),
 		},
 		layout: 'Application', 
 		scrollToTop: false, 
