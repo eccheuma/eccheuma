@@ -335,8 +335,8 @@
 				text-decoration: underline;
 				display: flex;
 
-		    justify-content: center;
-		    align-items: flex-end;
+				justify-content: center;
+				align-items: flex-end;
 
 				transition-duration: 250ms;
 
@@ -422,7 +422,7 @@
 		computed: {
 
 			...mapState({
-				mute: ( state: any ) => (state as VuexMap).Sound.global.mute,
+				mute: state => (state as VuexMap).Sound.global.mute,
 			}),
 
 		},
@@ -467,11 +467,17 @@
 
 			if ( process.browser ) {
 
-				const Ambient = this.Sounds.get('Ambient')!;
+				const Ambient = this.Sounds.get('Ambient');
 
-				Ambient.volume(0);
-				this.playSound(this.Sounds.get('Ambient'));
-				Ambient.fade(0, 1, 3000);
+				if ( Ambient ) {
+
+					Ambient.volume(0);
+
+					this.playSound(Ambient);
+
+					Ambient.fade(0, 1, 3000);
+
+				}
 
 				this.changeQuote();
 

@@ -51,6 +51,11 @@
     background-color: rgb(var(--color-mono-300));
     color: rgb(var(--color-mono-900));
 
+    @media screen and ( max-width: $mobile-breakpoint ) {
+			padding: 2.5vh 6vw;
+      justify-content: center;
+		}
+
     font: {
       size: var(--font-size-14);
       weight: 700;
@@ -70,6 +75,10 @@
         size: contain;
         repeat: no-repeat;
       };
+
+      @media screen and ( max-width: $mobile-breakpoint ) {
+        display: none;
+      }
 
     }
 

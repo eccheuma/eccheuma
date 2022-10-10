@@ -1,7 +1,12 @@
-import { externalFetch } from '~/api/cloudFunctions';
+import { fetchExternal } from '~/api/cloudFunctions';
 
 import { currencies } from '~/utils/currency';
 import { Result } from '~/utils';
+// import fetchOpaque from 'fetch-jsonp';
+
+declare global {
+	var __VUE_SSR_CONTEXT__: any
+}
 
 export let currencyData: currency.CurrencyResponse;
 
@@ -40,14 +45,14 @@ export namespace currency {
 
 		const responses = await Promise.all([
 			fetch(API_POINT),
-			externalFetch(API_POINT),
+			fetchExternal(API_POINT),
 		]);
 
-		if ( responses.every(({ status }) => status !== 200) ) {
+		if ( responses.every(res => !res.ok ) ) {
 			return Error(errors.UNREACHABLE);
 		}
 
-		const validResponse = responses.find(x => x.status === 200);
+		const validResponse = responses.find(x => x.ok);
 
 		console.debug('currency::getData', validResponse);
 

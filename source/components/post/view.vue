@@ -1,5 +1,5 @@
 <template>
-	<intesection-component :ignite="!$isMobile" :rootMargin="15" @isIntersecting="animateIntersection">
+	<intesection-component :rootMargin="15" @isIntersecting="animateIntersection">
 		<section
 			:id="`PostID-${ payload.ID }`" 
 			ref="post"
@@ -7,10 +7,7 @@
 			@keydown.ctrl.enter="sendComment"
 			> 
 
-			<div 
-				ref="ImageHolder" 
-				class="post-header"
-				>
+			<div class="post-header" ref="ImageHolder">
 
 				<picture class="post-header-image">
 					<source :srcset="Thumbnail.avif" type="image/avif">
@@ -38,13 +35,10 @@
 
 			</div>
 
-			<div 
-				class="post-footer"  
-				:class="[
-					{ 'utils::cooled-sections': Cooled && !$isMobile },
-					{ 'rounded-bottom': !ContentSection && !CommentSection },
-				]"
-				>
+			<div class="post-footer" :class="[
+				{ 'utils::cooled-sections': Cooled && !$isMobile },
+				{ 'rounded-bottom': !ContentSection && !CommentSection },
+				]">
 
 				<section class="post-footer-social">
 
@@ -383,14 +377,17 @@
 				h4 {
 					font-weight: 900;
 					font-size: var(--font-size-42);
-					// width: clamp(min-content, 25ch, 100%);
-					width: 25ch;
+					width: clamp(min-content, 25ch, 100%);
+
+					@media screen and ( max-width: $mobile-breakpoint ) {
+						font-size: var(--font-size-28);
+					}
+
 				}
 				h6 {
 					font-weight: 600;
 					font-size: var(--font-size-20);
-					// width: clamp(min-content, 65ch, 100%);
-					width: 65ch;
+					width: clamp(min-content, 65ch, 100%);
 				}
 
 			}

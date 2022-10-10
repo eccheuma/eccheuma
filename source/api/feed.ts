@@ -5,7 +5,7 @@ import type { WallWallpostAttachmentType, WallWallpostAttachment } from 'vk-io/l
 import { LocaleDate, utils } from '~/utils';
 
 // CloudFunctions 
-import { externalFetch } from '~/api/cloudFunctions';
+import { fetchExternal } from '~/api/cloudFunctions';
 
 export namespace vk {
 
@@ -75,7 +75,7 @@ export namespace feed {
 
     const response = await Promise.race([
       // fetch(vk.constructQuery(vk.wall.methods.GET, params)),
-      externalFetch(vk.constructQuery(vk.wall.methods.GET, params)),
+      fetchExternal(vk.constructQuery(vk.wall.methods.GET, params)),
     ]);
 
     // todo: Cделать более стоящий обработчик ошибок.

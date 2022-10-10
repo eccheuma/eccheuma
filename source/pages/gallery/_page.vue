@@ -76,6 +76,10 @@
 	import PageTransitionProperty 	from '~/assets/mixins/PageTransitionProperty';
 
 	// TYPES
+
+	// ? Надо разобраться, почему не хватаются типы.
+	import type VueRouter from 'vue-router';
+
 	import type { PayloadQuery } 					from '~/store/PageContent';
 	import type { ANIMATION_PAYLOAD } from '~/assets/mixins/IntersectionObserver';
 
@@ -158,15 +162,13 @@
 			await this.getDatabaseData();
 			
 		},
-		head(): {[index: string]: string } {
-
+		head() {
 			return {
 				title: Meta.conctructTitle(this.Lang, { 
 					page: this.Page, 
 					section: navigation.routeSections.gallery
-				}),
+				})
 			};
-			
 		},
 		computed: {
 
@@ -191,7 +193,7 @@
 				this.getDatabaseData();
 			}
 
-			this.$router.beforeEach((to, from, next) => {
+			(this.$router as VueRouter).beforeEach((to, from, next) => {
 
 				if (to.name !== 'gallery-page') return next();
 

@@ -23,14 +23,22 @@ export namespace math {
 
     }
 
-    export function inRange(min: number, val: number, max: number): boolean {
-      return min <= val && val <= max;
+    export function * range<
+      MIN extends number, 
+      MAX extends number, 
+      R extends intRange<MIN, MAX>
+    >(from: MIN, to: MAX): Generator<R,number> {
+
+      let index = from;
+
+      while(index <= to) yield index++ as R;
+
+      return index;
+
     }
 
-    export function range<MIN extends number, MAX extends number, R extends intRange<MIN, MAX>>(min: MIN, max: MAX): Array<R> {
-      return Array(max)
-        .fill(min)
-        .map((x, i) => (x + i) as R);
+    export function inRange(min: number, val: number, max: number): boolean {
+      return min <= val && val <= max;
     }
 
     export type intRange<

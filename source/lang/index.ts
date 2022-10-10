@@ -77,8 +77,23 @@ export namespace russian {
   };
 
   export const Application = {
-		Landing   : 'Лэндинг',
-		Multipage : 'Многостраничник',
+		Landing       : 'Лэндинг',
+		Multipage     : 'Многостраничник',
+    Applications  : 'Web Приложения'
+	};
+
+  export const Graphic = {
+    MockupBlock   : 'Макет блока',
+		MockupPage    : 'Макет страницы',
+		Logo          : 'Логотипы',
+		Vector        : 'Векторизация',
+		BusinessСard  : 'Визитки',
+	};
+
+	export const FrontEnd = {
+		Page    : 'Страница',
+		Section : 'Секция',
+		Letter  : 'HTML Письмо',
 	};
 
   export const authError = {

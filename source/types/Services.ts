@@ -6,6 +6,7 @@ export namespace Product {
 	export enum Application {
 		Landing,
 		Multipage,
+		Applications
 	}
 
 	export enum Graphic {

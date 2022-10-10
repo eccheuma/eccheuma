@@ -37,6 +37,8 @@
 		"@typescript-eslint/no-inferrable-types": 0,
 		"@typescript-eslint/no-array-constructor": 0,
 		"@typescript-eslint/ban-ts-comment": 0,
+		"@typescript-eslint/ban-types": 0,
+		"@typescript-eslint/no-explicit-any": 0,
 		"no-new-object": 0,
 
 		"vue/multi-word-component-names": 0,

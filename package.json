@@ -16,6 +16,7 @@
     "vitest::watch": "vitest --watch --config vitest.config.ts"
   },
   "dependencies": {
+    "@babel/preset-env": "^7.19.3",
     "@eccheuma/crusoris": "^1.1.16",
     "@supabase/storage-js": "1.5.1",
     "@supabase/supabase-js": "1.29.4",
@@ -38,6 +39,7 @@
   "devDependencies": {
     "@aceforth/nuxt-optimized-images": "1.4.0",
     "@babel/core": "7.16.12",
+    "@babel/plugin-transform-runtime": "^7.19.1",
     "@firebase/app-types": "0.6.3",
     "@firebase/database-types": "0.7.3",
     "@nuxt/types": "2.15.8",

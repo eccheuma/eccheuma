@@ -56,7 +56,7 @@
 		@media screen and ( max-width: $mobile-breakpoint ) {
 			grid-template: {
 				columns: 1fr;
-				rows: 30vh auto min-content;
+				rows: auto;
 			}
 		}
 
@@ -91,16 +91,34 @@
 			line-height: var(--size-56);
 			color: rgb(var(--color-mono-900));
 
+
+			@media screen and ( max-width: $mobile-breakpoint ) {
+				font-size: var(--font-size-36);
+				line-height: var(--size-36);
+			}
+
 		}
+
+		p {
+			@media screen and ( max-width: $mobile-breakpoint ) {
+				margin-bottom: 0px
+			}
+		}
+
 		@media screen and ( max-width: $mobile-breakpoint ) {
 			text-align: center !important;
 		}
+
 	}
 	&_body {
 
 		grid-area: body;
 		min-width: 55vw;
 		@extend %pattern-lines;
+
+		@media screen and ( max-width: $mobile-breakpoint ) {
+			min-width: unset;
+		}
 
 	}
 	&_footer {
