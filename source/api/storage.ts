@@ -1,5 +1,6 @@
 // TYPES
 import type { FileOptions, FileObject } from '@supabase/storage-js';
+import { Result } from '~/utils';
 
 export namespace references {
   export const images = 'images';
@@ -18,21 +19,25 @@ export namespace storage {
     folders : Array<ResponseFile>,
   }
 
-  export const enum error {
-    path = 'Wrong path' 
+  export const enum StorageErrors {
+    path = 'Wrong path',
+    corrupt = 'Path resolve was corrupt',
   } 
 
-  export function reference(path: string): string | null {
+  export async function reference(path: string): Promise<Result<string>> {
 
     const { publicURL, error } = global.supabase.storage.from('main').getPublicUrl(path);
-  
-    if ( error ) throw error;
-  
-    return publicURL;
+
+    if ( error ) 
+      return Error(StorageErrors.path);
+    if ( !publicURL ) 
+      return Error(StorageErrors.corrupt);
+
+    return Promise.resolve(publicURL);
   
   }
   
-  export async function list(path = '/'): Promise<ListResponse | storage.error> {
+  export async function list(path = '/'): Promise<ListResponse | StorageErrors> {
 
     function constructFile(object: FileObject): ResponseFile {
       return {
@@ -46,7 +51,7 @@ export namespace storage {
 
     const { error, data } = await global.supabase.storage.from('main').list(path);
 
-    if ( error || !data ) return storage.error.path;
+    if ( error || !data ) return storage.StorageErrors.path;
 
     for ( const value of data ) {
 
