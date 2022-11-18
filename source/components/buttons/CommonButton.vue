@@ -17,7 +17,7 @@
 	</component>
 </template>
 
-<style lang="scss" scoped>
+<style>
 
 	.scheme\:\:dark {
 		--eccheuma-button-border: var(--color-accent-edges-100);

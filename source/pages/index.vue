@@ -53,16 +53,11 @@
 		</section>
 
 		<section class="holl-links">
-
-			<a
-				v-for="(item, index) in Links"
-				:key="index"
-				:href="item.link"
-			>
-			
-				<icon :name="item.icon" /> {{ item.title }}
-
-			</a>
+			<template v-for="(item, index) in Links">
+				<a :key="index" :href="item.link">
+					<icon :name="item.icon" /> {{ item.title }}
+				</a>
+			</template>
 		</section>
 
 	</main>
