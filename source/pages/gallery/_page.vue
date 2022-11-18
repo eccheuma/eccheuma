@@ -80,7 +80,7 @@
 	// ? Надо разобраться, почему не хватаются типы.
 	import type VueRouter from 'vue-router';
 
-	import type { PayloadQuery } 					from '~/store/PageContent';
+	import { PayloadQuery, Reference } from '~/store/PageContent';
 	import type { ANIMATION_PAYLOAD } from '~/assets/mixins/IntersectionObserver';
 
 	import { navigation } from '~/types/Navigation';
@@ -220,7 +220,7 @@
 				const REM: number = QUANTITY - ( this.LoadRange * this.Page );
 
 				const Query: PayloadQuery = {
-					ref: 'Gallery',
+					ref: Reference.Gallery,
 					loadQuery: {
 						LoadRange: REM < 0 ? this.LoadRange + REM : this.LoadRange,
 						LoadPoint: REM < 0 ? 0 : REM

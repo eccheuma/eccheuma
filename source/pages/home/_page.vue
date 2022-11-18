@@ -39,7 +39,7 @@
 	import PageTransitionProperty 	from '~/assets/mixins/PageTransitionProperty';
 
 	// TYPES
-	import type { PayloadQuery } from '~/store/PageContent';
+	import { PayloadQuery, Reference } from '~/store/PageContent';
 	import { navigation } from '~/types/Navigation';
 
 	// COMPONENTS
@@ -143,7 +143,7 @@
 				const REM: number = QUANTITY - ( this.LOAD_RANGE * this.Page );
 
 				const Query: PayloadQuery = {
-					ref: 'Posts',
+					ref: Reference.Posts,
 					loadQuery: {
 						LoadRange: REM < 0 ? this.LOAD_RANGE + REM : this.LOAD_RANGE,
 						LoadPoint: REM < 0 ? 0 : REM
