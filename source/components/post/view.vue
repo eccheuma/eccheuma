@@ -121,128 +121,124 @@
 
 			</div>
 
-			<!-- <client-only> -->
+			<hardware-acceleration-decorator>
+				<collapse :active="ContentSection">
 
-				<hardware-acceleration-decorator>
-					<collapse :active="ContentSection">
+					<article 
+						class="post-content" 
+						:class="[
+							{ 'rounded': !ContentSection && !CommentSection },
+							{ 'rounded-bottom': ContentSection && !CommentSection }
+						]"
+					>
 
-						<article 
-							class="post-content" 
-							:class="[
-								{ 'rounded': !ContentSection && !CommentSection },
-								{ 'rounded-bottom': ContentSection && !CommentSection }
-							]"
-						>
+						<header class="post-content-header">
+							<h4>{{ payload.title }}</h4>
+							<h6>{{ payload.description }}</h6>
+							<span>{{ author ? author.UserName : '' }} | {{ postDate.Day }} в {{ postDate.Time }}</span>
+						</header>
 
-							<header class="post-content-header">
-								<h4>{{ payload.title }}</h4>
-								<h6>{{ payload.description }}</h6>
-								<span>{{ author ? author.UserName : '' }} | {{ postDate.Day }} в {{ postDate.Time }}</span>
-							</header>
+						<template v-if="editContent">
+							<slot />
+						</template>
 
-							<template v-if="editContent">
-								<slot />
+						<template v-else>
+							<content-component :source="content" />
+						</template>
+
+						<section v-once class="post-content-tags">
+							<h6>Теги: </h6>
+							<tag v-for="(item, i) in payload.tags" :key="i" :transparent="false" theme="grey">
+								#{{ item }}
+							</tag>
+						</section>
+
+						<hr v-once>
+
+						<section class="post-content-comments">
+							<common-button class="interface-dark" :scheme="UI" :sound="false" @click.native="toggleSection(!CommentSection, 'CommentSection')">
+								Открыть комментарии
+							</common-button>
+						</section>
+
+					</article>
+					
+				</collapse>
+			</hardware-acceleration-decorator>
+
+			<hardware-acceleration-decorator>
+				<collapse :active="CommentSection">	
+
+					<div 
+						class="post-comments" 
+						:class="[
+							{ 'rounded': !CommentSection },
+							{ 'rounded-bottom': CommentSection }
+						]"
+					>
+
+						<section class="post-comments-header">
+							<span>Комментарии</span>
+							<hr>
+						</section>
+
+						<template v-if="!sortedComments.length"> 
+							<section class="post-comments-first">
+								<span>" Тут ещё нет комментариев, но это пока... "</span>
+							</section>
+						</template>
+
+						<section class="post-comments-content">
+							<transition-group name="opacity-transition">
+								<comment-component 
+									v-for="item in sortedComments" 
+									:key="item.date" 
+									:userID="item.userID"
+									:postID="payload.ID" 
+									:commentID="item.ID"
+									@picked-user="pickAddressee"
+								/>
+							</transition-group>
+						</section>
+
+						<section class="post-comments-answer">
+
+							<template v-if="LoginStatus">
+
+								<h5>Оставьте свой комментарий</h5>
+								<p>Не длинее {{ CHAR_LIMIT }} символов и не менее 6. <strong>Лимит: {{ charLimit }}</strong></p>
+
+								<textarea 
+									v-model="Message" 
+									name="comment_section" 
+									:maxlength="CHAR_LIMIT" 
+									placeholder="Напишите тут что-то в ответ." 
+								/>
+		
+								<button :class="{ disabled: validation === false }" type="button" @click="sendComment" class="post-comments-answer-button">
+									Ответить <span>( Ctrl + Enter )</span>
+								</button>
+
 							</template>
 
 							<template v-else>
-								<content-component :source="content" />
-							</template>
 
-							<section v-once class="post-content-tags">
-								<h6>Теги: </h6>
-								<tag v-for="(item, i) in payload.tags" :key="i" :transparent="false" theme="grey">
-									#{{ item }}
-								</tag>
-							</section>
+								<icon v-once name="Info" />
+								<h5>Для комментирования необходима авторизация</h5>
+								<p>Это не так уж и сложно, да и получите сверху ещё больше функионала.</p>
 
-							<hr v-once>
-
-							<section class="post-content-comments">
-								<common-button class="interface-dark" :scheme="UI" :sound="false" @click.native="toggleSection(!CommentSection, 'CommentSection')">
-									Открыть комментарии
+								<common-button v-once @click.native="() => toggleRegisterModal()" style="margin: 1vh auto">
+									Зарегистрироваться
 								</common-button>
-							</section>
 
-						</article>
-						
-					</collapse>
-				</hardware-acceleration-decorator>
-
-				<hardware-acceleration-decorator>
-					<collapse :active="CommentSection">	
-
-						<div 
-							class="post-comments" 
-							:class="[
-								{ 'rounded': !CommentSection },
-								{ 'rounded-bottom': CommentSection }
-							]"
-						>
-
-							<section class="post-comments-header">
-								<span>Комментарии</span>
-								<hr>
-							</section>
-
-							<template v-if="!sortedComments.length"> 
-								<section class="post-comments-first">
-									<span>" Тут ещё нет комментариев, но это пока... "</span>
-								</section>
 							</template>
 
-							<section class="post-comments-content">
-								<transition-group name="opacity-transition">
-									<comment-component 
-										v-for="item in sortedComments" 
-										:key="item.date" 
-										:userID="item.userID"
-										:postID="payload.ID" 
-										:commentID="item.ID"
-										@picked-user="pickAddressee"
-									/>
-								</transition-group>
-							</section>
+						</section>
 
-							<section class="post-comments-answer">
+					</div>
 
-								<template v-if="LoginStatus">
-
-									<h5>Оставьте свой комментарий</h5>
-									<p>Не длинее {{ CHAR_LIMIT }} символов и не менее 6. <strong>Лимит: {{ charLimit }}</strong></p>
-
-									<textarea 
-										v-model="Message" 
-										name="comment_section" 
-										:maxlength="CHAR_LIMIT" 
-										placeholder="Напишите тут что-то в ответ." 
-									/>
-			
-									<button :class="{ disabled: validation === false }" type="button" @click="sendComment" class="post-comments-answer-button">
-										Ответить <span>( Ctrl + Enter )</span>
-									</button>
-
-								</template>
-
-								<template v-else>
-
-									<icon v-once name="Info" />
-									<h5>Для комментирования необходима авторизация</h5>
-									<p>Это не так уж и сложно, да и получите сверху ещё больше функионала.</p>
-
-									<common-button v-once @click.native="() => toggleRegisterModal()" style="margin: 1vh auto">
-										Зарегистрироваться
-									</common-button>
-
-								</template>
-
-							</section>
-
-						</div>
-
-					</collapse>
-				</hardware-acceleration-decorator>
-
-			<!-- </client-only> -->
+				</collapse>
+			</hardware-acceleration-decorator>
 
 		</section>
 	</intesection-component>
@@ -764,7 +760,7 @@
 	import Vue, { PropOptions } from 'vue';
 
 	// VUEX
-	import { mapActions, mapState, mapMutations } from 'vuex';
+	import { mapState, mapMutations } from 'vuex';
 
 	// API
 	import { database } from '~/api/database';
@@ -810,6 +806,9 @@
 
 	// TYPES & INTERFACES
 	import type { Image } from '~/types/Image';
+
+	// Helpers
+	import { getOptimalImage } from '../image/image.helpers';
 
 	type SECTIONS = 'likes' | 'comments' | 'content'
 
@@ -1033,10 +1032,6 @@
 				});
 			},
 
-			...mapActions({
-				getImageURL: 	'Images/getImageURL',
-			}),
-
 			...mapMutations({
 				toggleRegisterModal: 'Auth/Register/toggleRegisterModal',
 			}),
@@ -1069,20 +1064,17 @@
 
 			},
 
-			async updateImage(width?: number): Promise<void> {
+			async updateImage(): Promise<void> {
 
 				const IMAGE_CONTAINER = this.$refs.ImageHolder as HTMLElement;
 
-				const URL: Image.formatsStruct = await this.getImageURL({ 
-					path: this.payload.image,
-					size: width || IMAGE_CONTAINER.offsetWidth * window.devicePixelRatio
+				getOptimalImage(IMAGE_CONTAINER, this.payload.image).then(url => {
+					if ( this.application.context.browser && this.application.gpu.available() ) {
+						this.prepareAnimations(IMAGE_CONTAINER, url);
+					} else {
+						this.Thumbnail = url;
+					}
 				});
-
-				if ( this.application.context.browser && this.application.gpu.available() ) {
-					this.prepareAnimations(IMAGE_CONTAINER, URL);
-				} else {
-					this.Thumbnail = URL;
-				}
 
 			},
 
