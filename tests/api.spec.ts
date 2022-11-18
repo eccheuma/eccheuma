@@ -1,7 +1,7 @@
 import { describe, test, expect, beforeAll, afterAll  } from 'vitest';
 
 // TEST USER
-import { userForm } from 'path::root/utils/defaultUser';
+import { userForm } from 'path::root/mocks/defaultUser';
 
 // PLUGINS
 import Supabase from '~/plugins/Supabase'; Supabase();
