@@ -20,12 +20,12 @@ namespace DBPaths {
 
 export class PostModel implements IPostModel {
 
-  public likes: utils.types.asIterableObject<Post.like>;
-  public comments: utils.types.asIterableObject<Post.comment>;
-  public content: Post.struct[];
+  public likes    : utils.types.asIterableObject<Post.like>;
+  public comments : utils.types.asIterableObject<Post.comment>;
+  public content  : Post.struct[];
 
-  public author: User.struct = User.DEFAULT;
-  public postDate: LocaleDate = utils.getLocalTime(0);
+  public author   : User.struct = User.DEFAULT;
+  public postDate : LocaleDate = utils.getLocalTime(0);
 
   constructor() {
     this.likes    = Object();
@@ -56,7 +56,7 @@ export class PostModel implements IPostModel {
       date		: Date.now(),
       data		: message,
       userID	: userID,
-      mention : addressee || [],
+      mention : addressee,
     });
 
   }
