@@ -29,13 +29,14 @@
       "@types/node",
       "@nuxt/types",
       "@types/w3c-css-typed-object-model-level-1",
-    ]
+    ],
   },
   "exclude": [
     ".nuxt",
     ".firebase",
     "funtions",
     "node_modules",
+    "packages",
     "app",
   ]
 }
