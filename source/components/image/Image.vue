@@ -287,9 +287,12 @@
 	import type { VuexMap } from '~/types/VuexMap';
 
 	// COMPONENTS
-	import Icon 			from '~/components/common/Icon.vue';
-	import Tag				from '~/components/common/Tag.vue';
+	import Icon from '~/components/common/Icon.vue';
+	import Tag from '~/components/common/Tag.vue';
 	
+	// Helpers
+	import { getOptimalImage } from './image.helpers';
+
 	// MIXINS
 	import EmitSound from '~/assets/mixins/EmitSound';
 
@@ -376,21 +379,17 @@
 				getImageURL: 	'Images/getImageURL',
 			}),
 
-			async getImage(): Promise<void> {
+			getImage(): void {
 
-				const IMAGE_CONTAINER = this.$refs.holder as Element;
-				const { width } = IMAGE_CONTAINER?.getBoundingClientRect();
+				const IMAGE_CONTAINER = this.$refs.holder as HTMLElement;
 
-				const URL: Image.formatsStruct = await this.getImageURL({ 
-					path: this.content.path,
-					size: width * window.devicePixelRatio
+				getOptimalImage(IMAGE_CONTAINER, this.content.path).then(url => {
+					if ( this.application.context.browser && this.application.gpu.available() ) {
+						this.prepareAnimations(IMAGE_CONTAINER, url);
+					} else {
+						this.Source = url;
+					}
 				});
-
-				if ( this.application.context.browser && this.application.gpu.available() ) {
-					this.prepareAnimations(IMAGE_CONTAINER, URL);
-				} else {
-					this.Source = URL;
-				}
 
 			},
 

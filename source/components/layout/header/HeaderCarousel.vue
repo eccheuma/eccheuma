@@ -320,7 +320,7 @@
 	import Vue from 'vue';
 
 	// API
-		import { mapActions, mapState } from 'vuex';
+		import { mapState } from 'vuex';
 		import { database } from '~/api/database';
 
 	// VUEX
@@ -339,6 +339,9 @@
 
 	// LOAD POLITIC
 		import { Ranges } from '~/config/LoadPolitic';
+
+	// Helpers
+	import { DEFAULT_IMAGE_STRUCT, getImageURL } from '~/components/image/image.helpers';
 
 	// TYPES
 		import type { Image } from '~/types/Image';
@@ -391,17 +394,11 @@
 
 		},
 		computed: {
-
 			...mapState({
 				LoginStatus:	state => (state as VuexMap).Auth.Session.LoginStatus,
 			})
-
 		},
 		methods: {
-
-			...mapActions({
-				getImageURL: 'Images/getImageURL',
-			}),
 
 			setScrollPosition(scroll: number) {
 				this.CommonCarouselScrollPosition = scroll;
@@ -418,7 +415,7 @@
 						return {
 							content: { title, description, ID, tags },
 							date: utils.getLocalTime(date),
-							formatsStruct: await this.getImageURL({ 
+							formatsStruct: await getImageURL({ 
 								path: image,
 								size: 1440,
 							})
