@@ -1,0 +1,6 @@
+[submodule "crusoris"]
+	path = crusoris
+	url = https://github.com/Scarlatum/crusoris
+[submodule "packages/@eccheuma/crusoris"]
+	path = packages/@eccheuma/crusoris
+	url = https://github.com/Scarlatum/crusoris
