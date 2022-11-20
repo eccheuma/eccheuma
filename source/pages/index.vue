@@ -14,12 +14,12 @@
 		</client-only>
 
 		<section class="holl-mute">
-			<span
+			<button
 				:class="{ active: mute }"
 				@click="globalMute(!mute)"
 			>
 				<icon name="Mute" />
-			</span>
+			</button>
 		</section>
 
 		<section class="holl-info">
@@ -78,7 +78,12 @@
 			grid-template: {
 				columns: 1fr 12fr 1fr;
 				rows: 10vh 40vh 1fr 1fr 10vh;
-				areas: ". build 	mute" ". logo 	." ". nav 		." ". quote 	." ". links 	.";
+				areas: 
+					". build 	mute" 
+					". logo 	." 
+					". nav 		." 
+					". quote 	." 
+					". links 	.";
 			}
 
 			@media screen and ( max-width: $mobile-breakpoint ) {
@@ -158,7 +163,7 @@
 			align-self: center;
 			justify-self: center;
 
-			span {
+			button {
 				
 				$size: 50px;
 
@@ -176,6 +181,10 @@
 				i {
 					@include icon-size(24px);
 					margin: auto;
+				}
+
+				&:focus {
+					border: 3px solid rgb(var(--color-mono-600));
 				}
 
 			}
@@ -243,47 +252,6 @@
 				width: 100%;
 				margin: 3vh 0;
 			}
-
-			// span {
-			// 	opacity: 0;
-
-			// 	display: block;
-			// 	text-align: center;
-			// 	pointer-events: none;
-
-			// 	margin: {
-			// 		top: 5px;
-			// 	}
-
-			// 	@media screen and (max-width: $mobile-breakpoint) {
-			// 		opacity: 1;
-			// 	}
-
-			// 	&:nth-of-type(1) {
-
-			// 		color: rgb(var(--color-mono-900));
-					
-			// 		font: {
-			// 			size: var(--font-size-42);
-			// 			family: var(--decor-font);
-			// 		}
-
-			// 		letter-spacing: 0.5ch;
-			// 		margin-right: -0.25ch;
-			// 		line-height: normal;
-
-			// 	}
-
-			// 	&:nth-of-type(2) {
-			// 		color: rgb(var(--color-mono-800));
-			// 		// line-height: 2vh;
-			// 		letter-spacing: 0.5ch;
-			// 		font: {
-			// 			size: 0.45rem;
-			// 			weight: 600;
-			// 		}
-			// 	}
-			// }
 			
 		}
 		&-navigation {
