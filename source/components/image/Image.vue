@@ -27,7 +27,7 @@
 
 			<section ref="holder" class="eccheuma-image-picture">
 				<picture>
-					<source v-if="AVIF_SUPPORT" :srcset="Source.avif" type="image/avif">
+					<source :srcset="Source.avif" type="image/avif">
 					<img ref="image" :src="Source.webp" :alt="content.description">
 				</picture>
 			</section>
@@ -336,14 +336,6 @@
 				ImageFocus: false,
 
 			};
-		},
-
-		computed: {
-
-			...mapState({
-				AVIF_SUPPORT: state => (state as VuexMap).Images.AVIF_SUPPORT
-			}),
-
 		},
 
 		watch: {
