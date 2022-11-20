@@ -7,8 +7,8 @@
     </div>
 
     <picture class="post-image">
-      <source :srcset="ImageURL.avif" type="image/avif">
-      <img ref="image" :src="ImageURL.webp" :alt="Post.description">
+      <source :srcset="previewImage.avif" type="image/avif">
+      <img ref="image" :src="previewImage.webp" :alt="Post.description">
     </picture>
 
     <post-content :source="Post.content" />
@@ -69,6 +69,9 @@
 	import { Post }   from '~/types/Post';
   import { Image }  from '~/types/Image';
 
+  // HELPERS
+  import { getImageURL } from '~/components/image/image.helpers';
+
   // PAGE DESCRIPTION
 	import { opengraph } from '~/utils/opengraph';
 
@@ -85,13 +88,13 @@
       PostContent
     },
 
-    async asyncData({ params, redirect, store }) {
+    async asyncData({ params, redirect }) {
 
       const Post: Post.struct = await database.get(`Posts/PostID-${ params.id }`);
 
       if ( !Post ) redirect('/error'); 
 
-      const ImageURL = await store.dispatch('Images/getImageURL', { 
+      const imageResult = await getImageURL({
         path: Post.image,
         size: 1440,
       });
@@ -99,10 +102,12 @@
       const PageDescription = {
         title				: `Eccheuma | ${ Post.title }`,
         description	: Post.description,
-        image				: ImageURL.webp,
+        image				: imageResult instanceof Error 
+          ? PLACEHOLDER.webp 
+          : imageResult.webp,
       };
 
-      return { Post, ImageURL, PageDescription };
+      return { Post, previewImage: imageResult, PageDescription };
 
     },
 
@@ -110,7 +115,7 @@
       return {
 
         Post: undefined as Post.struct | undefined,
-        ImageURL: PLACEHOLDER,
+        previewImage: PLACEHOLDER,
 
         PageDescription: Object() as opengraph.struct,
 
