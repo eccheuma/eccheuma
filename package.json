@@ -8,7 +8,7 @@
 		"email": "Scarlatum@yandex.ru"
 	},
 	"workspaces": [
-		"packages/@eccheuma/crusoris"
+		"packages/@eccheuma/*"
 	],
 	"scripts": {
 		"nuxt::dev": "nuxt dev",
