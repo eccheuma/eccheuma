@@ -15,7 +15,7 @@
 		"nuxt::build": "nuxt build",
 		"nuxt::start": "nuxt start",
 		"nuxt::generate": "nuxt generate",
-		"packages::build": "npm run vite:build --workspaces",
+		"packages::build": "npm run vite:build -w @eccheuma/crusoris",
 		"vitest::test": "vitest --config vitest.config.ts",
 		"vitest::watch": "vitest --watch --config vitest.config.ts",
 		"vercel::deploy": "npm run packages::build && npm run nuxt::generate"
