@@ -15,9 +15,10 @@
 		"nuxt::build": "nuxt build",
 		"nuxt::start": "nuxt start",
 		"nuxt::generate": "nuxt generate",
-		"crusoris::build": "npm run vite:build --workspace=@eccheuma/crusoris",
+		"packages::build": "npm run vite:build --workspaces",
 		"vitest::test": "vitest --config vitest.config.ts",
-		"vitest::watch": "vitest --watch --config vitest.config.ts"
+		"vitest::watch": "vitest --watch --config vitest.config.ts",
+		"vercel::deploy": "npm run packages::build && npm run nuxt::generate"
 	},
 	"dependencies": {
 		"@babel/preset-env": "7.19.3",
