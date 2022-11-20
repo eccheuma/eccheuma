@@ -22,6 +22,7 @@
 		"vercel::deploy": "npm run packages::clean-build && npm run nuxt::generate"
 	},
 	"dependencies": {
+		"@eccheuma/crusoris": "file:packages/@eccheuma/crusoris",
 		"@babel/preset-env": "7.19.3",
 		"@supabase/storage-js": "1.5.1",
 		"@supabase/supabase-js": "1.29.4",
