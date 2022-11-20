@@ -1,7 +1,7 @@
 <template>
 	<component 
 		:is="type" 
-		ref="button" 
+		ref="button"
 		:class="[
 			{ 'action': indicator },
 			{ 'scheme::dark': scheme === 'dark' },
@@ -17,7 +17,7 @@
 	</component>
 </template>
 
-<style>
+<style lang="scss" scoped>
 
 	.scheme\:\:dark {
 		--eccheuma-button-border: var(--color-accent-edges-100);
