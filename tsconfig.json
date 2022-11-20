@@ -18,6 +18,10 @@
     "strict": true,
     "noEmit": true,
     "experimentalDecorators": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+    "strictBindCallApply": true,
+    "jsx": "preserve",    
     "baseUrl": ".",
     "resolveJsonModule": true,
     "paths": {
@@ -30,6 +34,12 @@
       "@nuxt/types",
       "@types/w3c-css-typed-object-model-level-1",
     ],
+  },
+  "vueCompilerOptions": {
+    "target": 2.7,
+    "experimentalImplicitWrapComponentOptionsWithVue2Extend": true,
+    "jsxTemplates": true,
+    "experimentalRuntimeMode": "runtime-dom",
   },
   "exclude": [
     ".nuxt",
