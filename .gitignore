@@ -4,6 +4,7 @@
 .output
 .nuxt
 .env
+.turbo
 
 #
 app

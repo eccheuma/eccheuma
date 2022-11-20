@@ -15,10 +15,11 @@
 		"nuxt::build": "nuxt build",
 		"nuxt::start": "nuxt start",
 		"nuxt::generate": "nuxt generate",
-		"packages::build": "npm run vite:build -ws",
+		"packages::build": "yarn workspaces run vite:build --if-present",
+		"packages::clean-build": "yarn workspaces info && yarn workspaces run install::build --if-present",
 		"vitest::test": "vitest --config vitest.config.ts",
 		"vitest::watch": "vitest --watch --config vitest.config.ts",
-		"vercel::deploy": "npm run packages::build && npm run nuxt::generate"
+		"vercel::deploy": "npm run packages::clean-build && npm run nuxt::generate"
 	},
 	"dependencies": {
 		"@babel/preset-env": "7.19.3",
