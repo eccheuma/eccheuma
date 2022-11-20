@@ -14,12 +14,12 @@
 		</client-only>
 
 		<section class="holl-mute">
-			<span
+			<button
 				:class="{ active: mute }"
 				@click="globalMute(!mute)"
 			>
 				<icon name="Mute" />
-			</span>
+			</button>
 		</section>
 
 		<section class="holl-info">
@@ -53,16 +53,11 @@
 		</section>
 
 		<section class="holl-links">
-
-			<a
-				v-for="(item, index) in Links"
-				:key="index"
-				:href="item.link"
-			>
-			
-				<icon :name="item.icon" /> {{ item.title }}
-
-			</a>
+			<template v-for="(item, index) in Links">
+				<a :key="index" :href="item.link">
+					<icon :name="item.icon" /> {{ item.title }}
+				</a>
+			</template>
 		</section>
 
 	</main>
@@ -83,7 +78,12 @@
 			grid-template: {
 				columns: 1fr 12fr 1fr;
 				rows: 10vh 40vh 1fr 1fr 10vh;
-				areas: ". build 	mute" ". logo 	." ". nav 		." ". quote 	." ". links 	.";
+				areas: 
+					". build 	mute" 
+					". logo 	." 
+					". nav 		." 
+					". quote 	." 
+					". links 	.";
 			}
 
 			@media screen and ( max-width: $mobile-breakpoint ) {
@@ -163,7 +163,7 @@
 			align-self: center;
 			justify-self: center;
 
-			span {
+			button {
 				
 				$size: 50px;
 
@@ -181,6 +181,10 @@
 				i {
 					@include icon-size(24px);
 					margin: auto;
+				}
+
+				&:focus {
+					border: 3px solid rgb(var(--color-mono-600));
 				}
 
 			}
@@ -248,47 +252,6 @@
 				width: 100%;
 				margin: 3vh 0;
 			}
-
-			// span {
-			// 	opacity: 0;
-
-			// 	display: block;
-			// 	text-align: center;
-			// 	pointer-events: none;
-
-			// 	margin: {
-			// 		top: 5px;
-			// 	}
-
-			// 	@media screen and (max-width: $mobile-breakpoint) {
-			// 		opacity: 1;
-			// 	}
-
-			// 	&:nth-of-type(1) {
-
-			// 		color: rgb(var(--color-mono-900));
-					
-			// 		font: {
-			// 			size: var(--font-size-42);
-			// 			family: var(--decor-font);
-			// 		}
-
-			// 		letter-spacing: 0.5ch;
-			// 		margin-right: -0.25ch;
-			// 		line-height: normal;
-
-			// 	}
-
-			// 	&:nth-of-type(2) {
-			// 		color: rgb(var(--color-mono-800));
-			// 		// line-height: 2vh;
-			// 		letter-spacing: 0.5ch;
-			// 		font: {
-			// 			size: 0.45rem;
-			// 			weight: 600;
-			// 		}
-			// 	}
-			// }
 			
 		}
 		&-navigation {
@@ -335,8 +298,8 @@
 				text-decoration: underline;
 				display: flex;
 
-		    justify-content: center;
-		    align-items: flex-end;
+				justify-content: center;
+				align-items: flex-end;
 
 				transition-duration: 250ms;
 
@@ -374,7 +337,7 @@
 
 // TYPES
 	import type { AnimeInstance, AnimeAnimParams } 	from 'animejs';
-	import type { VuexMap } 										from '~/types/VuexMap';
+	import type { VuexMap } from '~/types/VuexMap';
 
 // MIXINS
 	import EmitSound from '~/assets/mixins/EmitSound';
@@ -383,6 +346,9 @@
 	import HeaderNavigation from '~/components/layout/header/HeaderNavigation.vue';
 	import CanvasComponent	from '~/components/Canvas.vue';
 	import Icon 						from '~/components/common/Icon.vue';
+
+// Анекдоты категории Б
+	import Anec from '~/assets/json/anetodes.json';
 
 // MODULE
 	export default Vue.extend({
@@ -403,15 +369,11 @@
 
 				Quotes: [
 					'Escape from Mordorland - Блог-портфолио ориентируемый на визуальный дизайн сайтов, логотипов, баннеров, и UI интерфейса. Предоставление услуг по работе с веб-дизайном и digital дизайном, фирменным стилем, и прочим графическим услугам',
-					'SPA - Что-то странное, но работает лучше.',
-					'Tilda это конечно быстро, но есть одна загвоздка...'
+					...Anec,
 				],
 
 				Links: [
-					{ link: 'https://vk.com/club158755478', icon: 'VK', title: 'ВКонтакте'},
 					{ link: 'https://github.com/Scarlatum', icon: 'URL', title: 'GitHub' },
-					// { link: 'https://facebook.com', 				icon: 'Facebook', 	title: 'FaceBook' 	},
-					// { link: 'https://telegramm.com', 				icon: 'Telegramm', 	title: 'Telegramm' 	},
 				],
 			
 				HollVolume: 0,
@@ -423,7 +385,7 @@
 		computed: {
 
 			...mapState({
-				mute: ( state: any ) => (state as VuexMap).Sound.global.mute,
+				mute: state => (state as VuexMap).Sound.global.mute,
 			}),
 
 		},
@@ -468,11 +430,17 @@
 
 			if ( process.browser ) {
 
-				const Ambient = this.Sounds.get('Ambient')!;
+				const Ambient = this.Sounds.get('Ambient');
 
-				Ambient.volume(0);
-				this.playSound(this.Sounds.get('Ambient'));
-				Ambient.fade(0, 1, 3000);
+				if ( Ambient ) {
+
+					Ambient.volume(0);
+
+					this.playSound(Ambient);
+
+					Ambient.fade(0, 1, 3000);
+
+				}
 
 				this.changeQuote();
 
@@ -559,9 +527,19 @@
 
 			},
 
+			pickIndex(): number {
+					
+				const newIndex = Math.trunc(Math.random() * this.Quotes.length);
+
+				return newIndex === this.CurentQuoteIndex
+					? this.pickIndex()
+					: newIndex;
+
+			},
+
 			changeQuote() {
 
-				this.CurentQuoteIndex = Math.trunc(Math.random() * this.Quotes.length);
+				this.CurentQuoteIndex = this.pickIndex();
 
 				const textAnimation = (this.$refs.quote as HTMLElement).animate([
 					{ opacity: 0 },

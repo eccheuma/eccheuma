@@ -6,7 +6,7 @@ import type { SupabaseStorageClient } from '@supabase/storage-js';
 
 declare global {
   var supabase: {
-    storage: SupabaseStorageClient
+    storage: ReturnType<typeof createClient>['storage']
   };
 }
  

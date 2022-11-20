@@ -27,7 +27,7 @@
 
 			<section ref="holder" class="eccheuma-image-picture">
 				<picture>
-					<source v-if="AVIF_SUPPORT" :srcset="Source.avif" type="image/avif">
+					<source :srcset="Source.avif" type="image/avif">
 					<img ref="image" :src="Source.webp" :alt="content.description">
 				</picture>
 			</section>
@@ -71,8 +71,9 @@
 			}
 
 			.type\:\:promo {
-				width: clamp(340px, 100%, 40vw) !important;
-				margin: auto !important;
+				// width: clamp(340px, 100%, 40vw) !important;
+				width: 100%;
+				margin: auto;
 				aspect-ratio: 16/9;
 			}
 
@@ -286,9 +287,12 @@
 	import type { VuexMap } from '~/types/VuexMap';
 
 	// COMPONENTS
-	import Icon 			from '~/components/common/Icon.vue';
-	import Tag				from '~/components/common/Tag.vue';
+	import Icon from '~/components/common/Icon.vue';
+	import Tag from '~/components/common/Tag.vue';
 	
+	// Helpers
+	import { getOptimalImage } from './image.helpers';
+
 	// MIXINS
 	import EmitSound from '~/assets/mixins/EmitSound';
 
@@ -334,14 +338,6 @@
 			};
 		},
 
-		computed: {
-
-			...mapState({
-				AVIF_SUPPORT: state => (state as VuexMap).Images.AVIF_SUPPORT
-			}),
-
-		},
-
 		watch: {
 			'content.path': {
 				handler() {
@@ -375,21 +371,17 @@
 				getImageURL: 	'Images/getImageURL',
 			}),
 
-			async getImage(): Promise<void> {
+			getImage(): void {
 
-				const IMAGE_CONTAINER = this.$refs.holder as Element;
-				const { width } = IMAGE_CONTAINER?.getBoundingClientRect();
+				const IMAGE_CONTAINER = this.$refs.holder as HTMLElement;
 
-				const URL: Image.formatsStruct = await this.getImageURL({ 
-					path: this.content.path,
-					size: width * window.devicePixelRatio
+				getOptimalImage(IMAGE_CONTAINER, this.content.path).then(url => {
+					if ( this.application.context.browser && this.application.gpu.available() ) {
+						this.prepareAnimations(IMAGE_CONTAINER, url);
+					} else {
+						this.Source = url;
+					}
 				});
-
-				if ( this.application.context.browser && this.application.gpu.available() ) {
-					this.prepareAnimations(IMAGE_CONTAINER, URL);
-				} else {
-					this.Source = URL;
-				}
 
 			},
 

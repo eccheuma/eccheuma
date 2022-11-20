@@ -51,6 +51,11 @@
     background-color: rgb(var(--color-mono-300));
     color: rgb(var(--color-mono-900));
 
+    @media screen and ( max-width: $mobile-breakpoint ) {
+			padding: 2.5vh 6vw;
+      justify-content: center;
+		}
+
     font: {
       size: var(--font-size-14);
       weight: 700;
@@ -71,6 +76,10 @@
         repeat: no-repeat;
       };
 
+      @media screen and ( max-width: $mobile-breakpoint ) {
+        display: none;
+      }
+
     }
 
   }
@@ -83,11 +92,12 @@
   import Vue from 'vue';
 
   // API
+  import { feed, vk } from '~/api/feed';
   import { database } from '~/api/database';
-  import { feed } from '~/api/feed';
 
   // COMPONENTS
   import Post from './Post.vue';
+import { utils } from '~/utils';
 
   // MODULE
   export default Vue.extend({
@@ -99,42 +109,27 @@
         Posts: Array<feed.IFeed>(),
       };
     },
-    created() {
-      if ( process.browser ) {
-        // database.get<string>('App/Cache/Vk').then((response) => {
-        //   this.checkPosts(response);
-        // })
-      }
-    },
     async mounted() {
       if ( process.browser ) {
-        this.Posts = await feed.get();
+
+        const response = await database.get<Array<any>>('VkPosts');
+
+        this.Posts = response.map(post => {
+          return {
+            thumb : vk.pickThumbnail(post.attachments),
+            body  : String(post.text),
+            date  : utils.getLocalTime(Number(post.date) * 1000),
+            link  : `https://vk.com/club${ Math.abs(post.from_id || 0) }?w=wall${ post.from_id }_${ post.id }`,
+            social: {
+              likes    : Number(post.likes.count || Number()),
+              comments : Number(post.comments.count || Number()),
+              reposts  : Number(post.reposts.count || Number()),
+            }
+          };
+        });
+
       }
     },
-    methods: {
-
-      // TODO | Использовать внутренние утилиты для работы с хранилищем.
-      async checkPosts(SERVER_HASH: string) {
-
-        // const LOCAL_HASH = window.localStorage.getItem('VK_HASH');
-        // const LOCAL_DATA = window.localStorage.getItem('VK_POSTS');
-
-        // if ( LOCAL_HASH && LOCAL_DATA && LOCAL_HASH === SERVER_HASH ) {
-
-        //   this.Posts = JSON.parse(LOCAL_DATA); 
-
-        // } else {
-
-        //   this.Posts = await feed.get();
-
-        //   window.localStorage.setItem('VK_POSTS', JSON.stringify(this.Posts))
-        //   window.localStorage.setItem('VK_HASH', SERVER_HASH)
-
-        // }
-
-      },
-
-    }
   });
 
 </script>

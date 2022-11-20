@@ -2,9 +2,11 @@ import type { MetaPropertyProperty, MetaPropertyName } from 'vue-meta';
 import { utils } from '~/utils';
 import { languages } from '~/lang';
 
+
+
 export type OpengraphMetaObject = MetaPropertyProperty | MetaPropertyName
 
-export namespace Opengraph {
+export namespace opengraph {
 
   const PREFIX = 'og';
 
@@ -38,10 +40,7 @@ export namespace Opengraph {
 
       Object.assign(this.struct, meta);
 
-      if ( opt ) {
-        Meta.predefined.website ||= opt.website;
-        Meta.predefined.locale  ||= opt.locale;
-      }
+      if ( opt ) Object.assign(Meta.predefined, opt);
 
     }
 

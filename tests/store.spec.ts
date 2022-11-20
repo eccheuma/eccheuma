@@ -18,11 +18,10 @@ import Vue from 'vue';
 Vue.use(Vuex);
 
 // TEST USER
-import { userForm } from 'path::root/utils/defaultUser';
+import { userForm } from 'path::root/mocks/defaultUser';
 
 // STORES
 import * as NotificationStore from '~/store/Notification';
-import * as ImageStore        from '~/store/Images';
 
 import * as MessageStore      from '~/store/User/Messages';
 import * as UserStateStore    from '~/store/User/State';
@@ -100,39 +99,6 @@ describe('store::notification', () => {
 
 		expect(store.state.status).toBe(true);
 		expect(store.state.content).toEqual(struct);
-
-	});
-
-});
-
-describe('store::image', () => {
-
-	const store = new Vuex.Store({
-		state     : ImageStore.state(),
-		actions   : ImageStore.actions,
-		mutations : ImageStore.mutations,
-		strict    : true,
-	});
-
-	test('image::getImageURL', async () => {
-
-		const subabaseDomen = 'unfruhyobjypfbvnncoc.supabase.co';
-		const imagePath     = 'Other/YumAjBcQMUM.jpg';
-		const targetSize    = Image.sizes.large;
-		
-		const virtualSize   = Image.sizes.medium + 60;
-
-		const actualURLS: Pick<Image.formatsStruct, 'avif' | 'webp'> = {
-			webp: `https://${ subabaseDomen }/storage/v1/object/public/main/images/${ imagePath }/webp/${ targetSize }.webp`,
-			avif: `https://${ subabaseDomen }/storage/v1/object/public/main/images/${ imagePath }/avif/${ targetSize }.avif`,
-		};
-
-		const struct: Image.formatsStruct = await store.dispatch('getImageURL', { path: imagePath, size: virtualSize });
-
-		expect(struct.avif).toBeTypeOf('string');
-		expect(struct.webp).toBeTypeOf('string');
-
-		expect(struct).toStrictEqual(actualURLS);
 
 	});
 

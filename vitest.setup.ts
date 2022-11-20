@@ -1,6 +1,9 @@
 // Apply ENV
 require('dotenv').config();
 
-// @ts-ignore REDEFINE FETCH METHOD
+// Redefine*
 globalThis.fetch = require('node-fetch');
 
+// Initiate DB clients
+import Supabase from '~/plugins/Supabase'; Supabase();
+import Firebase from '~/plugins/Firebase'; Firebase();

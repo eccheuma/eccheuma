@@ -1,7 +1,7 @@
 <template>
 	<component 
 		:is="type" 
-		ref="button" 
+		ref="button"
 		:class="[
 			{ 'action': indicator },
 			{ 'scheme::dark': scheme === 'dark' },

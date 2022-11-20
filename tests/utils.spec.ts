@@ -5,7 +5,8 @@ import { getLocale, languages, russian } from '~/lang';
 import { utils }      from '~/utils';
 import { user, work } from '~/utils/status';
 import { validate }   from '~/utils/validate';
-import { Opengraph }  from '~/utils/opengraph';
+import { math }       from '~/utils/math';
+import { opengraph }  from '~/utils/opengraph';
 
 import { navigation } from '~/types/Navigation';
 import { Purchase }   from '~/types/Services';
@@ -102,28 +103,28 @@ describe('utils::validate', () => {
 describe('utils::meta', () => {
   test('meta::opengraph', () => {
   
-    const meta: Opengraph.struct = { title: 'something', description: 'something', image: 'something', url: 'something' };
+    const meta: opengraph.struct = { title: 'something', description: 'something', image: 'something', url: 'something' };
   
-    const result = new Opengraph.Meta(meta, { locale: languages.Russian }).buildMeta();
+    const result = new opengraph.Meta(meta, { locale: languages.Russian }).buildMeta();
   
     const target = [
   
-      { property: Opengraph.Meta.setPreffix('description'), 
+      { property: opengraph.Meta.setPreffix('description'), 
         content : meta.description },
   
-      { property: Opengraph.Meta.setPreffix('website'),     
-        content : Opengraph.Meta.predefined.website },
+      { property: opengraph.Meta.setPreffix('website'),     
+        content : opengraph.Meta.predefined.website },
   
-      { property: Opengraph.Meta.setPreffix('locale'),      
+      { property: opengraph.Meta.setPreffix('locale'),      
         content : languages.Russian },
   
-      { property: Opengraph.Meta.setPreffix('image'),       
+      { property: opengraph.Meta.setPreffix('image'),       
         content : meta.image },
   
-      { property: Opengraph.Meta.setPreffix('title'),       
+      { property: opengraph.Meta.setPreffix('title'),       
         content : meta.title },
   
-      { property: Opengraph.Meta.setPreffix('url'),         
+      { property: opengraph.Meta.setPreffix('url'),         
         content : meta.url },
   
     ];
@@ -174,4 +175,18 @@ describe('utils::hash', () => {
 
   });
 
+});
+
+describe('utils::math', () => {
+  test('math::vector', () => {
+
+    expect(math.vector.invert(1)).toBe(0);
+
+    expect(math.vector.invert(0.25)).toBe(-0.75);
+    expect(math.vector.invert(0.75)).toBe(-0.25);
+
+    expect(math.vector.invert(-0.25)).toBe(0.75);
+    expect(math.vector.invert(-0.75)).toBe(0.25);
+
+  });
 });

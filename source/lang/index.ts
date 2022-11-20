@@ -1,4 +1,6 @@
 
+import type { Categories } from '~/types/Services';
+
 import { navigation } from '~/types/Navigation';
 import { math } from '~/utils/math';
 
@@ -9,24 +11,33 @@ export const enum languages {
 
 export namespace russian {
 
-  // Numeric
-  const suffix = ['ой', 'ух', 'ёх', 'ми', 'ти'];
+  export namespace types  {
+    export type CustomPlural = Array<[number, string]>;
+  }
 
-  export function getSuffix(num: number): string {
+  export function getSuffix(num: number, suffix: Array<string>, customNumerator?: types.CustomPlural): string {
 
-    const rem = num % 10;
+    const rem = num % 20;
 
-    if ( rem === 1 && num !== 11 ) return suffix[0];
+    if ( customNumerator?.length ) {
 
-    if ( num < 10 || num > 20 ) {
+      let customSuffix = String();
 
-      if ( rem === 2 ) return suffix[1];
-      if ( math.int.inRange(1,rem,5) ) return suffix[2];
-      if ( rem === 7 || rem === 8 ) return suffix[3];
+      customNumerator.forEach(([ n, str ]) => {
+        if ( rem === n ) {
+          customSuffix = str;
+        }
+      });
+
+      return customSuffix || getSuffix(num, suffix);
 
     }
 
-    return suffix[4];
+    if ( rem === 0 || rem % 10 === 1 ) return suffix[0];
+
+    if ( math.int.inRange(2, rem, 4) ) return suffix[1];
+
+    return suffix[2];
 
   }
 
@@ -66,8 +77,23 @@ export namespace russian {
   };
 
   export const Application = {
-		Landing   : 'Лэндинг',
-		Multipage : 'Многостраничник',
+		Landing       : 'Лэндинг',
+		Multipage     : 'Многостраничник',
+    Applications  : 'Web Приложения'
+	};
+
+  export const Graphic = {
+    MockupBlock   : 'Макет блока',
+		MockupPage    : 'Макет страницы',
+		Logo          : 'Логотипы',
+		Vector        : 'Векторизация',
+		BusinessСard  : 'Визитки',
+	};
+
+	export const FrontEnd = {
+		Page    : 'Страница',
+		Section : 'Секция',
+		Letter  : 'HTML Письмо',
 	};
 
   export const authError = {
@@ -83,6 +109,12 @@ export namespace russian {
     sizeStrict  : 'Загружаемый размер файла привышает 1.5МБ: Размер вашего изображения:',
     sendError   : 'При отправке изображения произошла ошибка',
     loadError   : 'При загрузке изображения произошла ошибка',
+  };
+
+  export const Categories: Record<Categories, string> = {
+    Application : 'Приложения',
+    FrontEnd    : 'Фронт-энд',
+    Graphic     : 'Графический дизайн',
   };
 
 }

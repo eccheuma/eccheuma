@@ -14,13 +14,13 @@
 				<div class="calculator-main-input-type">
 					<span>Тип услуги</span>
 					<hr>
-					<select v-model="form.category" name="category">
+					<select v-model="form.category" name="category" :class="{ active: form.category }">
 						<option value="">
 							Тип услуги не выбран
 						</option>
 						<template v-for="item in SERVICE_TYPES">
 							<option :key="item" :value="item">
-								{{ item }}
+								{{ getCategoryName(item) || item }}
 							</option>
 						</template>
 					</select>
@@ -28,11 +28,11 @@
 
 				<!-- Type of service  -->
 				<transition name="opacity-transition">
-					<div v-if="form.category" class="calculator-main-input-service">
+					<div v-if="form.category && services.length" class="calculator-main-input-service">
 						<span>Услуга</span>
 						<hr>
-						<select v-model="form.service" name="service">
-							<option value="NONE">
+						<select v-model="form.service" name="service" :class="{ active: form.service.ID }">
+							<option value="">
 								Услуга не выбрана
 							</option>
 							<template v-for="item in services">
@@ -46,13 +46,13 @@
 
 				<!-- Type of service  -->
 				<transition name="opacity-transition">
-					<div v-if="form.service" class="calculator-main-input-options">
+					<div v-if="form.service && additions.length" class="calculator-main-input-options">
 						<span>Дополнения</span>
 						<hr>
 						<template v-for="field in additions.length">
 							<div class="calculator-main-input-options-item" :key="field">
-								<select v-model="form.additions[field - 1]" name="service">
-									<option value="NONE">
+								<select v-model="form.additions[field - 1]" name="service" :class="{ active: form.additions[field - 1] && form.additions[field - 1] !== '' }">
+									<option value="">
 										Услуга не выбрана
 									</option>
 									<template v-for="(item, index) in additions">
@@ -69,7 +69,7 @@
 			</section>
 
 			<section v-if="form.service" class="calculator-main-description">
-				<big>Описание услуги</big>
+				<strong>Описание услуги</strong>
 				<hr>
 				<span>
 					{{ form.service.description }}
@@ -91,12 +91,12 @@
 				<ul v-if="cost.view !== 0">
 
 					<template v-if="form.service">
-						<li>{{ form.service.name }}: <strong> {{ form.service.cost }} ₽ ( {{ quantity.service }} шт. )</strong></li>	
+						<li>{{ form.service.name }}: <strong> {{ form.service.cost }} ₽ | В количестве {{ quantity.service }} шт.</strong></li>	
 					</template>
 
 					<template v-if="form.additions">
 						<li v-for="addition in filledAdditions" :key="addition.type">
-							{{ addition.name }}: <strong>{{ addition.cost }} ₽ - {{ quantity.additions[addition.ID] || 1 }} шт.</strong>
+							{{ addition.name }}: <strong>{{ addition.cost }} ₽ | В количестве {{ quantity.additions[addition.ID] || 1 }} шт.</strong>
 						</li>	
 					</template>
 
@@ -117,7 +117,7 @@
 						В основном это связанно либо с правками, или же с пересмотром технического задания.
 					</template>
 				</caption-card>
-				<span>{{ deliveryTime }} часов</span>
+				<span>{{ formatToDays(deliveryTime) }}</span>
 			</section>
 
 			<section class="calculator-aside-cost">
@@ -128,10 +128,10 @@
 						Цена учитывается с НДС в размере {{ Math.round((taxes.GLOBAL_TAX_INDEX - 1) * 100) }} %
 					</template>
 					<template #desc>
-						Если заказ идёт через фриланс площадку, то цена будет {{ resultCost }} ₽ за счёт их средних комиссии в 15-20%.
+						Если заказ идёт через фриланс площадку, то цена будет {{ formatCost(Math.round(resultCost * 1.20)) }} ₽ за счёт их средних комиссии в 15-20%.
 					</template>
 				</caption-card>
-				<span>{{ cost.view }} ₽</span>
+				<span>{{ formatCost(cost.view) }} ₽</span>
 			</section>
 		</div>
 
@@ -143,7 +143,7 @@
 	%calculator-header {
 
 		text-align: center;
-		padding: 2vh 2vw;
+		padding: 0vh 2vw 2vh;
 
 		@extend %pattern-lines;
 
@@ -179,6 +179,10 @@
 	.calculator {
 
 		&-container {
+
+			.active {
+				border: 1px solid var(--color-accent-pass);
+			}
 
 			display: grid;
 			grid-template: {
@@ -232,6 +236,8 @@
 					}
 				}
 
+				
+
 				select {
 
 					width: 100%;
@@ -255,7 +261,15 @@
 			}
 
 			&-description {
+
 				padding: 3vh 2vw;
+
+				strong {
+					font: {
+						size: var(--font-size-18);
+						weight: 800;
+					}
+				}
 
 				hr {
 					margin: 1vh 0;
@@ -325,69 +339,19 @@
 
 	import Vue from 'vue';
 
-// API
-	import { database } from '~/api/database';
+// Global Types
+	import type { Second } from '~/types/Nominals';
+	import type { Purchase, Additions } from '~/types/Services';
 
-// Utils
-	import type { Result } from '~/utils';
-	import { cache } from '~/utils/cache';
-
-// TYPES
-	import type { Hash, Second } from '~/types/Nominals';
-	import type { Categories, Purchase, Additions } from '~/types/Services';
-
+// Inner Types
+	import { IPurchaseForm } from './calc.types';
+// Model
+	import { CalculatorModel } from './calc.model';
 // Helpers
-	function toHours(secs: Second): number {
-		return parseFloat(Number((secs / 60) / 60).toPrecision(3));
-	}
+	import { FormatHelpres } from './calc.helpers';
 
 // Components 
 	import CaptionCard from '~/components/common/Caption.vue';
-
-// Constants
-	// TODO #20 : Подключить API ЦБРФ для сбора индексов для конечных поборов. @Scarlatum
-	const GLOBAL_TAX_INDEX = 1.24;
-
-	const COMMON_DELIVERY_TIME = 864_000 as Second;
-
-	const SERVICE_TYPES: Array<Categories> = ['Application', 'Graphic', 'FrontEnd'];
-
-// Errors
-	const enum ERRORS {
-		SERVICES_EMPTY 	= 'Services category is empty',
-		ADDITIONS_EMPTY	= 'Addition for this service is not available',
-	}
-
-// Models
-	interface IPurchaseForm {
-		category	: Categories 
-		service		: Purchase.struct,
-		additions	: Array<Additions.struct['type']>
-	}
-
-	interface ICost {
-		raw		: number
-		view	: number
-	}
-
-	interface IQuantity {
-		service		: number,
-		additions	: Record<Hash, number>,
-	}
-	
-	namespace CacheContainer {
-
-		export interface IService {
-			category	: Categories,
-			services	: Array<Purchase.struct>,
-		}
-	
-		export interface IAddition {
-			serviceID	: Purchase.struct['ID'],
-			additions	: Array<Additions.struct>,
-		}
-
-	}
 
 // Module
 	export default Vue.extend({
@@ -400,29 +364,15 @@
 				alerts: undefined,
 
 				taxes: {
-					GLOBAL_TAX_INDEX
+					GLOBAL_TAX_INDEX: CalculatorModel.GLOBAL_TAX_INDEX
 				},
 
-				SERVICE_TYPES,
+				SERVICE_TYPES: CalculatorModel.SERVICE_TYPES,
 
 				services	: Array<Purchase.struct>(),
 				additions	: Array<Additions.struct>(),
 
-				form: {
-					category	: String(),
-					service		: Object(),
-					additions	: Array(),
-				} as IPurchaseForm,
-
-				quantity: {
-					service		: 1,
-					additions	: Object(),
-				} as IQuantity,
-
-				cost: {
-					raw		: Number(),
-					view	: Number(),
-				} as ICost,
+				...CalculatorModel.createForm()
 
 			};
 		},
@@ -440,18 +390,21 @@
 				const rawCost = this.form.service.cost + additionsCost;
 
 				// ? | Тут желательно вообще использовать адекватные библиотеки а не простой floor.
-				return Math.floor(rawCost * GLOBAL_TAX_INDEX);
+				return Math.floor(rawCost * CalculatorModel.GLOBAL_TAX_INDEX);
 
 			},
 
 			deliveryTime(): number {
 
-				const serviceTime 	= Number(this.form.service.delivery) || COMMON_DELIVERY_TIME;
+				const serviceTime 	= Number(this.form.service.delivery) || CalculatorModel.hourPayment(this.form.service.cost);
+
 				const additionsTime = this.filledAdditions.reduce((acc, addition) => {
-					return acc + addition.delivery || COMMON_DELIVERY_TIME;
+					return acc + (addition.delivery || CalculatorModel.hourPayment(addition.cost));
 				}, 0);
 
-				return toHours((serviceTime + additionsTime) as Second);
+				const timeInSeconds = (serviceTime + additionsTime) as Second;
+
+				return Math.round(CalculatorModel.toHours(timeInSeconds));
 
 			},
 
@@ -462,7 +415,8 @@
 
 					console.debug('form.category handler');
 
-					await this.setServices(category);
+					this.services = await CalculatorModel.setServices(category);
+
 				}
 			},
 			'form.service': {
@@ -470,7 +424,13 @@
 
 					console.debug('form.service handler');
 
-					await this.setAdditions(service);
+					this.additions = await CalculatorModel.setAdditions(service);
+
+				}
+			},
+			additions: {
+				handler(newVal: Array<Additions.struct>) {
+					this.form.additions = Array(newVal.length);
 				}
 			},
 			resultCost: {
@@ -480,94 +440,6 @@
 			}
 		},
 		methods: {
-
-			// Getters
-			async getSerives(category: Categories): Promise<Result<Array<Purchase.struct>, Error>> {
-
-				const response: Array<IPurchaseForm['service']> = await database.get(`Service/${ category }`);
-
-				console.debug(response);
-
-				cache.set<CacheContainer.IService>(`services::${ category }`, {
-					category,
-					services: response,
-				});
-
-				return response.length
-					? response
-					: Error(ERRORS.SERVICES_EMPTY);
-
-			},
-			async getAdditions(type: string, ID: Hash): Promise<Result<Array<Additions.struct>, Error>> {
-
-				const response: Array<Additions.struct> = await database.get(`Service/Addictions/${ type }`);
-
-				console.debug(response, type, ID);
-
-				cache.set<CacheContainer.IAddition>(`additions::${ type }`, {
-					serviceID: ID,
-					additions: response
-				});
-
-				return response?.length
-					? response
-					: Error(ERRORS.ADDITIONS_EMPTY);
-
-			},
-
-			// Setters
-			async setServices(category: Categories) {
-
-				const cachedData = cache.get<CacheContainer.IService>(`services::${ category }`);
- 
-				if ( cachedData instanceof Error ) {
-
-					const responseResult = await this.getSerives(category);
-
-					console.debug('setServices::responseResult:', responseResult);
-
-					this.services = responseResult instanceof Error
-						? []
-						: responseResult;
-
-				} else {
-
-					console.debug('setServices::cachedData:', cachedData);
-
-					this.services = cachedData.data.services;	
-
-				}
-
-			},
-			async setAdditions({ type, ID }: Purchase.struct) {
-
-				const cachedData = cache.get<CacheContainer.IAddition>(`additions::${ type }`);
-
-				if ( cachedData instanceof Error ) {
-
-					const responseResult = await this.getAdditions(type, ID);
-
-					console.debug('setAdditions::responseResult:', responseResult);
-
-					this.additions = responseResult instanceof Error
-						? []
-						: responseResult;
-
-				} else {
-
-					console.debug('setAdditions::cachedData:', cachedData);
-
-					this.additions = ID === cachedData.data.serviceID
-						? cachedData.data.additions
-						: await this.getAdditions(type, ID).then(data => {
-								return data instanceof Error
-									? []
-									: data;
-							});
-
-				}
-
-			},
 
 			// Helpers
 			animateCostCounter([ from, to ]: [ number, number ]) {
@@ -588,6 +460,8 @@
 				});
 
 			},
+			
+			...FormatHelpres
 			
 		}
 	});

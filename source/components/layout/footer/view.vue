@@ -11,22 +11,12 @@
 			</template>
 		</section>
 
-		<section class="footer-freelance">
-			<h5>Фриланс Биржи</h5>
-			<hr v-once>
-			<template v-for="(item, index) in Links.Freelance">
-				<a :key="`link-freelance-${ index }`" :href="item.link">
-					<icon :name="item.icon" /> {{ item.content }}
-				</a>
-			</template>
-		</section>
-
 		<section class="footer-about">
 			<h5>Информация для клиента</h5>
 			<hr v-once>
 			<template v-for="(item, index) in Links.About">
 				<a :key="`link-${ index }`" :href="item.link" class="disabled">
-					{{ item.content }} | {{ item.ext }}
+					{{ item.content }} | {{ item.ext ? item.ext.toString() : '' }}
 				</a>
 			</template>
 		</section>
@@ -91,7 +81,7 @@
 		grid-template: {
 			columns: 1fr 1fr 2fr;
 			rows: 20vh auto 10vh;
-			areas: 	"social freelance about"
+			areas: 	"social about 		about"
 							"info 	info 			info "
 							"pit		pit				pit  "
 		}
@@ -333,15 +323,55 @@
 	// MIXINS
 	import IntersectionCooler from '~/assets/mixins/IntersectionCooler';
 
-	// TYPES
-	type LINK = {
-		link: 			string
-		content: 		string 
-		icon?: string
-		ext?: 'PDF' | 'TXT'
+	enum DocumentExtension {
+		PDF,
+		TXT,
 	}
 
-	type FOOTER_SECTIONS = 'Social' | 'Freelance' | 'About'
+	// TYPES
+	interface IFooterLink {
+		link		 : string
+		content	 : string 
+		icon		?: string
+		ext			?: DocumentExtension
+	}
+
+	type FooterKeys = 'Social' | 'About';
+
+	const FooterLinks: Record<FooterKeys, Array<IFooterLink>> = {
+
+		Social: [
+			{ 
+				icon: 'VK',
+				content: 'Группа в ВКонтакте', 
+				link: 'https://vk.com/eccheuma' 
+			},
+			{ 
+				icon: 'URL', 	
+				content: 'GitHub Репозиторий', 
+				link: 'https://github.com/Scarlatum' 
+			}
+		],
+
+		About: [
+			{ 
+				content: 'Политика ценообразования и вопросы оплаты.', 
+				link: '/', 
+				ext: DocumentExtension.PDF
+			},
+			{ 
+				content: 'О сроках, просрочках, внесение правок.', 
+				link: '/', 
+				ext: DocumentExtension.PDF
+			},
+			{ 
+				content: 'Сотрудничество, и общие работы.', 
+				link: '/', 
+				ext: DocumentExtension.PDF
+			},
+		]
+
+	};
 	
 	// MODULE
 	export default Vue.extend({
@@ -350,43 +380,15 @@
 		data() {
 			return {
 
-				Cooled: !process.browser,
-
-				Links: {
-					Social: [
-						{ 
-							icon: 'VK',
-							content: 'Группа в ВКонтакте', 
-							link: 'https://vk.com/eccheuma' 
-						},
-						{ 
-							icon: 'URL', 	
-							content: 'GitHub Репозиторий', 
-							link: 'https://github.com/Scarlatum' 
-						}
-					],
-					Freelance: [
-					],
-					About: [
-						{ 
-							content: 'Политика ценообразования и вопросы оплаты.', 
-							link: '/', 
-							ext: 'PDF' 
-						},
-						{ 
-							content: 'О сроках, просрочках, внесение правок.', 
-							link: '/', 
-							ext: 'PDF' 
-						},
-						{ 
-							content: 'Сотрудничество, и общие работы.', 
-							link: '/', 
-							ext: 'PDF' 
-						},
-					]
-				} as {[K in FOOTER_SECTIONS]: LINK[]}
+				Cooled	: false,
+				Links		: FooterLinks,
 
 			};
+		},
+		created() {
+
+			this.Cooled = !process.browser;
+
 		},
 		mounted() {
 

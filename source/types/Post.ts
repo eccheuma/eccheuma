@@ -1,5 +1,6 @@
 // UTILS
 import { utils } from '~/utils';
+import { User } from './User';
 
 export namespace Post {
 
@@ -13,10 +14,11 @@ export namespace Post {
 	}
 	
 	export type comment = {
-		ID			: string
-		date		: number
-		userID	: string
-		data		: string
+		ID			 : string
+		date		 : number
+		userID	 : string
+		data		 : string
+		mention ?: Array<User.struct['UserID']>
 	}
 	
 	export type struct = {

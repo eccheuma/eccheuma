@@ -38,7 +38,7 @@
 	import Vue from 'vue';
 
 	// VUEX
-	import { mapState, mapMutations, mapActions } from 'vuex';
+	import { mapState, mapMutations } from 'vuex';
 
 	// COMPONENTS
 	import EccheumaButton		from '~/components/buttons/CommonButton.vue';
@@ -105,9 +105,6 @@
 	background-color: rgb(var(--color-mono-200));
 	align-items: center;
 	section {
-		@media screen and ( max-width: $mobile-breakpoint ) {
-			display: none;
-		}
 		span {
 			display: block; text-transform: uppercase;
 			&:nth-child(1) {
@@ -123,6 +120,9 @@
 				color: rgb(var(--color-mono-900)); font-weight: 700; letter-spacing: 1px; font-size: .45rem
 			}
 		}
+		@media screen and ( max-width: $mobile-breakpoint ) {
+			display: none;
+		}
 	}
 	svg {
 		height: 33%;
@@ -137,6 +137,9 @@
 	button {
 		width: min-content;
 		justify-self: right;
+		@media screen and ( max-width: $mobile-breakpoint ) {
+			display: none
+		}
 	}
 }
 

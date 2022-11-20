@@ -23,6 +23,22 @@
 		<mobile-navigation v-if="$isMobile" />
 		<desktop-navigation v-else :search="true" :background="true" />
 
+		<client-only>
+			<section class="layout-mobile">
+				<template v-if="LoginStatus == true && !$isMobile">
+					<eccheuma-button @click.native="toggleProfileArea">
+						Личный кабинет
+					</eccheuma-button>
+				</template>
+
+				<template v-else>
+					<eccheuma-button @click.native="toggleRegisterModal">
+						Зарегистрироваться
+					</eccheuma-button>
+				</template>
+			</section>
+		</client-only>
+
 		<section class="content-wrapper">
 
 			<scroll-bar v-if="!$isMobile" />
@@ -70,6 +86,25 @@
 			cursor: pointer;
 
 		}
+
+	}
+
+	.layout-mobile {
+
+		display: none;
+
+		background: rgb(var(--color-mono-200));
+    width: 100%;
+    place-content: center;
+    padding-top: 2vh;
+
+		@media screen and ( max-width: $mobile-breakpoint ) {
+			display: grid;
+			grid-template: {
+				columns: 75vw;
+			};
+			margin: auto;
+		};
 
 	}
 
@@ -166,14 +201,17 @@
 	import HeaderCarousel from '~/components/layout/header/HeaderCarousel.vue';
 	import HeaderTop 			from '~/components/layout/header/HeaderTop.vue';
 	import Loader, { LoadStage } from '~/components/common/Loader.vue';
+	import EccheumaButton		from '~/components/buttons/CommonButton.vue';
 
 	// FUNCTIONAL COMPONENTS
 	import HardwareAccelerationDecorator 	from '~/components/functional/HardwareAcceleration.vue';
 	import TransitionWrapper 							from '~/components/functional/TransitionWrapper.vue';
 
+	// NOTIFICATION DATA
+	import { registration } from '~/assets/json/notifications.json';
+
 	// TYPES
 	import type { Notification } from '~/types/Notification';
-
 	import type { VuexMap } from '~/types/VuexMap';
 	
 	Vue.component('TransitionWrapper', TransitionWrapper);
@@ -184,17 +222,17 @@
 
 			// FUNCTIONAL
 			HardwareAccelerationDecorator,
-			// eslint-disable-next-line vue/no-unused-components
 
 			// PREDEFINED COMPONENTS //
 			Loader,
 			HeaderCarousel,
+			EccheumaButton,
 			HeaderTop,
 
 			// ASYNC COMPONENTS //
-			FooterComponent: 		() => import('~/components/layout/Footer.vue'),
+			FooterComponent: 		() => import('~/components/layout/footer/view.vue'),
 			DesktopNavigation:	() => import('~/components/layout/header/HeaderNavigation.vue'),
-			ScrollBar: 					() => import('~/components/layout/ScrollBar.vue'),
+			ScrollBar: 					() => import('~/components/layout/scrollbar/view.vue'),
 
 			Notification: 			() => import('~/components/common/Notification.vue'),
 			// VkMessages: 				() => import('~/components/common/VK_Messages.vue'),
@@ -222,37 +260,32 @@
 		computed: {
 
 			...mapState({
-				UI:						state => (state as VuexMap).App.UI,
-				LoginStatus:	state => (state as VuexMap).Auth.Session.LoginStatus,
+				UI					:	state => (state as VuexMap).App.UI,
+				LoginStatus	:	state => (state as VuexMap).Auth.Session.LoginStatus,
 			}),
 
 		},
 		mounted() {
-
-			setTimeout(this.setRegNotification, 360_000);
-
+			setTimeout(this.registrationNotify, 360_000);
 		},
 		methods: {
 
 			...mapMutations({
-				setDeviceType: 						'setDeviceType',
-				changeStatus: 	'Notification/changeStatus',
+				setDeviceType				: 'setDeviceType',
+				changeStatus				: 'Notification/changeStatus',
+				toggleProfileArea		: 'User/State/toggleProfileArea',
+				toggleRegisterModal	: 'Auth/Register/toggleRegisterModal',
 			}),
 
 			...mapActions({
 				createNotification: 'Notification/createNotification',
 			}),
 
-			setRegNotification() {
+			registrationNotify() {
 
 				if ( !this.LoginStatus ) {
-
-					const C: Notification.struct = {
-						message: 'Если вы ещё не зарегистрированны - То сейчас самое лучшее время!',
-						description: 'Благодаря регистрации на сайте, вы получите личный кабинет с возможностью мониторинга состояния заказа, просмотр заявок, и возможность коментиривания и оценки контента.',
-					};
 				
-					this.createNotification(C);
+					this.createNotification(registration as Notification.struct);
 
 				}
 

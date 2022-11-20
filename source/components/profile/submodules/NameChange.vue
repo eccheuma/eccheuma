@@ -14,7 +14,7 @@
 
 		<hr>
 
-		<eccheuma-button>
+		<eccheuma-button @click.native="setUsername">
 			Отправить
 		</eccheuma-button>
 

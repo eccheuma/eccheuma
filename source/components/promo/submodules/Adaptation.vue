@@ -42,7 +42,9 @@
 	background-color: rgb(var(--color-mono-300));
 
 	@media screen and ( max-width: $mobile-breakpoint ) {
+		padding: 2vh 2vw;
 		grid-template-columns: 1fr;
+		grid-template-rows: auto auto;
 		text-align: center;
 	}
 

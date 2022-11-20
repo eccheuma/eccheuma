@@ -48,7 +48,7 @@
 				</template>
 			</caption-card>
 
-			<div class="auth_login-body-social">
+			<!-- <div class="auth_login-body-social">
 
 				<span>
 					Войти с помощью соц. сетей
@@ -68,7 +68,7 @@
 					</button>
 				</div>
 
-			</div>
+			</div> -->
 
 		</section>
 

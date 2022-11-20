@@ -2,14 +2,17 @@
 import { utils } from '~/utils';
 import { currency } from '~/api/currency';
 
+// Decorators
+import { debug } from '~/decorators/logger.decorator';
+
 export namespace currencies {
 
 	const GLOBAL_COF: number = 1;
 
 	export enum Country {
-		ru = 'ru',
-		en = 'en', 
-		ch = 'ch',
+		ru = 'RUB',
+		en = 'USD', 
+		ch = 'CHY',
 	}
 
 	export const DEFAULT = [ currencies.Country.ru ];
@@ -35,6 +38,7 @@ export namespace currencies {
 			this.coefficient = coefficient;
 		} 
 
+		@debug.derive(true, process.browser)
 		public convert<C extends Country, Cur extends ICurrency>(currency_type: Cur) {
 
 			return this.value * (currency_type.coefficient / this.coefficient) as utils.types.nominal<number, C>;
@@ -47,6 +51,10 @@ export namespace currencies {
 
 		public grab(value: number) {
 			this.value = this.value - value as utils.types.nominal<number, C>; return value;
+		}
+
+		public dry() {
+			this.value = 0 as utils.types.nominal<number, C>;
 		}
 
 	}
@@ -72,9 +80,9 @@ export namespace wallet {
 	const WALLET_LIMIT = 50_000;
 
 	const DEFAULT_JSON: contract = {
-		ch: Number(0),
-		en: Number(0),
-		ru: Number(0),
+		CHY: Number(0),
+		USD: Number(0),
+		RUB: Number(0),
 	};
 
 	const enum errors {
@@ -127,6 +135,7 @@ export namespace wallet {
 
 		}
 
+		@debug.derive(true, process.browser)
 		public async send<Cur extends currencies.Currency>(cur: Cur, wallet_type: currencies.Country): Promise<number | Error> {
 
 			const wallet = this.currencies[wallet_type];
@@ -139,6 +148,8 @@ export namespace wallet {
 				: Error(currency.errors.REJECT);
 
 		}
+
+    @debug.derive(true, process.browser)
 		public async take<Cur extends currencies.Currency>(cur: Cur, wallet_type: currencies.Country): Promise<number | Error> {
 
 			const wallet = this.currencies[wallet_type];
@@ -150,6 +161,10 @@ export namespace wallet {
 				? wallet.grab(value)
 				: Error(currency.errors.REJECT);
 
+		}
+
+		public dry(wallet_type: currencies.Country) {
+			this.currencies[wallet_type].dry();
 		}
 
 	}

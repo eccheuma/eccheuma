@@ -61,21 +61,25 @@ import type { MutationTree, ActionTree } from 'vuex';
 			vuex.commit('Auth/Session/setUserState', { uid, email }, { root: true });
 			vuex.commit('Auth/Session/setAuthError', null, { root: true });
 
-			await database.set(`Users/${ uid }/state`, {
+			await database.set<User.struct>(`Users/${ uid }/state`, {
 				UserID					:	uid,
 				UserEmail				:	email,
 				UserName				:	form.name,
 				UserStatus			:	User.status.User,
 				UserWallet			:	userWallet.toJSON,
 				UserWorkStatus	: Purchase.status.None,
-				UserImageID			:	storage.reference('UserIcons/default.webp')
-			} as User.struct);
+				UserImageID			:	String(storage.reference('UserIcons/default.webp'))
+			});
+
+			await database.set(`User/${ uid }/info`, {
+				registrationDate: Date.now()
+			});
 
 			// ? Всё ещё стоит под вопросом. Нужно ли хранить данные касательно клиентских настроек вне браузера...
-			//	await database.set(`Users/${ uid  }/preferences`, {
-			// 		DarkTheme		: true,
-			// 		Anotations	: true,
-			// 	})
+			await database.set(`Users/${ uid  }/preferences`, {
+				theme					: 0,
+				notifications	: false,
+			});
 
 			const Message: Message.struct = {
 				ID			: utils.randHashGenerator(),

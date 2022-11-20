@@ -121,6 +121,10 @@ $TransitionDuration: 250ms;
 
 		padding-inline: 6vw;
 
+		@media screen and ( max-width: $mobile-breakpoint ) {
+			padding-inline: 2vw;
+		}
+
 		display: grid; 
 		min-height: $GLOBAL-HeaderHeight;
 		
@@ -143,6 +147,9 @@ $TransitionDuration: 250ms;
 
 			a {
 				transform: translateY(-2vh);
+				@media screen and ( max-width: $mobile-breakpoint ) {
+					transform: translateY(0);
+				}
 			}
 
 			i {
@@ -179,10 +186,6 @@ $TransitionDuration: 250ms;
 		text-align: center;
 
 		width: 100%;
-
-		@media screen and ( max-width: $mobile-breakpoint ) {
-			margin: .5vh 0;
-		}
 
 		&:before {
 
@@ -251,8 +254,8 @@ $TransitionDuration: 250ms;
 			z-index: 1000;
 
 			@media screen and ( max-width: $mobile-breakpoint ) {
-				display: inline-flex;
-				font-size: var(--font-size-20);
+				// display: inline-flex;
+				font-size: var(--font-size-21);
 			}
 
 			i {
@@ -289,6 +292,7 @@ $TransitionDuration: 250ms;
 		align-self: center;
 
 		width: 2%; 
+		min-width: 4px;
 		height: 10px;
 
 		background-color: rgb(var(--color-mono-400));

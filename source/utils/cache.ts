@@ -11,27 +11,35 @@ export namespace cache {
 
   export function set<D>(key: string, data: D) {
 
+    const KEY = utils.string.mangle(key, utils.string.MangleMode.ENCODE);
+
     const container: ICacheContainer<D> = {
       hash: utils.randHashGenerator(),
       data: data,
     };
 
-    window.localStorage.setItem(key, JSON.stringify(container));
+    window.localStorage.setItem(KEY, JSON.stringify(container));
 
   }
 
   export function get<D>(key: string): Result<ICacheContainer<D>, Error> {
 
-    const item = window.localStorage.getItem(key);
+    const KEY = utils.string.mangle(key, utils.string.MangleMode.DECODE);
 
-    if ( item?.charAt(0) !== '{' ) return Error('Cache miss');
+    const container = window.localStorage.getItem(KEY);
 
-    return JSON.parse(item);
+    if ( container?.charAt(0) !== '{' ) return Error('Cache miss');
+
+    return JSON.parse(container);
 
   }
 
   export function check(key: string): boolean {
-    return Boolean(window.localStorage.getItem(key));
+
+    const KEY = utils.string.mangle(key, utils.string.MangleMode.ENCODE);
+
+    return Boolean(window.localStorage.getItem(KEY));
+    
   }
 
   export function clear() {

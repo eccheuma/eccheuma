@@ -1,8 +1,5 @@
-// NODE LIBRARIES
-  import { writeFile }  from 'fs';
-
 // ENV
-  import { environment } from './utils/configEnvironment';
+  import { environment } from './packages/utils/configEnvironment';
 
   const appEnvironment = environment.config([
     
@@ -11,6 +8,8 @@
 
     'FIREBASE_API_APP', 
     'FIREBASE_API_KEY',
+
+    'CLOUD_FUNCTION_HOSTING_URL',
 
     'CURRENCY_API_URL',
     'CURRENCY_API_KEY',
@@ -26,16 +25,12 @@
   import { NuxtConfig } from '@nuxt/types';
 
 // TEMPLATESnp
-  import HEAD_CONFIG      from './utils/defaultHead';
-  import genearateName    from './utils/nameGenerator';
+  import HEAD_CONFIG      from './mocks/defaultHead';
   import { utils }        from './source/utils';
 
 // VARIABLES
   const inDevelopment = process.env.NODE_ENV === environment.node.development;
   const hash = utils.randHashGenerator(12);
-
-// WRITE A VERSION
-  writeFile('.version', hash, () => console.log(`≏ Hash build: ${ genearateName(4) }:${ hash }`));
 
 // CONFIG
   const config: NuxtConfig = {

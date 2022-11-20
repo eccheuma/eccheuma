@@ -1,65 +1,61 @@
 <template>
 	<div id="HomePage" class="home-container">
 
-		<main>
-
-			<client-only>
-				<auth v-if="$isMobile" />
-			</client-only>
-
+		<section class="home-wrapper home-main" >
 			<pagination :payload="{ order: 1, scrollTarget: 445, section: 'home', delay: 0 }" />
-
-			<nuxt-child :key="$route.path" class="home-content" />
-
+			<nuxt-child :key="$route.path" />
 			<pagination :payload="{ order: -1, scrollTarget: 445, section: 'home', delay: 0 }" />
+		</section>
 
-		</main>
-
-		<aside>
-
+		<section class="home-wrapper home-auth">
 			<client-only>
-
-				<auth v-if="!$isMobile" v-once />
-
-				<vk-posts-container />
-
+				<auth />
 			</client-only>
-			
-		</aside>
+		</section>
+
+		<section class="home-wrapper home-feed">
+			<client-only>
+				<vk-posts-container />
+			</client-only>
+		</section>
 
 	</div>
 </template>
 
 <style lang="scss" scoped>
 
-aside {
-
-	padding: 2vh 10px;
-	display: grid;
-	row-gap: 2vh;
-	align-content: start;
-
-}
-
-main {
-	display: grid;
-	row-gap: 2vh;
-	align-content: start;
-	padding: 2vh 10px;
-}
-
 .home {
+	&-wrapper {
+		padding: 2vh 10px;
+		background: rgb(var(--color-mono-200));
+	}
 	&-container {
 		display: grid;
-		column-gap: 15px;
-		grid-template-columns: 3fr minmax(300px, 1fr);
+		grid-template-columns: 9fr 3fr;
+		grid-template-rows: auto 1fr;
+		grid-template-areas: 
+			"main auth" 
+			"main feed";
+		column-gap: 1vw;
+
 		@media screen and ( max-width: $mobile-breakpoint ) {
 			grid-template-columns: 1fr;
+			grid-template-areas: "auth" "main" "feed";
 		}
+
 	}
-	&-content {
-		display: grid;
+	&-main {
+		grid-area: main;
+		display: flex;
+		flex-direction: column;
 		row-gap: 2vh;
+	}
+	&-auth {
+		grid-area: auth;
+	}
+	&-feed {
+		grid-area: feed;
+		padding-top: 0;
 	}
 }
 
@@ -79,8 +75,8 @@ main {
 	import TransitionProperty from '~/assets/mixins/PageTransitionProperty';
 
 // COMPONENTS
-	import Pagination 			from '~/components/common/Pagination.vue';
-	import Auth 						from '~/components/auth/Auth.vue';
+	import Pagination from '~/components/common/Pagination.vue';
+	import Auth from '~/components/auth/Auth.vue';
 
 // TYPES
 	import type { VuexMap } from '~/types/VuexMap';
@@ -89,9 +85,9 @@ main {
 	import { Ranges } from '~/config/LoadPolitic';
 
 // PAGE DESCRIPTION
-	import { Opengraph } from '~/utils/opengraph';
+	import { opengraph } from '~/utils/opengraph';
 
-	export const PageDescription: Opengraph.struct = {
+	export const PageDescription: opengraph.struct = {
 		title				: 'Eccheuma | Главная',
 		description	: 'Главная страница. Тут собраны статьи на завязанные на профильную тему.',
 		url					: '',
@@ -116,11 +112,12 @@ main {
 
 			};
 		},
-		head () {
+
+		head() {
 			return {
 				title: PageDescription.title,
 				meta: [
-					...new Opengraph.Meta(PageDescription).buildMeta()
+					...new opengraph.Meta(PageDescription).buildMeta()
 				],
 			};
 		},

@@ -1,44 +1,50 @@
 <template>
   <section class="promo-body">
-    <eccheuma-swiper v-if="Ready" :options="{ auto: true, interval: 8000 }" class="works_swiper">
-      <template #default>
-        <template v-for="item in Works.Logo">
-          
-          <section v-for="image in item.content.images" :key="image.content.date" class="works_swiper-item">
+    <transition name="opacity">
+      <eccheuma-swiper v-if="Ready" :options="{ auto: true, interval: 8000 }" class="works_swiper">
+        <template #default>
+          <template v-for="item in Works.Logo">
             
-            <eccheuma-image
-              style="height: 40vh"
-              :content="{ path: image.content.path, description: item.content.description }"
-              :sections="{ date: false, description: true, zoom: true }"
-              :property="{ fit: 'cover', type: 'default', collumn: 7 }"
-            >
-              {{ item.content.name }}
-            </eccheuma-image>
+            <section v-for="image in item.content.images" :key="image.content.date" class="works_swiper-item">
+              
+              <eccheuma-image
+                style="height: 40vh"
+                :content="{ path: image.content.path, description: item.content.description }"
+                :sections="{ date: false, description: true, zoom: true }"
+                :property="{ fit: 'cover', type: 'default', collumn: 7 }"
+              >
+                {{ item.content.name }}
+              </eccheuma-image>
 
-            <hr>
+              <hr>
 
-            <div class="works_swiper-item-description">
-              <span>{{ item.content.name }}</span>
-              <span>{{ item.content.theme }}</span>
-            </div>
-            
-          </section>
+              <div class="works_swiper-item-description">
+                <span>{{ item.content.name }}</span>
+                <span>{{ item.content.theme }}</span>
+              </div>
+              
+            </section>
 
+          </template>
         </template>
-      </template>
-    </eccheuma-swiper>
+      </eccheuma-swiper>
+    </transition>
   </section>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 
 .works_swiper {
-  width: 720px;
+  
+  max-width: 720px;
   margin: auto;
+
   &-item {
 
     padding: 0 5vw;
     display: inline-grid;
+
+    min-height: 50vh;
 
     hr {
       background-color: rgb(var(--color-mono-400));
@@ -96,41 +102,42 @@ import { Portfolio } from '~/types/Portfolio';
 import { Workcase  } from '~/types/WorkCase';
 
 export default Vue.extend({
-	components: {
-		EccheumaImage: () => import('~/components/image/Image.vue'),
-		EccheumaSwiper: () => import('~/components/common/Carousel.vue')
-	},
-	mixins: [ EmitSound ],
-	data() {
-		return {
+  components: {
+    EccheumaImage   : () => import('~/components/image/Image.vue'),
+    EccheumaSwiper  : () => import('~/components/common/Carousel.vue')
+  },
+  mixins: [ EmitSound ],
+  data() {
+    return {
 
-			Ready: false,
+      Ready: false,
 
-			CasesType: [
+      CasesType: [
         Portfolio.sections.logo
       ] as Array<Portfolio.sections>,
 
-			Works: new Object() as {[ KEY in Portfolio.sections ]: Array<Workcase.struct> },
+      Works: new Object() as {[ KEY in Portfolio.sections ]: Array<Workcase.struct> },
 
-		};
-	},
+    };
+  },
   created() {
     this.GetCases();
   },
-	methods: {
+  methods: {
 
-		GetCases() {
+    GetCases() {
 
-			this.CasesType.forEach( async section => {
+      this.CasesType.forEach( async section => {
 
         this.Works[section] = Object.values(await database.get(`Cases/${ section }`, { limit: 3 }));
 
         this.Ready = true;
 
-			});
+      });
 
-		}
+    }
 
-	}
+  }
 });
+
 </script>

@@ -12,6 +12,9 @@ container
 # Node Modules
 node_modules
 
+# packages
+packages
+
 *.rules
 *.rules.*
 

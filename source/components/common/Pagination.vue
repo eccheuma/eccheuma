@@ -10,7 +10,7 @@
 		</nuxt-link>
 
 		<span style="pointer-events: none">
-			{{ PageSelector.Page }}-я cтраница из {{ PageSelector.PageQuantity }}-{{ getSuffix(PageSelector.PageQuantity) }} 
+			{{ PageSelector.Page }}-я cтраница из {{ PageSelector.PageQuantity }}-{{ fmtSuffix(PageSelector.PageQuantity) }} 
 		</span>
 
 		<nuxt-link 
@@ -70,13 +70,13 @@ $h: 10vh;
 			content: '';
 			position: absolute;
 
-			top: -1px; 
+			top: 0px; 
 			left: 0;
 
 			width: 100%; 
 			height: 1px;
 
-			background: linear-gradient(to left, transparent, rgb(var(--color-mono-900)), transparent);
+			background: linear-gradient(to left, transparent, var(--color-accent-edges-300), transparent);
 
 			transition-duration: 250ms;
 
@@ -118,6 +118,9 @@ $h: 10vh;
 		params?: string
 	}
 
+	// CONSTANTS
+	const RUSSIAN_CUSTOM_NUMERATOR: russian.types.CustomPlural = Array([ 3, 'ёх' ], [ 4, 'ёх' ], [ 11, 'и' ]);
+
 	// MODULE
 	export default Vue.extend({
 		props: {
@@ -127,6 +130,7 @@ $h: 10vh;
 			} as PropOptions<PageSelectorProperty>
 		},
 		computed: {
+
 			...mapState({
 				PageSelector	: state => (state as VuexMap).PageSelector,
 				Lang					: state => (state as VuexMap).App.Lang,
@@ -146,6 +150,10 @@ $h: 10vh;
 
 				return { next, prev };
 
+			},
+
+			test() {
+				this.test
 			}
 
 		},
@@ -153,15 +161,17 @@ $h: 10vh;
 
 			getPath(page: number) {
 
-				const QUERY_PARAMS = this.payload.params ? `?${ this.payload.params }` : '';
+				const QUERY_PARAMS = this.payload.params 
+					? String('?').concat(this.payload.params)
+					: String();
 
 				return `/${ this.payload.section }/page_${ page }${ QUERY_PARAMS }`;
 
 			},
 
-			getSuffix(value: number) {
+			fmtSuffix(...[ value ]: Partial<Parameters<typeof russian.getSuffix>>) { 
 				switch (this.Lang) {
-					case languages.Russian: return russian.getSuffix(value);
+					case languages.Russian: return russian.getSuffix(Number(value), ['ой', 'ух', 'и'], RUSSIAN_CUSTOM_NUMERATOR);
 				}
 			}
 

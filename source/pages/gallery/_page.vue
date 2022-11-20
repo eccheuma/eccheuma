@@ -76,7 +76,11 @@
 	import PageTransitionProperty 	from '~/assets/mixins/PageTransitionProperty';
 
 	// TYPES
-	import type { PayloadQuery } 					from '~/store/PageContent';
+
+	// ? Надо разобраться, почему не хватаются типы.
+	import type VueRouter from 'vue-router';
+
+	import { PayloadQuery, Reference } from '~/store/PageContent';
 	import type { ANIMATION_PAYLOAD } from '~/assets/mixins/IntersectionObserver';
 
 	import { navigation } from '~/types/Navigation';
@@ -159,12 +163,16 @@ import { MetaInfo } from 'vue-meta/types/vue-meta';
 			await this.getDatabaseData();
 			
 		},
+<<<<<<< HEAD
 		head(): MetaInfo {
+=======
+		head() {
+>>>>>>> dev
 			return {
 				title: Meta.conctructTitle(this.Lang, { 
 					page: this.Page, 
 					section: navigation.routeSections.gallery
-				}),
+				})
 			};
 		},
 		computed: {
@@ -190,7 +198,7 @@ import { MetaInfo } from 'vue-meta/types/vue-meta';
 				this.getDatabaseData();
 			}
 
-			this.$router.beforeEach((to, from, next) => {
+			(this.$router as VueRouter).beforeEach((to, from, next) => {
 
 				if (to.name !== 'gallery-page') return next();
 
@@ -217,7 +225,7 @@ import { MetaInfo } from 'vue-meta/types/vue-meta';
 				const REM: number = QUANTITY - ( this.LoadRange * this.Page );
 
 				const Query: PayloadQuery = {
-					ref: 'Gallery',
+					ref: Reference.Gallery,
 					loadQuery: {
 						LoadRange: REM < 0 ? this.LoadRange + REM : this.LoadRange,
 						LoadPoint: REM < 0 ? 0 : REM

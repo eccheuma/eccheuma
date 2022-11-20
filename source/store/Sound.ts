@@ -21,7 +21,7 @@
 	export const state = () => ({
 
 		global: {
-			mute: false,
+			mute: true,
 			volume: 1,
 			inChange: false,
 		} as GLOBAL_PROPERTY,

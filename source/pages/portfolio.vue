@@ -1,7 +1,7 @@
 <template>
   <main class="portfolio-container">
 
-    <promo-banner promo-type="Style" :order="0" />
+    <promo-banner promo-type="Stylistics" :order="0" />
 
 		<section class="portfolio-content">
 
@@ -52,20 +52,25 @@
 <script lang="ts">
 
 	import Vue from 'vue';
+// VUEX
+	import { mapState } from 'vuex';
 
 // MIXINS
-	import EmitSound 				from '~/assets/mixins/EmitSound';
+	import EmitSound from '~/assets/mixins/EmitSound';
 
 // TYPE
 	import { Portfolio } from '~/types/Portfolio';
+	import { navigation } from '~/types/Navigation';
+	import type { VuexMap } from '~/types/VuexMap';
 
 // COMPONENTS
-	import SectionHeader 		from '~/components/common/SectionHeader.vue';
+	import SectionHeader from '~/components/common/SectionHeader.vue';
 
 // PAGE DESCRIPTION
-	import { Opengraph } from '~/utils/opengraph';
+	import { opengraph } from '~/utils/opengraph';
+	import { getLocale, languages } from '~/lang';
 
-	export const PageDescription: Opengraph.struct = {
+	export const PageDescription: opengraph.struct = {
 		title				: 'Eccheuma | Портфолио',
 		description	: 'Предложения по оказанию услуг. В зависимости от сезона и нагруженности тут появляются выгодные предложения на разные виды услуг.',
 		url					: '',
@@ -88,32 +93,32 @@
 				HeaderMenu: [
 					{
 						disabled: false,
-						route: `/portfolio/${ Portfolio.sections.landings.toLowerCase() }`,
-						name: 'Лэндинги',
+						route: `/${ navigation.routeSections.portfolio }/${ Portfolio.sections.landings.toLowerCase() }`,
+						name: getLocale(languages.Russian).Application.Landing,
 						icon: 'JS',
 						discription:
 							'Главная страница. Тут собраны статьи на завязанные на профильную тему.',
 					},
 					{
 						disabled: false,
-						route: `/portfolio/${ Portfolio.sections.logo.toLowerCase()  }`,
-						name: 'Логотипы',
+						route: `/${ navigation.routeSections.portfolio }/${ Portfolio.sections.logo.toLowerCase()  }`,
+						name: getLocale(languages.Russian).Graphic.Logo,
 						icon: 'Vector',
 						discription:
 							'Галлерея изображений. Начиная от логотипов и полноценных макетов, заканчивая всякими набросками и непринятыми вариантами работ.',
 					},
 					{
 						disabled: true,
-						route: `/portfolio/${ Portfolio.sections.mockups.toLowerCase() }`,
-						name: 'Макеты',
+						route: `/${ navigation.routeSections.portfolio }/${ Portfolio.sections.mockups.toLowerCase() }`,
+						name: getLocale(languages.Russian).Graphic.MockupBlock,
 						icon: 'Blank',
 						discription:
 							'Предложения по оказанию услуг. В зависимости от сезона и нагруженности тут появляются выгодные предложения на разные виды услуг.',
 					},
 					{
 						disabled: true,
-						route: `/portfolio/${ Portfolio.sections.applications.toLowerCase() }`,
-						name: 'Web Приложения',
+						route: `/${ navigation.routeSections.portfolio }/${ Portfolio.sections.applications.toLowerCase() }`,
+						name: getLocale(languages.Russian).Application.Applications,
 						icon: 'Vue',
 						discription:
 							'Предложения по оказанию услуг. В зависимости от сезона и нагруженности тут появляются выгодные предложения на разные виды услуг.',
@@ -125,9 +130,14 @@
 			return {
 				title: PageDescription.title,
 				meta: [
-					...new Opengraph.Meta(PageDescription).buildMeta()
+					...new opengraph.Meta(PageDescription).buildMeta()
 				],
 			};
+		},
+		computed: {
+			...mapState({
+				Lang: state => (state as VuexMap).App.Lang
+			}),
 		},
 	});
 
