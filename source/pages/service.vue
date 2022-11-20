@@ -121,8 +121,6 @@
 		category : Categories,
 	}
 
-	// 'Услуги. Перечень оказываемых услуг, калькулятор стоимости, и форма обратной связи.'
-
 	// PAGE DESCRIPTION
 	import { opengraph } from '~/utils/opengraph';
 
@@ -145,30 +143,17 @@
 		layout: 'Application',
 		scrollToTop: false,  
 		transition: 'opacity-transition',
+		async asyncData() {
+
+			const { default: Products } = await import('~/assets/json/services.json');
+
+			return { Products };
+
+		},
 		data() {
 			return {
 
-				Products: [
-					{ 
-						category: 'Application',
-						name: 'Готовые решения',
-						description: 'Лэндинги, сайты, CMS, web приложения',
-						about: 'Включает в себя полный цикл создания приложения / сайта / лэндинга. Начиная от создания графического макета, с его последующей вёрсткой, и созданием бизнес логики на платформе "Vue & Firebase".'
-					},
-					{
-						category: 'Graphic',
-						name: 'Графический Дизайн',
-						description: 'Логотипы, баннера, визитки',
-						about: 'В данном бандле есть всё, начиная от оформления заказа на визитки, логотипы, и прочие услуги по графическому макетированию. Так же работа с вектором, если она необходима.'
-					},
-					{
-						category: 'FrontEnd',
-						name: 'Вёрстка',
-						description: 'Вёрстка графических макетов',
-						about: 'Создание HTML и CSS(Sass) разметки на основе готового графического макета, для дальнейшей работы Front-End разработчика и переноса полученной разметки на нужную для вас платформу.'
-					}
-				] as Array<CardStruct>,
-
+				Products: Array<CardStruct>(),
 				Categories: ['Application', 'Graphic', 'FrontEnd'] as Array<Categories>,
 
 			};
