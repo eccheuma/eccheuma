@@ -24,7 +24,6 @@
 
 <style lang="scss" scoped>
 
-
 .home {
 	&-wrapper {
 		padding: 2vh 10px;
@@ -76,8 +75,8 @@
 	import TransitionProperty from '~/assets/mixins/PageTransitionProperty';
 
 // COMPONENTS
-	import Pagination 			from '~/components/common/Pagination.vue';
-	import Auth 						from '~/components/auth/Auth.vue';
+	import Pagination from '~/components/common/Pagination.vue';
+	import Auth from '~/components/auth/Auth.vue';
 
 // TYPES
 	import type { VuexMap } from '~/types/VuexMap';
@@ -113,7 +112,8 @@
 
 			};
 		},
-		head () {
+
+		head() {
 			return {
 				title: PageDescription.title,
 				meta: [
