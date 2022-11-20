@@ -76,6 +76,7 @@
 	import PageTransitionProperty 	from '~/assets/mixins/PageTransitionProperty';
 
 	// TYPES
+	import { MetaInfo } from 'vue-meta/types/vue-meta';
 
 	// ? Надо разобраться, почему не хватаются типы.
 	import type VueRouter from 'vue-router';
@@ -91,7 +92,6 @@
 	// COMPONENTS
 	import EccheumaImage 						from '~/components/image/Image.vue';
 	import IntesectionComponent from '~/components/functional/intersectionComponent.vue';
-import { MetaInfo } from 'vue-meta/types/vue-meta';
 
 	const PAGE_TRANSITION_TIME = 250;
 
@@ -163,11 +163,7 @@ import { MetaInfo } from 'vue-meta/types/vue-meta';
 			await this.getDatabaseData();
 			
 		},
-<<<<<<< HEAD
 		head(): MetaInfo {
-=======
-		head() {
->>>>>>> dev
 			return {
 				title: Meta.conctructTitle(this.Lang, { 
 					page: this.Page, 
