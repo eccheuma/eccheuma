@@ -203,13 +203,13 @@
 
 			async getDefaultIcons(): Promise<Array<string>> {
 
-				const response = await storage.list('UserIcons');
+				const responseResult = await storage.list('UserIcons');
 
-				if ( typeof response === 'string' ) return new Array(0);
+				if ( responseResult instanceof Error ) return new Array(0);
 
-				return response.files
-					.map(({ path }) => storage.reference(path))
-					.filter(x => x) as Array<string>;
+				return responseResult.files
+					.map(({ path }) => path )
+					.filter(Boolean);
 
 			},
 
@@ -251,8 +251,11 @@
 
 				await storage.upload(path, file, { contentType: file.type });
 
-				// TS can't correct work with logical assigment...
-				this.NewIcon ||= storage.reference(path) as string;
+				const newReference = await storage.reference(path);
+
+				if ( newReference instanceof Error ) return void 0;
+
+				this.NewIcon = newReference;
 
 			},
 
