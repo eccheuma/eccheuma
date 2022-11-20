@@ -87,6 +87,7 @@
 	// COMPONENTS
 	import EccheumaImage 						from '~/components/image/Image.vue';
 	import IntesectionComponent from '~/components/functional/intersectionComponent.vue';
+import { MetaInfo } from 'vue-meta/types/vue-meta';
 
 	const PAGE_TRANSITION_TIME = 250;
 
@@ -158,15 +159,13 @@
 			await this.getDatabaseData();
 			
 		},
-		head(): {[index: string]: string } {
-
+		head(): MetaInfo {
 			return {
 				title: Meta.conctructTitle(this.Lang, { 
 					page: this.Page, 
 					section: navigation.routeSections.gallery
 				}),
 			};
-			
 		},
 		computed: {
 

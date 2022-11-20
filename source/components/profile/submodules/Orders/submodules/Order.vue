@@ -398,7 +398,7 @@
 
       },
 
-      getOrderType(type: number): string {
+      getOrderType(type: string): string {
         return this.payload.category[type];
       }
 

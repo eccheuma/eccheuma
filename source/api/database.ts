@@ -1,13 +1,14 @@
-import { ref, 
-  get as firebaseGet, 
-  set as firebaseSet, 
-  remove as firebaseRemove, 
+import {
+  ref,
+  get as firebaseGet,
+  set as firebaseSet,
+  remove as firebaseRemove,
   update as firebaseUpdate,
   orderByKey,
   orderByChild,
 } from 'firebase/database';
 
-import { onValue, onChildChanged  } from 'firebase/database';
+import { onValue, onChildChanged } from 'firebase/database';
 import { query, startAt, endAt, limitToFirst, orderByValue } from 'firebase/database';
 
 import type { DatabaseReference, Query, QueryConstraint } from 'firebase/database';
@@ -16,12 +17,12 @@ import type { DatabaseReference, Query, QueryConstraint } from 'firebase/databas
 import { Result } from '~/utils';
 
 export interface QueryParams<O extends database.order = database.order.NONE> extends database.QueryOrder<O> {
-  mode    : database.mode
-  limit   : O extends database.order.key ? string : number
-  start   : O extends database.order.key ? string : number
-  end     : O extends database.order.key ? string : number
-  from    : O extends database.order.key ? string : number
-  to      : O extends database.order.key ? string : number
+  mode: database.mode
+  limit: O extends database.order.key ? string : number
+  start: O extends database.order.key ? string : number
+  end: O extends database.order.key ? string : number
+  from: O extends database.order.key ? string : number
+  to: O extends database.order.key ? string : number
 }
 
 // INNER FUNCTIONS
@@ -29,21 +30,21 @@ function defineQuery<O extends database.order>(ref: DatabaseReference, params?: 
 
   const QUERY = Array<QueryConstraint>();
 
-  if ( params?.order ) {
-    switch ( params.order ) {
+  if (params?.order) {
+    switch (params.order) {
       case database.order.key: QUERY.push(orderByKey()); break;
       case database.order.value: QUERY.push(orderByValue()); break;
       case database.order.child: {
-        if ( params.orderBy ) QUERY.push(orderByChild(params.orderBy));
+        if (params.orderBy) QUERY.push(orderByChild(params.orderBy));
       }
     }
   }
 
-  if ( params?.start ) 
+  if (params?.start)
     QUERY.push(startAt(params.start));
-  if ( params?.end )
+  if (params?.end)
     QUERY.push(endAt(params.end));
-  if ( params?.limit )
+  if (params?.limit)
     QUERY.push(limitToFirst(params.limit as number));
 
   return query(ref, ...QUERY);
@@ -61,8 +62,8 @@ export namespace database {
   }
 
   export interface QueryOrder<O extends database.order = order.NONE> {
-    order   : O
-    orderBy : string
+    order: O
+    orderBy: string
   }
 
   export const enum error {
@@ -86,30 +87,29 @@ export namespace database {
     const query: Query = defineQuery(REF, params);
 
     return firebaseGet(query).then(snap => snap.val());
-  
+
   }
-  
+
   export function listen<
-    C extends object, 
-    O extends order  = order.NONE,
-    R extends object = object,
-  >(path: string, callback: (value: C) => R, params?: Partial<QueryParams<O>>) {
-  
+    C extends object,
+    O extends order = order.NONE,
+  >(path: string, callback: (value: C) => any, params?: Partial<QueryParams<O>>) {
+
     const REF = ref(globalThis.firebaseDB, path);
-  
+
     let getQuery: Query = query(REF);
-  
-    if ( params ) getQuery = defineQuery(REF, params);
+
+    if (params) getQuery = defineQuery(REF, params);
 
     switch (params?.mode) {
       case mode.child:
-        onChildChanged(getQuery, snap  => callback(snap.val())); break;
-      default: 
+        onChildChanged(getQuery, snap => callback(snap.val())); break;
+      default:
         onValue(getQuery, snap => callback(snap.val())); break;
     }
-  
+
   }
-  
+
   export async function getLength(path: string): Promise<number> {
 
     const Query: Query = query(ref(globalThis.firebaseDB, path));
@@ -117,15 +117,15 @@ export namespace database {
     return firebaseGet(Query).then(snap => snap.size);
 
   }
-  
+
   export async function set<D extends object>(path: string, data: D): Promise<Result<boolean, Error>> {
-  
+
     return firebaseSet(ref(globalThis.firebaseDB, path), data)
       .then(() => true)
       .catch(() => new Error(error.denied));
-    
+
   }
-  
+
   export async function remove(path: string): Promise<Result<boolean, Error>> {
 
     return firebaseRemove(ref(globalThis.firebaseDB, path))
@@ -133,7 +133,7 @@ export namespace database {
       .catch(() => new Error(error.denied));
 
   }
-  
+
   export async function update<D extends object>(path: string, data: D): Promise<Result<boolean, Error>> {
 
     return firebaseUpdate(ref(globalThis.firebaseDB, path), data)
