@@ -5,12 +5,7 @@
     "moduleResolution": "Node",
     "lib": [
       "DOM",
-      "ES6",
       "ESNext",
-      "ESNext.AsyncIterable",
-      "WebWorker",
-      "WebWorker.ImportScripts",
-      "DOM.Iterable",
     ],
     "esModuleInterop": true,
     "allowJs": true,
