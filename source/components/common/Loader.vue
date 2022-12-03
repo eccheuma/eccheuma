@@ -85,7 +85,7 @@
 
 		section {
 			display: grid;
-    	place-content: center;
+			place-content: center;
 		}
 
 		&:after {

@@ -1,11 +1,7 @@
-import { Context } from '@nuxt/types';
-
-import { utils } from '~/utils';
-
-import { initializeApp, FirebaseApp } from 'firebase/app';
+import { initializeApp, FirebaseApp, getApps, deleteApp, FirebaseOptions } from 'firebase/app';
 import { getDatabase, Database } from 'firebase/database';
 
-import { getAuth, Auth } from 'firebase/auth';
+import { getAuth, Auth, } from 'firebase/auth';
 
 declare global {
 	var firebaseClient: FirebaseApp;
@@ -13,18 +9,24 @@ declare global {
 	var firebaseAuth: Auth;
 }
 
-const DOMEN = 'escapefrommordorland';
+export const deleteActiveInstances = () => getApps().forEach(deleteApp);
 
-export default (context?: Context) => {
+export default async () => {
 
-	const applicationHash = utils.randHashGenerator(12);
-	const CONFIG = {
+	deleteActiveInstances();
 
-		appId: context?.env.FIREBASE_API_APP || process.env.FIREBASE_API_APP,
-		apiKey: context?.env.FIREBASE_API_KEY || process.env.FIREBASE_API_KEY,
+	const { utils: { randHashGenerator } } = await import('~/utils');
+
+	const applicationHash = randHashGenerator(12);
+	const DOMEN = String(process.env.FIREBASE_DOMEN);
+
+	const CONFIG: FirebaseOptions = {
+
+		appId: String(process.env.FIREBASE_API_APP),
+		apiKey: String(process.env.FIREBASE_API_KEY),
 
 		authDomain: `${DOMEN}.firebaseapp.com`,
-		projectId: `${DOMEN}`,
+		projectId: DOMEN,
 		databaseURL: `https://${DOMEN}.firebaseio.com`,
 		storageBucket: `${DOMEN}.appspot.com`,
 		messagingSenderId: '975378208350',

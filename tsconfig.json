@@ -24,6 +24,7 @@
       "path::root/*": ["./*"],
     },
     "types": [
+      "./source/wasm",
       "vue/types",
       "@types/node",
       "@nuxt/types",
