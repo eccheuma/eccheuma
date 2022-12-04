@@ -341,7 +341,7 @@
 		import { Ranges } from '~/config/LoadPolitic';
 
 	// Helpers
-	import { DEFAULT_IMAGE_STRUCT, getImageURL } from '~/components/image/image.helpers';
+		import { DEFAULT_IMAGE_STRUCT, getImageURL } from '~/components/image/image.helpers';
 
 	// TYPES
 		import type { Image } from '~/types/Image';
@@ -390,7 +390,7 @@
 		},
 		async fetch() {
 
-			await this.GetPosts();
+			this.Slides = await this.GetPosts();
 
 		},
 		computed: {
@@ -406,24 +406,26 @@
 
 			async GetPosts() {
 
-				const POSTS: utils.types.asIterableObject<Post.struct> = await database.get('Posts', { limit: Ranges.posts });
+				const Posts: utils.types.asIterableObject<Post.struct> = await database.get('Posts', { limit: Ranges.posts });
 
-				const formatedSlides = Object
-					.values(POSTS)
-					.map(async ({ title, description, ID, tags, image, date }) => {
+				const formatedSlides: Array<Promise<HeaderSlide>> = Object
+					.values(Posts)
+					.map(({ title, description, ID, tags, image, date }) => new Promise((res) => {
 
-						return {
+						getImageURL({ 
+							path: image,
+							size: 1440,
+						}).then(imageResult => res({
 							content: { title, description, ID, tags },
 							date: utils.getLocalTime(date),
-							formatsStruct: await getImageURL({ 
-								path: image,
-								size: 1440,
-							})
-						} as HeaderSlide;
+							formatsStruct: imageResult instanceof Error
+								? DEFAULT_IMAGE_STRUCT
+								: imageResult,
+						}));
 
-					});
+					}));
 
-				this.Slides = await Promise.all(formatedSlides);
+				return await Promise.all(formatedSlides);
 				
 			},
 

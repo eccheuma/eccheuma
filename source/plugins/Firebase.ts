@@ -2,6 +2,7 @@ import { initializeApp, FirebaseApp, getApps, deleteApp, FirebaseOptions } from 
 import { getDatabase, Database } from 'firebase/database';
 
 import { getAuth, Auth, } from 'firebase/auth';
+import { Context } from '@nuxt/types';
 
 declare global {
 	var firebaseClient: FirebaseApp;
@@ -11,9 +12,10 @@ declare global {
 
 export const deleteActiveInstances = () => getApps().forEach(deleteApp);
 
-export default async () => {
+export default async (context?: Context) => {
 
-	deleteActiveInstances();
+	// Wipeout all instances that was stared early. 
+	if (context?.isDev) deleteActiveInstances();
 
 	const { utils: { randHashGenerator } } = await import('~/utils');
 

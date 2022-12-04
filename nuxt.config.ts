@@ -82,26 +82,16 @@ const config: NuxtConfig = {
 
         const { deleteActiveInstances } = await import('./source/plugins/Firebase');
 
-        deleteActiveInstances();
+        setTimeout(deleteActiveInstances, 3000);
 
-      }
+      },
+
     }
   },
 
   generate: {
     dir: 'app',
     routes: ['/post/0'],
-    cache: {
-      ignore: [
-        '.**/*',
-        '.*',
-        'node_modules',
-        'packages',
-        'tests',
-        'app',
-        'mocks',
-      ],
-    },
   },
 
 
@@ -155,6 +145,9 @@ const config: NuxtConfig = {
 
   ],
 
+  hardSource: inDevelopment,
+  cache: inDevelopment,
+
   build: {
 
     // analyze: !inDevelopment,
@@ -166,9 +159,6 @@ const config: NuxtConfig = {
       chunk: (context: any) => context.isDev ? '[name].js' : `[name].${hash}.js`,
       css: (context: any) => context.isDev ? '[name].css' : `[name].${hash}.css`,
     },
-
-    cache: true,
-    hardSource: true,
 
     babel: {
       presets: [
