@@ -51,8 +51,10 @@ function defineQuery<O extends database.order>(ref: DatabaseReference, params?: 
 
 }
 
-function applyRoot(this: any, path: string, root = 'dep') {
-  return `${root}/${path}`;
+function applyRoot(this: any, path: string, root = 'v1') {
+  return path.substring(0,2) === '~/' 
+    ? path.substring(2) 
+    : `${ root }/${ path }`;
 }
 
 // MODULE NAMESPACE
