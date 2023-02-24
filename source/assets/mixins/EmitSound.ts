@@ -5,7 +5,7 @@ import Vue from 'vue';
 import 			{ mapActions, mapState } 	from 'vuex';
 import type { Howl, HowlOptions } from 'howler';
 
-import type { VuexMap } from '~/types/VuexMap';
+import type { VuexMap } from '~/contracts/VuexMap';
 
 // TYPES
 export type FILE_NAME = 'Holl' 
