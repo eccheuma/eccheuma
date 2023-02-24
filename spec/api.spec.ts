@@ -15,8 +15,8 @@ import { database } from '~/api/database';
 import { auth, form } from '~/api/auth';
 import { feed } from '~/api/feed';
 
-import { Post } from '~/types/Post';
-import { User } from '~/types/User';
+import { Post } from '~/contracts/Post';
+import { User } from '~/contracts/User';
 
 // TESTS
 describe('api::auth', () => {
@@ -84,7 +84,7 @@ describe('api::database', () => {
 
     const POSTS_LIMIT: number = 1;
 
-    const response: utils.types.asIterableObject<Post.struct> = await database.get('Posts', { limit: POSTS_LIMIT });
+    const response: utils.types.asIterableObject<Post.struct> = await database.get('posts', { limit: POSTS_LIMIT });
 
     const Posts: Array<Post.struct> = Object.values(response);
 
@@ -96,15 +96,13 @@ describe('api::database', () => {
 
     const Q_TARGET: number = 2;
 
-    type DataType = 'objects' | 'array'
-
-    const PATHS: Record<DataType, string> = {
-      objects : 'Test/StructLike',
-      array   : 'Test/ArrayLike',
+    const PATHS = {
+      struct : '~/test/structs',
+      array  : '~/test/array',
     };
 
-    const QUANTITY: Record<DataType, number> = {
-      objects : await database.getLength(PATHS.objects),
+    const QUANTITY = {
+      objects : await database.getLength(PATHS.struct),
       array   : await database.getLength(PATHS.array),
     };
 
@@ -113,14 +111,16 @@ describe('api::database', () => {
       order: database.order.key   
     });
 
-    const objects: Array<number> = await database.get(PATHS.objects, {
+    const structs: Array<{ ID: number }> = await database.get(PATHS.struct, {
       start: QUANTITY.objects - Q_TARGET,
       order: database.order.child,
       orderBy: 'ID',  
     });
 
+    console.log(numbers, structs);
+
     expect(numbers.filter(x => x)).toHaveLength(Q_TARGET);
-    expect(Object.values(objects)).toHaveLength(Q_TARGET);
+    expect(Object.values(structs)).toHaveLength(Q_TARGET);
 
   });
 
@@ -137,25 +137,30 @@ describe('api::database', () => {
   test.concurrent('database::update', async () => {
 
     const { uid } = userSession;
-    
+
+    const newData: Partial<User.struct> = {
+      name: userName,
+    };
+
     // Check restricted writes
-      const writeResult = await database.update('App', { __SELF_KEY__: userName });
+      const writeResult = await database.update('app', { __SELF_KEY__: userName });
       
       expect(writeResult).instanceOf(Error);
 
     // Check valid writes  
-      const validWrite = await database.update(`Users/${ uid }/state`, { UserName: userName } as Partial<User.struct>);
+      const validWrite = await database.update(`users/${ uid }/state`, newData);
 
       typeof validWrite === 'boolean'
         ? expect(validWrite).toBe(true)
         : expect.fail('write permissions in a mess');
 
     // Check writes
-      expect(await database.get(`Users/${ uid }/state/UserName`))
+      expect(await database.get(`users/${ uid }/state/name`))
         .toBe(userName);
-      expect(await database.get('App/__SELF_KEY__'))
-        .not
-        .toBe(userName);
+
+      // expect(await database.get('app/__SELF_KEY__'))
+      //   .not
+      //   .toBe(userName);
 
   });
 

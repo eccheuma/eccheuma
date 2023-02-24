@@ -10,18 +10,18 @@ import { utils } from '~/utils';
 import { database } from '~/api/database';
 
 // TYPES
-import { Workcase } from '~/types/WorkCase';
-import { Message } from '~/types/Message';
-import { Image } from '~/types/Image';
-import { Post } from '~/types/Post';
-import { User } from '~/types/User';
+import { Workcase } from '~/contracts/WorkCase';
+import { Message } from '~/contracts/Message';
+import { Image } from '~/contracts/Image';
+import { Post } from '~/contracts/Post';
+import { User } from '~/contracts/User';
 
 // PATHS
 const dbPaths = {
-	post  : 'Posts/PostID-0',
-	image : 'Gallery/0',
-	case  : 'Cases/Logo/CaseID_0',
-	user  : `Users/${ process.env.TEST_USER_ID }`
+	post  : 'posts/post::0',
+	image : 'gallery/0',
+	case  : 'cases/Logo/case::0',
+	user  : `users/${ process.env.TEST_USER_ID }`
 };
 
 // TESTS
@@ -35,8 +35,8 @@ describe('contract::cases', async () => {
 
 		const mock = Workcase.builder();
 
-		expect(utils.comparer(workcase, mock)).true;
-		expect(utils.comparer(workcase.content, mock.content)).true;
+		expect(utils.recursiveCompare(workcase, mock)).true;
+		expect(utils.recursiveCompare(workcase.content, mock.content)).true;
 
 	});
 
@@ -52,8 +52,8 @@ describe('contract::image', async () => {
 
 		const mock = Image.builder();
 
-		expect(utils.comparer(image, mock)).true;
-		expect(utils.comparer(image.content, mock.content)).true;
+		expect(utils.recursiveCompare(image, mock)).true;
+		expect(utils.recursiveCompare(image.content, mock.content)).true;
 
 	});
 
@@ -66,7 +66,7 @@ describe('contract::post', async () => {
 
 	test('post::struct', () => {
 
-		expect(utils.comparer(post, mock)).true;
+		expect(utils.recursiveCompare(post, mock)).true;
 		expect(post.tags).length;
 
 	});
@@ -78,7 +78,7 @@ describe('contract::post', async () => {
 		post.content
 			.filter((content) => content.tag !== 'hr')
 			.forEach((struct) => {
-				expect(utils.comparer(struct, content));
+				expect(utils.recursiveCompare(struct, content));
 			});
 
 	});
@@ -97,7 +97,7 @@ describe('contract::post', async () => {
 		};
 
 		comments.forEach(comment => {
-			expect(utils.comparer(comment, mock));
+			expect(utils.recursiveCompare(comment, mock));
 		});
 
 	});
@@ -112,7 +112,9 @@ describe('contract::user', async () => {
 
 		const mock = User.builder();
 
-		expect(utils.comparer(state, mock)).true;
+		console.log(mock, state);
+
+		expect(utils.recursiveCompare(state, mock)).true;
 
 	});
 
@@ -121,7 +123,7 @@ describe('contract::user', async () => {
 		const mock = Message.builder();
 
 		Object.values(messages).forEach(struct => {
-			expect(utils.comparer(struct, mock)).true;
+			expect(utils.recursiveCompare(struct, mock)).true;
 		});
 
 	});

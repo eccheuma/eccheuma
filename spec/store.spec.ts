@@ -31,9 +31,9 @@ import * as AuthLoginStore    from '~/store/Auth/Login';
 import * as AuthLogoutStore   from '~/store/Auth/Logout';
 
 // TYPES
-import { Notification } from '~/types/Notification';
-import { Message } from '~/types/Message';
-import { Image } from '~/types/Image';
+import { Notification } from '~/contracts/Notification';
+import { Message } from '~/contracts/Message';
+import { Image } from '~/contracts/Image';
 
 // VIRTUAL STATE
 const virtualStore = new Vuex.Store({
@@ -120,8 +120,8 @@ describe('store::auth', () => {
 
 		expect(response).toBe(true);
 
-		expect(State.UserEmail).toBe(userForm.email);
-		expect(State.UserID).toBe(CurentUser.uid);
+		expect(State.email).toBe(userForm.email);
+		expect(State.ID).toBe(CurentUser.uid);
 		
 	});
 
@@ -157,9 +157,11 @@ describe('store::user', async () => {
 
 		const response: auth.error | boolean = await virtualStore.dispatch('Auth/Login/SignIn', userForm);
 
+		console.log(response);
+
 		if ( typeof response === 'string' ) throw new Error(response);
 
-		messageID		= utils.randHashGenerator();
+		messageID	= utils.randHashGenerator();
 
 	});
 
@@ -175,7 +177,7 @@ describe('store::user', async () => {
 			from: userForm.name,
 			message: 'Dreams that forgotten shorn distant perched door floating, i for a whose before the has...',
 			readed: false,
-			userID: virtualStore.state.User.State.State.UserID
+			userID: virtualStore.state.User.State.State.ID
 		};
 
 		const response: Error | boolean = await virtualStore.dispatch('User/Messages/sendMessage', newMessage);
@@ -198,7 +200,7 @@ describe('store::user', async () => {
 		expect(NewMessagesCount).toBe(0);
 
 		Data.forEach(mess => {
-			expect(mess.userID).toBe(State.UserID);
+			expect(mess.userID).toBe(State.ID);
 		});
 
 	});

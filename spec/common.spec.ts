@@ -5,7 +5,7 @@ import { gpu } from '~/utils/gpu';
 import { utils } from '~/utils/index';
 
 // MODULES
-import { Image } from '~/types/Image';
+import { Image } from '~/contracts/Image';
 
 // Helpers
 import { getImageURL } from '~/components/image/image.helpers';
@@ -17,52 +17,52 @@ describe('images::helpers', () => {
     // LARGER
     expect(Image.matchSize(Image.sizes.medium + 1))
       .toBe(Image.sizes.large);
-  
+
     // EQUAL
     expect(Image.matchSize(Image.sizes.medium))
       .toBe(Image.sizes.medium);
-  
+
     // SMALLER
     expect(Image.matchSize(Image.sizes.medium - 1))
       .toBe(Image.sizes.medium);
-  
+
   });
 
-  test('helpers::getExtension', () =>{
+  test('helpers::getExtension', () => {
 
     const extensions: Array<keyof typeof Image.formats.input> = [
       'jpeg', 'jpg', 'png'
     ];
 
     const validName: string = 'something.jpg';
-    
+
     const invalids: Array<[string, utils.extension.error]> = [
       // EXTENSION
-      ['something.cvs', 
+      ['something.cvs',
         utils.extension.error.extension],
-      ['something.tiff', 
+      ['something.tiff',
         utils.extension.error.extension],
-      ['something.zip', 
+      ['something.zip',
         utils.extension.error.extension],
       // NAME
-      ['something', 
+      ['something',
         utils.extension.error.name],
-      ['.jpg', 
+      ['.jpg',
         utils.extension.error.name],
-      ['jpg.', 
+      ['jpg.',
         utils.extension.error.name],
       // DOT
-      ['.jpg.', 
+      ['.jpg.',
         utils.extension.error.dot],
-      ['something.spec.jpg', 
+      ['something.spec.jpg',
         utils.extension.error.dot],
-      ['.spec.jpg', 
+      ['.spec.jpg',
         utils.extension.error.dot],
     ];
 
     expect(utils.extension.define(validName, extensions)).toBe('jpg');
 
-    invalids.forEach(([ filename, error ]) => {
+    invalids.forEach(([filename, error]) => {
 
       const response = utils.extension.define(filename, extensions);
 
@@ -71,7 +71,7 @@ describe('images::helpers', () => {
         : expect.fail();
 
     });
-    
+
   });
 
   test('helpers::getImageURL', async () => {
@@ -79,17 +79,17 @@ describe('images::helpers', () => {
     const subabaseDomen = 'unfruhyobjypfbvnncoc.supabase.co';
     const imagePath = 'Other/YumAjBcQMUM.jpg';
     const targetSize = Image.sizes.large;
-    
+
     const virtualSize = Image.sizes.medium + 60;
 
     const actualURLS: Pick<Image.formatsStruct, 'avif' | 'webp'> = {
-      webp: `https://${ subabaseDomen }/storage/v1/object/public/main/images/${ imagePath }/webp/${ targetSize }.webp`,
-      avif: `https://${ subabaseDomen }/storage/v1/object/public/main/images/${ imagePath }/avif/${ targetSize }.avif`,
+      webp: `https://${subabaseDomen}/storage/v1/object/public/main/images/${imagePath}/webp/${targetSize}.webp`,
+      avif: `https://${subabaseDomen}/storage/v1/object/public/main/images/${imagePath}/avif/${targetSize}.avif`,
     };
 
     const structResult = await getImageURL({ path: imagePath, size: virtualSize });
 
-    if ( structResult instanceof Error ) return expect.fail(structResult.message);
+    if (structResult instanceof Error) return expect.fail(structResult.message);
 
     expect(structResult).toStrictEqual(actualURLS);
 
