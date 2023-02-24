@@ -34,7 +34,7 @@
   "vueCompilerOptions": {
     "target": 2.7,
     "experimentalImplicitWrapComponentOptionsWithVue2Extend": true,
-    "jsxTemplates": true,
+    "jsxTemplates": false,
     "experimentalRuntimeMode": "runtime-dom",
   },
   "exclude": [

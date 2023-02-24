@@ -20,12 +20,12 @@ export default async (context?: Context) => {
 	const { utils: { randHashGenerator } } = await import('~/utils');
 
 	const applicationHash = randHashGenerator(12);
-	const DOMEN = String(process.env.FIREBASE_DOMEN);
+	const DOMEN = process.env.FIREBASE_DOMEN || String();
 
 	const CONFIG: FirebaseOptions = {
 
-		appId: String(process.env.FIREBASE_API_APP),
-		apiKey: String(process.env.FIREBASE_API_KEY),
+		appId: process.env.FIREBASE_API_APP,
+		apiKey: process.env.FIREBASE_API_KEY,
 
 		authDomain: `${DOMEN}.firebaseapp.com`,
 		projectId: DOMEN,
