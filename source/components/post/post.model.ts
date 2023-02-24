@@ -1,7 +1,7 @@
 // Types
 import { database } from '~/api/database';
-import { Post } from '~/types/Post';
-import { User } from '~/types/User';
+import { Post } from '~/contracts/Post';
+import { User } from '~/contracts/User';
 
 // Utils
 import { LocaleDate, Result, utils } from '~/utils';
@@ -10,7 +10,7 @@ import { LocaleDate, Result, utils } from '~/utils';
 import { IPostModel, IComment, CurrentPostData } from './post.types';
 
 // Constants
-const PUBLIC_FIELDS: Readonly<Array<keyof IPostModel>> = ['author', 'comments', 'content', 'likes', 'postDate'];
+const PUBLIC_FIELDS: Readonly<Array<keyof IPostModel>> = ['author', 'comments', 'content', 'likes', 'date'];
 
 namespace DBPaths {
   export const postRoot = 'Posts';
@@ -22,10 +22,13 @@ export class PostModel implements IPostModel {
 
   public likes    : utils.types.asIterableObject<Post.like>;
   public comments : utils.types.asIterableObject<Post.comment>;
-  public content  : Post.struct[];
+  public content  : Array<Post.content>;
 
   public author   : User.struct = User.DEFAULT;
-  public postDate : LocaleDate = utils.getLocalTime(0);
+  public date: IPostModel['date'] = {
+    origin        : utils.getLocalTime(0),
+    modified      : utils.getLocalTime(0),
+  };
 
   constructor() {
     this.likes    = Object();
@@ -43,6 +46,10 @@ export class PostModel implements IPostModel {
 
     return model as PostModel;
 
+  }
+
+  static constructPath(ID: number): string {
+    return `${ DBPaths.postRoot }/PostID-${ ID }`;
   }
 
   static async sendComment({ postID, userID, message, addressee }: IComment): Promise<Result<boolean>> {
@@ -73,11 +80,29 @@ export class PostModel implements IPostModel {
 
   static async getAuthor(authorID: User.struct['UserID']): Promise<Result<User.struct>> {
 
-    const response: User.struct = await database.get(`Users/${ authorID }/state`);
+    const response: User.struct = await database.get(`users/${ authorID }/state`);
 
     if ( !response ) return Error('User is undefined');
 
     return response;
+
+  }
+
+  static updateTime({ date }: Post.struct): IPostModel['date'] {
+    return {
+      origin   : utils.getLocalTime(date.origin),
+      modified : utils.getLocalTime(date.modified),
+    };
+  }
+
+  static async isActual(fetched: Post.struct) {
+
+    const actual: Post.struct = await database.get(PostModel.constructPath(fetched.ID));
+    
+    return {
+      is: actual.date.modified === fetched.date.modified,
+      data: actual,
+    };
 
   }
 

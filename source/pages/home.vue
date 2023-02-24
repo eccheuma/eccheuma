@@ -2,12 +2,12 @@
 	<div id="HomePage" class="home-container">
 
 		<section class="home-wrapper home-main" >
-			<pagination :payload="{ order: 1, scrollTarget: 445, section: 'home', delay: 0 }" />
+			<!-- <pagination :payload="{ order: 1, scrollTarget: 445, section: 'home', delay: 0 }" /> -->
 			<nuxt-child :key="$route.path" />
-			<pagination :payload="{ order: -1, scrollTarget: 445, section: 'home', delay: 0 }" />
+			<!-- <pagination :payload="{ order: -1, scrollTarget: 445, section: 'home', delay: 0 }" /> -->
 		</section>
 
-		<section class="home-wrapper home-auth">
+		<!-- <section class="home-wrapper home-auth">
 			<client-only>
 				<auth />
 			</client-only>
@@ -17,7 +17,7 @@
 			<client-only>
 				<vk-posts-container />
 			</client-only>
-		</section>
+		</section> -->
 
 	</div>
 </template>
@@ -79,7 +79,7 @@
 	import Auth from '~/components/auth/Auth.vue';
 
 // TYPES
-	import type { VuexMap } from '~/types/VuexMap';
+	import type { VuexMap } from '~/contracts/VuexMap';
 
 // LOAD POLITIC
 	import { Ranges } from '~/config/LoadPolitic';

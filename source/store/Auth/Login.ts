@@ -6,8 +6,8 @@ import type { ActionTree, MutationTree } from 'vuex';
 
 // TYPES
 	import type { CurentState as SessionState } from '~/store/Auth/Session';
-	import type { VuexMap } 	from '~/types/VuexMap';
-	import type { User } from '~/types/User';
+	import type { VuexMap } 	from '~/contracts/VuexMap';
+	import type { User } from '~/contracts/User';
 
 // STATE
 	export const state = () => ({
@@ -18,7 +18,7 @@ import type { ActionTree, MutationTree } from 'vuex';
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/types/VuexMap' {
+	declare module '~/contracts/VuexMap' {
 		interface Auth {
 			Login: CurentState,
 		}
@@ -54,7 +54,7 @@ import type { ActionTree, MutationTree } from 'vuex';
 				vuex.commit('Auth/Session/setUserState', userData, { root: true });
 
 				// Загрузка стейта пользователя из Firebase
-				const userState: User.struct = await database.get(`Users/${ uid }/state`);
+				const userState: User.struct = await database.get(`users/${ uid }/state`);
 
 				vuex.commit('User/State/setUserState', userState, { root: true });
 
@@ -62,7 +62,7 @@ import type { ActionTree, MutationTree } from 'vuex';
 			
 				vuex.commit('setAction', false);
 
-				database.listen(`Users/${ uid }/state`, value => {
+				database.listen(`users/${ uid }/state`, value => {
 					vuex.commit('User/State/setUserState', value, { root: true });
 				}, { mode: database.mode.whole });
 

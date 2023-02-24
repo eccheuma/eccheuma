@@ -344,10 +344,10 @@
 		import { DEFAULT_IMAGE_STRUCT, getImageURL } from '~/components/image/image.helpers';
 
 	// TYPES
-		import type { Image } from '~/types/Image';
-		import type { Post } 	from '~/types/Post';
+		import type { Image } from '~/contracts/Image';
+		import type { Post } 	from '~/contracts/Post';
 
-		import type { VuexMap } from '~/types/VuexMap';
+		import type { VuexMap } from '~/contracts/VuexMap';
 
 		type HeaderSlide = {
 			content: Pick<Post.struct, 'title' | 'description' | 'ID' | 'tags'>

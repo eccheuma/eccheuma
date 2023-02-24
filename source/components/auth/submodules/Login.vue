@@ -299,7 +299,7 @@ import Vue from 'vue';
 	import { form, auth } from '~/api/auth';
 
 	// VUEX MODULE TYPE MAP
-	import type { VuexMap } from '~/types/VuexMap';
+	import type { VuexMap } from '~/contracts/VuexMap';
 
 	// COMPONENTS
 	import EccheumaButton from '~/components/buttons/CommonButton.vue';

@@ -84,7 +84,7 @@
 	import { database } from '~/api/database';
 
 	// VUEX MODULE TYPE MAP
-	import type { VuexMap } from '~/types/VuexMap';
+	import type { VuexMap } from '~/contracts/VuexMap';
 
 	// COMPONENTS
 	import EccheumaButton from '~/components/buttons/CommonButton.vue';

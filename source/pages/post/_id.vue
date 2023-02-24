@@ -66,8 +66,8 @@
   import { database } from '~/api/database';
 
   // NAMESPACES
-	import { Post }   from '~/types/Post';
-  import { Image }  from '~/types/Image';
+	import { Post }   from '~/contracts/Post';
+  import { Image }  from '~/contracts/Image';
 
   // HELPERS
   import { getImageURL } from '~/components/image/image.helpers';

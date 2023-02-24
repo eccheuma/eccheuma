@@ -79,7 +79,7 @@
 	import { mapActions, mapState, mapMutations } from 'vuex';
 
 	// VUEX MODULE TYPE MAP
-	import type { VuexMap } from '~/types/VuexMap';
+	import type { VuexMap } from '~/contracts/VuexMap';
 
 	// COMPONENTS
 	import CommonButton	from '~/components/buttons/CommonButton.vue';

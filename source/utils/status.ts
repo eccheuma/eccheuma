@@ -1,6 +1,6 @@
 // TYPES
-  import { Purchase } from '~/types/Services';
-  import { User }     from '~/types/User';
+  import { Purchase } from '~/contracts/Services';
+  import { User }     from '~/contracts/User';
 
 // TRANSLATES
   import { languages, getLocale } from '~/lang';

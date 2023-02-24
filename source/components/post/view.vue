@@ -29,7 +29,7 @@
 
 				<section class="post-header-time">
 					<tag theme="transparent">
-						{{ postDate.Day }} в {{ postDate.Time }}
+						{{ date.origin.Day }} в {{ date.origin.Time }}
 					</tag>
 				</section>
 
@@ -135,7 +135,7 @@
 						<header class="post-content-header">
 							<h4>{{ payload.title }}</h4>
 							<h6>{{ payload.description }}</h6>
-							<span>{{ author ? author.UserName : '' }} | {{ postDate.Day }} в {{ postDate.Time }}</span>
+							<span>{{ author ? author.UserName : '' }} | {{ date.origin.Day }} в {{ date.origin.Time }}</span>
 						</header>
 
 						<template v-if="editContent">
@@ -797,15 +797,19 @@
 	// import DisplacementFilter		from '~/components/filters/displacement.vue'
 	// import NoiseFilter					from '~/components/filters/noise.vue'
 
+	// ANIMATIONS
+	import { animations } from '~/animations';
+	import { resolve as resolveAnimation } from '~/animations/post.animation';
+
 	// VUEX MODULE TYPE MAP
-	import type { VuexMap } from '~/types/VuexMap';
+	import type { VuexMap } from '~/contracts/VuexMap';
 
 	// NAMESPACES
-	import { Post } from '~/types/Post';
-	import { User } from '~/types/User';
+	import { Post } from '~/contracts/Post';
+	import { User } from '~/contracts/User';
 
 	// TYPES & INTERFACES
-	import type { Image } from '~/types/Image';
+	import type { Image } from '~/contracts/Image';
 
 	// Helpers
 	import { getOptimalImage } from '../image/image.helpers';
@@ -885,7 +889,7 @@
 
 		async fetch() {
 
-			this.postDate = utils.getLocalTime(this.payload.date);
+			this.date = PostModel.updateTime(this.payload);
 
 			if ( process.server ) {
 				await this.getAuthor();
@@ -949,7 +953,7 @@
 
 			if ( process.browser ) {
 				
-				const watchCooledStatus 	= this.$watch('Cooled', async (status) => {
+				const watchCooledStatus = this.$watch('Cooled', async (status) => {
 					if ( !status ) {
 
 						this.listenDataSnapshots('comments');
@@ -957,6 +961,13 @@
 
 						this.updateImage(); 						
 						this.getAuthor();
+
+						PostModel.isActual(this.payload).then(({ is, data }) => {
+							if ( !is ) {
+								this.content 	= data.content;
+								this.date 		= PostModel.updateTime(this.payload);
+							}
+						});
 						
 						watchCooledStatus(); console.debug('[Post]: watchCooledStatus | init');
 
@@ -978,7 +989,7 @@
 					this.listenDataSnapshots('content'); watchPrepareContent();
 				});
 
-				const watchIntersection 	= this.$watch('IntersectionAnimation', () => {
+				const watchIntersection = this.$watch('IntersectionAnimation', () => {
 					if ( this.IntersectionAnimation ) {
 						this.IntersectionAnimation.reverse(); watchIntersection();
 					}
@@ -997,18 +1008,14 @@
 
 			if ( process.browser ) {
 
+				const { keyframes, options } = resolveAnimation();
+
 				this.initCooler(this.$el, (cooled: boolean) => {
 					this.Cooled = cooled;
 				});
 
-				this.IntersectionAnimation = (this.$refs.post as HTMLElement).animate([
-					{ opacity: 0 },
-					{ opacity: 1 }
-				], {
-					easing: 'ease-in-out',
-					duration: 1000,
-					fill: 'both',
-				});
+				this.IntersectionAnimation = (this.$refs.post as HTMLElement)
+					.animate(keyframes, options);
 
 				this.setSounds([
 					{ file: 'Off', 	name: 'Element::Action', settings: { rate: 0.50 } },
@@ -1090,13 +1097,9 @@
 
 			prepareAnimations(el: Element, url: Image.formatsStruct) {
 
-				const animation = el.animate([
-					{ opacity: 1 },
-					{ opacity: 0 }
-				], {
-					duration: 250,
-					fill: 'both',
-				});
+				const { keyframes, options } = animations.common.opacityResolve(animations.common.AnimationMode.Short, true);
+
+				const animation = el.animate(keyframes, options);
 
 				animation.onfinish = () => {
 					

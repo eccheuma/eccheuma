@@ -8,8 +8,8 @@
 	import { database } from '~/api/database';
 
 // TYPES
-	import type { VuexMap } from '~/types/VuexMap';
-	import type { Message } from '~/types/Message';
+	import type { VuexMap } from '~/contracts/VuexMap';
+	import type { Message } from '~/contracts/Message';
 
 // STATE
 	export const state = () => ({
@@ -24,7 +24,7 @@
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/types/VuexMap' {
+	declare module '~/contracts/VuexMap' {
 		interface User {
 			Messages: CurentState
 		}
@@ -53,7 +53,7 @@
 
 			return new Promise((resolve) => {
 
-				database.listen<utils.types.asIterableObject<Message.struct>>(`Users/${uid}/messages`, (messages) => {
+				database.listen<utils.types.asIterableObject<Message.struct>>(`users/${uid}/messages`, (messages) => {
 				
 					commit('setMessages', Object.values(messages || new Object())); 
 	
@@ -75,7 +75,7 @@
 			// Получение ID пользователя
 			const { State } = vuex.rootState.User.State;
 
-			return database.set(`Users/${ State.UserID }/messages/Hash_${prop.ID}`, prop); 
+			return database.set(`users/${ State.ID }/messages/Hash_${prop.ID}`, prop); 
 
 		},
 
@@ -83,7 +83,7 @@
 
 			const { State } = vuex.rootState.User.State;
 
-			return database.remove(`Users/${ State.UserID }/messages/Hash_${ ID }`);
+			return database.remove(`users/${ State.ID }/messages/Hash_${ ID }`);
 
 		},
 
@@ -92,7 +92,7 @@
 			// Получение ID пользователя
 			const { State } = vuex.rootState.User.State;
 
-			return database.update(`Users/${ State.UserID }/messages/Hash_${ ID }`, { readed: true } as Partial<Message.struct>);
+			return database.update(`users/${ State.ID }/messages/Hash_${ ID }`, { readed: true } as Partial<Message.struct>);
 
 		},
 
@@ -101,7 +101,7 @@
 			const { State } = vuex.rootState.User.State;
 
 			const { length } = vuex.state.Data.filter(message => {
-				return message.readed === false && message.userID !== State.UserID;
+				return message.readed === false && message.userID !== State.ID;
 			});
 			
 			vuex.commit('setUnreadedQuanity', length);

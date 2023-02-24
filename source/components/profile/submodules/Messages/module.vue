@@ -153,7 +153,7 @@
 
 	// VUEX
 	import { mapState, mapActions } from 'vuex';
-	import type { VuexMap } from '~/types/VuexMap';
+	import type { VuexMap } from '~/contracts/VuexMap';
 
 	// API
 	import { database } from '~/api/database';
@@ -171,8 +171,8 @@
 	import IntesectionComponent from '~/components/functional/intersectionComponent.vue';
 
 	// TYPES
-	import type { Message as MessageNamespace } from '~/types/Message';
-	import type { User } from '~/types/User';
+	import type { Message as MessageNamespace } from '~/contracts/Message';
+	import type { User } from '~/contracts/User';
 
 	// MODULE
 	export default Vue.extend({

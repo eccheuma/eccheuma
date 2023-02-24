@@ -330,8 +330,8 @@
 	import Icon			from '~/components/common/Icon.vue';
 
 // TYPES
-	import type { VuexMap } from '~/types/VuexMap';
-	import type { APP_THEME } 	from '~/types/App';
+	import type { VuexMap } from '~/contracts/VuexMap';
+	import type { APP_THEME } 	from '~/contracts/App';
 
 // MIXINS
 	import EmitSound from '~/assets/mixins/EmitSound';

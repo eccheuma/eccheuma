@@ -41,7 +41,7 @@
 // VUEX MODULE TYPE MAP
 	import type { Application, Container, Sprite, Texture, Graphics, TilingSprite, LoaderResource } from 'pixi.js';
 	import type { AnimeInstance } from 'animejs';
-	import type { VuexMap } from '~/types/VuexMap';
+	import type { VuexMap } from '~/contracts/VuexMap';
 
 // UTILS
 	import { utils } from '~/utils';

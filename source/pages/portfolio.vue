@@ -59,9 +59,9 @@
 	import EmitSound from '~/assets/mixins/EmitSound';
 
 // TYPE
-	import { Portfolio } from '~/types/Portfolio';
-	import { navigation } from '~/types/Navigation';
-	import type { VuexMap } from '~/types/VuexMap';
+	import { Portfolio } from '~/contracts/Portfolio';
+	import { navigation } from '~/contracts/Navigation';
+	import type { VuexMap } from '~/contracts/VuexMap';
 
 // COMPONENTS
 	import SectionHeader from '~/components/common/SectionHeader.vue';

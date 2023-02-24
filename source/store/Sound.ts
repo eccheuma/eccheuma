@@ -35,7 +35,7 @@
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/types/VuexMap' {
+	declare module '~/contracts/VuexMap' {
 		interface VuexMap {
 			Sound: CurentState
 		}

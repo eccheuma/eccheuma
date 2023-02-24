@@ -115,7 +115,7 @@
 	import Calculator				from '~/components/service/Calculator/view.vue';
 
 	// TYPES 
-	import type { Categories, Purchase } from '~/types/Services';
+	import type { Categories, Purchase } from '~/contracts/Services';
 
 	interface CardStruct extends Purchase.Description {
 		category : Categories,

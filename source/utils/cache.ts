@@ -1,4 +1,4 @@
-import { Hash } from '~/types/Nominals';
+import { Hash } from '~/contracts/Nominals';
 import { Result, utils } from '.';
 
 interface ICacheContainer<D> {

@@ -47,7 +47,7 @@
 	import AuthProfile 		from '~/components/auth/submodules/Profile.vue';
 
 	// TYPES
-	import type { VuexMap } from '~/types/VuexMap';
+	import type { VuexMap } from '~/contracts/VuexMap';
 
 	// MODULE
 	export default Vue.extend({

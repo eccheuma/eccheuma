@@ -7,8 +7,8 @@ import { database } from '~/api/database';
 import { cache } from '~/utils/cache';
 
 // INTERFACES & TYPES
-import type { Post } from '~/types/Post';
-import type { Image } from '~/types/Image';
+import type { Post } from '~/contracts/Post';
+import type { Image } from '~/contracts/Image';
 
 export const enum Reference {
 	Posts,
@@ -84,7 +84,7 @@ export const state = () => ({
 export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-declare module '~/types/VuexMap' {
+declare module '~/contracts/VuexMap' {
 	interface VuexMap { PageContent: CurentState }
 }
 

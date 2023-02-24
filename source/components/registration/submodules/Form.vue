@@ -118,7 +118,7 @@
           radius: var(--border-radius);
         }
 
-        padding: 1vh 1vw;
+        padding: max(8px, 1vh) max(8px, 1vw);
 
         font: {
           size: var(--font-size-16);
@@ -157,7 +157,7 @@
 
   // VUEX
 	import { mapState, mapMutations } from 'vuex';
-	import type { VuexMap } from '~/types/VuexMap';
+	import type { VuexMap } from '~/contracts/VuexMap';
 
   // MIXINS
 	import EmitSound from '~/assets/mixins/EmitSound';

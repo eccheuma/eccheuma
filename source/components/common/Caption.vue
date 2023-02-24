@@ -40,7 +40,7 @@
 
     display: grid;
     grid-template: {
-      columns: 4vw 1px 1fr;
+      columns: auto 1px 1fr;
     };
 
     padding-right: 15%;
@@ -52,6 +52,11 @@
     background-color: var(--caption-card-bg);
     color: var(--caption-card-color);
     padding: 1vw;
+
+    @media screen and ( max-width: $mobile-breakpoint ) {
+			padding: 2vw 3vw;
+      column-gap: min(8px, 4vw);
+		};
 
     hr {
       width: 1px;
@@ -102,7 +107,10 @@
       width: 100%;
       background: var(--caption-card-color);
       margin: 1vh 0;
-      opacity: .25; 
+      opacity: .25;
+      @media screen and ( max-width: $mobile-breakpoint ) {
+        margin: min(4px, 1vh) 0;
+      }; 
     }
 
     &-desc {

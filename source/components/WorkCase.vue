@@ -411,10 +411,10 @@
 	import { mapState } from 'vuex';
 
 	// TYPES
-	import type { Workcase } from '~/types/WorkCase';
+	import type { Workcase } from '~/contracts/WorkCase';
 
 	// VUEX MODULE TYPE MAP
-	import type { VuexMap } from '~/types/VuexMap';
+	import type { VuexMap } from '~/contracts/VuexMap';
 
 	// COMPONENTS
 	import EccheumaSwiper from '~/components/common/Carousel.vue';

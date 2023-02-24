@@ -107,7 +107,7 @@
 					<hr v-once>
 
 					<section v-once class="user_profile-navigation-footer">
-						<common-button @click.native="Logout">
+						<common-button @click.native="logout">
 							Выход из аккаунта
 						</common-button>
 					</section>
@@ -466,13 +466,13 @@
 
 	// TYPES
 	import type { AnimeAnimParams } from 'animejs';
-	import type { VuexMap } 				from '~/types/VuexMap';
+	import type { VuexMap } 				from '~/contracts/VuexMap';
 
 	// UTILS
 	import { user } from '~/utils/status';
 
 	// ENUMS
-	import { User } from '~/types/User';
+	import { User } from '~/contracts/User';
 
 	// COMPONENTS
 	import CommonButton	from '~/components/buttons/CommonButton.vue';
@@ -538,7 +538,7 @@
 			Messages: 		() => import('~/components/profile/submodules/Messages/module.vue'),
 			Orders: 			() => import('~/components/profile/submodules/Orders/module.vue'),
 			NameChange: 	() => import('~/components/profile/submodules/NameChange.vue'),
-			IconChange: 	() => import('~/components/profile/submodules/IconChange.vue'),
+			IconChange: 	() => import('~/components/profile/submodules/Icon/module.vue'),
 		},
 
 		data() {
@@ -650,7 +650,7 @@
 
 			...mapActions({
 				// AUTH
-				Logout: 							'Auth/Logout',
+				logout: 							'Auth/Logout/Logout',
 				// MessageS
 				getMessages: 					'User/Messages/getMessages',
 				checkUnreaded: 				'User/Messages/checkUnreaded',

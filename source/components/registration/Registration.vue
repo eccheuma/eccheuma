@@ -62,7 +62,7 @@
 		z-index: 3000;
 
 		width: $GLOBAL-BodySize; 
-		height: 100vh;
+		height: 100%;
 
 		display: flex;
 		place-content: center;
@@ -115,6 +115,11 @@
 
 		background-color: rgba(var(--color-mono-200));
 		border-radius: var(--border-radius);
+
+		@media screen and ( max-width: $mobile-breakpoint ) {
+			width: 90vw;
+			height: min-content;
+		};
 
 	}
 	&-header {
@@ -206,7 +211,7 @@
 
 // VUEX
 	import { mapState, mapMutations, mapActions } from 'vuex';
-	import type { VuexMap } from '~/types/VuexMap';
+	import type { VuexMap } from '~/contracts/VuexMap';
 
 // TYPES & INTERFACES & ENUMS
 	import { auth, form } from '~/api/auth';

@@ -8,12 +8,12 @@
 
 // INTERFACES AND TYPES 
 
-	import { VuexMap } from '~/types/VuexMap';
+	import { VuexMap } from '~/contracts/VuexMap';
 
-	import { Purchase } 	from '~/types/Services';
-	import { Message } from '~/types/Message';
+	import { Purchase } 	from '~/contracts/Services';
+	import { Message } from '~/contracts/Message';
 
-	import type { Notification } from '~/types/Notification';
+	import type { Notification } from '~/contracts/Notification';
 	
 // STATE
 	export const state = () => ({
@@ -29,7 +29,7 @@
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/types/VuexMap' {
+	declare module '~/contracts/VuexMap' {
 		interface User {
 			WorkRequest: CurentState
 		}
@@ -86,8 +86,8 @@
 
 				const requestHash = utils.randHashGenerator();
 
-				await database.set(`Users/${ UserID }/work_requests/WorkID-${ requestHash }`, order);
-				await database.set(`Users/${ UserID }/messages/Hash_${ requestHash }`, Message);
+				await database.set(`users/${ UserID }/work_requests/WorkID-${ requestHash }`, order);
+				await database.set(`users/${ UserID }/messages/Hash_${ requestHash }`, Message);
 
 				vuex.commit('Notification/Notification_Status', true, { root: true });
 				vuex.commit('Notification/createNotification', newNotification, { root: true });
@@ -102,7 +102,7 @@
 
 			const { UserID } = vuex.rootState.User.State.State;
 
-			vuex.commit('setOrders', await database.get<Array<Purchase.order<any>>>(`Users/${ UserID }/work_requests`));
+			vuex.commit('setOrders', await database.get<Array<Purchase.order<any>>>(`users/${ UserID }/work_requests`));
 
 
 		},
@@ -111,7 +111,7 @@
 
 			const { UserID } = vuex.rootState.User.State.State;
 
-			vuex.commit('setQuantity', await database.getLength(`Users/${ UserID }/work_requests`)); 
+			vuex.commit('setQuantity', await database.getLength(`users/${ UserID }/work_requests`)); 
 		},
 
 		setActiveRequest(vuex) {

@@ -22,7 +22,7 @@
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/types/VuexMap' {
+	declare module '~/contracts/VuexMap' {
 		interface Auth {
 			Session: CurentState
 		}

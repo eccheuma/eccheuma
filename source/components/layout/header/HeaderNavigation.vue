@@ -315,7 +315,7 @@ $TransitionDuration: 250ms;
 	import { mapState } from 'vuex';
 
 	// VUEX MAP
-	import { VuexMap } from '~/types/VuexMap';
+	import { VuexMap } from '~/contracts/VuexMap';
 
 	// LANG
 	import { getLocale } from '~/lang';
@@ -336,7 +336,7 @@ $TransitionDuration: 250ms;
 	import { PageDescription as ServicePage } from '~/pages/service.vue';
 
 	// TYPES
-	import { navigation } from '~/types/Navigation';
+	import { navigation } from '~/contracts/Navigation';
 
 	type HeaderMenuItem = {
 		disabled		: boolean,

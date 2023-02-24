@@ -200,7 +200,7 @@
 	import Vue, { PropOptions } from 'vue';
 
 	// NAMESPACES
-	import { Image } from '~/types/Image';
+	import { Image } from '~/contracts/Image';
 
 	// TYPES
 	// type PREVIEW_MODE = 'cover' | 'contain' | 'zoom'

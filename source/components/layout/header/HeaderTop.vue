@@ -99,14 +99,33 @@
 <style lang="scss">
 
 .header_top-container {
-	display: grid;
+
 	padding: 1vh 4vw;
-	grid-template-columns: repeat(3, 1fr); 
+
+	display: grid;
+	grid-template: {
+		columns: repeat(3, 1fr);
+		areas: 'text logo button'
+	};
+	
+	@media screen and ( max-width: $mobile-breakpoint ) {
+		grid-template: {
+			columns: 1fr;
+			areas: 'text'
+		};
+	}
+
 	background-color: rgb(var(--color-mono-200));
 	align-items: center;
+
 	section {
+
+		grid-area: text;
+
 		span {
+
 			display: block; text-transform: uppercase;
+
 			&:nth-child(1) {
 				color: rgb(var(--color-mono-900));
 				font-weight: 500;
@@ -116,31 +135,53 @@
 				line-height: var(--size-42);
 				margin-top: -0.5vh;
 			}
+
 			&:nth-child(2) {
 				color: rgb(var(--color-mono-900)); font-weight: 700; letter-spacing: 1px; font-size: .45rem
 			}
+
 		}
+
 		@media screen and ( max-width: $mobile-breakpoint ) {
-			display: none;
+			text-align: center;
+			justify-self: center;
+			width: 100%;
 		}
+
 	}
+
 	svg {
+
+		grid-area: logo;
+
 		height: 33%;
 		cursor: pointer;
-		grid-column: 2/3;
 		transition-duration: .5s;
 		margin: auto;
+
 		&:hover {
 			transform: scale(.85);
 		}
-	}
-	button {
-		width: min-content;
-		justify-self: right;
+
 		@media screen and ( max-width: $mobile-breakpoint ) {
 			display: none
 		}
+
 	}
+
+	button {
+
+		grid-area: button;
+
+		width: min-content;
+		justify-self: right;
+
+		@media screen and ( max-width: $mobile-breakpoint ) {
+			display: none
+		}
+
+	}
+
 }
 
 </style>

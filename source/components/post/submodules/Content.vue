@@ -43,6 +43,7 @@
 	&-body {
 
 		padding: 5vh 0vw;
+		overflow-y: hidden;
 
 		color: rgb(var(--color-mono-900));
 		font-family: var(--read-font);
@@ -79,7 +80,7 @@
 		p {
 			font-size: var(--font-size-21);
 			font-weight: 300;
-			width: clamp(35ch, 75ch, 100%);
+			width: min(100%, 75ch);
 			line-height: var(--font-size-28);
 			color: rgb(var(--color-mono-600));
 		}
@@ -120,7 +121,7 @@
 
 			color: var(--color);
 			display: inline-flex;
-    	align-items: flex-end;
+			align-items: flex-end;
 
 			i {
 				fill: var(--color); 
@@ -136,12 +137,14 @@
       
 			padding: 1vh 1vw 2vh .5vw;
 			margin: 2vh 0;
+
       
 			code {
 				display: block;
 				white-space: pre-wrap;
 				tab-size: 3ch;
 				font-size: 12px;
+				overflow-wrap: anywhere;
 			}
 
 			> span {
@@ -184,7 +187,7 @@
 	import Prism 		from 'prismjs';
 
 	// TYPES
-	import type { Post } from '~/types/Post';
+	import type { Post } from '~/contracts/Post';
 
 	// COMPONENTS
 	import Icon from '~/components/common/Icon.vue';

@@ -34,7 +34,7 @@
 		watch: {
 			inView: {
 				handler() {
-					this.$emit('isIntersecting', this.inView, this.$slots.default![0].elm);
+					this.$emit('isIntersecting', this.inView, this.$slots.default?.[0].elm);
 				}
 			},
 			ready: {
@@ -59,7 +59,6 @@
 
 			createObserver(): Promise<IntersectionObserver> {
 
-				// eslint-disable-next-line no-undef
 				const OPTIONS: IntersectionObserverInit = {
 					rootMargin: ` ${ process.browser ? ( window.innerHeight / 100) * -( this.rootMargin ) : 0 }px 0px`
 				};
@@ -82,10 +81,8 @@
 
 			},
 
-			defaultCB( entry: IntersectionObserverEntry[] ) {
-
-				this.inView = entry[0].isIntersecting;
-
+			defaultCB([ firstEntry ]: IntersectionObserverEntry[] ) {
+				this.inView = firstEntry.isIntersecting;
 			} 
 
 		},

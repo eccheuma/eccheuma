@@ -6,7 +6,7 @@ import { MutationTree } from 'vuex';
 	import { languages } from '~/lang';
 
 // TYPES
-	import type { APP_THEME } from '~/types/App';
+	import type { APP_THEME } from '~/contracts/App';
 
 // STATE
 	export const state = () => ({
@@ -18,7 +18,7 @@ import { MutationTree } from 'vuex';
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/types/VuexMap' {
+	declare module '~/contracts/VuexMap' {
 		interface VuexMap {
 			App: CurentState
 		}

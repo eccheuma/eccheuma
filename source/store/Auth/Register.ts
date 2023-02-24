@@ -10,12 +10,12 @@ import type { MutationTree, ActionTree } from 'vuex';
 	import { currencies, wallet } from '~/utils/currency';
 
 // TYPES
-	import type { VuexMap } from '~/types/VuexMap';
-	import type { Message } from '~/types/Message';
+	import type { VuexMap } from '~/contracts/VuexMap';
+	import type { Message } from '~/contracts/Message';
 
 // NAMESPACES
-	import { User } 		from '~/types/User';
-	import { Purchase } from '~/types/Services';
+	import { User } 		from '~/contracts/User';
+	import { Purchase } from '~/contracts/Services';
 
 // STATE
 	export const state = () => ({
@@ -26,7 +26,7 @@ import type { MutationTree, ActionTree } from 'vuex';
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/types/VuexMap' {
+	declare module '~/contracts/VuexMap' {
 		interface Auth {
 			Register: CurentState
 		}
@@ -61,7 +61,7 @@ import type { MutationTree, ActionTree } from 'vuex';
 			vuex.commit('Auth/Session/setUserState', { uid, email }, { root: true });
 			vuex.commit('Auth/Session/setAuthError', null, { root: true });
 
-			await database.set<User.struct>(`Users/${ uid }/state`, {
+			await database.set<User.struct>(`users/${ uid }/state`, {
 				UserID					:	uid,
 				UserEmail				:	email,
 				UserName				:	form.name,
@@ -76,7 +76,7 @@ import type { MutationTree, ActionTree } from 'vuex';
 			});
 
 			// ? Всё ещё стоит под вопросом. Нужно ли хранить данные касательно клиентских настроек вне браузера...
-			await database.set(`Users/${ uid  }/preferences`, {
+			await database.set(`users/${ uid  }/preferences`, {
 				theme					: 0,
 				notifications	: false,
 			});
@@ -90,7 +90,7 @@ import type { MutationTree, ActionTree } from 'vuex';
 				readed	: false,
 			};
 
-			await database.set(`Users/${ uid }/messages/Hash_${ Message.ID }`, Message);
+			await database.set(`users/${ uid }/messages/Hash_${ Message.ID }`, Message);
 
 			return true;
 

@@ -90,7 +90,7 @@
 
 			grid-template: {
 				columns: 1fr;
-				rows: auto auto auto auto 2vh;
+				rows: auto auto auto auto auto;
 				areas: 	"social"
 								"freelance"
 								"about"
@@ -184,13 +184,12 @@
 
 		@media screen and ( max-width: $mobile-breakpoint ) {
 			
-			padding: 5vh 25vw;
-
-			row-gap: 5vh;
+			padding: 2vh 10vw;
 
 			grid-template: {
 				columns: 1fr
 			}
+
 		}
 
 		align-self: center;
@@ -206,7 +205,7 @@
 				&:nth-of-type(1) {
 					color: rgb(var(--color-mono-900));
 					font: {
-						size: var(--font-size-24);
+						size: var(--font-size-21);
 						weight: 800;
 					}
 
@@ -216,12 +215,9 @@
 				&:nth-of-type(2) {
 					color: rgb(var(--color-mono-600));
 					font: {
-						size: var(--font-size-18);
+						size: var(--font-size-16);
 						weight: 600;
 					}
-
-					// text-transform: uppercase;
-
 				}
 			}
 		}
@@ -263,7 +259,23 @@
 			columns: 1fr 1fr 1fr
 		}
 
+		@media screen and ( max-width: $mobile-breakpoint ) {
+
+			grid-template: {
+				columns: 1fr;
+				rows: 1fr 1fr;
+			}
+
+			row-gap: 0;
+
+		}
+
 		&-text {
+
+			@media screen and ( max-width: $mobile-breakpoint ) {
+				text-align: center;
+			}
+
 			span {
 
 				display: block; 
@@ -286,16 +298,29 @@
 			}
 		}
 		&-logo {
+
 			display: flex;
+
+			@media screen and ( max-width: $mobile-breakpoint ) {
+				display: none;
+			}
+
 			svg {
 				margin: auto;
 				height: 3vh;
 				fill: rgb(var(--color-mono-300));
 			}
+
 		}
 		&-version {
+
 			display: flex;
 			justify-content: flex-end;
+
+			@media screen and ( max-width: $mobile-breakpoint ) {
+				justify-content: center;
+			}
+
 			span {
 				align-self: center;
 				color: rgb(var(--color-mono-500));

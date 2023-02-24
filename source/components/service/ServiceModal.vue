@@ -143,9 +143,9 @@
 	// import Loader 	from '~/components/common/Loader.vue'
 
 // TYPES
-	import type { VuexMap } from '~/types/VuexMap';
+	import type { VuexMap } from '~/contracts/VuexMap';
 
-	import type { Purchase, Categories } from '~/types/Services';
+	import type { Purchase, Categories } from '~/contracts/Services';
 
 // MODULE
 	export default Vue.extend({

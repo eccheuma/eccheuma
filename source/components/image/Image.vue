@@ -27,8 +27,8 @@
 
 			<section ref="holder" class="eccheuma-image-picture">
 				<picture>
-					<source :srcset="Source.avif" type="image/avif">
-					<img ref="image" :src="Source.webp" :alt="content.description">
+					<source :srcset="imageStruct.avif" type="image/avif">
+					<img ref="image" :src="imageStruct.webp" :alt="content.description">
 				</picture>
 			</section>
 
@@ -274,17 +274,11 @@
 
 	import Vue, { PropOptions } from 'vue';
 
-	// VUEX
-	import { mapActions, mapState } from 'vuex';
-
 	// UTILS
 	import { utils } from '~/utils';
 
 	// TYPES
-	import { Image } from '~/types/Image';
-
-	// VUEX MAP
-	import type { VuexMap } from '~/types/VuexMap';
+	import { Image } from '~/contracts/Image';
 
 	// COMPONENTS
 	import Icon from '~/components/common/Icon.vue';
@@ -292,6 +286,11 @@
 	
 	// Helpers
 	import { getOptimalImage } from './image.helpers';
+
+	// Animations
+	import { animations } from '~/animations';
+
+	const { keyframes, options } = animations.common.opacityResolve(animations.common.AnimationMode.Short, true);
 
 	// MIXINS
 	import EmitSound from '~/assets/mixins/EmitSound';
@@ -330,7 +329,7 @@
 
 				LocalDate: utils.getLocalTime(this.content.date),
 
-				Source: PLACEHOLDER as Image.formatsStruct,
+				imageStruct: PLACEHOLDER as Image.formatsStruct,
 
 				Modal: false,
 				ImageFocus: false,
@@ -340,8 +339,8 @@
 
 		watch: {
 			'content.path': {
-				handler() {
-					this.$nextTick(this.getImage);
+				async handler() {
+					this.imageStruct = await this.getOptimalImage();
 				}
 			},
 		},
@@ -350,60 +349,54 @@
 
 			if ( process.browser ) {
 
-				const interesection = new IntersectionObserver((entry) => {
-					if ( entry[0].isIntersecting )  {
+				const observerInstance = new IntersectionObserver(([ firstEntry ]) => {
 
-						setTimeout(this.getImage, 250);
-						
-						interesection.unobserve(this.$el as HTMLElement);
-						
+					if ( firstEntry.isIntersecting ) {
+						this.$nextTick( async () => {
+
+							this.imageStruct = await this.getOptimalImage(); 
+							observerInstance.unobserve(this.$el);
+
+						});
 					}
+
 				});
 
-				interesection.observe(this.$el as HTMLElement);
+				observerInstance.observe(this.$el);
 
 			}
+
 		},
 
 		methods: {
-			
-			...mapActions({
-				getImageURL: 	'Images/getImageURL',
-			}),
 
-			getImage(): void {
+			async getOptimalImage(): Promise<Image.formatsStruct> {
 
-				const IMAGE_CONTAINER = this.$refs.holder as HTMLElement;
+				const imageContainer = this.$refs.holder as HTMLElement;
 
-				getOptimalImage(IMAGE_CONTAINER, this.content.path).then(url => {
-					if ( this.application.context.browser && this.application.gpu.available() ) {
-						this.prepareAnimations(IMAGE_CONTAINER, url);
-					} else {
-						this.Source = url;
-					}
-				});
+				const image = await getOptimalImage(imageContainer, this.content.path);
+
+				return this.application.context.browser && this.application.gpu.available()
+					? await this.runAnimation(imageContainer, image)
+					: image;
 
 			},
 
-			prepareAnimations(el: Element, url: Image.formatsStruct) {
+			runAnimation(container: Element, struct: Image.formatsStruct): Promise<Image.formatsStruct> {
 
-				const animation = el.animate([
-					{ opacity: 1 },
-					{ opacity: 0 }
-				], {
-					duration: 250,
-					fill: 'both',
+				return new Promise((res) => {
+
+					const animation = container.animate(keyframes, options);
+
+					animation.onfinish = () => { animation.onfinish = null;
+
+						res(struct);
+
+						(this.$refs.image as HTMLImageElement).onload = () => animation.reverse();
+
+					};
+
 				});
-
-				animation.onfinish = () => {
-
-					animation.onfinish = null;
-
-					this.Source = url;
-
-					(this.$refs.image as HTMLImageElement).onload = () => animation.reverse();
-
-				};
 
 			},
 

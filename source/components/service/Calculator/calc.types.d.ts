@@ -1,6 +1,6 @@
 // Types
-import type { Hash } from '~/types/Nominals';
-import type { Categories, Purchase, Additions } from '~/types/Services';
+import type { Hash } from '~/contracts/Nominals';
+import type { Categories, Purchase, Additions } from '~/contracts/Services';
 import type { Result } from '~/utils';
 
 // Models

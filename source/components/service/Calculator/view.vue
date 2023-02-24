@@ -340,8 +340,8 @@
 	import Vue from 'vue';
 
 // Global Types
-	import type { Second } from '~/types/Nominals';
-	import type { Purchase, Additions } from '~/types/Services';
+	import type { Second } from '~/contracts/Nominals';
+	import type { Purchase, Additions } from '~/contracts/Services';
 
 // Inner Types
 	import { IPurchaseForm } from './calc.types';

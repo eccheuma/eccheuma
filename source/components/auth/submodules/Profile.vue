@@ -248,10 +248,10 @@
 	import Icon						from '~/components/common/Icon.vue';
 
 // TYPES
-	import type { VuexMap } from '~/types/VuexMap';
+	import type { VuexMap } from '~/contracts/VuexMap';
 
 // NAMESPACE
-	import { User } from '~/types/User';
+	import { User } from '~/contracts/User';
 
 	type PROFILE_AREA = {
 		title: string

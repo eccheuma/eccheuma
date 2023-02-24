@@ -1,5 +1,5 @@
-import { Post } from '~/types/Post';
-import { User } from '~/types/User';
+import { Post } from '~/contracts/Post';
+import { User } from '~/contracts/User';
 import { LocaleDate, utils } from '~/utils';
 
 declare interface IPostSocial {
@@ -10,8 +10,8 @@ declare interface IPostSocial {
 
 declare interface IPostModel extends IPostSocial {
 
-  content   : Array<Post.struct>,
-  postDate  : LocaleDate
+  content   : Array<Post.content>,
+  date      : Record<keyof Post.date, LocaleDate>,
 }
 
 declare interface CurrentPostData {

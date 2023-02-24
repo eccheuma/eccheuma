@@ -1,5 +1,5 @@
 import { russian } from '~/lang';
-import { Categories } from '~/types/Services';
+import { Categories } from '~/contracts/Services';
 import { DAY, CATEGORIES_LANG } from './calc.constants';
 
 export namespace FormatHelpres {

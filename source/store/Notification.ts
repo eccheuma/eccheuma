@@ -1,7 +1,7 @@
 import { ActionTree, MutationTree } from 'vuex';
 
 // TYPES AND INTERFACES
-	import type { Notification } from '~/types/Notification';
+	import type { Notification } from '~/contracts/Notification';
 
 // STATE
 	export const state = () => ({
@@ -16,7 +16,7 @@ import { ActionTree, MutationTree } from 'vuex';
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/types/VuexMap' {
+	declare module '~/contracts/VuexMap' {
 		interface VuexMap {
 			Notification: CurentState
 		}

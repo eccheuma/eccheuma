@@ -192,7 +192,7 @@
 
 	import { mapMutations, mapState } from 'vuex';
 
-	import type { VuexMap } from '~/types/VuexMap';
+	import type { VuexMap } from '~/contracts/VuexMap';
 
 	// COMPONENTS 
 	import Icon 									from '~/components/common/Icon.vue';

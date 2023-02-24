@@ -2,8 +2,8 @@
 import { database } from '~/api/database';
 
 // Types
-import type { Hash, Second } from '~/types/Nominals';
-import type { Categories, Purchase, Additions } from '~/types/Services';
+import type { Hash, Second } from '~/contracts/Nominals';
+import type { Categories, Purchase, Additions } from '~/contracts/Services';
 import type { ICost, IPurchaseForm, IQuantity, FetchResult } from './calc.types';
 
 // Utils

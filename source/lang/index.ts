@@ -1,7 +1,7 @@
 
-import type { Categories } from '~/types/Services';
+import type { Categories } from '~/contracts/Services';
 
-import { navigation } from '~/types/Navigation';
+import { navigation } from '~/contracts/Navigation';
 import { math } from '~/utils/math';
 
 export const enum languages {

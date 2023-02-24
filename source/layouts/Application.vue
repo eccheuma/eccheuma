@@ -24,19 +24,19 @@
 		<desktop-navigation v-else :search="true" :background="true" />
 
 		<client-only>
-			<section class="layout-mobile">
-				<template v-if="LoginStatus == true && !$isMobile">
-					<eccheuma-button @click.native="toggleProfileArea">
+			<template v-if="$isMobile">
+				<section class="layout-mobile">
+
+					<eccheuma-button v-if="LoginStatus == true && !$isMobile" @click.native="toggleProfileArea">
 						Личный кабинет
 					</eccheuma-button>
-				</template>
 
-				<template v-else>
-					<eccheuma-button @click.native="toggleRegisterModal">
+					<eccheuma-button v-else @click.native="toggleRegisterModal">
 						Зарегистрироваться
 					</eccheuma-button>
-				</template>
-			</section>
+
+				</section>
+			</template>
 		</client-only>
 
 		<section class="content-wrapper">
@@ -211,8 +211,8 @@
 	import { registration } from '~/assets/json/notifications.json';
 
 	// TYPES
-	import type { Notification } from '~/types/Notification';
-	import type { VuexMap } from '~/types/VuexMap';
+	import type { Notification } from '~/contracts/Notification';
+	import type { VuexMap } from '~/contracts/VuexMap';
 	
 	Vue.component('TransitionWrapper', TransitionWrapper);
 
@@ -239,8 +239,8 @@
 
 			Registration: 			() => import('~/components/registration/Registration.vue'),
 
-			// MOBILE COMPONENTS //
-			MobileNavigation: 	() => import('~/components/mobile/HeaderNavigation.vue'),
+			// MOBILE COMPONENTS
+			MobileNavigation: 	() => import('~/components/layout/mobile/HeaderNavigation.vue'),
 
 		},
 		transition: {

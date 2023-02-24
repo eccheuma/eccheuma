@@ -337,7 +337,7 @@
 
 // TYPES
 	import type { AnimeInstance, AnimeAnimParams } 	from 'animejs';
-	import type { VuexMap } from '~/types/VuexMap';
+	import type { VuexMap } from '~/contracts/VuexMap';
 
 // MIXINS
 	import EmitSound from '~/assets/mixins/EmitSound';

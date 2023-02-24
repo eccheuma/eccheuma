@@ -64,7 +64,7 @@
 	import { mapActions, mapMutations, mapState } from 'vuex';
 	
 	// VUEX MAP
-	import type { VuexMap } from '~/types/VuexMap';
+	import type { VuexMap } from '~/contracts/VuexMap';
 
 	// API
 	import { database } from '~/api/database';
@@ -84,7 +84,7 @@
 	import { PayloadQuery, Reference } from '~/store/PageContent';
 	import type { ANIMATION_PAYLOAD } from '~/assets/mixins/IntersectionObserver';
 
-	import { navigation } from '~/types/Navigation';
+	import { navigation } from '~/contracts/Navigation';
 
 	// LOAD POLITIC
 	import { Ranges } from '~/config/LoadPolitic';

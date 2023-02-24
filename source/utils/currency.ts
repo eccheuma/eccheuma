@@ -11,16 +11,16 @@ export namespace currencies {
 
 	export enum Country {
 		ru = 'RUB',
-		en = 'USD', 
+		en = 'USD',
 		ch = 'CHY',
 	}
 
-	export const DEFAULT = [ currencies.Country.ru ];
+	export const DEFAULT = [currencies.Country.ru];
 
 	export const signDict: Readonly<Record<Country, string>> = {
-		[ Country.ru ]: '₽',
-		[ Country.en ]: '$',
-		[ Country.ch ]: '¥'
+		[Country.ru]: '₽',
+		[Country.en]: '$',
+		[Country.ch]: '¥'
 	};
 
 	export interface ICurrency {
@@ -34,11 +34,11 @@ export namespace currencies {
 		readonly coefficient = GLOBAL_COF;
 
 		constructor(val: utils.types.nominal<number, C>, coefficient: number) {
-			this.value = val; 
+			this.value = val;
 			this.coefficient = coefficient;
-		} 
+		}
 
-		@debug.derive(true, process.browser)
+		@debug.derive(false, process.browser)
 		public convert<C extends Country, Cur extends ICurrency>(currency_type: Cur) {
 
 			return this.value * (currency_type.coefficient / this.coefficient) as utils.types.nominal<number, C>;
@@ -65,7 +65,7 @@ export namespace currencies {
 			static coefficient: number = cof;
 			static country: Country = country;
 
-			constructor(value = 0) { 
+			constructor(value = 0) {
 				super(value as utils.types.nominal<number, C>, cof);
 			}
 
@@ -125,7 +125,7 @@ export namespace wallet {
 
 		public async setCurrencies(cur: Array<currencies.Country>) {
 
-			for await ( const country of cur ) {
+			for await (const country of cur) {
 
 				const instance = currencies.Fabric(country, await currency.getCoefficient(country));
 
@@ -135,29 +135,29 @@ export namespace wallet {
 
 		}
 
-		@debug.derive(true, process.browser)
+		@debug.derive(false, process.browser)
 		public async send<Cur extends currencies.Currency>(cur: Cur, wallet_type: currencies.Country): Promise<number | Error> {
 
 			const wallet = this.currencies[wallet_type];
 			const value = cur.convert(wallet);
 
-			if ( wallet.value + value > WALLET_LIMIT ) return Error(errors.WALLET_LIMIT);
-		
-			return await currency.validateOperation() 
+			if (wallet.value + value > WALLET_LIMIT) return Error(errors.WALLET_LIMIT);
+
+			return await currency.validateOperation()
 				? wallet.add(value)
 				: Error(currency.errors.REJECT);
 
 		}
 
-    @debug.derive(true, process.browser)
+		@debug.derive(false, process.browser)
 		public async take<Cur extends currencies.Currency>(cur: Cur, wallet_type: currencies.Country): Promise<number | Error> {
 
 			const wallet = this.currencies[wallet_type];
 			const value = cur.convert(wallet);
 
-			if ( wallet.value < value ) return Error(errors.WALLET_OUT);
+			if (wallet.value < value) return Error(errors.WALLET_OUT);
 
-			return await currency.validateOperation() 
+			return await currency.validateOperation()
 				? wallet.grab(value)
 				: Error(currency.errors.REJECT);
 

@@ -2,7 +2,7 @@
 	import type { MutationTree } from 'vuex';
 
 // TYPES
-	import { User } from '~/types/User';
+	import { User } from '~/contracts/User';
 	import { currencies } from '~/utils/currency';
 
 // STATE
@@ -19,7 +19,7 @@
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/types/VuexMap' {
+	declare module '~/contracts/VuexMap' {
 		interface User {
 			State: CurentState
 		}

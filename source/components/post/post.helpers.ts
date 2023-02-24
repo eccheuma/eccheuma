@@ -1,5 +1,5 @@
 import { database } from '~/api/database';
-import { User } from '~/types/User';
+import { User } from '~/contracts/User';
 import { utils } from '~/utils';
 import { IAnswer } from './post.types';
 
@@ -15,7 +15,7 @@ export namespace helpers {
 
     const addressees = extractAddressee(message);
 
-    const users = await database.get<utils.types.asIterableObject<User.state>>('Users');
+    const users: utils.types.asIterableObject<User.state> = await database.get('Users');
 
     return Object.values(users)
       .filter(user => addressees.some(x => x === user.state.UserName))
