@@ -4,6 +4,11 @@ import { User } from './User';
 
 export namespace Post {
 
+	export interface date {
+		origin: number,
+		modified: number
+	}
+
 	export type content = { 
 		tag		: string, 
 		value	: any
@@ -30,7 +35,7 @@ export namespace Post {
 		content			: Array<content>
 		image				: string
 		tags				: Array<string>
-		date				: number
+		date				: date
 		title				: string
 	}
 
@@ -44,7 +49,10 @@ export namespace Post {
 			authorID: String(),
 			comments: Object(),
 			likes: Object(),
-			date: Number(),
+			date: {
+				modified: Number(),
+				origin: Number()
+			},
 			description: String(),
 			image: String(),
 			tags: [],

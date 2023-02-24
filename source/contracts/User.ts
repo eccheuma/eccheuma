@@ -1,9 +1,9 @@
 // ENUMS
-import { Purchase } from '~/types/Services';
+import { Purchase } from '~/contracts/Services';
 import { currencies, wallet } from '~/utils/currency';
 
 // TYPES
-import { Message } from '~/types/Message';
+import { Message } from '~/contracts/Message';
 
 export namespace User {
 
@@ -16,13 +16,13 @@ export namespace User {
 	
 	// INTERFACES
 	export interface struct {
-		UserID: string
-		UserEmail: string
-		UserName: string
-		UserStatus: status
-		UserWallet: wallet.contract
-		UserWorkStatus: Purchase.status
-		UserImageID: string
+		ID: string
+		email: string
+		name: string
+		status: status
+		wallet: wallet.contract
+		purchase: Purchase.status
+		image: string
 	}
 
 	export interface state {
@@ -31,13 +31,13 @@ export namespace User {
 	}
 
 	export const DEFAULT: struct = {
-		UserEmail: String(),
-		UserID: String(),
-		UserImageID: String(),
-		UserName: String(),
-		UserStatus: status.User,
-		UserWallet: new wallet.Instance(currencies.DEFAULT).toJSON,
-		UserWorkStatus: Purchase.status.None
+		ID				: String(),
+		email			: String(),
+		image			: String(),
+		name			: String(),
+		status		: status.User,
+		wallet		: new wallet.Instance(currencies.DEFAULT).toJSON,
+		purchase	: Purchase.status.None
 	};
 
 	/**
