@@ -7,6 +7,7 @@
 
 	import animeJS from 'animejs';
 	import type { SoundInstance } from '~/assets/mixins/EmitSound';
+import { Result } from '~/utils';
 
 // TYPES 
 	interface GLOBAL_PROPERTY {
@@ -61,7 +62,7 @@
 // ACTIONS
 	export const actions: ActionTree<CurentState, CurentState> = {
 
-		registerSound(vuex, sound: SoundInstance ): Howl {
+		registerSound(vuex, sound: SoundInstance ): Result<Howl> {
 			
 			if ( !vuex.state.sounds.has(sound.name) ) {
 				

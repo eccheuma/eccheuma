@@ -16,12 +16,12 @@ declare interface IPostModel extends IPostSocial {
 
 declare interface CurrentPostData {
   postID  : Post.struct['ID'],
-  userID  : User.struct['UserID']
+  userID  : User.struct['uid']
 }
 
 declare interface IComment extends CurrentPostData {
   message   : Post.comment['data'], 
-  addressee : Array<User.struct['UserID']>
+  addressee : Array<User.struct['uid']>
 }
 
 declare interface IAnswer {

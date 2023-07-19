@@ -252,7 +252,7 @@
 				ApplicationLoadStages: [
 					{ LoadPoint: 0, 	Message: 'Загрузка скриптов и данных' },
 					{ LoadPoint: 25, 	Message: 'Монтирование элементов' },
-					{ LoadPoint: 80, 	Message: 'Остаточная компоновка элементов' },
+					{ LoadPoint: 90, 	Message: 'Остаточная компоновка элементов' },
 					{ LoadPoint: 100, Message: 'Готово!' },
 				] as Array<LoadStage>
 			};
@@ -266,7 +266,9 @@
 
 		},
 		mounted() {
+
 			setTimeout(this.registrationNotify, 360_000);
+
 		},
 		methods: {
 

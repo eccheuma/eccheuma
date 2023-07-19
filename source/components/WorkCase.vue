@@ -239,6 +239,7 @@
 
 				&-item {
 					display: inline-grid;
+					min-width: 720px;
 				}
 
 				&-buttons {
@@ -266,13 +267,7 @@
 					}
 
 					&:hover {
-						background-color: rgba(var(--color-mono-200),.0);
-						&:nth-of-type(1) {
-							box-shadow: 1px 0px 0px 0px rgba(var(--color-mono-1000),.25)
-						}
-						&:nth-of-type(2) {
-							box-shadow: -1px 0px 0px 0px rgba(var(--color-mono-1000),.25)
-						}
+						background-color: rgba(var(--color-mono-200),0.5);
 					}
 
 				}

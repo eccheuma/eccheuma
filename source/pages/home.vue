@@ -2,12 +2,12 @@
 	<div id="HomePage" class="home-container">
 
 		<section class="home-wrapper home-main" >
-			<!-- <pagination :payload="{ order: 1, scrollTarget: 445, section: 'home', delay: 0 }" /> -->
+			<pagination :payload="{ order: 1, scrollTarget: 445, section: 'home', delay: 0 }" />
 			<nuxt-child :key="$route.path" />
-			<!-- <pagination :payload="{ order: -1, scrollTarget: 445, section: 'home', delay: 0 }" /> -->
+			<pagination :payload="{ order: -1, scrollTarget: 445, section: 'home', delay: 0 }" />
 		</section>
 
-		<!-- <section class="home-wrapper home-auth">
+		<section class="home-wrapper home-auth">
 			<client-only>
 				<auth />
 			</client-only>
@@ -17,7 +17,7 @@
 			<client-only>
 				<vk-posts-container />
 			</client-only>
-		</section> -->
+		</section>
 
 	</div>
 </template>
@@ -55,7 +55,7 @@
 	}
 	&-feed {
 		grid-area: feed;
-		padding-top: 0;
+		padding: 0;
 	}
 }
 
@@ -124,7 +124,7 @@
 
 		async mounted() {
 
-			const PostsQuantity: number = await database.getLength('Posts');
+			const PostsQuantity: number = await database.getLength('posts');
 
 			this.PageQuantity = Math.ceil( PostsQuantity / Ranges.posts );
 

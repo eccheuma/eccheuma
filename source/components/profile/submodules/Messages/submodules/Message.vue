@@ -165,7 +165,7 @@
     },
     mounted() {
 
-      switch (this.payload.userID) {
+      switch (this.payload.from) {
 
         case 'SUPPORT': this.author = {
           name: 'Eccheuma Support',
@@ -185,11 +185,11 @@
     methods: {
       async getUser() {
 
-        const { UserName, UserStatus } = await database.get<User.struct>(`Users/${ this.payload.userID }/state`);
+        const { name, status } = await database.get<User.struct>(`users/${ this.payload.uid }/state`);
 
         this.author = {
-          name: UserName,
-          status: UserStatus
+          name: name,
+          status: status
         };
 
       }

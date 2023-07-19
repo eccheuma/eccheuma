@@ -38,7 +38,6 @@
 					<nuxt-link 
 						:to="prop.route"
 						:prefetch="routePrefetch"
-						@click="topScroll"
 						>
 
 						<icon :name="prop.icon" />
@@ -438,20 +437,24 @@ $TransitionDuration: 250ms;
 				]);
 			}
 
-		},
-		methods: {
+			this.$router.beforeEach((to, from, next) => {
 
-			topScroll() {
+				if ( 'type' in to.params ) return next();
+
 				window.scrollTo({
-					top: this.$el.scrollTop,
+					top: window.innerHeight / 2,
 					behavior: 'smooth',
 				});
-			},
 
+				return next();
+
+			});
+
+		},
+		methods: {
 			getLocale(route: navigation.routeSections): string {
 				return getLocale(this.Lang).Routes[ route ];
 			}
-			
 		}
 	});
 

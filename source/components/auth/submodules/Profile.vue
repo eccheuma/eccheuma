@@ -1,13 +1,13 @@
 <template>
 	<div class="auth_profile-container">
 
-		<section class="auth_profile-header" :style="`background-image: url(${ State.UserImageID })`">
-			<i :style="`background-image: url(${ State.UserImageID })`" />
+		<section class="auth_profile-header" :style="`background-image: url(${ State.image })`">
+			<i :style="`background-image: url(${ State.image })`" />
 			<div class="auth_profile-header-info">
 				<tag theme="light">
-					{{ State.UserName }}
+					{{ State.name }}
 				</tag>
-				<span>{{ defineStatus(State.UserStatus) }}</span>
+				<span>{{ defineStatus(State.status) }}</span>
 			</div>
 		</section>
 
@@ -241,6 +241,7 @@
 
 // UTILS
 	import { user, work } from '~/utils/status';
+	import { currencies } from '~/utils/currency';
 
 // COMPONENTS
 	import EccheumaButton from '~/components/buttons/CommonButton.vue';
@@ -253,12 +254,16 @@
 // NAMESPACE
 	import { User } from '~/contracts/User';
 
+	type FIELDS = 'wallet' | 'status' | 'messages';
+
 	type PROFILE_AREA = {
 		title: string
 		value: string | number
 		icon: string
 		info?: string
 	}
+
+	type ProfileStat = Record<FIELDS, PROFILE_AREA>
 
 // MODULE
 	export default Vue.extend({
@@ -271,36 +276,40 @@
 			...mapState({
 
 				State				: state => (state as VuexMap).User.State.State,
-				Currency		: state => (state as VuexMap).User.State.Currency,
+
+				Country			: state => (state as VuexMap).User.Wallet.Country,
+				Wallet 			: state => (state as VuexMap).User.Wallet.Current,
+
 				NewMessages	: state => (state as VuexMap).User.Messages.NewMessagesCount,
 				Messages		: state => (state as VuexMap).User.Messages.Data,
 				Lang				: state => (state as VuexMap).App.Lang
 
 			}),
 
-			profileAreas(): { [ K in keyof User.struct ]?: PROFILE_AREA } | { Messages: PROFILE_AREA } {
+			profileAreas(): ProfileStat {
 
-				// ! Refactor target.
-				const LastMessage = this.Messages.length ? [ ...this.Messages ].pop()?.message : '';
+				const messageInfo = this.Messages[ this.Messages.length - 1 ]
+					? `Последнее сообщение: "${ this.Messages[ this.Messages.length - 1 ].message?.slice(0, 65) }"`
+					: "Новых сообщений нет."
 
 				return {
-					UserWallet: {
+					wallet: {
 						title: 'Баланс',
-						value: `${ this.State.UserWallet[this.Currency] || 0 } ₽`,
+						value: currencies.fmt_balance(this.Wallet, this.Country),
 						info: 'Ваш текущий баланс.',
 						icon: 'Service',
 					},
-					UserWorkStatus: {
+					status: {
 						title: 'Статус последнего заказа',
-						value: work.defineStatus(this.State.UserWorkStatus, this.Lang),
+						value: work.defineStatus(this.State.purchase, this.Lang),
 						info: 'Текущий статус последнего заказа заказа',
 						icon: 'Fire',
 					},
-					Messages: {
-						title: 'Сообщения',
-						value: this.NewMessages,
-						info: `Последнее сообщение: "${ LastMessage?.slice(0, 65) }"`,
-						icon: 'Message',
+					messages: {
+						title	: 'Сообщения',
+						value	: this.NewMessages,
+						info	: messageInfo, 
+						icon	: 'Message',
 					}
 				};
 			}

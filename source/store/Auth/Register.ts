@@ -34,8 +34,8 @@ import type { MutationTree, ActionTree } from 'vuex';
 
 // MUTATIONS
 	export const mutations: MutationTree<CurentState> = {
-		toggleRegisterModal(state, prop?: boolean) {
-			state.Modal = prop ?? !state.Modal;
+		toggleRegisterModal(state, prop: boolean = !state.Modal) {
+			state.Modal = prop;
 		}
 	};
 
@@ -56,19 +56,16 @@ import type { MutationTree, ActionTree } from 'vuex';
 
 			const { uid, email } = responseResult;
 
-			const userWallet = new wallet.Instance(currencies.DEFAULT);
-			
 			vuex.commit('Auth/Session/setUserState', { uid, email }, { root: true });
 			vuex.commit('Auth/Session/setAuthError', null, { root: true });
 
 			await database.set<User.struct>(`users/${ uid }/state`, {
-				UserID					:	uid,
-				UserEmail				:	email,
-				UserName				:	form.name,
-				UserStatus			:	User.status.User,
-				UserWallet			:	userWallet.toJSON,
-				UserWorkStatus	: Purchase.status.None,
-				UserImageID			:	String(storage.reference('UserIcons/default.webp'))
+				uid					:	uid,
+				email				:	email,
+				name				:	form.name,
+				status			:	User.status.User,
+				purchase		: Purchase.status.None,
+				image				:	String(storage.reference('UserIcons/default.webp'))
 			});
 
 			await database.set(`User/${ uid }/info`, {
@@ -82,7 +79,7 @@ import type { MutationTree, ActionTree } from 'vuex';
 			});
 
 			const Message: Message.struct = {
-				ID			: utils.randHashGenerator(),
+				uid			: utils.randHashGenerator(),
 				date		: Date.now(),
 				from		: 'Eccheuma',
 				userID	: 'SUPPORT',
@@ -90,7 +87,7 @@ import type { MutationTree, ActionTree } from 'vuex';
 				readed	: false,
 			};
 
-			await database.set(`users/${ uid }/messages/Hash_${ Message.ID }`, Message);
+			await database.set(`users/${ uid }/messages/Hash_${ Message.uid }`, Message);
 
 			return true;
 

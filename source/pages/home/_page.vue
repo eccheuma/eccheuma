@@ -2,7 +2,7 @@
 	<section class="home-page">
 
 		<template v-for="( item, index ) in Posts">
-			<post :key="item.date" :style="`order: ${ Posts.length - index }`" :payload="item" :opened="!index"/>
+			<post :key="item.date.modified" :style="`order: ${ Posts.length - index }`" :payload="item" :opened="!index"/>
 		</template>
 		
 		<promo-banner
@@ -21,6 +21,16 @@
 
 	</section>
 </template>
+
+<style lang="scss" scoped>
+
+.home {
+	&-page {
+		min-height: 60vh;
+	}
+}
+
+</style>
 
 <script lang="ts">
 
@@ -63,7 +73,7 @@
 
 			const Page 			= Number( params.page.slice(-1) ); // page_1 => 1
 			const LOADRANGE = Number( query.range || Ranges.posts );
-			const QUANTITY 	= await database.getLength('Posts');
+			const QUANTITY 	= await database.getLength('posts');
 
 			const OutRange = QUANTITY + LOADRANGE < Page * LOADRANGE; 
 
@@ -138,7 +148,7 @@
 
 			async getDatabaseData() {
 
-				const QUANTITY = await database.getLength('Posts');
+				const QUANTITY = await database.getLength('posts');
 
 				const REM: number = QUANTITY - ( this.LOAD_RANGE * this.Page );
 

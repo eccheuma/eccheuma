@@ -1,27 +1,27 @@
 {
   "compilerOptions": {
-    "target": "ES6",
+    "target": "ES2020",
     "module": "ES2020",
-    "moduleResolution": "Node",
+    "moduleResolution": "node",
     "lib": [
       "DOM",
-      "ESNext",
+      "ESNext"
     ],
     "esModuleInterop": true,
     "allowJs": true,
     "sourceMap": true,
     "strict": true,
     "noEmit": true,
-    "experimentalDecorators": true,
-    "noImplicitAny": true,
+    "noImplicitAny": false, 
     "strictNullChecks": true,
     "strictBindCallApply": true,
     "jsx": "preserve",    
     "baseUrl": ".",
     "resolveJsonModule": true,
+    "experimentalDecorators": true,
     "paths": {
       "~/*": ["./source/*"],
-      "path::root/*": ["./*"],
+      "path::root/*": ["./*"]
     },
     "types": [
       "./source/wasm",
@@ -29,13 +29,12 @@
       "@types/node",
       "@nuxt/types",
       "@types/w3c-css-typed-object-model-level-1",
-    ],
+      "nuxt-webpack-optimisations",
+    ]
   },
   "vueCompilerOptions": {
     "target": 2.7,
-    "experimentalImplicitWrapComponentOptionsWithVue2Extend": true,
-    "jsxTemplates": false,
-    "experimentalRuntimeMode": "runtime-dom",
+    // "jsxTemplates": false
   },
   "exclude": [
     ".nuxt",
@@ -43,6 +42,6 @@
     "funtions",
     "node_modules",
     "packages",
-    "app",
+    "app"
   ]
 }

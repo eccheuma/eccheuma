@@ -16,8 +16,8 @@ export const enum Reference {
 }
 
 const PATHS = {
-	[Reference.Posts]: 'Posts',
-	[Reference.Gallery]: 'Gallery'
+	[Reference.Posts]: 'posts',
+	[Reference.Gallery]: 'gallery'
 } as const;
 
 export type LoadQuery = {
@@ -92,7 +92,14 @@ declare module '~/contracts/VuexMap' {
 export const mutations: MutationTree<CurentState> = {
 
 	setContent(state, { data, to }: IMutInformer<RecordValues<CurentState['Content']>, string, Reference>) {
-		state.Content[PATHS[to]] = Object.values(data || Object());
+		switch ( to ) {
+			case Reference.Posts:
+				state.Content.Posts = Object.values(data || Object());
+				break;
+			case Reference.Gallery:
+				state.Content.Gallery = Object.values(data || Object());
+				break;
+		}
 	},
 
 };
@@ -106,7 +113,7 @@ export const actions: ActionTree<CurentState, CurentState> = {
 		const LOAD_PROPERTY_KEY = `${payload.loadQuery.LoadPoint}_${payload.loadQuery.LoadRange}`;
 
 		const hashes = {
-			server: await database.get(`App/Cache/${payload.ref}`),
+			server: await database.get(`app/content::hashes/${payload.ref}`),
 			cache: cache.get(HASH_KEY)
 		};
 

@@ -21,11 +21,12 @@
     top: #{ $GLOBAL-HeaderHeight + 2vh };
     position: sticky;
     height: #{ 80vh + 2vh };
-    padding-right: .5vw;
     overflow-y: scroll;
     overflow-x: visible;
     display: grid;
     gap: 1vh;
+    padding-inline: 10px;
+    margin-bottom: 10px;
 
   }
   &-header {
@@ -38,11 +39,13 @@
     position: sticky;
     top: 0;
 
-    padding: 2.5vh 2vw;
+    padding: 2vh 2vw;
     border-radius: var(--border-radius);
 
+    z-index: 0;
+
     width: 100%;
-    height: 10vh;
+    // height: 10vh;
 
     display: flex;
     justify-content: space-between;
@@ -52,7 +55,7 @@
     color: rgb(var(--color-mono-900));
 
     @media screen and ( max-width: $mobile-breakpoint ) {
-			padding: 2.5vh 6vw;
+			padding: 1vh 6vw;
       justify-content: center;
 		}
 
@@ -112,7 +115,7 @@ import { utils } from '~/utils';
     async mounted() {
       if ( process.browser ) {
 
-        const response = await database.get<Array<any>>('VkPosts');
+        const response = await database.get<Array<any>>('vk::feed');
 
         this.Posts = response.map(post => {
           return {

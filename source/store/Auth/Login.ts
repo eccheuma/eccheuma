@@ -1,5 +1,8 @@
 import type { ActionTree, MutationTree } from 'vuex';
 
+// UTILS
+	import { wallet } from '~/utils/currency';
+
 // API
 	import { database } 	from '~/api/database';
 	import { auth, form } from '~/api/auth';
@@ -56,10 +59,10 @@ import type { ActionTree, MutationTree } from 'vuex';
 				// Загрузка стейта пользователя из Firebase
 				const userState: User.struct = await database.get(`users/${ uid }/state`);
 
-				vuex.commit('User/State/setUserState', userState, { root: true });
+				await vuex.dispatch('Wallet/getWallet', uid, { root: true });
 
+				vuex.commit('User/State/setUserState', userState, { root: true });
 				vuex.commit('Auth/Session/setLoginStatus', true, { root: true });
-			
 				vuex.commit('setAction', false);
 
 				database.listen(`users/${ uid }/state`, value => {

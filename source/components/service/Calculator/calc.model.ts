@@ -78,7 +78,7 @@ export class CalculatorModel {
 
 	}
 
-  private static async fetchSerives(category: Categories): FetchResult<Purchase.struct> {
+  private static async fetchSerives(category: Categories) {
     
     const response: Array<IPurchaseForm['service']> = await database.get(`Service/${ category }`);
 
@@ -95,7 +95,7 @@ export class CalculatorModel {
 
   }
 
-  private static async fetchAdditions(type: string, ID: Hash): FetchResult<Additions.struct> {
+  private static async fetchAdditions(type: string, ID: Hash) {
     
     const response: Array<Additions.struct> = await database.get(`Service/Addictions/${ type }`);
 

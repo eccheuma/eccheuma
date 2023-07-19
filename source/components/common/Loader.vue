@@ -167,6 +167,8 @@
 
 	// VARIABLES
 	const ICON_COLOR_VARIABLE = 'rgb(var(--color-mono-900))';
+	const STAGE_TIME_DURATION = 300;
+	const ANIMATION_DURATION_MS = 100;
 
 	// MODULE
 	export default Vue.extend({
@@ -288,15 +290,15 @@
 					this.fillLogo({ direction: 'reverse', duration: 0, endDelay: 0 });
 				}
 
-				const stageDurationFN = () => Math.trunc(750 - (250 * Math.random()));
+				const stageDurationFN = () => Math.trunc(STAGE_TIME_DURATION * 2 - (STAGE_TIME_DURATION * Math.random()));
 				
 				// ---
 
 				// console.log('await block start')
 
-				await this.animateText({ direction: 'normal',  duration: 250 });
+				await this.animateText({ direction: 'normal',  duration: ANIMATION_DURATION_MS });
 				await this.pathlineDash({ direction: 'normal', duration: stageDurationFN() });
-				await this.animateText({ direction: 'reverse', duration: 250 });
+				await this.animateText({ direction: 'reverse', duration: ANIMATION_DURATION_MS });
 
 				// console.log('await block end')
 
@@ -361,7 +363,7 @@
 						easing: 'easeInOutQuad',
 						round: 1,
 						strokeDashoffset: this.segmentCoord,
-						stroke: { value: ICON_COLOR_VARIABLE, duration: 250 },
+						stroke: { value: ICON_COLOR_VARIABLE, duration: ANIMATION_DURATION_MS },
 						
 						...params,
 

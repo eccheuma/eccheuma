@@ -1,9 +1,11 @@
 # 
+.cache
 .github
 .firebase
 .output
 .nuxt
 .env
+.vim
 
 #
 app

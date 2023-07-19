@@ -45,7 +45,11 @@ export namespace utils {
     export const enum error {
       extension = 'requested format is not allowed',
       name = 'bad file naming',
-      dot = 'dot'
+      size = 'file size is too large',
+      type = 'file type is not allowed',
+      unknown = 'unknown error',
+      dot = 'dot',
+
     }
 
     export function define(filename: string, extensions: Array<string>): Result<string> {
@@ -157,6 +161,9 @@ export namespace utils {
 
     return structEnt.every(([ key, value ]) => {
 
+      // Pass validation if object have addition data
+      if ( mock[key] !== undefined ) return true;
+
       if ( typeof value !== typeof mock[key] ) {
         console.log(key, typeof value, typeof mock[key]);
       }
@@ -164,6 +171,7 @@ export namespace utils {
       return typeof value === 'object' && mock[key]
         ? recursiveCompare(value, mock[key])
         : typeof mock[key] === typeof value;
+        
     });
 
   }

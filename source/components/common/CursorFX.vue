@@ -120,7 +120,7 @@
 						this.setCursorPosition(event);
 
 						this.animateCursor({
-							opacity: [this.CursorNode?.style.opacity ?? 1, 1],
+							opacity: [this.CursorNode?.style.opacity || 1, 1],
 							scale: [10, .5],
 							filter: ['blur(3px)', 'blur(0px)'],
 							duration: 500,

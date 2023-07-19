@@ -20,7 +20,7 @@ import { User } from '~/contracts/User';
 const dbPaths = {
 	post  : 'posts/post::0',
 	image : 'gallery/0',
-	case  : 'cases/Logo/case::0',
+	case  : 'cases/logo/case::0',
 	user  : `users/${ process.env.TEST_USER_ID }`
 };
 
@@ -111,8 +111,6 @@ describe('contract::user', async () => {
 	test('user::state', () => {
 
 		const mock = User.builder();
-
-		console.log(mock, state);
 
 		expect(utils.recursiveCompare(state, mock)).true;
 

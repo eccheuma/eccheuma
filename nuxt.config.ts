@@ -56,11 +56,15 @@ const config: NuxtConfig = {
   },
 
   ssr: true,
-  target: 'static',
+  target: 'server',
 
   server: {
     port: 3000,
     host: '0.0.0.0',
+  },
+
+  render: {
+    ssrLog: true,
   },
 
   loading: {
@@ -94,7 +98,6 @@ const config: NuxtConfig = {
     routes: ['/post/0'],
   },
 
-
   css: [
     // Sass bootstrap modules
     '~/assets/styles/scss/modules.scss',
@@ -109,12 +112,18 @@ const config: NuxtConfig = {
 
   buildModules: [
 
+    ['nuxt-esbuild', {
+      loader: 'ts',
+      minify: false,
+      keepNames: true,
+    }],
+
     ['@nuxtjs/sitemap', {
       hostname: 'https://escapefrommordorland.web.app',
       exclude: ['/Admin/*'],
       trailingSlash: false,
     }],
-
+    
   ],
 
   modules: [
@@ -140,52 +149,73 @@ const config: NuxtConfig = {
           { name: 'removeUselessDefs' },
           { name: 'cleanupAttrs' },
         ]
-      }
-    }] as any,
+      },
+    }],
 
   ],
 
-  hardSource: inDevelopment,
-  cache: inDevelopment,
-
   build: {
 
-    // analyze: !inDevelopment,
-    parallel: inDevelopment,
-    publicPath: 'resources',
+    analyze     : inDevelopment === false,
+    parallel    : inDevelopment,
+    cache       : true,
+    hardSource 	: true,
+    postcss     : false,
+    publicPath  : 'resources',
 
     filenames: {
       font: () => 'fonts/[name].[ext]',
-      chunk: (context: any) => context.isDev ? '[name].js' : `[name].${hash}.js`,
-      css: (context: any) => context.isDev ? '[name].css' : `[name].${hash}.css`,
-    },
-
-    babel: {
-      presets: [
-        ['@babel/preset-env', {
-          useBuiltIns: false,
-          exclude: [
-            // ! Из-за того что бабель пытается настырно пережевать все асинхронные методы в генераторы, 
-            // ! часть асинхронных методов внезапно прерывается другими вызовами. Ошибка ли это Nuxt, Vue, или других прослоек - Я не знаю.
-            // ! Но я как-то не собираюсь ебать себе голову на счёт этого. И сделаю всё это крайне нахально...
-            '@babel/plugin-transform-async-to-generator'
-          ]
-        }]
-      ],
-      plugins: [
-        ['@babel/plugin-transform-runtime', {
-          regenerator: true
-        }]
-      ]
+      chunk: context => context.isDev ? '[name].js' : `[name].${hash}.js`,
+      css: context => context.isDev ? '[name].css' : `[name].${hash}.css`,
     },
 
     extractCSS: !inDevelopment,
+
+    loaders: {
+      scss: {
+        implementation: require('sass'),
+      },
+      vue: {
+        prettify: false,
+        optimizeSSR: !inDevelopment,
+      },
+    },
+
+    html: {
+      minify: {
+        minifyJS: false,
+        minifyCSS: false,
+      }
+    },
 
     optimization: {
       minimize: !inDevelopment,
       splitChunks: {
         maxSize: 524_288
       }
+    },
+
+    transpile: [/pixi.js/],
+    babel: {
+      presets: [
+        '@babel/preset-env'
+      ],
+      plugins: [
+        '@babel/plugin-transform-nullish-coalescing-operator',
+        '@babel/plugin-transform-optional-chaining',
+      ]
+    },
+
+    extend(config) {
+
+      if ( !config.module ) return;
+
+      config.module.rules.push({
+        test    : /\.mjs$/,
+        include : /node_modules/,
+        type    : 'javascript/auto',
+      });
+
     },
 
   },

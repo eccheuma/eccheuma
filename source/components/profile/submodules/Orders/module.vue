@@ -91,12 +91,14 @@
 			CommonButton
 		},
 		data() {
+
 			return {
 
 				orderModal: false,
 
 			};
-		},
+		
+},
 		computed: {
 
 			...mapState({
@@ -107,7 +109,7 @@
 		},
 		mounted() {
 
-			this.setRequestContent(this.State.UserID);
+			this.setRequestContent(this.State.uid);
 
 		},
 		methods: {

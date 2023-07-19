@@ -23,7 +23,7 @@ export namespace Post {
 		date		 : number
 		userID	 : string
 		data		 : string
-		mention ?: Array<User.struct['UserID']>
+		mention ?: Array<User.struct['uid']>
 	}
 	
 	export type struct = {

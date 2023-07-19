@@ -10,11 +10,11 @@
 		>
 		
 		<section class="post-comment-item-icon">
-			<i class="post_comment-icon" :style="`background-image: url(${ author.UserImageID })`" />
+			<i class="post_comment-icon" :style="`background-image: url(${ author.image })`" />
 		</section>
 
 		<section class="post-comment-item-author">
-			<span>{{ author.UserName }}</span>
+			<span>{{ author.name }}</span>
 			<span>
 				{{ localeDate.Day }} в {{ localeDate.Time }}
 			</span>
@@ -31,10 +31,10 @@
 			<hr v-once>
 			<common-button v-if="LoginStatus && canDelete" @click.native="RemoveComment">
 				Удалить комментарий 
-				<template v-if="State.UserStatus === roles.Admin">
+				<template v-if="State.status === roles.Admin">
 					от лица администратора
 				</template>
-				<template v-if="State.UserStatus === roles.Moderator">
+				<template v-if="State.status === roles.Moderator">
 					от лица модератора
 				</template>
 			</common-button>
@@ -292,7 +292,7 @@
 			userID: {
 				type: String,
 				required: true,
-			} as PropOptions<User.struct['UserID']>,
+			} as PropOptions<User.struct['uid']>,
 			commentID: {
 				type: String,
 				required: true,
@@ -304,6 +304,7 @@
 			} as PropOptions<boolean>,
 		},
 		data() {
+
 			return {
 
 				localeDate: utils.getLocalTime(0),
@@ -311,12 +312,13 @@
 				author: new Object() as User.struct,
 				comment: new Object() as Post.comment,
 
-				answerTo: Array<User.struct['UserName']>(),
+				answerTo: Array<User.struct['name']>(),
 
 				roles: User.status,
 
 			};
-		},
+		
+},
 		computed: {
 
 			...mapState({
@@ -328,14 +330,14 @@
 
 				if ( !this.LoginStatus ) return false;
 
-				switch (this.State.UserStatus) {
+				switch (this.State.status) {
 
 					case User.status.Admin: 
 						return true;
 					case User.status.Moderator: 
 						return true;
 					default:
-						return this.State.UserID === this.comment.userID;
+						return this.State.uid === this.comment.userID;
 
 				}
 
@@ -345,16 +347,18 @@
 		created() {
 			
 			if ( process.browser ) {
+
 				this.setSounds([
 					{ file: 'Tap', name: 'Element::Action', settings: { rate: 0.50 } }
 				]);
-			}
+			
+}
 			
 		},
 		async mounted() {
 
-			this.author 	= await database.get(`Users/${ this.userID }/state`);
-			this.comment 	= await database.get(`Posts/PostID-${ this.postID }/comments/Hash-${ this.commentID }`);
+			this.author 	= await database.get(`users/${ this.userID }/state`);
+			this.comment 	= await database.get(`posts/post::${ this.postID }/comments/Hash-${ this.commentID }`);
 			this.answerTo = await this.taggedUser();
 
 			this.localeDate = utils.getLocalTime(this.comment.date);
@@ -364,7 +368,7 @@
 
 			async RemoveComment() {
 
-				await database.remove(`Posts/PostID-${ this.postID }/comments/Hash-${ this.commentID }`);
+				await database.remove(`posts/post::${ this.postID }/comments/Hash-${ this.commentID }`);
 
 				this.playSound(this.Sounds.get('Element::Action'));
 
@@ -376,15 +380,17 @@
 
 			},
 
-			async taggedUser(): Promise<Array<User.struct['UserName']>> {
+			async taggedUser(): Promise<Array<User.struct['name']>> {
 
-				const users = await database.get<utils.types.asIterableObject<User.state>>('Users');
+				const users = await database.get<utils.types.asIterableObject<User.state>>('users');
 
 				if ( !this.comment.mention ) return [];
 
 				return Object.values(users).filter(user => {
-					return this.comment.mention?.some(id => id === user.state.UserID);
-				}).map(user => user.state.UserName);
+
+					return this.comment.mention?.some(id => id === user.state.uid);
+				
+				}).map(user => user.state.name);
 
 			}
 

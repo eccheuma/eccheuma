@@ -146,7 +146,7 @@ export class Model {
 
   public async updateIcon(uid: string, path: string) {
 
-    const updateResult = await database.update(`users/${ uid }/state`, { UserImageID: path });
+    const updateResult = await database.update(`users/${ uid }/state`, { image: path });
 
     if ( updateResult instanceof Error ) this.IOError(ERROR_MESSAGES.UPDATE);
 

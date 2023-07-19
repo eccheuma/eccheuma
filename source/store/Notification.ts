@@ -25,7 +25,7 @@ import { ActionTree, MutationTree } from 'vuex';
 // MUTATIONS
 	export const mutations: MutationTree<CurentState> = {
 		changeStatus: (state, status?: boolean ) => {
-			state.status = status ?? !state.status;
+			state.status = status || !state.status;
 		},
 		setContent(state, _content: Notification.struct ) {
 			state.content = _content;

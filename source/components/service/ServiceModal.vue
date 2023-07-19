@@ -10,9 +10,9 @@
 
 		<section class="service_modal-user">
 			<template v-if="LoginStatus">
-				<i :style="`background-image: url(${ State.UserImageID })`" />
-				<span>{{ State.UserName }}</span>
-				<span>{{ State.UserWallet.RUB }} ₽</span>
+				<i :style="`background-image: url(${ State.image })`" />
+				<span>{{ State.name }}</span>
+				<span>{{ State.wallet.RUB }} ₽</span>
 			</template>
 		</section>
 		<section class="service_modal-calc">

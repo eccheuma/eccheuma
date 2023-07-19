@@ -198,7 +198,7 @@
 
 		async mounted() {
 
-			const GalleryQuantity = await database.getLength('Gallery');
+			const GalleryQuantity = await database.getLength('gallery');
 
 			this.PageQuantity = Math.ceil( GalleryQuantity / Ranges.gallery );
 

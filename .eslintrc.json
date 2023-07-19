@@ -11,7 +11,9 @@
 	],
 	"overrides": [
 		{
-			"files": ["*.vue"],
+			"files": [
+				"*.vue"
+			],
 			"rules": {
 				"no-undef": 0
 			}
@@ -28,29 +30,30 @@
 		"@typescript-eslint"
 	],
 	"rules": {
-
 		"no-inner-declarations": 0,
 		"no-var": 0,
-		
 		"@typescript-eslint/no-var-requires": 0,
 		"@typescript-eslint/no-namespace": 0,
 		"@typescript-eslint/no-inferrable-types": 0,
 		"@typescript-eslint/no-array-constructor": 0,
 		"@typescript-eslint/ban-ts-comment": 0,
-		"@typescript-eslint/ban-types": 0,
-		"@typescript-eslint/no-explicit-any": 0,
 		"no-new-object": 0,
-
 		"vue/multi-word-component-names": 0,
-
 		"space-before-blocks": 2,
 		"spaced-comment": 1,
 		"block-spacing": 2,
 		"no-whitespace-before-property": 2,
-
-		"linebreak-style"	: ["error", "windows"],
-		"quotes"					: ["error", "single"],
-		"semi"						: ["error", "always"]
-
+		"linebreak-style": [
+			"error",
+			"windows"
+		],
+		"quotes": [
+			"error",
+			"single"
+		],
+		"semi": [
+			"error",
+			"always"
+		]
 	}
 }

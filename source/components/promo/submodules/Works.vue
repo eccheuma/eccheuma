@@ -3,12 +3,12 @@
     <transition name="opacity">
       <eccheuma-swiper v-if="Ready" :options="{ auto: true, interval: 8000 }" class="works_swiper">
         <template #default>
-          <template v-for="item in Works.Logo">
+          <template v-for="item in Works.logo">
             
             <section v-for="image in item.content.images" :key="image.content.date" class="works_swiper-item">
               
               <eccheuma-image
-                style="height: 40vh"
+                style="height: 40vh; width: 100%"
                 :content="{ path: image.content.path, description: item.content.description }"
                 :sections="{ date: false, description: true, zoom: true }"
                 :property="{ fit: 'cover', type: 'default', collumn: 7 }"
@@ -45,10 +45,11 @@
     display: inline-grid;
 
     min-height: 50vh;
+    min-width: 720px;
 
     hr {
       background-color: rgb(var(--color-mono-400));
-      width: 75%;
+      width: 100%;
     }
 
     &-description {
@@ -129,7 +130,7 @@ export default Vue.extend({
 
       this.CasesType.forEach( async section => {
 
-        this.Works[section] = Object.values(await database.get(`Cases/${ section }`, { limit: 3 }));
+        this.Works[section] = Object.values(await database.get(`cases/${ section }`, { limit: 3 }));
 
         this.Ready = true;
 

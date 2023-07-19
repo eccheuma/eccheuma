@@ -7,7 +7,7 @@
 			<input 
 				v-model="NewName" 
 				type="text" 
-				:placeholder="`Текущее имя: ${ State.UserName }`"
+				:placeholder="`Текущее имя: ${ State.name }`"
 				@keypress.shift.enter="setUsername"
 			>
 		</div>
@@ -95,24 +95,28 @@
 			EccheumaButton
 		},
 		data() {
+
 			return {
 				NewName: '',
 			};
-		},
+		
+},
 		computed: {
 			...mapState({
 				State: state => (state as VuexMap).User.State.State,
 			}),
 
 			nameValidation(): boolean {
+
 				return this.NewName.length > 1;
-			}
+			
+}
 
 		},
 		methods: {
 			setUsername() {
 				
-				database.update(`Users/${ this.State.UserID }/state`, { UserName: this.NewName });
+				database.update(`users/${ this.State.uid }/state`, { name: this.NewName });
 
 			},
 		}

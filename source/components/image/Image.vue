@@ -351,14 +351,15 @@
 
 				const observerInstance = new IntersectionObserver(([ firstEntry ]) => {
 
-					if ( firstEntry.isIntersecting ) {
-						this.$nextTick( async () => {
+					if ( !firstEntry.isIntersecting ) return;
 
-							this.imageStruct = await this.getOptimalImage(); 
-							observerInstance.unobserve(this.$el);
-
+					this.$nextTick(() => {
+						this.getOptimalImage().then(data => {
+							this.imageStruct = data;
 						});
-					}
+					});
+
+					observerInstance.unobserve(this.$el);
 
 				});
 
@@ -384,13 +385,13 @@
 
 			runAnimation(container: Element, struct: Image.formatsStruct): Promise<Image.formatsStruct> {
 
-				return new Promise((res) => {
+				return new Promise((resolve) => {
 
 					const animation = container.animate(keyframes, options);
 
 					animation.onfinish = () => { animation.onfinish = null;
 
-						res(struct);
+						resolve(struct);
 
 						(this.$refs.image as HTMLImageElement).onload = () => animation.reverse();
 

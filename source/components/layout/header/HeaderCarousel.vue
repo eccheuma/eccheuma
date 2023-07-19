@@ -406,7 +406,7 @@
 
 			async GetPosts() {
 
-				const Posts: utils.types.asIterableObject<Post.struct> = await database.get('Posts', { limit: Ranges.posts });
+				const Posts: utils.types.asIterableObject<Post.struct> = await database.get('posts', { limit: Ranges.posts });
 
 				const formatedSlides: Array<Promise<HeaderSlide>> = Object
 					.values(Posts)
@@ -417,7 +417,8 @@
 							size: 1440,
 						}).then(imageResult => res({
 							content: { title, description, ID, tags },
-							date: utils.getLocalTime(date),
+							// TODO: Выводить на отображение несколько дат, в зависимости от того, был ли изменён пост или нет.
+							date: utils.getLocalTime(date.modified),
 							formatsStruct: imageResult instanceof Error
 								? DEFAULT_IMAGE_STRUCT
 								: imageResult,

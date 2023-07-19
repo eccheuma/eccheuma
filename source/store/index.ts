@@ -21,6 +21,6 @@
 			state.isDesktop = prop;
 		},
 		AppScroll(state, prop) {
-			state.AppScroll = prop ?? !state.AppScroll;
+			state.AppScroll = prop;
 		},
 	};

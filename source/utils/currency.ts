@@ -27,6 +27,10 @@ export namespace currencies {
 		coefficient: number
 	}
 
+	export function fmt_balance(wallet: wallet.contract, country: Country): string {
+		return `${ wallet[country] || 0  } ${ signDict[ country ] }`;
+	}
+
 	export abstract class Currency<C extends Country = Country> {
 
 		public value = Number() as utils.types.nominal<number, C>;
@@ -46,7 +50,7 @@ export namespace currencies {
 		}
 
 		public add(value: number) {
-			this.value = this.value + value as utils.types.nominal<number, C>; return value;
+		  this.value = this.value + value as utils.types.nominal<number, C>; return value;
 		}
 
 		public grab(value: number) {

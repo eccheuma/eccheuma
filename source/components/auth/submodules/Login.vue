@@ -343,7 +343,7 @@ import Vue from 'vue';
 
 		},
 		mounted() {
-
+				
 			if ( process.browser ) {
 
 				this.setSounds([
@@ -364,9 +364,9 @@ import Vue from 'vue';
 				toggleRegisterModal: 'Auth/Register/toggleRegisterModal',
 			}),
 
-			inputSound(input: InputEvent) {
+			inputSound(event: Event) {
 				if ( this.inFocus ) {
-					this.playSound(this.Sounds.get(input.data ? 'Input::Increment' : 'Input::Decrement'));
+					this.playSound(this.Sounds.get((event as InputEvent).data ? 'Input::Increment' : 'Input::Decrement'));
 				}
 			},
 

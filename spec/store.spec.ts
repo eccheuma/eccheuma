@@ -121,7 +121,7 @@ describe('store::auth', () => {
 		expect(response).toBe(true);
 
 		expect(State.email).toBe(userForm.email);
-		expect(State.ID).toBe(CurentUser.uid);
+		expect(State.uid).toBe(CurentUser.uid);
 		
 	});
 
@@ -157,8 +157,6 @@ describe('store::user', async () => {
 
 		const response: auth.error | boolean = await virtualStore.dispatch('Auth/Login/SignIn', userForm);
 
-		console.log(response);
-
 		if ( typeof response === 'string' ) throw new Error(response);
 
 		messageID	= utils.randHashGenerator();
@@ -172,12 +170,12 @@ describe('store::user', async () => {
 	test('user::message::send', async () => {
 
 		const newMessage: Message.struct = {
-			ID: messageID,
+			uid: messageID,
 			date: Date.now(),
 			from: userForm.name,
 			message: 'Dreams that forgotten shorn distant perched door floating, i for a whose before the has...',
 			readed: false,
-			userID: virtualStore.state.User.State.State.ID
+			userID: virtualStore.state.User.State.State.uid
 		};
 
 		const response: Error | boolean = await virtualStore.dispatch('User/Messages/sendMessage', newMessage);
@@ -200,7 +198,7 @@ describe('store::user', async () => {
 		expect(NewMessagesCount).toBe(0);
 
 		Data.forEach(mess => {
-			expect(mess.userID).toBe(State.ID);
+			expect(mess.userID).toBe(State.uid);
 		});
 
 	});
@@ -211,7 +209,7 @@ describe('store::user', async () => {
 
 		const { Data } = virtualStore.state.User.Messages;
 
-		const [ newMessage, emptyMessage ] = Data.filter(({ ID }) => ID === messageID);
+		const [ newMessage, emptyMessage ] = Data.filter(({ uid: ID }) => ID === messageID);
 
 		// EXPECT
 

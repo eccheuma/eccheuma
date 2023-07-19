@@ -260,8 +260,8 @@
 
       },
 
-      inputSound(input: InputEvent) {
-        this.playSound(this.Sounds.get(input.data ? 'Input::Increment' : 'Input::Decrement'));
+      inputSound(input: Event) {
+        this.playSound(this.Sounds.get((input as InputEvent).data ? 'Input::Increment' : 'Input::Decrement'));
 			},
 
       getLocale(error: auth.error) {

@@ -40,7 +40,7 @@
 					@click="ActiveSection = i"
 				>
 					<span>{{ item.name }}</span>
-					<span>от {{ item.time }}</span>
+					<span>от {{ item.delivery	}}</span>					
 				</div>
 			</template>
 		</section>

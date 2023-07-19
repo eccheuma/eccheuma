@@ -3,9 +3,9 @@ import { User } from '~/contracts/User';
 export namespace Message {
 
   export type struct = {
-    ID: string
-    userID: User.struct['UserID'] 
-    from: User.struct['UserName']
+    uid: string
+    userID: User.struct['uid'] 
+    from: User.struct['name']
     date: number
     message: string
     readed: boolean
@@ -13,7 +13,7 @@ export namespace Message {
 
   export function builder(): struct {
 		return {
-			ID: String(),
+			uid: String(),
       userID: String(),
       from: String(),
       date: Number(),

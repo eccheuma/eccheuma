@@ -46,26 +46,17 @@
 // ACTIONS
 	export const actions: ActionTree<CurentState, VuexMap>  = {
 
-		async getMessages({ dispatch, commit, rootState }): Promise<boolean> {
+		async getMessages({ dispatch, commit, rootState }): Promise<void> {
 
 			// Получение ID пользователя
 			const { uid } = rootState.Auth.Session.CurentUser;
 
-			return new Promise((resolve) => {
+			const applyMessages = (messages: utils.types.asIterableObject<Message.struct>) => {
+				commit('setMessages', Object.values(messages || new Object()));
+				dispatch('checkUnreaded');
+			};
 
-				database.listen<utils.types.asIterableObject<Message.struct>>(`users/${uid}/messages`, (messages) => {
-				
-					commit('setMessages', Object.values(messages || new Object())); 
-	
-					dispatch('checkUnreaded');
-
-					resolve(true);
-	
-				});
-
-			});
-
-			
+			database.listen<utils.types.asIterableObject<Message.struct>>(`chats/${uid}/main`, applyMessages);
 
 		},
 
@@ -75,24 +66,24 @@
 			// Получение ID пользователя
 			const { State } = vuex.rootState.User.State;
 
-			return database.set(`users/${ State.ID }/messages/Hash_${prop.ID}`, prop); 
+			return database.set(`chats/${ State.uid }/main/hash::${prop.uid}`, prop); 
 
 		},
 
-		removeMessage(vuex, { ID }: Message.struct) {
+		removeMessage(vuex, { uid: ID }: Message.struct) {
 
 			const { State } = vuex.rootState.User.State;
 
-			return database.remove(`users/${ State.ID }/messages/Hash_${ ID }`);
+			return database.remove(`chats/${ State.uid }/main/hash::${ ID }`);
 
 		},
 
-		markAsReaded(vuex, ID: Message.struct['ID']): Promise<Error | boolean> {
+		markAsReaded(vuex, ID: Message.struct['uid']): Promise<Error | boolean> {
 
 			// Получение ID пользователя
 			const { State } = vuex.rootState.User.State;
 
-			return database.update(`users/${ State.ID }/messages/Hash_${ ID }`, { readed: true } as Partial<Message.struct>);
+			return database.update(`chats/${ State.uid }/main/hash::${ ID }`, { readed: true } as Partial<Message.struct>);
 
 		},
 
@@ -101,7 +92,7 @@
 			const { State } = vuex.rootState.User.State;
 
 			const { length } = vuex.state.Data.filter(message => {
-				return message.readed === false && message.userID !== State.ID;
+				return message.readed === false && message.userID !== State.uid;
 			});
 			
 			vuex.commit('setUnreadedQuanity', length);

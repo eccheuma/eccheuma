@@ -108,7 +108,7 @@
 			async GetCases(): Promise<Array<Workcase.struct>> {
 
 				return await database
-					.get(`Cases/${ this.Type }`)
+					.get(`cases/${ this.Type }`)
 					.then(data => Object.values(data || Object()));
 
 			},

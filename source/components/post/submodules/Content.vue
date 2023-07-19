@@ -184,7 +184,7 @@
 	import Vue, { PropOptions } from 'vue';
 
 	// PRISM
-	import Prism 		from 'prismjs';
+	import Prism from 'prismjs';
 
 	// TYPES
 	import type { Post } from '~/contracts/Post';
@@ -238,11 +238,7 @@
 			},
 
 			prismHighlight(code: string, lang: string) {
-
-				const res = Prism.highlight(code, Prism.languages.javascript, 'javascript');
-
-				return res;
-
+				return Prism.highlight(code, Prism.languages.javascript, 'javascript');
 			},
 
 		}

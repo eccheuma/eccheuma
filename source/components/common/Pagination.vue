@@ -6,7 +6,10 @@
 			:class="{ disabled: PageSelector.Page == 1 }"  
 			:to="getPath(PageSelector.Page - 1)"  
 		>
-			{{ pageLabels.prev }}
+			<icon v-if="$isMobile" name="Arrow" /> 
+			<template v-else>
+				{{ pageLabels.prev }}
+			</template>
 		</nuxt-link>
 
 		<span style="pointer-events: none">
@@ -18,7 +21,10 @@
 			:class="{ disabled: PageSelector.Page == PageSelector.PageQuantity }"  
 			:to="getPath(PageSelector.Page + 1)" 
 			>
-			{{ pageLabels.next }}
+			<icon v-if="$isMobile" name="Arrow" style="transform: rotate(180deg)"/> 
+			<template v-else>
+				{{ pageLabels.next }}
+			</template>
 		</nuxt-link>
 
 	</nav>
@@ -26,76 +32,85 @@
 
 <style lang="scss">
 
-$h: 10vh;
+	$h: 10vh;
 
-.pagination {
+	.pagination {
 
-	@include gradient_border;
-	@include component-shadow;
+		@include gradient_border;
+		@include component-shadow;
 
-	height: $h;
+		height: $h;
 
-	display: grid;
-	grid-template: {
-		columns: repeat(3, minmax(160px, min-content));
-	};
+		display: grid;
+		grid-template: {
+			columns: repeat(3, auto);
+		};
 
-	border-radius: var(--border-radius);
+		border-radius: var(--border-radius);
 
-	align-content: center;
-	justify-content: center;
+		align-content: center;
+		justify-content: center;
+		align-items: center;
 
-	span {
-
-		position: relative;
-		cursor: pointer;
-
-		text-align: center;
-		color: rgb(var(--color-mono-900));
-
-		;
-		font: {
-			size: var(--font-size-24);
-			weight: 500;
-			family: var(--decor-font);
+		column-gap: min(2vw,20px);
+		
+		.icon {
+			fill: rgb(var(--color-mono-900));
+			width: 40px;
+			height: 40px;
 		}
 
-		letter-spacing: .125ch;
-		line-height: $h;
+		span {
 
-		&::after {
+			position: relative;
+			cursor: pointer;
 
-			opacity: 0;
-
-			content: '';
-			position: absolute;
-
-			top: 0px; 
-			left: 0;
-
-			width: 100%; 
-			height: 1px;
-
-			background: linear-gradient(to left, transparent, var(--color-accent-edges-300), transparent);
-
-			transition-duration: 250ms;
-
-		}
-
-		transition-duration: 250ms;
-		&:hover {
-
+			text-align: center;
 			color: rgb(var(--color-mono-900));
 
+			;
+			font: {
+				size: var(--font-size-24);
+				weight: 500;
+				family: var(--decor-font);
+			}
+
+			letter-spacing: .125ch;
+			line-height: $h;
+
 			&::after {
-				opacity: 1;
+
+				opacity: 0;
+
+				content: '';
+				position: absolute;
+
+				top: 0px; 
+				left: 0;
+
+				width: 100%; 
+				height: 1px;
+
+				background: linear-gradient(to left, transparent, var(--color-accent-edges-300), transparent);
+
+				transition-duration: 250ms;
+
+			}
+
+			transition-duration: 250ms;
+			&:hover {
+
+				color: rgb(var(--color-mono-900));
+
+				&::after {
+					opacity: 1;
+				}
+
 			}
 
 		}
 
 	}
-
-}
 
 </style>
  
@@ -121,6 +136,9 @@ $h: 10vh;
 	// CONSTANTS
 	const RUSSIAN_CUSTOM_NUMERATOR: russian.types.CustomPlural = Array([ 3, 'ёх' ], [ 4, 'ёх' ], [ 11, 'и' ]);
 
+	// COMPONENTS
+	import Icon from '~/components/common/Icon.vue';
+
 	// MODULE
 	export default Vue.extend({
 		props: {
@@ -128,6 +146,9 @@ $h: 10vh;
 				type: Object,
 				required: true
 			} as PropOptions<PageSelectorProperty>
+		},
+		components: {
+			Icon
 		},
 		computed: {
 
@@ -151,10 +172,6 @@ $h: 10vh;
 				return { next, prev };
 
 			},
-
-			test() {
-				this.test
-			}
 
 		},
 		methods: {

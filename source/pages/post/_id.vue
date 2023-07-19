@@ -90,7 +90,7 @@
 
     async asyncData({ params, redirect }) {
 
-      const Post: Post.struct = await database.get(`Posts/PostID-${ params.id }`);
+      const Post: Post.struct = await database.get(`posts/post::${ params.id }`);
 
       if ( !Post ) redirect('/error'); 
 

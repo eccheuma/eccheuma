@@ -1,154 +1,155 @@
 <template>
 	<section class="user_profile-component">
+		<section class="user_profile-component-notification">
+			<input id="messageNotificationChecker" v-model="MessageNotification" type="checkbox" name="Оповещать о сообщениях" />
+			<label for="messageNotificationChecker">Оповещать о сообщениях</label>
+		</section>
 
 		<transition-group name="opacity-transition" class="user_profile-component-body">
 			<template v-for="(message, index) in Messages">
-				<intesection-component 
-					:key="message.date" 
-					:style="`order: ${ Messages.length - index }`" 
+				<intesection-component
+					:key="message.date"
+					:style="`order: ${Messages.length - index}`"
 					:ready="ReadyToRead"
 					:ignite="false"
-					@isIntersecting.once="observeIntesection(message)"
-					>
+					@isIntersecting.once="observeIntesection(message)">
 					<message-component :payload="message" />
 				</intesection-component>
 			</template>
 		</transition-group>
 
 		<div class="user_profile-component-textarea">
+			<textarea v-model="UserMessage" placeholder="Напишите что нибудь!" @keydown.ctrl.enter="sendMessage" />
 
-			<textarea 
-				v-model="UserMessage" 
-				placeholder="Напишите что нибудь!" 
-				@keydown.ctrl.enter="sendMessage"
-			/>
-
-			<!-- <section>
-				<input id="messageNotificationChecker" v-model="MessageNotification" type="checkbox" name="Оповещать о сообщениях">
-				<label for="messageNotificationChecker">Оповещать о сообщениях</label>
-			</section> -->
-
-			<eccheuma-button @click.native="sendMessage">
-				Отправить
-			</eccheuma-button>
-
+			<eccheuma-button @click.native="sendMessage"> Отправить </eccheuma-button>
 		</div>
-
 	</section>
 </template>
 
 <style lang="scss" scoped>
+	.user_profile-component {
+		display: grid;
 
-.user_profile-component {
+		grid-template: {
+			columns: 1fr;
+			rows: auto 1fr min-content;
+		}
 
-	display: grid;
-
-	grid-template: {
-		columns: 1fr;
-		rows: 1fr min-content;
-	}
-
-	row-gap: 3vh;
-
-	height: auto;
-	overflow: hidden;
-
-	&-body {
-
-		display: flex;
-		flex-direction: column;
 		row-gap: 1vh;
 
-		overflow-y: scroll;
-		padding-right: $GLOBAL-ScrollWidth;
+		height: auto;
+		overflow: hidden;
 
-		&::-webkit-scrollbar {
-			&-track {
-				border-radius: var(--border-radius);
-			}
-		}
+		&-body {
+			display: flex;
+			flex-direction: column;
+			row-gap: 1vh;
 
-		.message {
-			&-owner {
-				border: 1px solid rgb(var(--color-mono-500)) !important
+			overflow-y: scroll;
+			padding: 1px $GLOBAL-ScrollWidth 1px $GLOBAL-ScrollWidth * 2;
+
+			&::-webkit-scrollbar {
+				&-track {
+					border-radius: var(--border-radius);
+				}
 			}
-			&-support {
-				border: 1px solid var(--color-accent-warning) !important
-			}
-			&-unread {
-				border: 1px solid rgba(var(--color-mono-500), .25);
-				animation: unread 1s infinite alternate;
-				@keyframes unread {
-					0% {
-						border: 1px solid rgba(var(--color-mono-500), .25)
-					}
-					100% {
-						border: 1px solid rgba(var(--color-mono-500), 1)
+
+			.message {
+
+				$BORDER_SIZE: 3px;
+
+				&-owner {
+					border: $BORDER_SIZE solid rgb(var(--color-mono-500)) !important;
+				}
+				&-support {
+					border: $BORDER_SIZE solid var(--color-accent-warning) !important;
+				}
+				&-unread {
+					border: $BORDER_SIZE solid rgba(var(--color-mono-500), 0.25);
+					animation: unread 1s infinite alternate;
+					@keyframes unread {
+						0% {
+							border: $BORDER_SIZE solid rgba(var(--color-mono-500), 0.25);
+						}
+						100% {
+							border: $BORDER_SIZE solid rgba(var(--color-mono-500), 1);
+						}
 					}
 				}
-			}	
+			}
 		}
 
-	}
+		&-textarea {
+			display: flex;
+			flex-direction: column;
+			row-gap: 2vh;
 
-	&-textarea {
+			align-items: center;
+			padding: 0vh 2vw;
 
-		display: flex;
-		flex-direction: column;
-		row-gap: 2vh;
+			textarea {
+				resize: none;
+				display: block;
+				width: 100%;
+				height: 10vh;
+				border-radius: var(--border-radius);
+				padding: 0.7rem;
+				font-size: 0.8rem;
+				font-weight: 600;
+				background-color: rgb(var(--color-mono-200));
+				color: rgb(var(--color-mono-900));
+				border: 2px solid var(--color-accent-edges-100);
+				@media screen and (max-width: $mobile-breakpoint) {
+					height: 20vh;
+				}
 
-		align-items: center;
-		padding: 0vh 2vw;
+				transition-duration: 250ms;
+				&:focus {
+					border: 2px solid var(--color-accent-edges-300);
+					outline: none;
+				}
+			}
 
-		textarea {
-			resize: none;
-			display: block;
-			width: 100%;
-			height: 10vh;
-			border-radius: var(--border-radius); 
-			padding: .7rem;
-			font-size: .8rem;
-			font-weight: 600;
+			button {
+				width: 10vw;
+			}
+
+			section {
+				display: inline-flex;
+				place-items: center;
+				gap: 1vw;
+
+				label {
+					line-height: normal;
+					margin: 0;
+					padding-top: 1px;
+				}
+			}
+		}
+
+		&-notification {
+			@include gradient-border;
+
+			padding: 0.5vh 1vw;
 			background-color: rgb(var(--color-mono-200));
-			color: rgb(var(--color-mono-900));
-			border: 2px solid var(--color-accent-edges-100);
-			@media screen and ( max-width: $mobile-breakpoint ) {
-				height: 20vh;
-			}
+			display: flex;
+			place-content: center;
 
-			transition-duration: 250ms;
-			&:focus {
-				border: 2px solid var(--color-accent-edges-300);
-				outline: none;
-			}
+			gap: calc(min(0.5vw, 4px));
 
-		}
-
-		button {
-			width: 10vw;
-		}
-
-		section {
-			display: inline-flex;
-			place-items: center;
-			gap: 1vw;
+			@extend %pattern-lines;
 
 			label {
-				line-height: normal;
-				margin: 0;
-				padding-top: 1px;
+				margin: 2px 0px 0px;
+				font-size: var(--font-size-16);
+				font-weight: 700;
+				color: rgb(var(--color-mono-500));
 			}
-
 		}
-
 	}
-
-}
-
 </style>
 
 <script lang="ts">
-
 	import Vue from 'vue';
 
 	// VUEX
@@ -159,145 +160,152 @@
 	import { database } from '~/api/database';
 
 	// UTILS
-	import { utils } from '~/utils';
+	import { Result, utils } from '~/utils';
 
 	// MIXINS
 	import EmitSound from '~/assets/mixins/EmitSound';
 
 	// COMPONENTS
-	import EccheumaButton		from '~/components/buttons/CommonButton.vue';
+	import EccheumaButton from '~/components/buttons/CommonButton.vue';
 	import MessageComponent from './submodules/Message.vue';
 
 	import IntesectionComponent from '~/components/functional/intersectionComponent.vue';
 
 	// TYPES
-	import type { Message as MessageNamespace } from '~/contracts/Message';
+	import type { Message as MessageContract } from '~/contracts/Message';
 	import type { User } from '~/contracts/User';
+
+	// ERROR
+	const enum ComponentErrors {
+		REPEATED_MESSAGE = 'RM',
+	}
 
 	// MODULE
 	export default Vue.extend({
-		components: {
-			EccheumaButton, 
-			MessageComponent,
-			IntesectionComponent
-		},
 		mixins: [ EmitSound ],
+		components: {
+			EccheumaButton,
+			MessageComponent,
+			IntesectionComponent,
+		},
 		data() {
+
 			return {
+				message: {
+					current: String(),
+					prev: String(),
+				},
 
-				UserPrevMessage: '',
-				UserMessage: '',
-
-				MessageNotification: false,
+				MessageNotification: Notification.permission === 'granted',
 				ReadyToRead: false,
-
 			};
+		
 		},
 		computed: {
-
 			...mapState({
-				UserState	: state	=> ( state as VuexMap ).User.State.State,
-				Messages	:	state => ( state as VuexMap ).User.Messages.Data,
+				UserState		: state => (state as VuexMap).User.State.State,
+				Messages		: state => (state as VuexMap).User.Messages.Data,
 			}),
-
 		},
 		watch: {
 			Messages: {
 				handler() {
-					if ( this.MessageNotification ) {
-						this.sendNotification(this.Messages[this.Messages.length - 1]);
-					}
-				}
+
+					if (this.MessageNotification) this.sendNotification(this.Messages[this.Messages.length - 1]);
+				
+				},
 			},
 			UserMessage: {
 				handler(n, o) {
+
 					this.playSound(this.Sounds.get(n.length > o.length ? 'Input::Increment' : 'Input::Decrement'));
-				}
+				
+				},
 			},
 			MessageNotification: {
 				handler(value) {
-					if ( value ) {
-						this.requestNotificationPermission();
-					}
-				}
-			}
+
+					if (value) this.requestNotificationPermission();
+				
+				},
+			},
 		},
 		created() {
 
 			this.setSounds([
-				{ file: 'Off', name: 'Input::Increment', settings: { rate: 0.65, volume: .25 } },
-				{ file: 'Off', name: 'Input::Decrement', settings: { rate: 0.50, volume: .25 } },
+				{ file: 'Off', name: 'Input::Increment', settings: { rate: 0.65, volume: 0.25 } },
+				{ file: 'Off', name: 'Input::Decrement', settings: { rate: 0.5, volume: 0.25 } },
 			]);
 
 		},
 		mounted() {
-			this.$nextTick(() => { this.ReadyToRead = true; });
+
+			requestIdleCallback(() => {
+
+				this.ReadyToRead = true;
+
+			});
+
 		},
 		methods: {
-
 			...mapActions({
-				vuex_markAsReaded	:	'User/Messages/markAsReaded',
-				vuex_sendMessage	:	'User/Messages/sendMessage',
+				vuex_markAsReaded: 'User/Messages/markAsReaded',
+				vuex_sendMessage: 'User/Messages/sendMessage',
 			}),
 
-			observeIntesection(message: MessageNamespace.struct) {
+			observeIntesection(message: MessageContract.struct) {
 
 				this.checkMessage(message);
 
 			},
 
-			checkMessage({ ID, readed, userID }: MessageNamespace.struct) {
+			checkMessage({ ID, readed, uid }: MessageContract.struct) {
 
-				if ( userID !== this.UserState.UserID && readed === false ) { 
-					this.vuex_markAsReaded(ID);
-				}
+				if (uid !== this.UserState.uid && readed === false) this.vuex_markAsReaded(ID);
 
 			},
 
-			sendMessage() {
-				if ( this.UserPrevMessage !== this.UserMessage ) {
+			sendMessage(): Result<void> {
 
-					const M: MessageNamespace.struct = {
-						ID				: utils.randHashGenerator(),
-						userID		: this.UserState.UserID,
-						date			: Date.now(),
-						from			: this.UserState.UserName,
-						message		: this.UserMessage,
-						readed		: false
-					};
-	
-					this.vuex_sendMessage(M);
+				if (this.UserPrevMessage === this.UserMessage) return Error(ComponentErrors.REPEATED_MESSAGE);
 
-					this.UserPrevMessage 	= this.UserMessage; 
-					this.UserMessage 			= '';
+				this.vuex_sendMessage({
+					ID: utils.randHashGenerator(),
+					uid: this.UserState.uid,
+					date: Date.now(),
+					from: this.UserState.name,
+					message: this.UserMessage,
+					readed: false,
+				});
 
-				}
+				this.message.prev = this.message.current;
+				this.message.current = '';
+
 			},
 
 			requestNotificationPermission() {
+
 				Notification.requestPermission().then((perm) => {
+
 					this.MessageNotification = perm === 'granted';
+
 				});
+
 			},
 
-			async sendNotification({ message, userID, from, readed }: MessageNamespace.struct ) {
+			async sendNotification({ message, uid, from }: MessageContract.struct) {
+
+				if (uid === this.UserState.uid) return;
+
+				new Notification('Eccheuma | Новое сообщение', {
+					body: `${from}: ${message}`,
+					image: require('~/assets/images/NotificationBadge.png'),
+					icon: await database.get<User.struct['image']>(`users/${uid}/state/image`),
+					silent: true,
+				});
 				
-				if ( userID !== this.UserState.UserID ) {
-
-					const CONTENT: NotificationOptions = {
-						body		: `${ from }: ${ message }`,
-						image		: require('~/assets/images/NotificationBadge.png'),
-						icon		: await database.get<User.struct['UserImageID']>(`Users/${ userID }/state/UserImageID`),
-						silent	: true,
-					};
-
-					new Notification('Eccheuma | Новое сообщение', CONTENT);
-
-				}
-
-			}
-
-		}
+			},
+		},
 	});
 
 </script>

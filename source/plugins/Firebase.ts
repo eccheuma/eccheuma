@@ -17,9 +17,8 @@ export default async (context?: Context) => {
 	// Wipeout all instances that was stared early. 
 	if (context?.isDev) deleteActiveInstances();
 
-	const { utils: { randHashGenerator } } = await import('~/utils');
+	// const { utils: { randHashGenerator } } = await import('~/utils');
 
-	const applicationHash = randHashGenerator(12);
 	const DOMEN = process.env.FIREBASE_DOMEN || String();
 
 	const CONFIG: FirebaseOptions = {
@@ -33,10 +32,10 @@ export default async (context?: Context) => {
 		storageBucket: `${DOMEN}.appspot.com`,
 		messagingSenderId: '975378208350',
 		measurementId: 'G-W49JBK6546',
-
+		
 	};
 
-	globalThis.firebaseClient = initializeApp(CONFIG, applicationHash);
+	globalThis.firebaseClient = initializeApp(CONFIG, 'DEFAULT');
 	globalThis.firebaseDB = getDatabase(globalThis.firebaseClient);
 	globalThis.firebaseAuth = getAuth(globalThis.firebaseClient);
 

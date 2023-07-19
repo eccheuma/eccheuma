@@ -128,7 +128,7 @@
 				? parseInt(query.range)
 				: Ranges.gallery;
 
-			const Quantity: number = await database.getLength('Gallery');
+			const Quantity: number = await database.getLength('gallery');
 
 			if ( ! Number.isInteger(Page) ) redirect('/error');
  
@@ -216,7 +216,7 @@
 
 			async getDatabaseData() {
 
-				const QUANTITY = await database.getLength('Gallery');
+				const QUANTITY = await database.getLength('gallery');
 
 				const REM: number = QUANTITY - ( this.LoadRange * this.Page );
 

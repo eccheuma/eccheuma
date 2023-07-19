@@ -2,7 +2,7 @@
 	<div class="user_profile-component-picture">
 
 		<div class="user_profile-component-picture-user">
-			<i ref="iconPreview" :style="`background-image: url(${ NewIcon || State.UserImageID })`" />
+			<i ref="iconPreview" :style="`background-image: url(${ NewIcon || State.image })`" />
 			<input 
 				v-show="false" 
 				id="CustomImage" 
@@ -39,7 +39,7 @@
 		<hr v-once>
 
 		<div class="user_profile-component-picture-footer">
-			<common-button :class="{ disabled: !NewIcon || NewIcon === State.UserImageID }" @click.native="update">
+			<common-button :class="{ disabled: !NewIcon || NewIcon === State.image }" @click.native="update">
 				Подтвердить
 			</common-button>
 		</div>
@@ -160,6 +160,7 @@
 			CaptionCard,
 		},
 		data() {
+
 			return {
 
 				Warning	: String(),
@@ -169,10 +170,13 @@
 				SelectableIcon: Array<string>(),
 
 			};
-		},
+		
+},
 		created() {
+
 			model = new CustomizeModel(this.$data);
-		},
+		
+},
 		computed: {
 
 			...mapState({
@@ -181,8 +185,10 @@
 			}),
 
 			loadError(): boolean {
+
 				return this.Loading === IconStatus.error;
-			}
+			
+}
 
 		},
 		watch: {
@@ -199,15 +205,21 @@
 			}
 		},
 		async mounted() {
+
 			this.SelectableIcon = await model.getDefaultIcons();
-		},
+		
+},
 		methods: {
 			upload(event: Event): void {
+
 				model.uploadIcon(event);
-			},
+			
+},
 			update(): void {
-				model.updateIcon(this.State.UserID, this.NewIcon);
-			}
+
+				model.updateIcon(this.State.uid, this.NewIcon);
+			
+}
 		}
 	});
 

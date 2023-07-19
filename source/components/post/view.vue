@@ -112,9 +112,9 @@
 
 					<template v-if="author">
 						<tag>
-							{{ author.UserName }}
+							{{ author.name }}
 						</tag>
-						<i :style="`background-image: url(${ author.UserImageID })`" />
+            <i :style="`background-image: url(${ author.image })`"></i>
 					</template>
 
 				</section>
@@ -135,7 +135,7 @@
 						<header class="post-content-header">
 							<h4>{{ payload.title }}</h4>
 							<h6>{{ payload.description }}</h6>
-							<span>{{ author ? author.UserName : '' }} | {{ date.origin.Day }} в {{ date.origin.Time }}</span>
+							<span>{{ author ? author.name : '' }} | {{ date.origin.Day }} в {{ date.origin.Time }}</span>
 						</header>
 
 						<template v-if="editContent">
@@ -766,7 +766,6 @@
 	import { database } from '~/api/database';
 
 	// UTILS
-	import { utils } from '~/utils';
 	import { validate } from '~/utils/validate';
 
 	// MIXINS
@@ -864,6 +863,7 @@
 		},
 
 		data() {
+
 			return {
 
 				CHAR_LIMIT,
@@ -877,7 +877,7 @@
 				CommentSection: false,
 				prepareContent: false,
 
-				Addressee: Array<User.struct['UserID']>(),
+				Addressee: Array<User.struct['uid']>(),
 
 				IntersectionAnimation: undefined as Animation | undefined,
 				Cooled: undefined as undefined | boolean,
@@ -885,6 +885,7 @@
 				...PostInstance.objectRepresentation(),
 
 			};
+		
 		},
 
 		async fetch() {
@@ -892,11 +893,15 @@
 			this.date = PostModel.updateTime(this.payload);
 
 			if ( process.server ) {
+
 				await this.getAuthor();
+			
 			}
 
 			if ( this.opened ) {
-				this.content = await database.get(`Posts/PostID-${ this.payload.ID }/content`);
+
+				this.content = await database.get(`posts/post::${ this.payload.ID }/content`);
+			
 			}
 
 		},
@@ -910,41 +915,53 @@
 			}),
 
 			charLimit(): number {
+
 				return CHAR_LIMIT - this.Message.length;
+			
 			},
 
 			userLiked(): boolean {
 
 				return this.likes 
-					? Reflect.has(this.likes, this.StoreUser.UserID)
+					? Reflect.has(this.likes, this.StoreUser.uid)
 					: false;
 
 			},
 
 			sortedComments(): Array<Post.comment> {
+
 				return Object.values(this.comments || {}).sort((a, b) => a.date - b.date);
+			
 			},
 
 			validation(): boolean {
+
 				return validate.sentence(this.Message, ['something'], { minLength: 6 });
-			}
+			
+		}
 			
 		},
 
 		watch: {
 			'payload.image': {
 				handler() {
+
 					this.$nextTick().then(() => this.updateImage());
+				
 				},
 			},
 			Message: {
 				handler(n: string, o: string) {
+
 					this.playSound(this.Sounds.get(n.length > o.length ? 'Input::Increment' : 'Input::Decrement'));
+				
 				}
 			},
 			userLiked: {
 				handler(value: boolean) {
+
 					this.playSound(this.Sounds.get(value ? 'Switch::On' : 'Switch::Off'));
+				
 				}
 			},
 		},
@@ -954,6 +971,7 @@
 			if ( process.browser ) {
 				
 				const watchCooledStatus = this.$watch('Cooled', async (status) => {
+
 					if ( !status ) {
 
 						this.listenDataSnapshots('comments');
@@ -963,16 +981,21 @@
 						this.getAuthor();
 
 						PostModel.isActual(this.payload).then(({ is, data }) => {
+
 							if ( !is ) {
+
 								this.content 	= data.content;
 								this.date 		= PostModel.updateTime(this.payload);
+							
 							}
+						
 						});
 						
 						watchCooledStatus(); console.debug('[Post]: watchCooledStatus | init');
 
 					}
-				}); 
+				
+			}); 
 	
 				const watchCommentSection = this.$watch('CommentSection', () => {
 
@@ -986,20 +1009,28 @@
 				});
 	
 				const watchPrepareContent = this.$watch('prepareContent', () => {
+
 					this.listenDataSnapshots('content'); watchPrepareContent();
-				});
+				
+			});
 
 				const watchIntersection = this.$watch('IntersectionAnimation', () => {
+
 					if ( this.IntersectionAnimation ) {
+
 						this.IntersectionAnimation.reverse(); watchIntersection();
-					}
-				});
+					
+			}
+							
+			});
 
 			}
 
 			if ( this.opened ) {
+
 				this.prepareContent = true;
 				this.ContentSection = this.opened;
+			
 			}
 
 		},
@@ -1011,8 +1042,10 @@
 				const { keyframes, options } = resolveAnimation();
 
 				this.initCooler(this.$el, (cooled: boolean) => {
+
 					this.Cooled = cooled;
-				});
+				
+			});
 
 				this.IntersectionAnimation = (this.$refs.post as HTMLElement)
 					.animate(keyframes, options);
@@ -1033,10 +1066,12 @@
 		methods: {
 
 			pickAddressee(user: User.struct) {
+
 				this.Message = helpers.asAnswer({
 					user		: user,
 					message	: this.Message
 				});
+			
 			},
 
 			...mapMutations({
@@ -1057,9 +1092,13 @@
 
 				console.debug(`[Post]: listenDataSnapshots | ${ section }`);
 
-				const PATH = `Posts/PostID-${ this.payload.ID }/${ section.toLowerCase() }`;
+				const PATH = `posts/post::${ this.payload.ID }/${ section.toLowerCase() }`;
 
-				database.listen(PATH, data => { this[section] = data as any; });
+				database.listen(PATH, data => {
+
+					this[section] = data as any; 
+
+				});
 
 			}, 
 
@@ -1076,16 +1115,23 @@
 				const IMAGE_CONTAINER = this.$refs.ImageHolder as HTMLElement;
 
 				getOptimalImage(IMAGE_CONTAINER, this.payload.image).then(url => {
+
 					if ( this.application.context.browser && this.application.gpu.available() ) {
+
 						this.prepareAnimations(IMAGE_CONTAINER, url);
+					
 					} else {
+
 						this.Thumbnail = url;
+										
 					}
+				
 				});
 
 			},
 
 			animateIntersection(intersection: boolean) {
+
 				if ( this.IntersectionAnimation ) {
 
 					this.IntersectionAnimation.cancel(); 
@@ -1093,6 +1139,7 @@
 					this.IntersectionAnimation.play();
 
 				}
+				
 			},
 
 			prepareAnimations(el: Element, url: Image.formatsStruct) {
@@ -1120,7 +1167,7 @@
 					const sendResult = await PostModel.sendComment({ 
 						message		: this.Message,
 						postID		: this.payload.ID,
-						userID		: this.StoreUser.UserID,
+						userID		: this.StoreUser.uid,
 						addressee : await helpers.getAddresseeID(this.Message),
 					});
 
@@ -1129,8 +1176,10 @@
 						// TODO: Make error handling for UI
 
 					} else {
+
 						this.PrevMessage 	= this.Message;
 						this.Message 			= String();
+					
 					}
 
 				}
@@ -1143,7 +1192,7 @@
 
 				await PostModel.sendLike({
 					postID	: this.payload.ID,
-					userID	: this.StoreUser.UserID,
+					userID	: this.StoreUser.uid,
 				}, this.userLiked);
 
 			},

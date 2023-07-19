@@ -8,18 +8,18 @@ export namespace helpers {
   const MentionRE = new RegExp('@.+?,','g');
 
   export function asAnswer({ message, user }: IAnswer): IAnswer['message'] {
-    return `@${ user.UserName }, ${ message }`;
+    return `@${ user.name }, ${ message }`;
   }
 
-  export async function getAddresseeID(message: string): Promise<Array<User.struct['UserID']>> {
+  export async function getAddresseeID(message: string): Promise<Array<User.struct['uid']>> {
 
     const addressees = extractAddressee(message);
 
-    const users: utils.types.asIterableObject<User.state> = await database.get('Users');
+    const users: utils.types.asIterableObject<User.state> = await database.get('users');
 
     return Object.values(users)
-      .filter(user => addressees.some(x => x === user.state.UserName))
-      .map(user => user.state.UserID);
+      .filter(user => addressees.some(x => x === user.state.name))
+      .map(user => user.state.uid);
 
   }
 

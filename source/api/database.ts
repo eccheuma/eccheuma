@@ -96,6 +96,15 @@ export namespace database {
 
   }
 
+  /** 
+    * По своей сути является аналогом get, но вызывает каллбэк при каждом изменении данных.
+    * В каллбэк передается объект полученный от firebase\supabase. 
+    * 
+    * @param path Путь к данным
+    * @param callback
+    * @param params Параметры запроса, будь то количество данных или их пложение.
+    * @returns 
+  */
   export function listen<
     C extends object,
     O extends order = order.NONE,
@@ -116,6 +125,10 @@ export namespace database {
 
   }
 
+  /** 
+    * Возвращает количество предметов в коллекции по выбранному пути.
+    * @param path Путь к данным
+    */   
   export async function getLength(path: string): Promise<number> {
 
     const Query: Query = query(ref(globalThis.firebaseDB, applyRoot(path)));
@@ -124,6 +137,10 @@ export namespace database {
 
   }
 
+  /** 
+    * Запись данных в базу данных.
+    * @param path Путь к данным
+    */ 
   export async function set<D extends object>(path: string, data: D): Promise<Result<boolean, Error>> {
 
     return firebaseSet(ref(globalThis.firebaseDB, applyRoot(path)), data)
@@ -132,6 +149,12 @@ export namespace database {
 
   }
 
+  /**
+   * Удаление из базы данных по выбранному пути.
+   *  
+   * @param path Путь к данным.
+   * @returns 
+   */
   export async function remove(path: string): Promise<Result<boolean, Error>> {
 
     return firebaseRemove(ref(globalThis.firebaseDB, applyRoot(path)))
@@ -140,6 +163,13 @@ export namespace database {
 
   }
 
+  /**
+   * Обновляет данные по указанному пути.
+   * 
+   * @param path Путь к данным. 
+   * @param data JSON объект с данными.
+   * @returns Возвращает либо буллевое значение, либо ошибку.
+   */
   export async function update<D extends object>(path: string, data: D): Promise<Result<boolean, Error>> {
 
     return firebaseUpdate(ref(globalThis.firebaseDB, applyRoot(path)), data)

@@ -3,13 +3,11 @@
 
 // TYPES
 	import { User } from '~/contracts/User';
-	import { currencies } from '~/utils/currency';
 
 // STATE
 	export const state = () => ({
 
 		UserProfileArea: false,
-		Currency: currencies.Country.ru, 
 
 		State: new Object() as User.struct
 

@@ -117,7 +117,7 @@ describe('api::database', () => {
       orderBy: 'ID',  
     });
 
-    console.log(numbers, structs);
+    // console.log(numbers, structs);
 
     expect(numbers.filter(x => x)).toHaveLength(Q_TARGET);
     expect(Object.values(structs)).toHaveLength(Q_TARGET);

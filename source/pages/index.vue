@@ -36,7 +36,7 @@
 				<path
 					ref="LOGO_PATH"
 					d="m156 7h-155c1-2 1-3 3-4 1-1 3-2 6-2h138c2 0 4 1 5 2 2 1 3 2 3 4zm-135 2h20c0 1 0 3-1 4s-3 2-7 2h-20c0-2 1-3 2-4 2-1 4-2 6-2zm135 8c0 2-1 3-3 4-1 1-3 2-5 2h-138c-3 0-5-1-6-2-2-1-2-2-3-4h155z"
-					stroke="rgb(var(--color-mono-900))"
+					stroke="rgb(var(--color-mono-800))"
 				/>
 			</svg>
 
@@ -54,8 +54,9 @@
 
 		<section class="holl-links">
 			<template v-for="(item, index) in Links">
-				<a :key="index" :href="item.link">
-					<icon :name="item.icon" /> {{ item.title }}
+				<a :href="item.link" :key="index">
+					<icon :name="item.icon" />
+          {{ item.title }}
 				</a>
 			</template>
 		</section>
@@ -251,6 +252,7 @@
 				height: 1.5rem;
 				width: 100%;
 				margin: 3vh 0;
+				filter: drop-shadow(0px 0px 0px transparent);
 			}
 			
 		}

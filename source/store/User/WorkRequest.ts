@@ -58,10 +58,10 @@
 		// TODO: #16 Перенести сообщения в отдельный модуль, чтобы не болтались по среди метода. @Scarlatum
 		async sendWorkRequest(vuex, order: Purchase.order<any>) {
 
-			const { UserID } = vuex.rootState.User.State.State;
+			const { uid: ID } = vuex.rootState.User.State.State;
 
 			const Message: Message.struct = {
-				ID: utils.randHashGenerator(),
+				uid: utils.randHashGenerator(),
 				userID: 'SUPPORT',
 				from: 'Eccheuma Informer',
 				message: 
@@ -86,8 +86,8 @@
 
 				const requestHash = utils.randHashGenerator();
 
-				await database.set(`users/${ UserID }/work_requests/WorkID-${ requestHash }`, order);
-				await database.set(`users/${ UserID }/messages/Hash_${ requestHash }`, Message);
+				await database.set(`users/${ ID }/work_requests/WorkID-${ requestHash }`, order);
+				await database.set(`users/${ ID }/messages/Hash_${ requestHash }`, Message);
 
 				vuex.commit('Notification/Notification_Status', true, { root: true });
 				vuex.commit('Notification/createNotification', newNotification, { root: true });
@@ -100,18 +100,18 @@
 		
 		async setRequestContent(vuex) {
 
-			const { UserID } = vuex.rootState.User.State.State;
+			const { uid: ID } = vuex.rootState.User.State.State;
 
-			vuex.commit('setOrders', await database.get<Array<Purchase.order<any>>>(`users/${ UserID }/work_requests`));
+			vuex.commit('setOrders', await database.get<Array<Purchase.order<any>>>(`users/${ ID }/work_requests`));
 
 
 		},
 
 		async setRequestQuantity(vuex) {
 
-			const { UserID } = vuex.rootState.User.State.State;
+			const { uid: ID } = vuex.rootState.User.State.State;
 
-			vuex.commit('setQuantity', await database.getLength(`users/${ UserID }/work_requests`)); 
+			vuex.commit('setQuantity', await database.getLength(`users/${ ID }/work_requests`)); 
 		},
 
 		setActiveRequest(vuex) {

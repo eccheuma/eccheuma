@@ -55,7 +55,7 @@ export default Vue.extend({
 			};
 	
 			const OPTIONS = {
-				threshold: payload._threshold ?? this.$isMobile ? 0 : .25
+				threshold: payload._threshold || this.$isMobile ? 0 : .25
 			};
 	
 			const OBSERVER = new IntersectionObserver((entry) => {
