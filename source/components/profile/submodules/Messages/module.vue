@@ -259,9 +259,9 @@
 
 			},
 
-			checkMessage({ ID, readed, uid }: MessageContract.struct) {
+			checkMessage({ userID, readed, uid }: MessageContract.struct) {
 
-				if (uid !== this.UserState.uid && readed === false) this.vuex_markAsReaded(ID);
+				if (uid !== this.UserState.uid && readed === false) this.vuex_markAsReaded(userID);
 
 			},
 
