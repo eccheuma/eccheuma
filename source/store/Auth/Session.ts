@@ -1,8 +1,8 @@
 // VUEX
-	import type { MutationTree } from 'vuex';
+	import type { MutationTree } from "vuex";
 
 // AUTH
-	import { auth, form } from '~/api/auth';
+	import { auth, form } from "~/api/auth";
 
 // STATE
 	export const state = () => ({
@@ -22,7 +22,7 @@
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/contracts/VuexMap' {
+	declare module "~/contracts/VuexMap" {
 		interface Auth {
 			Session: CurentState
 		}
@@ -36,7 +36,7 @@
 		setAuthError(state, prop: auth.error) {
 			state.AuthError = prop;
 		},
-		setUserState(state, { email, uid }: CurentState['CurentUser']) {
+		setUserState(state, { email, uid }: CurentState["CurentUser"]) {
 			state.CurentUser = { email, uid };
 		},
 

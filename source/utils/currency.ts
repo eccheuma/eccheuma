@@ -1,26 +1,26 @@
 
-import { utils } from '~/utils';
-import { currency } from '~/api/currency';
+import { utils } from "~/utils";
+import { currency } from "~/api/currency";
 
 // Decorators
-import { debug } from '~/decorators/logger.decorator';
+import { debug } from "~/decorators/logger.decorator";
 
 export namespace currencies {
 
 	const GLOBAL_COF: number = 1;
 
 	export enum Country {
-		ru = 'RUB',
-		en = 'USD',
-		ch = 'CHY',
+		ru = "RUB",
+		en = "USD",
+		ch = "CHY",
 	}
 
 	export const DEFAULT = [currencies.Country.ru];
 
 	export const signDict: Readonly<Record<Country, string>> = {
-		[Country.ru]: '₽',
-		[Country.en]: '$',
-		[Country.ch]: '¥'
+		[Country.ru]: "₽",
+		[Country.en]: "$",
+		[Country.ch]: "¥"
 	};
 
 	export interface ICurrency {
@@ -50,7 +50,7 @@ export namespace currencies {
 		}
 
 		public add(value: number) {
-		  this.value = this.value + value as utils.types.nominal<number, C>; return value;
+			this.value = this.value + value as utils.types.nominal<number, C>; return value;
 		}
 
 		public grab(value: number) {
@@ -90,8 +90,8 @@ export namespace wallet {
 	};
 
 	const enum errors {
-		WALLET_OUT = 'Not enough on balance',
-		WALLET_LIMIT = 'Wallet size limit',
+		WALLET_OUT = "Not enough on balance",
+		WALLET_LIMIT = "Wallet size limit",
 	}
 
 	interface IWallet {

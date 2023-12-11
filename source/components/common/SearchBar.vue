@@ -154,13 +154,13 @@
 
 <script lang="ts">
 
-	import Vue from 'vue';
+	import Vue from "vue";
 
 	// MIXINS
-	import EmitSound from '~/assets/mixins/EmitSound';
+	import EmitSound from "~/assets/mixins/EmitSound";
 
 	// COMPONENTS
-	import Icon			from '~/components/common/Icon.vue';
+	import Icon			from "~/components/common/Icon.vue";
 
 	// MODULE
 	export default Vue.extend({
@@ -198,11 +198,11 @@
 		},
 		mounted() {
 
-			const watcherPrepared = this.$watch('preparedInteraction', () => {
+			const watcherPrepared = this.$watch("preparedInteraction", () => {
 
 				this.setSounds([
-					{ file: 'On', 	name: 'Input::Increment',  settings: { rate: 1.00, volume: 0.25 } },
-					{ file: 'Off', 	name: 'Input::Decrement',  settings: { rate: 1.00, volume: 0.25 } },
+					{ file: "On", 	name: "Input::Increment",  settings: { rate: 1.00, volume: 0.25 } },
+					{ file: "Off", 	name: "Input::Decrement",  settings: { rate: 1.00, volume: 0.25 } },
 				]);
 
 				watcherPrepared();
@@ -212,7 +212,7 @@
 		},
 		methods: {
 			inputSound({ data }: InputEvent) {
-				this.playSound(this.Sounds.get(data ? 'Input::Increment' : 'Input::Decrement'));
+				this.playSound(this.Sounds.get(data ? "Input::Increment" : "Input::Decrement"));
 			},
 			searchData() {
 
@@ -221,7 +221,7 @@
 					this.inProcess = true;
 	
 					setTimeout(() => {
-						this.result = 'NOTHING'; this.inProcess = false;
+						this.result = "NOTHING"; this.inProcess = false;
 					}, 5000);
 					
 				}

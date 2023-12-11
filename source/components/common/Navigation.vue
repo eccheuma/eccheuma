@@ -195,17 +195,17 @@ $TransitionDuration: 250ms;
 
 <script lang="ts">
 
-	import Vue, { PropOptions } from 'vue';
+	import Vue, { PropOptions } from "vue";
 
 	// COMPONENTS
 	// import Popover from '~/components/common/Popover.vue'
-	import Icon from '~/components/common/Icon.vue';
+	import Icon from "~/components/common/Icon.vue";
 
 	// MIXINS
-	import EmitSound from '~/assets/mixins/EmitSound';
+	import EmitSound from "~/assets/mixins/EmitSound";
 
 	// TYPES
-	import type { navigation } from '~/contracts/Navigation';
+	import type { navigation } from "~/contracts/Navigation";
 
 	type NAV_ITEM = {
 		ID					: number 
@@ -236,8 +236,8 @@ $TransitionDuration: 250ms;
 		created() {
 			if ( process.browser ) {
 				this.setSounds([
-					{ file: 'On', name: 'Element::Action', 	settings: { rate: 0.50 } },
-					{ file: 'On', name: 'Element::Hover', 	settings: { rate: 0.25 } }
+					{ file: "On", name: "Element::Action", 	settings: { rate: 0.50 } },
+					{ file: "On", name: "Element::Hover", 	settings: { rate: 0.25 } }
 				]);
 			}
 		},
@@ -246,8 +246,8 @@ $TransitionDuration: 250ms;
 			const LINK_COMPONENTS = this.$refs.links as Vue[];
 
 			LINK_COMPONENTS.forEach((component) => {
-				component.$el.addEventListener('mouseenter', 	() => this.playSound(this.Sounds.get('Element::Hover')));
-				component.$el.addEventListener('click', 			() => this.playSound(this.Sounds.get('Element::Action')));
+				component.$el.addEventListener("mouseenter", 	() => this.playSound(this.Sounds.get("Element::Hover")));
+				component.$el.addEventListener("click", 			() => this.playSound(this.Sounds.get("Element::Action")));
 			});
 
 		},

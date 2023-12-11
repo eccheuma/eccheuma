@@ -192,29 +192,29 @@
 	⣿⣿⣿⣶⣶⣮⣥⣒⠲⢮⣝⡿⣿⣿⡆⣿⡿⠃⠄⠄⠄⠄⠄⠄⠄⣠⣴⣿⣿⣿
 */
 
-	import Vue from 'vue';
+	import Vue from "vue";
 
 	// VUEX
-	import { mapState, mapActions, mapMutations } from 'vuex';
+	import { mapState, mapActions, mapMutations } from "vuex";
 
 	// COMPONENTS
-	import HeaderCarousel from '~/components/layout/header/HeaderCarousel.vue';
-	import HeaderTop 			from '~/components/layout/header/HeaderTop.vue';
-	import Loader, { LoadStage } from '~/components/common/Loader.vue';
-	import EccheumaButton		from '~/components/buttons/CommonButton.vue';
+	import HeaderCarousel from "~/components/layout/header/HeaderCarousel.vue";
+	import HeaderTop 			from "~/components/layout/header/HeaderTop.vue";
+	import Loader, { LoadStage } from "~/components/common/Loader.vue";
+	import EccheumaButton		from "~/components/buttons/CommonButton.vue";
 
 	// FUNCTIONAL COMPONENTS
-	import HardwareAccelerationDecorator 	from '~/components/functional/HardwareAcceleration.vue';
-	import TransitionWrapper 							from '~/components/functional/TransitionWrapper.vue';
+	import HardwareAccelerationDecorator 	from "~/components/functional/HardwareAcceleration.vue";
+	import TransitionWrapper 							from "~/components/functional/TransitionWrapper.vue";
 
 	// NOTIFICATION DATA
-	import { registration } from '~/assets/json/notifications.json';
+	import { registration } from "~/assets/json/notifications.json";
 
 	// TYPES
-	import type { Notification } from '~/contracts/Notification';
-	import type { VuexMap } from '~/contracts/VuexMap';
+	import type { Notification } from "~/contracts/Notification";
+	import type { VuexMap } from "~/contracts/VuexMap";
 	
-	Vue.component('TransitionWrapper', TransitionWrapper);
+	Vue.component("TransitionWrapper", TransitionWrapper);
 
 	// MODULE
 	export default Vue.extend({ 
@@ -230,30 +230,30 @@
 			HeaderTop,
 
 			// ASYNC COMPONENTS //
-			FooterComponent: 		() => import('~/components/layout/footer/view.vue'),
-			DesktopNavigation:	() => import('~/components/layout/header/HeaderNavigation.vue'),
-			ScrollBar: 					() => import('~/components/layout/scrollbar/view.vue'),
+			FooterComponent: 		() => import("~/components/layout/footer/view.vue"),
+			DesktopNavigation:	() => import("~/components/layout/header/HeaderNavigation.vue"),
+			ScrollBar: 					() => import("~/components/layout/scrollbar/view.vue"),
 
-			Notification: 			() => import('~/components/common/Notification.vue'),
+			Notification: 			() => import("~/components/common/Notification.vue"),
 			// VkMessages: 				() => import('~/components/common/VK_Messages.vue'),
 
-			Registration: 			() => import('~/components/registration/Registration.vue'),
+			Registration: 			() => import("~/components/registration/Registration.vue"),
 
 			// MOBILE COMPONENTS
-			MobileNavigation: 	() => import('~/components/layout/mobile/HeaderNavigation.vue'),
+			MobileNavigation: 	() => import("~/components/layout/mobile/HeaderNavigation.vue"),
 
 		},
 		transition: {
-			name: 'layout-transition',
-			mode: 'out-in',
+			name: "layout-transition",
+			mode: "out-in",
 		},
 		data() {
 			return {
 				ApplicationLoadStages: [
-					{ LoadPoint: 0, 	Message: 'Загрузка скриптов и данных' },
-					{ LoadPoint: 25, 	Message: 'Монтирование элементов' },
-					{ LoadPoint: 90, 	Message: 'Остаточная компоновка элементов' },
-					{ LoadPoint: 100, Message: 'Готово!' },
+					{ LoadPoint: 0, 	Message: "Загрузка скриптов и данных" },
+					{ LoadPoint: 25, 	Message: "Монтирование элементов" },
+					{ LoadPoint: 90, 	Message: "Остаточная компоновка элементов" },
+					{ LoadPoint: 100, Message: "Готово!" },
 				] as Array<LoadStage>
 			};
 		},
@@ -273,14 +273,14 @@
 		methods: {
 
 			...mapMutations({
-				setDeviceType				: 'setDeviceType',
-				changeStatus				: 'Notification/changeStatus',
-				toggleProfileArea		: 'User/State/toggleProfileArea',
-				toggleRegisterModal	: 'Auth/Register/toggleRegisterModal',
+				setDeviceType				: "setDeviceType",
+				changeStatus				: "Notification/changeStatus",
+				toggleProfileArea		: "User/State/toggleProfileArea",
+				toggleRegisterModal	: "Auth/Register/toggleRegisterModal",
 			}),
 
 			...mapActions({
-				createNotification: 'Notification/createNotification',
+				createNotification: "Notification/createNotification",
 			}),
 
 			registrationNotify() {

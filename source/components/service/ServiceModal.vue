@@ -12,7 +12,7 @@
 			<template v-if="LoginStatus">
 				<i :style="`background-image: url(${ State.image })`" />
 				<span>{{ State.name }}</span>
-				<span>{{ State.wallet.RUB }} ₽</span>
+				<!-- <span>{{ State.wallet.RUB }} ₽</span> -->
 			</template>
 		</section>
 		<section class="service_modal-calc">
@@ -133,19 +133,19 @@
 
 <script lang="ts">
 
-	import Vue, { PropOptions } from 'vue';
+	import Vue, { PropOptions } from "vue";
 
 // VUEX
-	import { mapState, mapActions } from 'vuex';
+	import { mapState, mapActions } from "vuex";
 
 // COMPONENTS
-	import Calculator from '~/components/service/Calculator/view.vue';
+	import Calculator from "~/components/service/Calculator/view.vue";
 	// import Loader 	from '~/components/common/Loader.vue'
 
 // TYPES
-	import type { VuexMap } from '~/contracts/VuexMap';
+	import type { VuexMap } from "~/contracts/VuexMap";
 
-	import type { Purchase, Categories } from '~/contracts/Services';
+	import type { Purchase, Categories } from "~/contracts/Services";
 
 // MODULE
 	export default Vue.extend({
@@ -162,7 +162,7 @@
 		data() {
 			return {
 
-				selectedPurchase: {} as Purchase.struct<any>
+				selectedPurchase: {} as Purchase.struct
 
 			};
 		},
@@ -177,16 +177,16 @@
 		methods: {
 
 			...mapActions({
-				sendWorkRequest: 'User/WorkRequest/sendWorkRequest'
+				sendWorkRequest: "User/WorkRequest/sendWorkRequest"
 			}),
 
-			SetSelectedService(purchase: Purchase.struct<any>) {
+			SetSelectedService(purchase: Purchase.struct) {
 				this.selectedPurchase = purchase; 
 			},
 
 			CloseModal() {
 
-				this.$emit('close-modal');
+				this.$emit("close-modal");
 
 			},
 

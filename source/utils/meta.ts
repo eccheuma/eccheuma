@@ -1,6 +1,6 @@
-import { languages, getLocale } from '~/lang';
-import { navigation } from '~/contracts/Navigation';
-import { utils } from '~/utils';
+import { languages, getLocale } from "~/lang";
+import { navigation } from "~/contracts/Navigation";
+import { utils } from "~/utils";
 
 
 export namespace Meta {
@@ -15,7 +15,7 @@ export namespace Meta {
     const pageName = getLocale(lang).Routes[ prop.section ];
     const pageType = getLocale(lang).Pagination.page;
 
-    const pagePrefix = typeof prop.page === 'number'
+    const pagePrefix = typeof prop.page === "number"
       ? `${ prop.page } ${ pageType }`
       : `${ prop.page }`;
 

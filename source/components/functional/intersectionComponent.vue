@@ -1,6 +1,6 @@
 <script lang="ts">
 
-	import Vue from 'vue';
+	import Vue from "vue";
 
 	export default Vue.extend({
 		props: {
@@ -34,7 +34,7 @@
 		watch: {
 			inView: {
 				handler() {
-					this.$emit('isIntersecting', this.inView, this.$slots.default?.[0].elm);
+					this.$emit("isIntersecting", this.inView, this.$slots.default?.[0].elm);
 				}
 			},
 			ready: {
@@ -89,7 +89,7 @@
 		render(h): any {
 
 			if ( this.wrap ) {
-				return h('div', { staticClass: 'itersection::wrapper' }, this.$slots.default);
+				return h("div", { staticClass: "itersection::wrapper" }, this.$slots.default);
 			}
 
 			return this.$slots.default;

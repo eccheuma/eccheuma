@@ -1,11 +1,13 @@
-import nodeFetch from 'node-fetch';
-import { VercelRequest, VercelResponse } from '@vercel/node';
+import nodeFetch from "node-fetch";
+import { VercelRequest, VercelResponse } from "@vercel/node";
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   
   const { url } = req.query;
 
-  if ( !url ) return res.status(500).send('url');
+  console.log(url, req.query);
+
+  if ( !url ) return res.status(500).send("url");
 
   const response = url instanceof Array
     ? await nodeFetch(url[0])
@@ -17,7 +19,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   console.log(data);
 
   res.statusCode = 200;
-  res.setHeader('Content-Type', 'application/json');
+  res.setHeader("Content-Type", "application/json");
   res.end(JSON.stringify({ response: data }));
 
 }

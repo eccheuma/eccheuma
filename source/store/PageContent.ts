@@ -1,14 +1,14 @@
-import { ActionTree, MutationTree } from 'vuex';
+import { ActionTree, MutationTree } from "vuex";
 
 // API
-import { database } from '~/api/database';
+import { database } from "~/api/database";
 
 // UTILS
-import { cache } from '~/utils/cache';
+import { cache } from "~/utils/cache";
 
 // INTERFACES & TYPES
-import type { Post } from '~/contracts/Post';
-import type { Image } from '~/contracts/Image';
+import type { Post } from "~/contracts/Post";
+import type { Image } from "~/contracts/Image";
 
 export const enum Reference {
 	Posts,
@@ -16,8 +16,8 @@ export const enum Reference {
 }
 
 const PATHS = {
-	[Reference.Posts]: 'posts',
-	[Reference.Gallery]: 'gallery'
+	[Reference.Posts]: "posts",
+	[Reference.Gallery]: "gallery"
 } as const;
 
 export type LoadQuery = {
@@ -45,7 +45,7 @@ namespace helpers {
 		switch (ref) {
 			case Reference.Posts: {
 				query.order = database.order.child;
-				query.orderBy = 'ID';
+				query.orderBy = "ID";
 			} break;
 			case Reference.Gallery: {
 				query.order = database.order.key;
@@ -56,7 +56,7 @@ namespace helpers {
 
 	}
 
-	export async function getContentSlice(payload: PayloadQuery): Promise<RecordValues<CurentState['Content']>> {
+	export async function getContentSlice(payload: PayloadQuery): Promise<RecordValues<CurentState["Content"]>> {
 
 		const LP = payload.loadQuery.LoadPoint;
 
@@ -84,14 +84,14 @@ export const state = () => ({
 export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-declare module '~/contracts/VuexMap' {
+declare module "~/contracts/VuexMap" {
 	interface VuexMap { PageContent: CurentState }
 }
 
 // MUTATIONS
 export const mutations: MutationTree<CurentState> = {
 
-	setContent(state, { data, to }: IMutInformer<RecordValues<CurentState['Content']>, string, Reference>) {
+	setContent(state, { data, to }: IMutInformer<RecordValues<CurentState["Content"]>, string, Reference>) {
 		switch ( to ) {
 			case Reference.Posts:
 				state.Content.Posts = Object.values(data || Object());
@@ -118,19 +118,19 @@ export const actions: ActionTree<CurentState, CurentState> = {
 		};
 
 		const CACHE_KEY = `${hashes.server}_${PATHS[payload.ref].toUpperCase()}_${LOAD_PROPERTY_KEY}`;
-		const CACHED_DATA = cache.get<RecordValues<CurentState['Content']>>(CACHE_KEY);
+		const CACHED_DATA = cache.get<RecordValues<CurentState["Content"]>>(CACHE_KEY);
 
 		if (!(CACHED_DATA instanceof Error) && hashes.cache && hashes.cache === hashes.server) {
 
-			commit('setContent', { data: CACHED_DATA.data, from: 'cache', to: payload.ref });
+			commit("setContent", { data: CACHED_DATA.data, from: "cache", to: payload.ref });
 
 		} else {
 
 			const data = await helpers.getContentSlice(payload);
 
-			commit('setContent', {
+			commit("setContent", {
 				data,
-				from: 'server',
+				from: "server",
 				to: payload.ref
 			});
 
@@ -145,13 +145,13 @@ export const actions: ActionTree<CurentState, CurentState> = {
 
 		if (process.browser) {
 
-			await vuex.dispatch('checkCachedData', payload);
+			await vuex.dispatch("checkCachedData", payload);
 
 		} else {
 
-			vuex.commit('setContent', {
+			vuex.commit("setContent", {
 				data: await helpers.getContentSlice(payload),
-				from: 'server',
+				from: "server",
 				to: payload.ref
 			});
 

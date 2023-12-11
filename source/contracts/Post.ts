@@ -1,6 +1,6 @@
 // UTILS
-import { utils } from '~/utils';
-import { User } from './User';
+import { utils } from "~/utils";
+import { User } from "./User";
 
 export namespace Post {
 
@@ -23,7 +23,7 @@ export namespace Post {
 		date		 : number
 		userID	 : string
 		data		 : string
-		mention ?: Array<User.struct['uid']>
+		mention ?: Array<User.struct["uid"]>
 	}
 	
 	export type struct = {
@@ -43,8 +43,8 @@ export namespace Post {
 		return {
 			ID: Number(),
 			content: [{ 
-				tag: 'h1', 
-				value: 'test' 
+				tag: "h1", 
+				value: "test" 
 			}],
 			authorID: String(),
 			comments: Object(),

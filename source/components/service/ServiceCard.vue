@@ -40,7 +40,7 @@
 					@click="ActiveSection = i"
 				>
 					<span>{{ item.name }}</span>
-					<span>от {{ item.delivery	}}</span>					
+					<span>от {{ formatDelivery(item.delivery)	}}</span>					
 				</div>
 			</template>
 		</section>
@@ -203,34 +203,38 @@
 
 <script lang="ts">
 
-	import Vue, { PropOptions } from 'vue';
+	import Vue, { PropOptions } from "vue";
 
 	// VUEX
-	import { mapState, mapMutations } from 'vuex';
+	import { mapState, mapMutations } from "vuex";
+
+
+	// LANG 
+	import { languages, russian } from "~/lang/index";
 
 	// API
-	import { database } from '~/api/database';
+	import { database } from "~/api/database";
 
 	// COMPONENTS
-	import ServiceModal from '~/components/service/ServiceModal.vue';
-	// import CaptionCard 	from '~/components/common/Caption.vue';
+	import ServiceModal from "~/components/service/ServiceModal.vue";
 
 	// TYPES 
-	import type { Purchase } from '~/contracts/Services';
-	import type { VuexMap } from '~/contracts/VuexMap';
+	import type { Purchase } from "~/contracts/Services";
+	import type { VuexMap } from "~/contracts/VuexMap";
+import { time } from "~/utils/time";
 
 	// MODULE
 	export default Vue.extend({
 		components: {
 			// CaptionCard,
 			ServiceModal,
-			CommonButton: () => import('~/components/buttons/CommonButton.vue')
+			CommonButton: () => import("~/components/buttons/CommonButton.vue")
 		},
 		props: {
 			payload: {
 				type: Object,
 				required: true
-			} as PropOptions<Purchase.struct<any>>,
+			} as PropOptions<Purchase.struct>,
 			wide: {
 				type: Boolean,
 				default: false,
@@ -241,7 +245,7 @@
 
 				ActiveSection: 0,
 
-				Services: new Array<Purchase.struct<any>>(0),
+				Services: new Array<Purchase.struct>(0),
 
 				Modal: false,
 
@@ -253,28 +257,40 @@
 		},
 
 		computed: {
+
 			...mapState({
-				LoginStatus: state => (state as VuexMap).Auth.Session.LoginStatus
-			})
+				LoginStatus: state => (state as VuexMap).Auth.Session.LoginStatus,
+				locale: state => (state as VuexMap).App.Lang,
+			}),
+
 		},
 		
 		methods: {
 
+			formatDelivery(milli: number): string {
+				switch (this.locale) {
+					case languages.Russian: 
+						return russian.format.delivery(milli)
+					case languages.English: 
+						return `${ Math.round(milli / time.MILLIS_PER_HOUR) } hours`
+				}
+			},
+
 			...mapMutations({
-				toggleRegisterModal: 'Auth/Register/toggleRegisterModal',
+				toggleRegisterModal: "Auth/Register/toggleRegisterModal",
 			}),
 
 			ToggleModal(value: boolean) {
 				this.Modal = value;
 			},
 
-			async getDatabaseData(): Promise<Array<Purchase.struct<any>>> {
+			async getDatabaseData(): Promise<Array<Purchase.struct>> {
 
 				return await database
-					.get(`Service/${ this.payload.category }`)
+					.get(`service/${ String(this.payload.category).toLowerCase() }`)
 					.then(data => Object.values(data));
 
-			}
+			},
 
 		},
 	});

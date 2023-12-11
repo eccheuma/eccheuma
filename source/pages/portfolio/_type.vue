@@ -28,33 +28,33 @@
 
 <script lang="ts">
 
-	import Vue from 'vue';
+	import Vue from "vue";
 
 	// VUEX
-	import { mapState } from 'vuex';
+	import { mapState } from "vuex";
 
 	// VUEX MAP
-	import { VuexMap } from '~/contracts/VuexMap';
+	import { VuexMap } from "~/contracts/VuexMap";
 
 	// UTILS
-	import { Meta } from '~/utils/meta';
+	import { Meta } from "~/utils/meta";
 
 	// API
-	import { database } from '~/api/database';
+	import { database } from "~/api/database";
 
 	// TYPES
-	import { Workcase } from '~/contracts/WorkCase';
-	import { Portfolio } from '~/contracts/Portfolio';
-	import { navigation } from '~/contracts/Navigation';
+	import { Workcase } from "~/contracts/WorkCase";
+	import { Portfolio } from "~/contracts/Portfolio";
+	import { navigation } from "~/contracts/Navigation";
 
 	// MODULE
 	export default Vue.extend({
 		components: {
-			WorkCase: () => import('~/components/WorkCase.vue')
+			WorkCase: () => import("~/components/WorkCase.vue")
 		},
 		transition: {
-			name: 'opacity-enterDelayed-transition',
-			mode: 'out-in',
+			name: "opacity-enterDelayed-transition",
+			mode: "out-in",
 		},
 		asyncData({ params, redirect }) {
 
@@ -62,13 +62,13 @@
 
 			switch (params.type) {
 
-				case 'landings'	: Type = Portfolio.sections.landings; 
+				case "landings"	: Type = Portfolio.sections.landings; 
 					break;
-				case 'logo'			: Type = Portfolio.sections.logo; 
+				case "logo"			: Type = Portfolio.sections.logo; 
 					break;	
-				case 'mockups'	: Type = Portfolio.sections.mockups; 
+				case "mockups"	: Type = Portfolio.sections.mockups; 
 					break;
-				default: redirect('/error'); break;
+				default: redirect("/error"); break;
 			}
 
 			return { Type };
@@ -91,7 +91,7 @@
 			}),
 
 		},
-		head(): any {
+		head() {
 
 			return {
 				title: Meta.conctructTitle(this.Lang, { 

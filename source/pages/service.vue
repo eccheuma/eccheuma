@@ -103,32 +103,32 @@
 
 <script lang="ts">
 
-	import Vue from 'vue';
+	import Vue from "vue";
 
 	// COMPONENTS
-	import PromoBanner      from '~/components/promo/PromoBanner.vue';
+	import PromoBanner      from "~/components/promo/PromoBanner.vue";
 
-	import SectionHeader 		from '~/components/common/SectionHeader.vue';
-	import CaptionCard 			from '~/components/common/Caption.vue';
+	import SectionHeader 		from "~/components/common/SectionHeader.vue";
+	import CaptionCard 			from "~/components/common/Caption.vue";
 
-	import ServiceCard 			from '~/components/service/ServiceCard.vue';
-	import Calculator				from '~/components/service/Calculator/view.vue';
+	import ServiceCard 			from "~/components/service/ServiceCard.vue";
+	import Calculator				from "~/components/service/Calculator/view.vue";
 
 	// TYPES 
-	import type { Categories, Purchase } from '~/contracts/Services';
+	import type { Categories, Purchase } from "~/contracts/Services";
 
 	interface CardStruct extends Purchase.Description {
 		category : Categories,
 	}
 
 	// PAGE DESCRIPTION
-	import { opengraph } from '~/utils/opengraph';
+	import { opengraph } from "~/utils/opengraph";
 
 	export const PageDescription: opengraph.struct = {
-		title				: 'Eccheuma | Услуги',
-		description	: 'Услуги. Перечень оказываемых услуг, калькулятор стоимости, и форма обратной связи.',
-		url					: '',
-		image				: require('~/assets/images/NotificationBadge.png?resize&size=600').src,
+		title				: "Eccheuma | Услуги",
+		description	: "Услуги. Перечень оказываемых услуг, калькулятор стоимости, и форма обратной связи.",
+		url					: "",
+		image				: require("~/assets/images/NotificationBadge.png?resize&size=600").src,
 	};
 
 	// MODULE
@@ -140,12 +140,12 @@
 			Calculator,
 			CaptionCard,
 		}, 
-		layout: 'Application',
+		layout: "Application",
 		scrollToTop: false,  
-		transition: 'opacity-transition',
+		transition: "opacity-transition",
 		async asyncData() {
 
-			const { default: Products } = await import('~/assets/json/services.json');
+			const { default: Products } = await import("~/assets/json/services.json");
 
 			return { Products };
 
@@ -154,7 +154,7 @@
 			return {
 
 				Products: Array<CardStruct>(),
-				Categories: ['Application', 'Graphic', 'FrontEnd'] as Array<Categories>,
+				Categories: ["Application", "Graphic", "FrontEnd"] as Array<Categories>,
 
 			};
 		},

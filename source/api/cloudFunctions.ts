@@ -5,7 +5,7 @@ const CLOUD_FUNCTION_HOSTING_URL = globalThis.location?.origin;
 
 export async function fetchExternal(url: string): Promise<Response> {
 
-  if (CLOUD_FUNCTION_HOSTING_URL.match('localhost')?.length) {
+  if (CLOUD_FUNCTION_HOSTING_URL.match("localhost")?.length) {
     return Response.error();
   }
 

@@ -1,6 +1,6 @@
-import { Post } from '~/contracts/Post';
-import { User } from '~/contracts/User';
-import { LocaleDate, utils } from '~/utils';
+import { Post } from "~/contracts/Post";
+import { User } from "~/contracts/User";
+import { LocaleDate, utils } from "~/utils";
 
 declare interface IPostSocial {
   likes     : utils.types.asIterableObject<Post.like>,
@@ -15,13 +15,13 @@ declare interface IPostModel extends IPostSocial {
 }
 
 declare interface CurrentPostData {
-  postID  : Post.struct['ID'],
-  userID  : User.struct['uid']
+  postID  : Post.struct["ID"],
+  userID  : User.struct["uid"]
 }
 
 declare interface IComment extends CurrentPostData {
-  message   : Post.comment['data'], 
-  addressee : Array<User.struct['uid']>
+  message   : Post.comment["data"], 
+  addressee : Array<User.struct["uid"]>
 }
 
 declare interface IAnswer {

@@ -220,21 +220,21 @@
 
 <script lang="ts">
 
-  import Vue, { PropOptions } from 'vue';
+  import Vue, { PropOptions } from "vue";
 
   // API
-  import { feed } from '~/api/feed';
+  import { feed } from "~/api/feed";
 
   // UTILS
-  import { utils } from '~/utils';
+  import { utils } from "~/utils";
 
   // CONST
   const BODY_WORD_LENGTH  = 75;
-  const DEFAULT_AVATAR    = require('~/assets/images/GroupAvatar.jpg').src as string;
+  const DEFAULT_AVATAR    = require("~/assets/images/GroupAvatar.jpg").src as string;
 
   // COMPONENTS
-	import Icon	          from '~/components/common/Icon.vue';
-  import CommonButton   from '~/components/buttons/CommonButton.vue';
+	import Icon	          from "~/components/common/Icon.vue";
+  import CommonButton   from "~/components/buttons/CommonButton.vue";
 
   // MODULE
   export default Vue.extend({

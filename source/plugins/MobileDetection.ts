@@ -1,9 +1,9 @@
-import Vue from 'vue';
+import Vue from "vue";
 
 // TYPES
-import { Context } from '@nuxt/types';
+import { Context } from "@nuxt/types";
 
-declare module 'vue/types/vue' {
+declare module "vue/types/vue" {
   interface Vue {
     $isMobile: boolean
   }

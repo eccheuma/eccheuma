@@ -24,11 +24,11 @@
 
 <script lang="ts">
 
-	import Vue, { PropOptions } from 'vue';
+	import Vue, { PropOptions } from "vue";
 
 	interface Options {
 		Multiplier: number
-		Direction: 'down' | 'up'
+		Direction: "down" | "up"
 		OpacityFade: boolean
 		OpacityFadeOffset: number
 	}
@@ -45,7 +45,7 @@
 				default() {
 					return {
 						Multiplier: .25,
-						Direction: 'down',
+						Direction: "down",
 						OpacityFade: true,
 						OpacityFadeOffset: 100,
 					};
@@ -66,7 +66,7 @@
 
 				DefaultOptions: {
 					Multiplier: .25,
-					Direction: 'down',
+					Direction: "down",
 					OpacityFade: false,
 					OpacityFadeOffset: 0,
 				} as Options
@@ -80,9 +80,9 @@
 				const DIR 				= this.options.Direction 	|| this.DefaultOptions.Direction;
 
 				switch ( DIR.toLowerCase() ) {
-					case 'down': 	
+					case "down": 	
 						return 0 + Math.trunc( this.ScrollPosition * MULTIPLIER );
-					case 'up': 		
+					case "up": 		
 						return 0 - Math.trunc( this.ScrollPosition * MULTIPLIER ); 
 					default: 			
 						return 0;
@@ -101,9 +101,9 @@
 			inViewport: {
 				handler() {
 					if ( this.inViewport ) {
-						window.addEventListener('scroll', this.scrollHandler);
+						window.addEventListener("scroll", this.scrollHandler);
 					} else {
-						window.removeEventListener('scroll', this.scrollHandler);
+						window.removeEventListener("scroll", this.scrollHandler);
 					}
 				},
 			},
@@ -112,14 +112,14 @@
 
 					const css = `transform: translateY(${ this.translateValue as number }px)`;
 
-					this.setStyleElement('Container', css); 
+					this.setStyleElement("Container", css); 
 
 				}
 			},
 			opacityValue: {
 				handler() { 
 					this.setStyleElement(
-						'Wrapper', 
+						"Wrapper", 
 						`opacity: ${ this.opacityValue }%`
 					);
 				}
@@ -127,7 +127,7 @@
 			ScrollPosition: {
 				handler() {
 					requestIdleCallback(() => {
-						this.$emit('scroll-position', this.ScrollPosition);
+						this.$emit("scroll-position", this.ScrollPosition);
 					});
 				}
 			},
@@ -152,7 +152,7 @@
 					this.inViewport = entry.pop()?.isIntersecting || false; 
 				}).observe(this.$el);
 				
-				window.addEventListener('scroll', this.scrollHandler);
+				window.addEventListener("scroll", this.scrollHandler);
 
 			},
 
@@ -163,7 +163,7 @@
 			},
 
 			setStyleElement(id: string, css: string ) {
-				(this.$refs[id] as Element).setAttribute('style', css ); 
+				(this.$refs[id] as Element).setAttribute("style", css ); 
 			},
 
 			getElementPosition(el: HTMLElement): Promise<POSITION> {

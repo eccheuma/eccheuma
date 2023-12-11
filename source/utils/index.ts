@@ -1,9 +1,9 @@
-import { Hash } from '~/contracts/Nominals';
-import { math } from './math';
+import { Hash } from "~/contracts/Nominals";
+import { math } from "./math";
 
 export type Result<R, E extends Error = Error> = R | E;
 
-export type LocaleDate = Record<'Day' | 'Time', string>
+export type LocaleDate = Record<"Day" | "Time", string>
 
 export namespace utils {
 
@@ -43,18 +43,18 @@ export namespace utils {
     // const regular = new RegExp('.+.(avif|png|jpe?g|webp)')
 
     export const enum error {
-      extension = 'requested format is not allowed',
-      name = 'bad file naming',
-      size = 'file size is too large',
-      type = 'file type is not allowed',
-      unknown = 'unknown error',
-      dot = 'dot',
+      extension = "requested format is not allowed",
+      name = "bad file naming",
+      size = "file size is too large",
+      type = "file type is not allowed",
+      unknown = "unknown error",
+      dot = "dot",
 
     }
 
     export function define(filename: string, extensions: Array<string>): Result<string> {
 
-      const splited = filename.split('.');
+      const splited = filename.split(".");
 
       switch (splited.length) {
         case 0:
@@ -92,11 +92,11 @@ export namespace utils {
 
       if (str.length === 0) return str;
 
-      if (mode >= 2) throw Error('Wrong mode');
+      if (mode >= 2) throw Error("Wrong mode");
 
       const BASE = 700;
 
-      return str.split('')
+      return str.split("")
         .map(char => char.codePointAt(0) || 0)
         .map((code, i) => {
 
@@ -109,7 +109,7 @@ export namespace utils {
           }
 
         })
-        .join('');
+        .join("");
 
     }
 
@@ -117,13 +117,13 @@ export namespace utils {
   export function getLocalTime(n = 0): LocaleDate {
 
     const Properties: Record<keyof LocaleDate, Intl.DateTimeFormatOptions> = {
-      Day: { year: 'numeric', month: 'long', day: 'numeric' },
-      Time: { hour: '2-digit', minute: '2-digit' }
+      Day: { year: "numeric", month: "long", day: "numeric" },
+      Time: { hour: "2-digit", minute: "2-digit" }
     };
 
     const DATA = {
-      Day: Intl.DateTimeFormat('ru-RU', Properties.Day).format(n),
-      Time: Intl.DateTimeFormat('ru-RU', Properties.Time).format(n)
+      Day: Intl.DateTimeFormat("ru-RU", Properties.Day).format(n),
+      Time: Intl.DateTimeFormat("ru-RU", Properties.Time).format(n)
     };
 
     return DATA;
@@ -139,25 +139,25 @@ export namespace utils {
       .map(randomChar)
       .reduce((acc, cur) => {
         return acc + cur.toUpperCase();
-      }, '') as Hash;
+      }, "") as Hash;
 
   }
 
   export function cutText(text: string, words = 45): string {
 
     return text
-      .split(' ')
+      .split(" ")
       .slice(0, words)
       .reduce((acc, cur) => `${acc} ${cur}`, String());
 
   }
 
   export function recursiveCompare<
-    S extends Record<any,any>,
-    M extends Record<any,any>,
+    S extends object,
+    M extends object,
   >(struct: S, mock: M): boolean {
 
-    const structEnt = Object.entries(struct) as Array<[ keyof S, any ]>;
+    const structEnt = Object.entries(struct) as Array<[ keyof M, M[keyof M] ]>;
 
     return structEnt.every(([ key, value ]) => {
 
@@ -168,7 +168,7 @@ export namespace utils {
         console.log(key, typeof value, typeof mock[key]);
       }
 
-      return typeof value === 'object' && mock[key]
+      return typeof value === "object" && mock[key]
         ? recursiveCompare(value, mock[key])
         : typeof mock[key] === typeof value;
         

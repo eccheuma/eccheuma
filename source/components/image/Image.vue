@@ -272,43 +272,43 @@
  
 <script lang="ts">
 
-	import Vue, { PropOptions } from 'vue';
+	import Vue, { PropOptions } from "vue";
 
 	// UTILS
-	import { utils } from '~/utils';
+	import { utils } from "~/utils";
 
 	// TYPES
-	import { Image } from '~/contracts/Image';
+	import { Image } from "~/contracts/Image";
 
 	// COMPONENTS
-	import Icon from '~/components/common/Icon.vue';
-	import Tag from '~/components/common/Tag.vue';
+	import Icon from "~/components/common/Icon.vue";
+	import Tag from "~/components/common/Tag.vue";
 	
 	// Helpers
-	import { getOptimalImage } from './image.helpers';
+	import { getOptimalImage } from "./image.helpers";
 
 	// Animations
-	import { animations } from '~/animations';
+	import { animations } from "~/animations";
 
 	const { keyframes, options } = animations.common.opacityResolve(animations.common.AnimationMode.Short, true);
 
 	// MIXINS
-	import EmitSound from '~/assets/mixins/EmitSound';
+	import EmitSound from "~/assets/mixins/EmitSound";
 
 	// VARS
 	const PLACEHOLDER: Image.formatsStruct = {
-		avif: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src,
-		webp: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src
+		avif: require("~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp").src,
+		webp: require("~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp").src
 	};
 
-	const defaultSections: Image.struct['sections'] = {
+	const defaultSections: Image.struct["sections"] = {
 		date: false,
 		description: false,
 		zoom: true,
 	};
 
-	const defaultProperty: Image.struct['property'] = {
-		type: 'gallery',
+	const defaultProperty: Image.struct["property"] = {
+		type: "gallery",
 	};
 
 	// MODULE
@@ -316,13 +316,13 @@
 		components: {
 			Icon,
 			Tag,
-			Modal: () => import('./submodules/modal.vue')
+			Modal: () => import("./submodules/modal.vue")
 		},
 		mixins: [ EmitSound ],
 		props: {
-			content: 	{ type: Object, required: true  } as PropOptions<Image.struct['content']>,
-			property: { type: Object, required: false, default() { return defaultProperty; } } as PropOptions<Image.struct['property']>,
-			sections: { type: Object, required: false, default() { return defaultSections; } } as PropOptions<Image.struct['sections']>,
+			content: 	{ type: Object, required: true  } as PropOptions<Image.struct["content"]>,
+			property: { type: Object, required: false, default() { return defaultProperty; } } as PropOptions<Image.struct["property"]>,
+			sections: { type: Object, required: false, default() { return defaultSections; } } as PropOptions<Image.struct["sections"]>,
 		},
 		data() {
 			return {
@@ -338,7 +338,7 @@
 		},
 
 		watch: {
-			'content.path': {
+			"content.path": {
 				async handler() {
 					this.imageStruct = await this.getOptimalImage();
 				}

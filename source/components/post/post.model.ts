@@ -1,21 +1,21 @@
 // Types
-import { database } from '~/api/database';
-import { Post } from '~/contracts/Post';
-import { User } from '~/contracts/User';
+import { database } from "~/api/database";
+import { Post } from "~/contracts/Post";
+import { User } from "~/contracts/User";
 
 // Utils
-import { Result, utils } from '~/utils';
+import { Result, utils } from "~/utils";
 
 // Inner Types
-import { IPostModel, IComment, CurrentPostData } from './post.types';
+import { IPostModel, IComment, CurrentPostData } from "./post.types";
 
 // Constants
-const PUBLIC_FIELDS: Readonly<Array<keyof IPostModel>> = ['author', 'comments', 'content', 'likes', 'date'];
+const PUBLIC_FIELDS: Readonly<Array<keyof IPostModel>> = ["author", "comments", "content", "likes", "date"];
 
 namespace DBPaths {
-  export const postRoot = 'posts';
-  export const postComments = 'comments';
-  export const postLikes = 'likes';
+  export const postRoot = "posts";
+  export const postComments = "comments";
+  export const postLikes = "likes";
 }
 
 export class PostModel implements IPostModel {
@@ -25,7 +25,7 @@ export class PostModel implements IPostModel {
   public content  : Array<Post.content>;
 
   public author   : User.struct = User.DEFAULT;
-  public date     : IPostModel['date'] = {
+  public date     : IPostModel["date"] = {
     origin        : utils.getLocalTime(0),
     modified      : utils.getLocalTime(0),
   };
@@ -78,17 +78,17 @@ export class PostModel implements IPostModel {
 
   }
 
-  static async getAuthor(authorID: User.struct['uid']): Promise<Result<User.struct>> {
+  static async getAuthor(authorID: User.struct["uid"]): Promise<Result<User.struct>> {
 
     const response: User.struct = await database.get(`users/${ authorID }/state`);
 
-    if ( !response ) return Error('User is undefined');
+    if ( !response ) return Error("User is undefined");
 
     return response;
 
   }
 
-  static updateTime({ date }: Post.struct): IPostModel['date'] {
+  static updateTime({ date }: Post.struct): IPostModel["date"] {
     return {
       origin   : utils.getLocalTime(date.origin),
       modified : utils.getLocalTime(date.modified),

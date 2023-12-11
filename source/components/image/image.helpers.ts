@@ -1,11 +1,11 @@
 // func(container: HTMLElement, path: string, cb): URL
 
-import { references, storage } from '~/api/storage';
-import { Image } from '~/contracts/Image';
-import { Result } from '~/utils';
-import { cache } from '~/utils/cache';
+import { references, storage } from "~/api/storage";
+import { Image } from "~/contracts/Image";
+import { Result } from "~/utils";
+import { cache } from "~/utils/cache";
 
-const FORMATS: Array<keyof typeof Image.formats.output> = ['webp', 'avif'];
+const FORMATS: Array<keyof typeof Image.formats.output> = ["webp", "avif"];
 
 export const DEFAULT_IMAGE_STRUCT: Image.formatsStruct = {
   avif: String(),

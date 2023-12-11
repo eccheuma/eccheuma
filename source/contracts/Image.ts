@@ -47,7 +47,7 @@ export namespace Image {
 			description: string
 		}
 		property?: {
-			type: 'promo' | 'gallery'
+			type: "promo" | "gallery"
 		}
 		sections?: {
 			date: boolean

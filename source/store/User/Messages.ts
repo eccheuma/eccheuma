@@ -1,15 +1,15 @@
 // VUEX
-	import type { ActionTree, MutationTree } from 'vuex';
+	import type { ActionTree, MutationTree } from "vuex";
 
 // UTILS
-	import { utils } from '~/utils';
+	import { utils } from "~/utils";
 
 // API
-	import { database } from '~/api/database';
+	import { database } from "~/api/database";
 
 // TYPES
-	import type { VuexMap } from '~/contracts/VuexMap';
-	import type { Message } from '~/contracts/Message';
+	import type { VuexMap } from "~/contracts/VuexMap";
+	import type { Message } from "~/contracts/Message";
 
 // STATE
 	export const state = () => ({
@@ -24,7 +24,7 @@
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/contracts/VuexMap' {
+	declare module "~/contracts/VuexMap" {
 		interface User {
 			Messages: CurentState
 		}
@@ -52,8 +52,8 @@
 			const { uid } = rootState.Auth.Session.CurentUser;
 
 			const applyMessages = (messages: utils.types.asIterableObject<Message.struct>) => {
-				commit('setMessages', Object.values(messages || new Object()));
-				dispatch('checkUnreaded');
+				commit("setMessages", Object.values(messages || new Object()));
+				dispatch("checkUnreaded");
 			};
 
 			database.listen<utils.types.asIterableObject<Message.struct>>(`chats/${uid}/main`, applyMessages);
@@ -78,7 +78,7 @@
 
 		},
 
-		markAsReaded(vuex, ID: Message.struct['uid']): Promise<Error | boolean> {
+		markAsReaded(vuex, ID: Message.struct["uid"]): Promise<Error | boolean> {
 
 			// Получение ID пользователя
 			const { State } = vuex.rootState.User.State;
@@ -95,7 +95,7 @@
 				return message.readed === false && message.userID !== State.uid;
 			});
 			
-			vuex.commit('setUnreadedQuanity', length);
+			vuex.commit("setUnreadedQuanity", length);
 
 		},
 		

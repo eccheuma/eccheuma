@@ -70,7 +70,7 @@
 
 	export default {
 		components: {
-			EccheumaImage: () => import( '~/components/image/Image.vue' ),
+			EccheumaImage: () => import( "~/components/image/Image.vue" ),
 		},
 	};
 </script>

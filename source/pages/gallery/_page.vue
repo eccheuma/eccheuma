@@ -58,40 +58,40 @@
 
 <script lang="ts">
 
-	import Vue, { VNodeData } from 'vue';
+	import Vue, { VNodeData } from "vue";
 
 	// VUEX
-	import { mapActions, mapMutations, mapState } from 'vuex';
+	import { mapActions, mapMutations, mapState } from "vuex";
 	
 	// VUEX MAP
-	import type { VuexMap } from '~/contracts/VuexMap';
+	import type { VuexMap } from "~/contracts/VuexMap";
 
 	// API
-	import { database } from '~/api/database';
+	import { database } from "~/api/database";
 
 	// UTILS
-	import { Meta } from '~/utils/meta';
+	import { Meta } from "~/utils/meta";
 
 	// MIXINS
-	import PageTransitionProperty 	from '~/assets/mixins/PageTransitionProperty';
+	import PageTransitionProperty 	from "~/assets/mixins/PageTransitionProperty";
 
 	// TYPES
-	import { MetaInfo } from 'vue-meta/types/vue-meta';
+	import { MetaInfo } from "vue-meta/types/vue-meta";
 
 	// ? Надо разобраться, почему не хватаются типы.
-	import type VueRouter from 'vue-router';
+	import type VueRouter from "vue-router";
 
-	import { PayloadQuery, Reference } from '~/store/PageContent';
-	import type { ANIMATION_PAYLOAD } from '~/assets/mixins/IntersectionObserver';
+	import { PayloadQuery, Reference } from "~/store/PageContent";
+	import type { ANIMATION_PAYLOAD } from "~/assets/mixins/IntersectionObserver";
 
-	import { navigation } from '~/contracts/Navigation';
+	import { navigation } from "~/contracts/Navigation";
 
 	// LOAD POLITIC
-	import { Ranges } from '~/config/LoadPolitic';
+	import { Ranges } from "~/config/LoadPolitic";
 
 	// COMPONENTS
-	import EccheumaImage 						from '~/components/image/Image.vue';
-	import IntesectionComponent from '~/components/functional/intersectionComponent.vue';
+	import EccheumaImage 						from "~/components/image/Image.vue";
+	import IntesectionComponent from "~/components/functional/intersectionComponent.vue";
 
 	const PAGE_TRANSITION_TIME = 250;
 
@@ -124,19 +124,19 @@
 			// ? Parse page_1: str => 1: int
 			const Page: number = parseInt(params.page.slice(-1));
 
-			const Range: number = typeof query.range === 'string'
+			const Range: number = typeof query.range === "string"
 				? parseInt(query.range)
 				: Ranges.gallery;
 
-			const Quantity: number = await database.getLength('gallery');
+			const Quantity: number = await database.getLength("gallery");
 
-			if ( ! Number.isInteger(Page) ) redirect('/error');
+			if ( ! Number.isInteger(Page) ) redirect("/error");
  
 			const inRange: boolean = (Quantity + Range) >= (Page * Range);
 
 			inRange 
 				? null 
-				: redirect('/error');
+				: redirect("/error");
 
     },
 		asyncData({ params, query }) {
@@ -178,9 +178,9 @@
 				Lang 		: state => (state as VuexMap).App.Lang
 			}),
 
-			dynamicStyles(): VNodeData['style'] {
+			dynamicStyles(): VNodeData["style"] {
 				return {
-					['--t']: `${ PAGE_TRANSITION_TIME }ms`,
+					["--t"]: `${ PAGE_TRANSITION_TIME }ms`,
 					opacity: Number(this.Ready)
 				};
 			}
@@ -190,13 +190,13 @@
 
 			this.ChangePage(this.Page);
 
-			if ( process.browser && this.$router.currentRoute.name === 'gallery' ) {
+			if ( process.browser && this.$router.currentRoute.name === "gallery" ) {
 				this.getDatabaseData();
 			}
 
 			(this.$router as VueRouter).beforeEach((to, from, next) => {
 
-				if (to.name !== 'gallery-page') return next();
+				if (to.name !== "gallery-page") return next();
 
 				this.Ready = false;
 
@@ -208,15 +208,15 @@
 		methods: {
 			
 			...mapActions({
-				GetContent: 'PageContent/GetContent',
+				GetContent: "PageContent/GetContent",
 			}),
 			...mapMutations({
-				ChangePage: 'PageSelector/ChangePage'
+				ChangePage: "PageSelector/ChangePage"
 			}),
 
 			async getDatabaseData() {
 
-				const QUANTITY = await database.getLength('gallery');
+				const QUANTITY = await database.getLength("gallery");
 
 				const REM: number = QUANTITY - ( this.LoadRange * this.Page );
 
@@ -238,9 +238,9 @@
 
 				this.$AnimeJS({
 					targets: slotNode,
-					easing: 'linear',
+					easing: "linear",
 
-					...Animation[intersection ? 'in' : 'out']
+					...Animation[intersection ? "in" : "out"]
 
 				});
 

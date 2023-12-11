@@ -136,21 +136,21 @@
 
 <script lang="ts">
 
-	import Vue from 'vue';
+	import Vue from "vue";
 
 	// VUEX
-	import { mapState } from 'vuex';
-	import type { VuexMap } from '~/contracts/VuexMap';
+	import { mapState } from "vuex";
+	import type { VuexMap } from "~/contracts/VuexMap";
 
 	// COMPONENT
-	import CommonButton from '~/components/buttons/CommonButton.vue';
-	import CaptionCard 	from '~/components/common/Caption.vue';
+	import CommonButton from "~/components/buttons/CommonButton.vue";
+	import CaptionCard 	from "~/components/common/Caption.vue";
 
 	// ANIMATIONS
-	import { iconAnimation, IconStatus } from '~/animations/profile.animations';
+	import { iconAnimation, IconStatus } from "~/animations/profile.animations";
 
 	// MODEL
-	import { Model as CustomizeModel } from './icon.model';
+	import { Model as CustomizeModel, ViewContext } from "./icon.model";
 
 	let model: CustomizeModel;
 
@@ -174,7 +174,7 @@
 },
 		created() {
 
-			model = new CustomizeModel(this.$data);
+			model = new CustomizeModel(this.$data as ViewContext);
 		
 },
 		computed: {

@@ -36,23 +36,23 @@
 
 <script lang="ts">
 
-	import Vue from 'vue';
+	import Vue from "vue";
 
 	// PAGE DESCRIPTION
-	import { opengraph } from '~/utils/opengraph';
+	import { opengraph } from "~/utils/opengraph";
 
 	export const PageDescription: opengraph.struct = {
-		title				: 'Eccheuma | Рекомендации',
-		description	: 'Раздел связан с обслуживанием и заметками касательно содержания проектов',
-		url					: '',
-		image				: require('~/assets/images/NotificationBadge.png?resize&size=600').src,
+		title				: "Eccheuma | Рекомендации",
+		description	: "Раздел связан с обслуживанием и заметками касательно содержания проектов",
+		url					: "",
+		image				: require("~/assets/images/NotificationBadge.png?resize&size=600").src,
 	};
 
 	// MODULE
 	export default Vue.extend({
-		layout: 'Application',
+		layout: "Application",
 		scrollToTop: false,
-		transition: 'opacity-transition',
+		transition: "opacity-transition",
 		head () {
 			return {
 				title: PageDescription.title,

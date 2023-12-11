@@ -102,31 +102,31 @@
 
 <script lang="ts"> 
 
-	import Vue from 'vue';
+	import Vue from "vue";
 
 	// MIXINS
-	import EmitSound      from '~/assets/mixins/EmitSound';
+	import EmitSound      from "~/assets/mixins/EmitSound";
 	
 	// MODULE
 	export default Vue.extend({
 		components: {
-			CursorVisual: 	() => import('~/components/common/CursorFX.vue'),
+			CursorVisual: 	() => import("~/components/common/CursorFX.vue"),
 		},
 		mixins: [ EmitSound ],
 		props: {
 			type: {
 				type: String,
-				default: 'button',
+				default: "button",
 				required: false,
 			},
 			link: {
 				type: String,
-				default: '',
+				default: "",
 				required: false,
 			},
 			scheme: {
 				type: String,
-				default: 'light',
+				default: "light",
 				required: false,
 			},
 			indicator: {
@@ -143,7 +143,7 @@
 		data() {
 			return {
 
-				soundHash: ''
+				soundHash: ""
 
 			};
 		},
@@ -151,8 +151,8 @@
 
 			if ( process.browser ) {
 				this.setSounds([
-					{ file: 'On', name: 'Element::Action', 	settings: { rate: 0.50 } },
-					{ file: 'On', name: 'Element::Hover', 	settings: { rate: 0.25 } }
+					{ file: "On", name: "Element::Action", 	settings: { rate: 0.50 } },
+					{ file: "On", name: "Element::Hover", 	settings: { rate: 0.25 } }
 				]);
 			}
 
@@ -161,13 +161,13 @@
 
 			const ELEMENT = this.$refs.button as HTMLElement;
 
-			if ( this.type === 'a' ) {
-				ELEMENT.setAttribute('href', this.link);
+			if ( this.type === "a" ) {
+				ELEMENT.setAttribute("href", this.link);
 			}
 
 			if ( this.sound ) {
-				ELEMENT.addEventListener('mouseenter',  () => this.playSound(this.Sounds.get('Element::Hover')));
-				ELEMENT.addEventListener('click',       () => this.playSound(this.Sounds.get('Element::Action')));
+				ELEMENT.addEventListener("mouseenter",  () => this.playSound(this.Sounds.get("Element::Hover")));
+				ELEMENT.addEventListener("click",       () => this.playSound(this.Sounds.get("Element::Action")));
 			}
 
 		}

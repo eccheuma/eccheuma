@@ -1,8 +1,8 @@
-import Vue from 'vue';
+import Vue from "vue";
 
 // DECLARE FUNC
 
-	declare module 'vue/types/vue' {
+	declare module "vue/types/vue" {
 		interface Vue {
 			initCooler: (el: Element, cb: (cooled: boolean) => void ) => void
 		}

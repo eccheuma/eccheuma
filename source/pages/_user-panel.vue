@@ -18,13 +18,13 @@
 
 <script lang="ts">
 
-	import Vue from 'vue';
+	import Vue from "vue";
 
-	import { mapMutations } from 'vuex';
+	import { mapMutations } from "vuex";
 
-	import type { VuexMap } from '~/contracts/VuexMap';
+	import type { VuexMap } from "~/contracts/VuexMap";
 
-	import UserProfile from '~/components/profile/Profile.vue';
+	import UserProfile from "~/components/profile/Profile.vue";
 	
 	export default Vue.extend({
 		components: {
@@ -42,7 +42,7 @@
 		},
 		methods: {
 			...mapMutations({
-				ToggleProfileArea: 'User/State/toggleProfileArea'
+				ToggleProfileArea: "User/State/toggleProfileArea"
 			}),
 		}
 	});

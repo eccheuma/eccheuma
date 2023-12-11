@@ -1,9 +1,9 @@
 // TYPES
-  import { Purchase } from '~/contracts/Services';
-  import { User }     from '~/contracts/User';
+  import { Purchase } from "~/contracts/Services";
+  import { User }     from "~/contracts/User";
 
 // TRANSLATES
-  import { languages, getLocale } from '~/lang';
+  import { languages, getLocale } from "~/lang";
   
 // NAMESPACES
 export namespace work {

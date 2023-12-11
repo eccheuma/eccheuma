@@ -1,4 +1,4 @@
-import { animations, AnimationProperties } from './index';
+import { animations, AnimationProperties } from "./index";
 
 export function resolve(): AnimationProperties {
 

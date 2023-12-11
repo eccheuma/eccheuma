@@ -159,10 +159,10 @@
 
 <script lang="ts">
 
-	import Vue, { PropOptions } from 'vue';
+	import Vue, { PropOptions } from "vue";
 
 	// TYPES
-	type MODULES = 'Works' | 'Stylistics' | 'Gallery' | 'Adaptation'
+	type MODULES = "Works" | "Stylistics" | "Gallery" | "Adaptation"
 
 	type CONTENT = {
 		title: string
@@ -180,13 +180,13 @@
 	// MODULE
 	export default Vue.extend({
 		components: {
-			Works					: () => import('./submodules/Works.vue'),
-			Stylistics		: () => import('./submodules/Stylistics.vue'),
-			Gallery				: () => import('./submodules/Gallery.vue'),
-			Adaptation		: () => import('./submodules/Adaptation.vue'),
+			Works					: () => import("./submodules/Works.vue"),
+			Stylistics		: () => import("./submodules/Stylistics.vue"),
+			Gallery				: () => import("./submodules/Gallery.vue"),
+			Adaptation		: () => import("./submodules/Adaptation.vue"),
 			// OTHERS 
-			CommonButton	: () => import('~/components/buttons/CommonButton.vue'),
-			Notion        : () => import('~/components/common/Notion.vue'),
+			CommonButton	: () => import("~/components/buttons/CommonButton.vue"),
+			Notion        : () => import("~/components/common/Notion.vue"),
 		},
 		mixins: [
 			// IntersectionCooler
@@ -195,7 +195,7 @@
 			PromoType: {
 				type: String,
 				required: true,
-				default: 'Works'
+				default: "Works"
 			} as PropOptions<MODULES>
 		},
 		data() {
@@ -205,48 +205,48 @@
 
 				PromoContent: {
 					Stylistics: {
-						title: 'Фирменный стиль и айдентика',
-						subtitle: 'Последние выполненые работы за этот месяц, начиная от логотипов, и заканчивая полновестными макетами сайтов',
+						title: "Фирменный стиль и айдентика",
+						subtitle: "Последние выполненые работы за этот месяц, начиная от логотипов, и заканчивая полновестными макетами сайтов",
 						footer: {
-							body: 'Jugendlich ihr seh im träne freundschaft kommt was mir, vor busen erste lispelnd denen. Neu guten nennt hinweggeschwunden ernsten, mir weich mild lieb sich, was sich die guten klage unbestimmten ich neu. Busen lebens froher seelen festzuhalten ihr, besitze noch herz die herzen zerstoben ihr.',
+							body: "Jugendlich ihr seh im träne freundschaft kommt was mir, vor busen erste lispelnd denen. Neu guten nennt hinweggeschwunden ernsten, mir weich mild lieb sich, was sich die guten klage unbestimmten ich neu. Busen lebens froher seelen festzuhalten ihr, besitze noch herz die herzen zerstoben ihr.",
 						},
 						link: {
-							path: '/service',
-							name: 'К услугам'
+							path: "/service",
+							name: "К услугам"
 						}
 					},
 					Works: {
-						title: 'Последние выполненные заказы',
-						subtitle: 'Последние выполненые работы за этот месяц, начиная от логотипов, и заканчивая полновестными макетами сайтов',
+						title: "Последние выполненные заказы",
+						subtitle: "Последние выполненые работы за этот месяц, начиная от логотипов, и заканчивая полновестными макетами сайтов",
 						footer: {
-							body: 'Не все представленные работы выше могут являться полноценными или принятыми заказами, и так же могут содержать работы которые являются лишь простыми работами "в ящик" которые оставляются на усмотрение'
+							body: "Не все представленные работы выше могут являться полноценными или принятыми заказами, и так же могут содержать работы которые являются лишь простыми работами \"в ящик\" которые оставляются на усмотрение"
 						},
 						link: {
-							path: '/portfolio',
-							name: 'Перейти к портфолио'
+							path: "/portfolio",
+							name: "Перейти к портфолио"
 						}	
 					},
 					Gallery: {
-						title: 'Фирменный стиль и айдентика',
-						subtitle: 'Последние выполненые работы за этот месяц, начиная от логотипов, и заканчивая полновестными макетами сайтов',
+						title: "Фирменный стиль и айдентика",
+						subtitle: "Последние выполненые работы за этот месяц, начиная от логотипов, и заканчивая полновестными макетами сайтов",
 						footer: {
-							body: 'Die  zu sage gut wiederholt den zug aus, strenge herzen herzen was sich verschwand und. Was lauf mir froher hören gestalten sage an ich, stillen vom strenge um euch bang wohl tage. Der wirklichkeiten wirklichkeiten schatten mild, nicht sonst es ihr einer lebens, strenge die zug jenem kommt sage getäuscht halbverklungnen was, es beifall mir nun glück alten lispelnd...'
+							body: "Die  zu sage gut wiederholt den zug aus, strenge herzen herzen was sich verschwand und. Was lauf mir froher hören gestalten sage an ich, stillen vom strenge um euch bang wohl tage. Der wirklichkeiten wirklichkeiten schatten mild, nicht sonst es ihr einer lebens, strenge die zug jenem kommt sage getäuscht halbverklungnen was, es beifall mir nun glück alten lispelnd..."
 						},
 						link: {
-							path: '/service',
-							name: 'К услугам'
+							path: "/service",
+							name: "К услугам"
 						}
 					},
 					Adaptation: {
-						title: 'Адаптивная вёрстка для ваших сайтов',
-						subtitle: 'Последние выполненые работы за этот месяц, начиная от логотипов, и заканчивая полновестными макетами сайтов',
+						title: "Адаптивная вёрстка для ваших сайтов",
+						subtitle: "Последние выполненые работы за этот месяц, начиная от логотипов, и заканчивая полновестными макетами сайтов",
 						footer: {
-							body: 'Wiederholt sang lispelnd nach trüben meinem ihr um liebe längst zerstreuet, lied blick vom zu bilder. Nun labyrinthisch aus mein bilder ihr lauf folgt. Äolsharfe mein bang ernsten nach seelen wenn wird busen, der es wohl steigen wirklichkeiten vor euch mich sich erste, was welt euch lauf geneigt wirklichkeiten, weiten der in ein die folgenden schmerz der nebel. Nun und.',
-							about: 'https://vc.ru/design/166963-chto-takoe-adaptivnyy-dizayn-i-pochemu-adaptivnaya-verstka-sayta-dorozhe',
+							body: "Wiederholt sang lispelnd nach trüben meinem ihr um liebe längst zerstreuet, lied blick vom zu bilder. Nun labyrinthisch aus mein bilder ihr lauf folgt. Äolsharfe mein bang ernsten nach seelen wenn wird busen, der es wohl steigen wirklichkeiten vor euch mich sich erste, was welt euch lauf geneigt wirklichkeiten, weiten der in ein die folgenden schmerz der nebel. Nun und.",
+							about: "https://vc.ru/design/166963-chto-takoe-adaptivnyy-dizayn-i-pochemu-adaptivnaya-verstka-sayta-dorozhe",
 						},
 						link: {
-							path: '/portfolio',
-							name: 'Перейти к портфолио'
+							path: "/portfolio",
+							name: "Перейти к портфолио"
 						}	
 					}
 				} as {[T in MODULES]: CONTENT} 

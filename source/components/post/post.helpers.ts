@@ -1,21 +1,21 @@
-import { database } from '~/api/database';
-import { User } from '~/contracts/User';
-import { utils } from '~/utils';
-import { IAnswer } from './post.types';
+import { database } from "~/api/database";
+import { User } from "~/contracts/User";
+import { utils } from "~/utils";
+import { IAnswer } from "./post.types";
 
 export namespace helpers {
   
-  const MentionRE = new RegExp('@.+?,','g');
+  const MentionRE = new RegExp("@.+?,","g");
 
-  export function asAnswer({ message, user }: IAnswer): IAnswer['message'] {
+  export function asAnswer({ message, user }: IAnswer): IAnswer["message"] {
     return `@${ user.name }, ${ message }`;
   }
 
-  export async function getAddresseeID(message: string): Promise<Array<User.struct['uid']>> {
+  export async function getAddresseeID(message: string): Promise<Array<User.struct["uid"]>> {
 
     const addressees = extractAddressee(message);
 
-    const users: utils.types.asIterableObject<User.state> = await database.get('users');
+    const users: utils.types.asIterableObject<User.state> = await database.get("users");
 
     return Object.values(users)
       .filter(user => addressees.some(x => x === user.state.name))

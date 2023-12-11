@@ -24,11 +24,11 @@ export namespace animations {
       ];
 
       const BaseOptions: KeyframeAnimationOptions = {
-        fill: 'both',
-        easing: 'ease-in-out',
+        fill: "both",
+        easing: "ease-in-out",
         direction: reverse 
-          ? 'reverse' 
-          : 'normal',
+          ? "reverse" 
+          : "normal",
       };
 
       switch (mode) {

@@ -339,14 +339,14 @@
 
 <script lang="ts">
 
-	import Vue from 'vue';
+	import Vue from "vue";
 
 	// COMPONENTS
-	import SearchBar 	from '~/components/common/SearchBar.vue';
-	import Icon				from '~/components/common/Icon.vue';
+	import SearchBar 	from "~/components/common/SearchBar.vue";
+	import Icon				from "~/components/common/Icon.vue";
 
 	// MIXINS
-	import IntersectionCooler from '~/assets/mixins/IntersectionCooler';
+	import IntersectionCooler from "~/assets/mixins/IntersectionCooler";
 
 	enum DocumentExtension {
 		PDF,
@@ -361,37 +361,37 @@
 		ext			?: DocumentExtension
 	}
 
-	type FooterKeys = 'Social' | 'About';
+	type FooterKeys = "Social" | "About";
 
 	const FooterLinks: Record<FooterKeys, Array<IFooterLink>> = {
 
 		Social: [
 			{ 
-				icon: 'VK',
-				content: 'Группа в ВКонтакте', 
-				link: 'https://vk.com/eccheuma' 
+				icon: "VK",
+				content: "Группа в ВКонтакте", 
+				link: "https://vk.com/eccheuma" 
 			},
 			{ 
-				icon: 'URL', 	
-				content: 'GitHub Репозиторий', 
-				link: 'https://github.com/Scarlatum' 
+				icon: "URL", 	
+				content: "GitHub Репозиторий", 
+				link: "https://github.com/Scarlatum" 
 			}
 		],
 
 		About: [
 			{ 
-				content: 'Политика ценообразования и вопросы оплаты.', 
-				link: '/', 
+				content: "Политика ценообразования и вопросы оплаты.", 
+				link: "/", 
 				ext: DocumentExtension.PDF
 			},
 			{ 
-				content: 'О сроках, просрочках, внесение правок.', 
-				link: '/', 
+				content: "О сроках, просрочках, внесение правок.", 
+				link: "/", 
 				ext: DocumentExtension.PDF
 			},
 			{ 
-				content: 'Сотрудничество, и общие работы.', 
-				link: '/', 
+				content: "Сотрудничество, и общие работы.", 
+				link: "/", 
 				ext: DocumentExtension.PDF
 			},
 		]

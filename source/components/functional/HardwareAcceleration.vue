@@ -1,6 +1,6 @@
 <script lang="ts">
 
-  import Vue from 'vue';
+  import Vue from "vue";
 
   export default Vue.extend({
     data() {
@@ -20,7 +20,7 @@
     mounted() {
 
       if ( !this.GPU ) {
-        (this.$el as Element).classList.add('utils::dead-GPU');
+        (this.$el as Element).classList.add("utils::dead-GPU");
       }
 
     },

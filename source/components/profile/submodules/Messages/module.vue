@@ -150,34 +150,34 @@
 </style>
 
 <script lang="ts">
-	import Vue from 'vue';
+	import Vue from "vue";
 
 	// VUEX
-	import { mapState, mapActions } from 'vuex';
-	import type { VuexMap } from '~/contracts/VuexMap';
+	import { mapState, mapActions } from "vuex";
+	import type { VuexMap } from "~/contracts/VuexMap";
 
 	// API
-	import { database } from '~/api/database';
+	import { database } from "~/api/database";
 
 	// UTILS
-	import { Result, utils } from '~/utils';
+	import { Result, utils } from "~/utils";
 
 	// MIXINS
-	import EmitSound from '~/assets/mixins/EmitSound';
+	import EmitSound from "~/assets/mixins/EmitSound";
 
 	// COMPONENTS
-	import EccheumaButton from '~/components/buttons/CommonButton.vue';
-	import MessageComponent from './submodules/Message.vue';
+	import EccheumaButton from "~/components/buttons/CommonButton.vue";
+	import MessageComponent from "./submodules/Message.vue";
 
-	import IntesectionComponent from '~/components/functional/intersectionComponent.vue';
+	import IntesectionComponent from "~/components/functional/intersectionComponent.vue";
 
 	// TYPES
-	import type { Message as MessageContract } from '~/contracts/Message';
-	import type { User } from '~/contracts/User';
+	import type { Message as MessageContract } from "~/contracts/Message";
+	import type { User } from "~/contracts/User";
 
 	// ERROR
 	const enum ComponentErrors {
-		REPEATED_MESSAGE = 'RM',
+		REPEATED_MESSAGE = "RM",
 	}
 
 	// MODULE
@@ -196,7 +196,7 @@
 					prev: String(),
 				},
 
-				MessageNotification: Notification.permission === 'granted',
+				MessageNotification: Notification.permission === "granted",
 				ReadyToRead: false,
 			};
 		
@@ -218,7 +218,7 @@
 			UserMessage: {
 				handler(n, o) {
 
-					this.playSound(this.Sounds.get(n.length > o.length ? 'Input::Increment' : 'Input::Decrement'));
+					this.playSound(this.Sounds.get(n.length > o.length ? "Input::Increment" : "Input::Decrement"));
 				
 				},
 			},
@@ -233,8 +233,8 @@
 		created() {
 
 			this.setSounds([
-				{ file: 'Off', name: 'Input::Increment', settings: { rate: 0.65, volume: 0.25 } },
-				{ file: 'Off', name: 'Input::Decrement', settings: { rate: 0.5, volume: 0.25 } },
+				{ file: "Off", name: "Input::Increment", settings: { rate: 0.65, volume: 0.25 } },
+				{ file: "Off", name: "Input::Decrement", settings: { rate: 0.5, volume: 0.25 } },
 			]);
 
 		},
@@ -249,8 +249,8 @@
 		},
 		methods: {
 			...mapActions({
-				vuex_markAsReaded: 'User/Messages/markAsReaded',
-				vuex_sendMessage: 'User/Messages/sendMessage',
+				vuex_markAsReaded: "User/Messages/markAsReaded",
+				vuex_sendMessage: "User/Messages/sendMessage",
 			}),
 
 			observeIntesection(message: MessageContract.struct) {
@@ -279,7 +279,7 @@
 				});
 
 				this.message.prev = this.message.current;
-				this.message.current = '';
+				this.message.current = "";
 
 			},
 
@@ -287,7 +287,7 @@
 
 				Notification.requestPermission().then((perm) => {
 
-					this.MessageNotification = perm === 'granted';
+					this.MessageNotification = perm === "granted";
 
 				});
 
@@ -297,10 +297,10 @@
 
 				if (uid === this.UserState.uid) return;
 
-				new Notification('Eccheuma | Новое сообщение', {
+				new Notification("Eccheuma | Новое сообщение", {
 					body: `${from}: ${message}`,
-					image: require('~/assets/images/NotificationBadge.png'),
-					icon: await database.get<User.struct['image']>(`users/${uid}/state/image`),
+					image: require("~/assets/images/NotificationBadge.png"),
+					icon: await database.get<User.struct["image"]>(`users/${uid}/state/image`),
 					silent: true,
 				});
 				

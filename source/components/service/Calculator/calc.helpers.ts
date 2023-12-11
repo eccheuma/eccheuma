@@ -1,6 +1,6 @@
-import { russian } from '~/lang';
-import { Categories } from '~/contracts/Services';
-import { DAY, CATEGORIES_LANG } from './calc.constants';
+import { russian } from "~/lang";
+import { Categories } from "~/contracts/Services";
+import { DAY, CATEGORIES_LANG } from "./calc.constants";
 
 export namespace FormatHelpres {
 
@@ -12,8 +12,8 @@ export namespace FormatHelpres {
 
     const [ FullDays, Rem ] = [ Math.floor(hours / 24), hours % 24 ];
 
-    const H = `${ Rem 		 } ${ getRussianSuffix(Rem, 'час', ['','а','ов']) }`;
-    const D = `${ FullDays } ${ getRussianSuffix(FullDays, 'д', ['ень','ня','ней']) }`;
+    const H = `${ Rem 		 } ${ getRussianSuffix(Rem, "час", ["","а","ов"]) }`;
+    const D = `${ FullDays } ${ getRussianSuffix(FullDays, "д", ["ень","ня","ней"]) }`;
 
     return hours > DAY
       ? `${ D } и ${ H }`
@@ -22,7 +22,7 @@ export namespace FormatHelpres {
   }
 
   export function formatCost(cost: number) {
-    return cost.toLocaleString('DE-de');
+    return cost.toLocaleString("DE-de");
   }
 
   export function getCategoryName(category: Categories) {

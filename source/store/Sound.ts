@@ -1,13 +1,13 @@
 // LIBS
-	import 			{ Howler, Howl } 	from 'howler';
-	import type { HowlOptions } 	from 'howler';
+	import 			{ Howler, Howl } 	from "howler";
+	import type { HowlOptions } 	from "howler";
 
 // VUEX
-	import type { ActionTree, MutationTree } from 'vuex';
+	import type { ActionTree, MutationTree } from "vuex";
 
-	import animeJS from 'animejs';
-	import type { SoundInstance } from '~/assets/mixins/EmitSound';
-import { Result } from '~/utils';
+	import animeJS from "animejs";
+	import type { SoundInstance } from "~/assets/mixins/EmitSound";
+import { Result } from "~/utils";
 
 // TYPES 
 	interface GLOBAL_PROPERTY {
@@ -36,7 +36,7 @@ import { Result } from '~/utils';
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/contracts/VuexMap' {
+	declare module "~/contracts/VuexMap" {
 		interface VuexMap {
 			Sound: CurentState
 		}
@@ -76,9 +76,9 @@ import { Result } from '~/utils';
 					...PREDEFINED_OPTIONS, 
 					...sound.settings,
 	
-				}).once('load', () => {
+				}).once("load", () => {
 					console.debug(`[registerSound]: Load sound element | ${ sound.name }`);
-				}).once('unlock', () => {
+				}).once("unlock", () => {
 
 					const volume = sound.settings?.volume;
 
@@ -88,7 +88,7 @@ import { Result } from '~/utils';
 
 				});
 
-				vuex.commit('setSound', { name: sound.name, howl: CURRENT_HOWL });
+				vuex.commit("setSound", { name: sound.name, howl: CURRENT_HOWL });
 
 			}
 
@@ -98,9 +98,9 @@ import { Result } from '~/utils';
 
 		globalMute(vuex, value: boolean ) {
 
-			vuex.dispatch('changeGlobalVolume', Number(!value)).then(() => { 
+			vuex.dispatch("changeGlobalVolume", Number(!value)).then(() => { 
 
-				vuex.commit('setGlobalProperty', { type: 'mute', value }); Howler.mute(value);
+				vuex.commit("setGlobalProperty", { type: "mute", value }); Howler.mute(value);
 
 			});
 
@@ -111,7 +111,7 @@ import { Result } from '~/utils';
 			if ( process.browser ) {
 
 				const GLOBAL_PROPERTY: { type: keyof GLOBAL_PROPERTY, value: GLOBAL_VALUES } = {
-					type: 'inChange',
+					type: "inChange",
 					value: true
 				};
 
@@ -124,11 +124,11 @@ import { Result } from '~/utils';
 					volume: [TARGET.volume, value],
 					duration: 3000,
 					round: 10,
-					easing: 'linear',
+					easing: "linear",
 					begin: () => {
 
 						GLOBAL_PROPERTY.value = true;
-						vuex.commit('setGlobalProperty', GLOBAL_PROPERTY);
+						vuex.commit("setGlobalProperty", GLOBAL_PROPERTY);
 
 					},
 					change: () => {
@@ -143,7 +143,7 @@ import { Result } from '~/utils';
 					complete: () => {
 
 						GLOBAL_PROPERTY.value = false;
-						vuex.commit('setGlobalProperty', GLOBAL_PROPERTY);
+						vuex.commit("setGlobalProperty", GLOBAL_PROPERTY);
 
 					}
 				});

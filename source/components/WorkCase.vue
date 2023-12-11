@@ -400,36 +400,36 @@
 
 <script lang="ts">
 
-	import Vue, { PropOptions } from 'vue';
+	import Vue, { PropOptions } from "vue";
 
 	// VUEX
-	import { mapState } from 'vuex';
+	import { mapState } from "vuex";
 
 	// TYPES
-	import type { Workcase } from '~/contracts/WorkCase';
+	import type { Workcase } from "~/contracts/WorkCase";
 
 	// VUEX MODULE TYPE MAP
-	import type { VuexMap } from '~/contracts/VuexMap';
+	import type { VuexMap } from "~/contracts/VuexMap";
 
 	// COMPONENTS
-	import EccheumaSwiper from '~/components/common/Carousel.vue';
-	import Icon 					from '~/components/common/Icon.vue';
+	import EccheumaSwiper from "~/components/common/Carousel.vue";
+	import Icon 					from "~/components/common/Icon.vue";
 
 	// MIXINS
-	import IntersectionObserver from '~/assets/mixins/IntersectionObserver';
+	import IntersectionObserver from "~/assets/mixins/IntersectionObserver";
 
 	// MODULE
 	export default Vue.extend({
 		components: {
 			EccheumaSwiper,
 			Icon,
-			EccheumaImage: () => import('~/components/image/Image.vue')
+			EccheumaImage: () => import("~/components/image/Image.vue")
 		},
 		mixins: [ IntersectionObserver ],
 		props: {
 			content: 		{ type: Object, required: true  } as PropOptions<Workcase.content>,
-			properties: { type: Object, required: true  } as PropOptions<Workcase.struct['properties']>,
-			rating: 		{ type: Number, default: 8.5    } as PropOptions<Workcase.struct['rating'] >
+			properties: { type: Object, required: true  } as PropOptions<Workcase.struct["properties"]>,
+			rating: 		{ type: Number, default: 8.5    } as PropOptions<Workcase.struct["rating"] >
 		},
 		data() {
 			return {

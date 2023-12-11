@@ -337,21 +337,21 @@
 
 <script lang="ts">
 
-	import Vue from 'vue';
+	import Vue from "vue";
 
 // Global Types
-	import type { Second } from '~/contracts/Nominals';
-	import type { Purchase, Additions } from '~/contracts/Services';
+	import type { Second } from "~/contracts/Nominals";
+	import type { Purchase, Additions } from "~/contracts/Services";
 
 // Inner Types
-	import { IPurchaseForm } from './calc.types';
+	import { IPurchaseForm } from "./calc.types";
 // Model
-	import { CalculatorModel } from './calc.model';
+	import { CalculatorModel } from "./calc.model";
 // Helpers
-	import { FormatHelpres } from './calc.helpers';
+	import { FormatHelpres } from "./calc.helpers";
 
 // Components 
-	import CaptionCard from '~/components/common/Caption.vue';
+	import CaptionCard from "~/components/common/Caption.vue";
 
 // Module
 	export default Vue.extend({
@@ -375,6 +375,13 @@
 				...CalculatorModel.createForm()
 
 			};
+		},
+		mounted() {
+
+			// this.services
+
+			// CalculatorModel.setServices(this.SERVICE_TYPES[0]);
+
 		},
 		computed: {
 
@@ -410,22 +417,16 @@
 
 		},
 		watch: {
-			'form.category': {
-				async handler(category: IPurchaseForm['category']) {
-
-					console.debug('form.category handler');
-
-					this.services = await CalculatorModel.setServices(category);
-
+			"form.category": {
+				async handler(category: IPurchaseForm["category"]) {
+					if ( category ) {
+						this.services = await CalculatorModel.setServices(category);
+					}
 				}
 			},
-			'form.service': {
-				async handler(service: IPurchaseForm['service']) {
-
-					console.debug('form.service handler');
-
-					this.additions = await CalculatorModel.setAdditions(service);
-
+			"form.service": {
+				async handler(service: IPurchaseForm["service"]) {
+					if ( service ) this.additions = await CalculatorModel.setAdditions(service);
 				}
 			},
 			additions: {
@@ -452,7 +453,7 @@
 					targets: innerCounter,
 					data: [ innerCounter.data, to ],
 					round: 1,
-					easing: 'easeInOutQuad',
+					easing: "easeInOutQuad",
 					duration: 500,
 					update: () => {
 						this.cost.view = innerCounter.data;

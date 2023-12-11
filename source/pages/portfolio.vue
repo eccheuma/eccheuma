@@ -51,43 +51,43 @@
 
 <script lang="ts">
 
-	import Vue from 'vue';
+	import Vue from "vue";
 // VUEX
-	import { mapState } from 'vuex';
+	import { mapState } from "vuex";
 
 // MIXINS
-	import EmitSound from '~/assets/mixins/EmitSound';
+	import EmitSound from "~/assets/mixins/EmitSound";
 
 // TYPE
-	import { Portfolio } from '~/contracts/Portfolio';
-	import { navigation } from '~/contracts/Navigation';
-	import type { VuexMap } from '~/contracts/VuexMap';
+	import { Portfolio } from "~/contracts/Portfolio";
+	import { navigation } from "~/contracts/Navigation";
+	import type { VuexMap } from "~/contracts/VuexMap";
 
 // COMPONENTS
-	import SectionHeader from '~/components/common/SectionHeader.vue';
+	import SectionHeader from "~/components/common/SectionHeader.vue";
 
 // PAGE DESCRIPTION
-	import { opengraph } from '~/utils/opengraph';
-	import { getLocale, languages } from '~/lang';
+	import { opengraph } from "~/utils/opengraph";
+	import { getLocale, languages } from "~/lang";
 
 	export const PageDescription: opengraph.struct = {
-		title				: 'Eccheuma | Портфолио',
-		description	: 'Предложения по оказанию услуг. В зависимости от сезона и нагруженности тут появляются выгодные предложения на разные виды услуг.',
-		url					: '',
-		image				: require('~/assets/images/NotificationBadge.png?resize&size=600').src,
+		title				: "Eccheuma | Портфолио",
+		description	: "Предложения по оказанию услуг. В зависимости от сезона и нагруженности тут появляются выгодные предложения на разные виды услуг.",
+		url					: "",
+		image				: require("~/assets/images/NotificationBadge.png?resize&size=600").src,
 	};
 
 // MODULE
 	export default Vue.extend({
 		components: {
 			SectionHeader,
-			PromoBanner	: () => import('~/components/promo/PromoBanner.vue'),
-			Navigation	: () => import('~/components/common/Navigation.vue'),
+			PromoBanner	: () => import("~/components/promo/PromoBanner.vue"),
+			Navigation	: () => import("~/components/common/Navigation.vue"),
 		},
 		mixins: [ EmitSound ],
-		layout: 'Application',
+		layout: "Application",
 		scrollToTop: false,
-		transition: 'opacity-transition',
+		transition: "opacity-transition",
 		data() {
 			return {
 				HeaderMenu: [
@@ -95,33 +95,33 @@
 						disabled: false,
 						route: `/${ navigation.routeSections.portfolio }/${ Portfolio.sections.landings.toLowerCase() }`,
 						name: getLocale(languages.Russian).Application.Landing,
-						icon: 'JS',
+						icon: "JS",
 						discription:
-							'Главная страница. Тут собраны статьи на завязанные на профильную тему.',
+							"Главная страница. Тут собраны статьи на завязанные на профильную тему.",
 					},
 					{
 						disabled: false,
 						route: `/${ navigation.routeSections.portfolio }/${ Portfolio.sections.logo.toLowerCase()  }`,
 						name: getLocale(languages.Russian).Graphic.Logo,
-						icon: 'Vector',
+						icon: "Vector",
 						discription:
-							'Галлерея изображений. Начиная от логотипов и полноценных макетов, заканчивая всякими набросками и непринятыми вариантами работ.',
+							"Галлерея изображений. Начиная от логотипов и полноценных макетов, заканчивая всякими набросками и непринятыми вариантами работ.",
 					},
 					{
 						disabled: true,
 						route: `/${ navigation.routeSections.portfolio }/${ Portfolio.sections.mockups.toLowerCase() }`,
 						name: getLocale(languages.Russian).Graphic.MockupBlock,
-						icon: 'Blank',
+						icon: "Blank",
 						discription:
-							'Предложения по оказанию услуг. В зависимости от сезона и нагруженности тут появляются выгодные предложения на разные виды услуг.',
+							"Предложения по оказанию услуг. В зависимости от сезона и нагруженности тут появляются выгодные предложения на разные виды услуг.",
 					},
 					{
 						disabled: true,
 						route: `/${ navigation.routeSections.portfolio }/${ Portfolio.sections.applications.toLowerCase() }`,
 						name: getLocale(languages.Russian).Application.Applications,
-						icon: 'Vue',
+						icon: "Vue",
 						discription:
-							'Предложения по оказанию услуг. В зависимости от сезона и нагруженности тут появляются выгодные предложения на разные виды услуг.',
+							"Предложения по оказанию услуг. В зависимости от сезона и нагруженности тут появляются выгодные предложения на разные виды услуг.",
 					},
 				],
 			};

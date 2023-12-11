@@ -1,6 +1,6 @@
 
 // VUEX TYPES
-	import type { MutationTree } from 'vuex';
+	import type { MutationTree } from "vuex";
 	
 	export const strict = false;
 

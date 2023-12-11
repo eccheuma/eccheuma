@@ -80,7 +80,7 @@
 
 <script lang="ts">
 
-import Vue, { PropOptions } from 'vue';
+import Vue, { PropOptions } from "vue";
 
 // TYPES AND INTERFACES
 	type Options = {
@@ -140,13 +140,13 @@ import Vue, { PropOptions } from 'vue';
 			};
 		},
 		watch: {
-			'mouseData.hoverPosition': {
+			"mouseData.hoverPosition": {
 				handler() { this.UpdateStyles(); }
 			},
-			'ActiveIndex': {
-				handler() { this.UpdateStyles(); this.$emit('active-index', this.ActiveIndex); }
+			"ActiveIndex": {
+				handler() { this.UpdateStyles(); this.$emit("active-index", this.ActiveIndex); }
 			},
-			'forcedIndex': {
+			"forcedIndex": {
 				handler() {
 					this.ActiveIndex = this.forcedIndex;
 				}
@@ -178,7 +178,7 @@ import Vue, { PropOptions } from 'vue';
 			slotChecker(): void {
 
 				if ( this.slotChecks === 10 ) {
-					console.warn('Swiper content may be empty, and it can\'t be mounted.'); return;
+					console.warn("Swiper content may be empty, and it can't be mounted."); return;
 				}
 				setTimeout(() => {
 					( this.$refs.swiperContent as Element ).childElementCount 
@@ -206,12 +206,12 @@ import Vue, { PropOptions } from 'vue';
 						new CSSTranslate(CSS.vw(-Y), CSS.px(0), CSS.px(0))
 					]);
 
-					contentNode.attributeStyleMap.set('transform', TRANSFORM);
-					contentNode.attributeStyleMap.set('transition-duration', CSS.ms( MD.isDown ? 0 : DURATION ));
+					contentNode.attributeStyleMap.set("transform", TRANSFORM);
+					contentNode.attributeStyleMap.set("transition-duration", CSS.ms( MD.isDown ? 0 : DURATION ));
 
 				} else {
 
-					contentNode.setAttribute('style', `
+					contentNode.setAttribute("style", `
 						transition-duration: ${ MD.isDown ? 0 : DURATION }ms;
 						transform: translate3D( -${ (this.ContainerWidth * this.ActiveIndex) + SHIFT }vw, 0px, 0px );
 					`);
@@ -231,10 +231,10 @@ import Vue, { PropOptions } from 'vue';
 
 				Object.values( contentNode.children ).forEach((el) => {
 
-					const DefaultClasses = el.getAttribute('class');
+					const DefaultClasses = el.getAttribute("class");
 					
-					el.setAttribute('class', `${ DefaultClasses || '' } swiper-item`.trim() );
-					el.setAttribute('style', `width: ${ this.ContainerWidth }vw`);
+					el.setAttribute("class", `${ DefaultClasses || "" } swiper-item`.trim() );
+					el.setAttribute("style", `width: ${ this.ContainerWidth }vw`);
 
 				});
 
@@ -259,7 +259,7 @@ import Vue, { PropOptions } from 'vue';
 
 				const cb = () => {
 					if ( !this.mouseData.isHover ) {
-						this.ChangeSlide('NEXT');
+						this.ChangeSlide("NEXT");
 					}
 				};
 
@@ -273,7 +273,7 @@ import Vue, { PropOptions } from 'vue';
 				this.$nextTick().then(() => {
 
 					Object.values( IndicatorsElement.children ).forEach((el, i) => {
-						el.addEventListener('click', () => { this.ActiveIndex = i; });
+						el.addEventListener("click", () => { this.ActiveIndex = i; });
 					});
 
 				});
@@ -286,15 +286,15 @@ import Vue, { PropOptions } from 'vue';
 				const prevButton = buttonContainer.children[0];
 				const nextButton = buttonContainer.children[1];
 
-				prevButton.addEventListener('click', () => this.ChangeSlide('PREV'));
-				nextButton.addEventListener('click', () => this.ChangeSlide('NEXT'));
+				prevButton.addEventListener("click", () => this.ChangeSlide("PREV"));
+				nextButton.addEventListener("click", () => this.ChangeSlide("NEXT"));
 
 			},
 			TouchEvents(el: HTMLElement) {
 
 				const LISTENERS_OPTIONS = { passive: true, capture: false };
 
-				el.addEventListener('touchmove', 	(e: TouchEvent) => {
+				el.addEventListener("touchmove", 	(e: TouchEvent) => {
 					
 					requestAnimationFrame( () => {
 						this.mouseData.hoverPosition = e.changedTouches[0].clientX; 
@@ -302,14 +302,14 @@ import Vue, { PropOptions } from 'vue';
 
 				}, LISTENERS_OPTIONS);
 
-				el.addEventListener('touchstart', (e: TouchEvent) => {
+				el.addEventListener("touchstart", (e: TouchEvent) => {
 
 					this.mouseData.hoverPosition 	= this.mouseData.clickPosition 	= e.changedTouches[0].clientX;
 					this.mouseData.isDown 				= true;
 
 				}, LISTENERS_OPTIONS);
 
-				el.addEventListener('touchend', 	(e: TouchEvent) => {
+				el.addEventListener("touchend", 	(e: TouchEvent) => {
 
 					const POS 			= e.changedTouches[0].clientX;
 					const MD				=	this.mouseData;
@@ -319,7 +319,7 @@ import Vue, { PropOptions } from 'vue';
 					MD.isDown	= false;
 
 					if ( Math.abs( MD.clickPosition - POS) > MD.offset ) {
-						this.ChangeSlide( DIFFERNCE > 0 ? 'NEXT' : 'PREV' );
+						this.ChangeSlide( DIFFERNCE > 0 ? "NEXT" : "PREV" );
 					}
 
 				}, LISTENERS_OPTIONS);
@@ -334,7 +334,7 @@ import Vue, { PropOptions } from 'vue';
 			},
 			MouseDown(e: MouseEvent) {
 
-				( this.$refs.swiperContainer as Element ).addEventListener('mousemove', this.MouseHover );
+				( this.$refs.swiperContainer as Element ).addEventListener("mousemove", this.MouseHover );
 
 				this.mouseData.hoverPosition 	= this.mouseData.clickPosition 	= e.x;
 				this.mouseData.isDown 				= true;
@@ -342,7 +342,7 @@ import Vue, { PropOptions } from 'vue';
 			},
 			MouseUp(e: MouseEvent) {
 
-				( this.$refs.swiperContainer as Element ).removeEventListener('mousemove', this.MouseHover );
+				( this.$refs.swiperContainer as Element ).removeEventListener("mousemove", this.MouseHover );
 
 				this.mouseData.isDown 				= false;
 
@@ -350,11 +350,11 @@ import Vue, { PropOptions } from 'vue';
 				const OFFSET 		= this.mouseData.offset;
 
 				if ( Math.abs(this.mouseData.clickPosition - e.x) > OFFSET ) {
-					this.ChangeSlide( DIFFERNCE > 0 ? 'NEXT' : 'PREV' );
+					this.ChangeSlide( DIFFERNCE > 0 ? "NEXT" : "PREV" );
 				}
 
 			},
-			ChangeSlide(direction: 'NEXT' | 'PREV') {
+			ChangeSlide(direction: "NEXT" | "PREV") {
 
 				if ( this.Quantity === 1 ) {
 					this.UpdateStyles(); return;
@@ -364,11 +364,11 @@ import Vue, { PropOptions } from 'vue';
 
 				switch (direction) {
 
-					case 'NEXT': if ( this.ActiveIndex === lastIndex ) { 
+					case "NEXT": if ( this.ActiveIndex === lastIndex ) { 
 						this.ActiveIndex = 0; 
 					} else { this.ActiveIndex += 1; } break;
 
-					case 'PREV': if ( !this.ActiveIndex ) { 
+					case "PREV": if ( !this.ActiveIndex ) { 
 						this.ActiveIndex = lastIndex; 
 					} else { this.ActiveIndex -= 1; } break;
 				}

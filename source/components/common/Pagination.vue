@@ -116,16 +116,16 @@
  
 <script lang="ts">
 
-	import Vue, { PropOptions } from 'vue';
+	import Vue, { PropOptions } from "vue";
 
 	// VUEX
-	import { mapState } from 'vuex';
+	import { mapState } from "vuex";
 
 	// VUEX MAP
-	import type { VuexMap } from '~/contracts/VuexMap';
+	import type { VuexMap } from "~/contracts/VuexMap";
 
 	// UTILS
-	import { getLocale, languages, russian } from '~/lang';
+	import { getLocale, languages, russian } from "~/lang";
 
 	// TYPES
 	type PageSelectorProperty = {
@@ -134,10 +134,10 @@
 	}
 
 	// CONSTANTS
-	const RUSSIAN_CUSTOM_NUMERATOR: russian.types.CustomPlural = Array([ 3, 'ёх' ], [ 4, 'ёх' ], [ 11, 'и' ]);
+	const RUSSIAN_CUSTOM_NUMERATOR: russian.types.CustomPlural = Array([ 3, "ёх" ], [ 4, "ёх" ], [ 11, "и" ]);
 
 	// COMPONENTS
-	import Icon from '~/components/common/Icon.vue';
+	import Icon from "~/components/common/Icon.vue";
 
 	// MODULE
 	export default Vue.extend({
@@ -179,7 +179,7 @@
 			getPath(page: number) {
 
 				const QUERY_PARAMS = this.payload.params 
-					? String('?').concat(this.payload.params)
+					? String("?").concat(this.payload.params)
 					: String();
 
 				return `/${ this.payload.section }/page_${ page }${ QUERY_PARAMS }`;
@@ -188,7 +188,7 @@
 
 			fmtSuffix(...[ value ]: Partial<Parameters<typeof russian.getSuffix>>) { 
 				switch (this.Lang) {
-					case languages.Russian: return russian.getSuffix(Number(value), ['ой', 'ух', 'и'], RUSSIAN_CUSTOM_NUMERATOR);
+					case languages.Russian: return russian.getSuffix(Number(value), ["ой", "ух", "и"], RUSSIAN_CUSTOM_NUMERATOR);
 				}
 			}
 

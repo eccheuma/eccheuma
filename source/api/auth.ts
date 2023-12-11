@@ -4,10 +4,10 @@ import {
   sendPasswordResetEmail,
   confirmPasswordReset,
   signOut,
-} from 'firebase/auth';
+} from "firebase/auth";
 
-import { getLocale, languages } from '~/lang';
-import { Result } from '~/utils';
+import { getLocale, languages } from "~/lang";
+import { Result } from "~/utils";
 
 export namespace form {
 
@@ -30,12 +30,12 @@ export namespace form {
 export namespace auth {
 
   export const enum error {
-    network     = 'auth/network-request-failed',
-		notUser     = 'auth/user-not-found',
-		email       = 'auth/invalid-email',
-		password    = 'auth/wrong-password',
-    weekPass    = 'auth/weak-password',
-		takedEmail  = 'auth/email-already-in-use',
+    network     = "auth/network-request-failed",
+		notUser     = "auth/user-not-found",
+		email       = "auth/invalid-email",
+		password    = "auth/wrong-password",
+    weekPass    = "auth/weak-password",
+		takedEmail  = "auth/email-already-in-use",
   }
 
   export function defineError(e: error, lang: languages) {

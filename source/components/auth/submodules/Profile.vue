@@ -234,27 +234,27 @@
 
 <script lang="ts">
 
-	import Vue from 'vue';
+	import Vue from "vue";
 
 // VUEX
-	import { mapState, mapActions } from 'vuex';
+	import { mapState, mapActions } from "vuex";
 
 // UTILS
-	import { user, work } from '~/utils/status';
-	import { currencies } from '~/utils/currency';
+	import { user, work } from "~/utils/status";
+	import { currencies } from "~/utils/currency";
 
 // COMPONENTS
-	import EccheumaButton from '~/components/buttons/CommonButton.vue';
-	import Tag 						from '~/components/common/Tag.vue';
-	import Icon						from '~/components/common/Icon.vue';
+	import EccheumaButton from "~/components/buttons/CommonButton.vue";
+	import Tag 						from "~/components/common/Tag.vue";
+	import Icon						from "~/components/common/Icon.vue";
 
 // TYPES
-	import type { VuexMap } from '~/contracts/VuexMap';
+	import type { VuexMap } from "~/contracts/VuexMap";
 
 // NAMESPACE
-	import { User } from '~/contracts/User';
+	import { User } from "~/contracts/User";
 
-	type FIELDS = 'wallet' | 'status' | 'messages';
+	type FIELDS = "wallet" | "status" | "messages";
 
 	type PROFILE_AREA = {
 		title: string
@@ -290,26 +290,26 @@
 
 				const messageInfo = this.Messages[ this.Messages.length - 1 ]
 					? `Последнее сообщение: "${ this.Messages[ this.Messages.length - 1 ].message?.slice(0, 65) }"`
-					: "Новых сообщений нет."
+					: "Новых сообщений нет.";
 
 				return {
 					wallet: {
-						title: 'Баланс',
+						title: "Баланс",
 						value: currencies.fmt_balance(this.Wallet, this.Country),
-						info: 'Ваш текущий баланс.',
-						icon: 'Service',
+						info: "Ваш текущий баланс.",
+						icon: "Service",
 					},
 					status: {
-						title: 'Статус последнего заказа',
+						title: "Статус последнего заказа",
 						value: work.defineStatus(this.State.purchase, this.Lang),
-						info: 'Текущий статус последнего заказа заказа',
-						icon: 'Fire',
+						info: "Текущий статус последнего заказа заказа",
+						icon: "Fire",
 					},
 					messages: {
-						title	: 'Сообщения',
+						title	: "Сообщения",
 						value	: this.NewMessages,
 						info	: messageInfo, 
-						icon	: 'Message',
+						icon	: "Message",
 					}
 				};
 			}
@@ -318,7 +318,7 @@
 		methods: {
 
 			...mapActions({
-				logout: 'Auth/Logout/Logout'
+				logout: "Auth/Logout/Logout"
 			}),
 
 			defineStatus(status: User.status) {

@@ -1,10 +1,10 @@
-	import Vue from 'vue';
+	import Vue from "vue";
 
 // TYPES
 
-	import type { AnimeAnimParams } from 'animejs';
+	import type { AnimeAnimParams } from "animejs";
 
-	type ANIMATION_MODE = 'in' | 'out';
+	type ANIMATION_MODE = "in" | "out";
 
 	export type ANIMATION_PAYLOAD = {
 		in: AnimeAnimParams
@@ -25,7 +25,7 @@
 
 // DECLARE FUNC
 
-	declare module 'vue/types/vue' {
+	declare module "vue/types/vue" {
 		interface Vue {
 			initIntersectionObserver: (payload: PAYLOAD) => void
 		}
@@ -48,8 +48,8 @@ export default Vue.extend({
 				this.animateElement(
 
 				isIntersecting 
-					? 'in' 
-					: 'out', 
+					? "in" 
+					: "out", 
 				payload._options?.animation_target || payload.el, 
 				payload.animation);
 			};
@@ -85,7 +85,7 @@ export default Vue.extend({
 			const ANIMATION = this.$AnimeJS({
 				targets: el,
 				duration: DUR,
-				easing: 'linear',
+				easing: "linear",
 
 				...animation[mode],
 

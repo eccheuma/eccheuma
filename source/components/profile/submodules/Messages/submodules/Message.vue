@@ -122,20 +122,20 @@
 
 <script lang="ts">
 
-  import Vue, { PropOptions } from 'vue';
+  import Vue, { PropOptions } from "vue";
 
   // API
-  import { database } from '~/api/database';
+  import { database } from "~/api/database";
 
   // UTILS
-  import { utils } from '~/utils';
+  import { utils } from "~/utils";
 
   // COMPONENTS
-  import Icon from '~/components/common/Icon.vue';
+  import Icon from "~/components/common/Icon.vue";
 
   // TYPE | INTERFACES | NAMESPACES
-  import { Message }  from '~/contracts/Message';
-  import { User }     from '~/contracts/User';
+  import { Message }  from "~/contracts/Message";
+  import { User }     from "~/contracts/User";
 
   // MODULE
   export default Vue.extend({
@@ -152,7 +152,7 @@
       return {
 
         author: {
-          name: String('Placeholdy'),
+          name: String("Placeholdy"),
           status: User.status.User,
         },
 
@@ -167,13 +167,13 @@
 
       switch (this.payload.from) {
 
-        case 'SUPPORT': this.author = {
-          name: 'Eccheuma Support',
+        case "SUPPORT": this.author = {
+          name: "Eccheuma Support",
           status: User.status.Support,
         }; break;
 
-        case 'ADMIN': this.author = {
-          name: 'Eccheuma Administration',
+        case "ADMIN": this.author = {
+          name: "Eccheuma Administration",
           status: User.status.Admin,
         }; break;
       

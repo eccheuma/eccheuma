@@ -6,7 +6,7 @@
 
 <script lang="ts">
 
-	import Vue from 'vue';
+	import Vue from "vue";
 
 	const CURSOR_OFFSET = 4;
 
@@ -40,9 +40,9 @@
 			ParentNode: {
 				handler() {
 
-					this.ParentNode?.addEventListener('mouseenter', 	this.defineListenersAction);
-					this.ParentNode?.addEventListener('mouseleave', 	this.defineListenersAction);
-					this.ParentNode?.addEventListener('click', 				this.defineListenersAction);
+					this.ParentNode?.addEventListener("mouseenter", 	this.defineListenersAction);
+					this.ParentNode?.addEventListener("mouseleave", 	this.defineListenersAction);
+					this.ParentNode?.addEventListener("click", 				this.defineListenersAction);
 
 				}
 			}
@@ -55,9 +55,9 @@
 		},
 		destroyed() {
 
-			this.ParentNode?.removeEventListener('mouseenter', 	this.defineListenersAction);
-			this.ParentNode?.removeEventListener('mouseleave', 	this.defineListenersAction);
-			this.ParentNode?.removeEventListener('click', 			this.defineListenersAction);
+			this.ParentNode?.removeEventListener("mouseenter", 	this.defineListenersAction);
+			this.ParentNode?.removeEventListener("mouseleave", 	this.defineListenersAction);
+			this.ParentNode?.removeEventListener("click", 			this.defineListenersAction);
 
 		},	
 		methods: {
@@ -79,7 +79,7 @@
 					targets: this.CursorNode,
 					opacity: [0, 0.1],
 					scale: [0, 10],
-					easing: 'easeInOutQuad',
+					easing: "easeInOutQuad",
 					duration: 1000,
 				};
 
@@ -94,37 +94,37 @@
 
 				switch (event.type) {
 
-					case 'mouseenter':
+					case "mouseenter":
 
 						this.animateCursor({
 							begin: () => {
-								window.addEventListener('mousemove', this.setCursorPosition, EventProperty);
+								window.addEventListener("mousemove", this.setCursorPosition, EventProperty);
 							}
 						}); break;
 
-					case 'mouseleave':
+					case "mouseleave":
 
 						this.animateCursor({
-							direction: 'reverse',
+							direction: "reverse",
 							complete: () => { 
 								
 								this.CursorShowed = false;
 
-								window.removeEventListener('mousemove', this.setCursorPosition, EventProperty ); 
+								window.removeEventListener("mousemove", this.setCursorPosition, EventProperty ); 
 
 							},
 						}); break;
 
-					case 'click':
+					case "click":
 
 						this.setCursorPosition(event);
 
 						this.animateCursor({
 							opacity: [this.CursorNode?.style.opacity || 1, 1],
 							scale: [10, .5],
-							filter: ['blur(3px)', 'blur(0px)'],
+							filter: ["blur(3px)", "blur(0px)"],
 							duration: 500,
-							direction: 'alternate',
+							direction: "alternate",
 						}); break;
 
 				}

@@ -132,7 +132,7 @@
 
 <script lang="ts">
 
-	import Vue, { PropOptions, VNodeData } from 'vue';
+	import Vue, { PropOptions, VNodeData } from "vue";
 
 	const MARGIN = 20;
 
@@ -152,8 +152,8 @@
 			},
 			position: {
 				type: String,
-				default: 'top'
-			} as PropOptions<'top' | 'bottom' | 'left' | undefined>
+				default: "top"
+			} as PropOptions<"top" | "bottom" | "left" | undefined>
 		},
 		data() {
 			return {
@@ -171,9 +171,9 @@
 			};
 		},
 		computed: {
-			dynamicStyles(): VNodeData['style'] {
+			dynamicStyles(): VNodeData["style"] {
 				return {
-					['--w']: `${ this.width / 2 }px`,
+					["--w"]: `${ this.width / 2 }px`,
 				};
 			}
 		},
@@ -183,8 +183,8 @@
 
 			if ( !this.init ) {
 
-				T?.addEventListener('mouseenter', () => this.ChangeState(true), { capture: true, passive: true });
-				T?.addEventListener('mouseleave', () => this.ChangeState(false), { capture: true, passive: true });
+				T?.addEventListener("mouseenter", () => this.ChangeState(true), { capture: true, passive: true });
+				T?.addEventListener("mouseleave", () => this.ChangeState(false), { capture: true, passive: true });
 
 				this.init = true;
 
@@ -208,14 +208,14 @@
 					};
 
 					switch (this.position) {
-						case 'left': {
+						case "left": {
 
 							this.pop_position.x = (ParentRect.width + MARGIN) + ( PopoverRect.width / 2 );
 							this.pop_position.y = ParentCenter.y - ( PopoverRect.height / 2 );
 
 						} break;
 
-						case 'top': {
+						case "top": {
 
 							this.pop_position.x = ParentCenter.x;
 							this.pop_position.y = (MARGIN + PopoverRect.height) * -1;

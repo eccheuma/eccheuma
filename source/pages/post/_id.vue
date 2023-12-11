@@ -57,28 +57,28 @@
 
 <script lang="ts">
 
-  import Vue from 'vue';
+  import Vue from "vue";
 
   // COMPONENTS
-  import PostContent from '~/components/post/submodules/Content.vue';
+  import PostContent from "~/components/post/submodules/Content.vue";
 
   // API
-  import { database } from '~/api/database';
+  import { database } from "~/api/database";
 
   // NAMESPACES
-	import { Post }   from '~/contracts/Post';
-  import { Image }  from '~/contracts/Image';
+	import { Post }   from "~/contracts/Post";
+  import { Image }  from "~/contracts/Image";
 
   // HELPERS
-  import { getImageURL } from '~/components/image/image.helpers';
+  import { getImageURL } from "~/components/image/image.helpers";
 
   // PAGE DESCRIPTION
-	import { opengraph } from '~/utils/opengraph';
+	import { opengraph } from "~/utils/opengraph";
 
   // IMAGE PLACEHOLDER
-	const PLACEHOLDER: Pick<Image.formatsStruct, 'avif' | 'webp'> = {
-		avif: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=avif').src,
-		webp: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src
+	const PLACEHOLDER: Pick<Image.formatsStruct, "avif" | "webp"> = {
+		avif: require("~/assets/images/ImagePlaceholder.png?resize&size=600&format=avif").src,
+		webp: require("~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp").src
 	};
 
   // MODULE
@@ -92,7 +92,7 @@
 
       const Post: Post.struct = await database.get(`posts/post::${ params.id }`);
 
-      if ( !Post ) redirect('/error'); 
+      if ( !Post ) redirect("/error"); 
 
       const imageResult = await getImageURL({
         path: Post.image,

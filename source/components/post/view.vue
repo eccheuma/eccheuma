@@ -757,37 +757,37 @@
 
 <script lang="ts">
 
-	import Vue, { PropOptions } from 'vue';
+	import Vue, { PropOptions } from "vue";
 
 	// VUEX
-	import { mapState, mapMutations } from 'vuex';
+	import { mapState, mapMutations } from "vuex";
 
 	// API
-	import { database } from '~/api/database';
+	import { database } from "~/api/database";
 
 	// UTILS
-	import { validate } from '~/utils/validate';
+	import { validate } from "~/utils/validate";
 
 	// MIXINS
-	import EmitSound 						from '~/assets/mixins/EmitSound';
-	import IntersectionCooler 	from '~/assets/mixins/IntersectionCooler';
+	import EmitSound 						from "~/assets/mixins/EmitSound";
+	import IntersectionCooler 	from "~/assets/mixins/IntersectionCooler";
 
 	// Model 
-	import { PostModel } from './post.model';
+	import { PostModel } from "./post.model";
 
 	// Helpers
-	import { helpers } from './post.helpers';
+	import { helpers } from "./post.helpers";
 
 	// COMPONETS
-	import Collapse 						from '~/components/common/Collapse.vue';
-	import Popover 							from '~/components/common/Popover.vue';
-	import Tag 									from '~/components/common/Tag.vue';
-	import Icon									from '~/components/common/Icon.vue';
-	import CommonButton 				from '~/components/buttons/CommonButton.vue';
+	import Collapse 						from "~/components/common/Collapse.vue";
+	import Popover 							from "~/components/common/Popover.vue";
+	import Tag 									from "~/components/common/Tag.vue";
+	import Icon									from "~/components/common/Icon.vue";
+	import CommonButton 				from "~/components/buttons/CommonButton.vue";
 
 	// FUNCTIONAL COMPONENTS
-	import HardwareAccelerationDecorator 	from '~/components/functional/HardwareAcceleration.vue';
-	import IntesectionComponent 					from '~/components/functional/intersectionComponent.vue';
+	import HardwareAccelerationDecorator 	from "~/components/functional/HardwareAcceleration.vue";
+	import IntesectionComponent 					from "~/components/functional/intersectionComponent.vue";
 
 	// ? С фильтрами происходит что-то не совсем ясное. 
 	// ? Нормально работают в хроме, но лиса отказывается с ними адекватно дружить.
@@ -797,28 +797,28 @@
 	// import NoiseFilter					from '~/components/filters/noise.vue'
 
 	// ANIMATIONS
-	import { animations } from '~/animations';
-	import { resolve as resolveAnimation } from '~/animations/post.animation';
+	import { animations } from "~/animations";
+	import { resolve as resolveAnimation } from "~/animations/post.animation";
 
 	// VUEX MODULE TYPE MAP
-	import type { VuexMap } from '~/contracts/VuexMap';
+	import type { VuexMap } from "~/contracts/VuexMap";
 
 	// NAMESPACES
-	import { Post } from '~/contracts/Post';
-	import { User } from '~/contracts/User';
+	import { Post } from "~/contracts/Post";
+	import { User } from "~/contracts/User";
 
 	// TYPES & INTERFACES
-	import type { Image } from '~/contracts/Image';
+	import type { Image } from "~/contracts/Image";
 
 	// Helpers
-	import { getOptimalImage } from '../image/image.helpers';
+	import { getOptimalImage } from "../image/image.helpers";
 
-	type SECTIONS = 'likes' | 'comments' | 'content'
+	type SECTIONS = "likes" | "comments" | "content"
 
 	// IMAGE PLACEHOLDER
-	const IMAGE_PLACEHOLDER: Pick<Image.formatsStruct, 'avif' | 'webp'> = {
-		avif: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=avif').src,
-		webp: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src
+	const IMAGE_PLACEHOLDER: Pick<Image.formatsStruct, "avif" | "webp"> = {
+		avif: require("~/assets/images/ImagePlaceholder.png?resize&size=600&format=avif").src,
+		webp: require("~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp").src
 	};
 
 	const CHAR_LIMIT = 600;
@@ -838,8 +838,8 @@
 			Icon,
 			// DisplacementFilter,
 			// NoiseFilter,
-			CommentComponent: () => import('~/components/post/submodules/Comment.vue'),
-			ContentComponent: () => import('~/components/post/submodules/Content.vue'),
+			CommentComponent: () => import("~/components/post/submodules/Comment.vue"),
+			ContentComponent: () => import("~/components/post/submodules/Content.vue"),
 		},
 
 		mixins: [ 
@@ -877,7 +877,7 @@
 				CommentSection: false,
 				prepareContent: false,
 
-				Addressee: Array<User.struct['uid']>(),
+				Addressee: Array<User.struct["uid"]>(),
 
 				IntersectionAnimation: undefined as Animation | undefined,
 				Cooled: undefined as undefined | boolean,
@@ -936,14 +936,14 @@
 
 			validation(): boolean {
 
-				return validate.sentence(this.Message, ['something'], { minLength: 6 });
+				return validate.sentence(this.Message, ["something"], { minLength: 6 });
 			
 		}
 			
 		},
 
 		watch: {
-			'payload.image': {
+			"payload.image": {
 				handler() {
 
 					this.$nextTick().then(() => this.updateImage());
@@ -953,14 +953,14 @@
 			Message: {
 				handler(n: string, o: string) {
 
-					this.playSound(this.Sounds.get(n.length > o.length ? 'Input::Increment' : 'Input::Decrement'));
+					this.playSound(this.Sounds.get(n.length > o.length ? "Input::Increment" : "Input::Decrement"));
 				
 				}
 			},
 			userLiked: {
 				handler(value: boolean) {
 
-					this.playSound(this.Sounds.get(value ? 'Switch::On' : 'Switch::Off'));
+					this.playSound(this.Sounds.get(value ? "Switch::On" : "Switch::Off"));
 				
 				}
 			},
@@ -970,12 +970,12 @@
 
 			if ( process.browser ) {
 				
-				const watchCooledStatus = this.$watch('Cooled', async (status) => {
+				const watchCooledStatus = this.$watch("Cooled", async (status) => {
 
 					if ( !status ) {
 
-						this.listenDataSnapshots('comments');
-						this.listenDataSnapshots('likes');
+						this.listenDataSnapshots("comments");
+						this.listenDataSnapshots("likes");
 
 						this.updateImage(); 						
 						this.getAuthor();
@@ -991,30 +991,30 @@
 						
 						});
 						
-						watchCooledStatus(); console.debug('[Post]: watchCooledStatus | init');
+						watchCooledStatus(); console.debug("[Post]: watchCooledStatus | init");
 
 					}
 				
 			}); 
 	
-				const watchCommentSection = this.$watch('CommentSection', () => {
+				const watchCommentSection = this.$watch("CommentSection", () => {
 
 					this.setSounds([
-						{ file: 'Off', name: 'Input::Increment', settings: { rate: 0.65, volume: .25 } },
-						{ file: 'Off', name: 'Input::Decrement', settings: { rate: 0.50, volume: .25 } },
+						{ file: "Off", name: "Input::Increment", settings: { rate: 0.65, volume: .25 } },
+						{ file: "Off", name: "Input::Decrement", settings: { rate: 0.50, volume: .25 } },
 					]);
 	
 					watchCommentSection();
 
 				});
 	
-				const watchPrepareContent = this.$watch('prepareContent', () => {
+				const watchPrepareContent = this.$watch("prepareContent", () => {
 
-					this.listenDataSnapshots('content'); watchPrepareContent();
+					this.listenDataSnapshots("content"); watchPrepareContent();
 				
 			});
 
-				const watchIntersection = this.$watch('IntersectionAnimation', () => {
+				const watchIntersection = this.$watch("IntersectionAnimation", () => {
 
 					if ( this.IntersectionAnimation ) {
 
@@ -1051,12 +1051,12 @@
 					.animate(keyframes, options);
 
 				this.setSounds([
-					{ file: 'Off', 	name: 'Element::Action', settings: { rate: 0.50 } },
+					{ file: "Off", 	name: "Element::Action", settings: { rate: 0.50 } },
 				]);
 		
 				this.setSounds([
-					{ file: 'Tap', 	name: 'Switch::On',		settings: { rate: 1.00, volume: 0.25 } },
-					{ file: 'Tap', 	name: 'Switch::Off',	settings: { rate: 0.50, volume: 0.25 } },
+					{ file: "Tap", 	name: "Switch::On",		settings: { rate: 1.00, volume: 0.25 } },
+					{ file: "Tap", 	name: "Switch::Off",	settings: { rate: 0.50, volume: 0.25 } },
 				]);
 
 			}
@@ -1075,7 +1075,7 @@
 			},
 
 			...mapMutations({
-				toggleRegisterModal: 'Auth/Register/toggleRegisterModal',
+				toggleRegisterModal: "Auth/Register/toggleRegisterModal",
 			}),
 			
 			async getAuthor() {
@@ -1096,17 +1096,18 @@
 
 				database.listen(PATH, data => {
 
-					this[section] = data as any; 
+					// @ts-ignore
+					this[section] = data; 
 
 				});
 
 			}, 
 
-			toggleSection(status: boolean, section: 'ContentSection' | 'CommentSection'): void {
+			toggleSection(status: boolean, section: "ContentSection" | "CommentSection"): void {
 
 				this[section] = status;
 
-				this.playSound(this.Sounds.get(status ? 'Switch::On' : 'Switch::Off'));
+				this.playSound(this.Sounds.get(status ? "Switch::On" : "Switch::Off"));
 
 			},
 

@@ -33,36 +33,36 @@
 
 <script lang="ts">
 
-	import Vue from 'vue';
+	import Vue from "vue";
 
 // VUEX
-	import { mapState } from 'vuex';
+	import { mapState } from "vuex";
 
 // VUEX MODULE TYPE MAP
-	import type { Application, Container, Sprite, Texture, Graphics, TilingSprite, LoaderResource } from 'pixi.js';
-	import type { AnimeInstance } from 'animejs';
-	import type { VuexMap } from '~/contracts/VuexMap';
+	import type { Application, Container, Sprite, Texture, Graphics, TilingSprite, LoaderResource } from "pixi.js";
+	import type { AnimeInstance } from "animejs";
+	import type { VuexMap } from "~/contracts/VuexMap";
 
 // UTILS
-	import { utils } from '~/utils';
+	import { utils } from "~/utils";
 
 // FILES
 	const ASSETS = [
 		{
-			name: 'Background',
-			path: require('~/assets/images/Background.png?format=webp&size=1440').src
+			name: "Background",
+			path: require("~/assets/images/Background.png?format=webp&size=1440").src
 		},
 		{
-			name: 'Pattern',
-			path: require('~/assets/images/Pattern.png?format=webp&size=480').src
+			name: "Pattern",
+			path: require("~/assets/images/Pattern.png?format=webp&size=480").src
 		},
 		{
-			name: 'Stripes',
-			path: require('~/assets/images/Stripes.png?format=webp').src,
+			name: "Stripes",
+			path: require("~/assets/images/Stripes.png?format=webp").src,
 		}
 	] as const;
 
-	type FileNames = utils.types.propertyListValue<typeof ASSETS, 'name'>;
+	type FileNames = utils.types.propertyListValue<typeof ASSETS, "name">;
 
 	const HEAD_LINKS = ASSETS.map((asset) => { 
 
@@ -72,14 +72,14 @@
 						i.src = asset.path;
 		}
 
-		return { rel: 'prefetch', href: asset.path, as: 'fetch', crossorigin: true, };
+		return { rel: "prefetch", href: asset.path, as: "fetch", crossorigin: true, };
 
 	});
 
 // MODULE
 	export default Vue.extend({
 		middleware() {
-			console.time('middleware');
+			console.time("middleware");
 		},
 		data() {
 			return {
@@ -107,8 +107,8 @@
 				isDesktop: state => (state as VuexMap).isDesktop,
 			}),
 
-			ViewOrientation(): 'width' | 'height' {
-				return this.$isMobile ? 'height' : 'width';
+			ViewOrientation(): "width" | "height" {
+				return this.$isMobile ? "height" : "width";
 			}
 
 		},
@@ -126,14 +126,14 @@
 		},
 		created() {
 
-			console.time('Canvas execution');
+			console.time("Canvas execution");
 
 			this.Loader();
 			this.ApplicationInit();
 
 		},
 		mounted() {
-			window.addEventListener('mousemove', this.ChangeMouseCoordinate, { capture: true });
+			window.addEventListener("mousemove", this.ChangeMouseCoordinate, { capture: true });
 		},
 		destroyed() {
 
@@ -147,14 +147,14 @@
 				}, 1000);
 			}
 
-			window.removeEventListener('mousemove', this.ChangeMouseCoordinate, { capture: true });
+			window.removeEventListener("mousemove", this.ChangeMouseCoordinate, { capture: true });
 
 		},
 		methods: {
 
 			ApplicationInit() {
 
-				console.time('Initialise');
+				console.time("Initialise");
 
 				this.container 	= new this.$PIXI.Container();
 				this.app 				= new this.$PIXI.Application({
@@ -167,13 +167,13 @@
 				this.app.stage.addChild(this.container);
 				this.app.ticker.autoStart = false;
 
-				console.timeEnd('Initialise');
+				console.timeEnd("Initialise");
 
 			},
 
 			Loader() {
 
-				console.time('Loader');
+				console.time("Loader");
 
 				const Loader = new this.$PIXI.Loader();
 
@@ -181,13 +181,13 @@
 
 				Loader.load(({ resources }) => { this.resources = resources as Record<FileNames, LoaderResource>; });
 
-				console.timeEnd('Loader');
+				console.timeEnd("Loader");
 
 			},
 
 			Composite(resources: Record<string, LoaderResource>) {
 
-				console.time('Composite');
+				console.time("Composite");
 
 				const Layers = [
 					this.backgroundLayer(resources.Background),
@@ -203,17 +203,17 @@
 
 				}).then(() => {
 
-					console.timeEnd('Composite');
-					console.timeEnd('Canvas execution');
+					console.timeEnd("Composite");
+					console.timeEnd("Canvas execution");
 
 					this.$AnimeJS({
 						targets: this.$refs.canvas,
 						opacity: [0, 1],
 						duration: 5000,
-						easing: 'easeInOutQuad',
+						easing: "easeInOutQuad",
 						begin: () => {
 
-							this.$emit('ready');
+							this.$emit("ready");
 
 							requestAnimationFrame(this.app.ticker.start);
 
@@ -238,7 +238,7 @@
 			ShiftBackground() {
 
 				// Берём класс спрайта
-				const Background = this.SpriteMap.get('Background');
+				const Background = this.SpriteMap.get("Background");
 
 				// Координаты сентра сцены
 				const CenterScene = {
@@ -291,8 +291,8 @@
 						angle: [0, 25],
 						scale: [1, 1.5],
 						alpha: [1, .25],
-						direction: 'alternate',
-						easing: 'easeInOutQuad',
+						direction: "alternate",
+						easing: "easeInOutQuad",
 						duration: this.GlobalAnimationDuration,
 						loop: true,
 						update() {
@@ -312,8 +312,8 @@
 						autoplay: false,
 						targets: g,
 						alpha: [0, 1],
-						direction: 'alternate',
-						easing: 'linear',
+						direction: "alternate",
+						easing: "linear",
 						duration: 4e4,
 						loop: true,
 						update: () => { g.alpha *= (0.5 + (0.25 * Math.random())); }
@@ -336,7 +336,7 @@
 
 						resolve(Background);
 
-						this.SpriteMap.set('Background', Background);
+						this.SpriteMap.set("Background", Background);
 
 						this.backgroundAnimation(Background);
 
@@ -409,7 +409,7 @@
 
 						resolve(Stripes);
 
-						this.SpriteMap.set('Stripes', Stripes);
+						this.SpriteMap.set("Stripes", Stripes);
 
 					});
 
@@ -426,7 +426,7 @@
 
 						resolve(Lines);
 
-						this.SpriteMap.set('Lines', Lines);
+						this.SpriteMap.set("Lines", Lines);
 
 					});
 

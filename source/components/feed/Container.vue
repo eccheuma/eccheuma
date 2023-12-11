@@ -6,8 +6,8 @@
       <span>Посты из Вконтакте</span>
     </header>
 
-    <template v-if="Posts.length">
-      <post v-for="(post, i) in Posts" :key="i" :post="post" />
+    <template v-if="posts.length">
+      <post v-for="(post, i) in posts" :key="i" :post="post" />
     </template>
 
   </div>
@@ -92,46 +92,24 @@
 
 <script lang="ts">
 
-  import Vue from 'vue';
+  import Vue, { PropOptions } from "vue";
 
   // API
-  import { feed, vk } from '~/api/feed';
-  import { database } from '~/api/database';
+  import { feed } from "~/api/feed";
 
   // COMPONENTS
-  import Post from './Post.vue';
-import { utils } from '~/utils';
+  import Post from "./Post.vue";
 
   // MODULE
   export default Vue.extend({
+    props: {
+      posts: {
+        required: true,
+        type: Array,
+      } as PropOptions<Array<feed.IFeed>>
+    },
     components: {
       Post
-    },  
-    data() {
-      return {
-        Posts: Array<feed.IFeed>(),
-      };
-    },
-    async mounted() {
-      if ( process.browser ) {
-
-        const response = await database.get<Array<any>>('vk::feed');
-
-        this.Posts = response.map(post => {
-          return {
-            thumb : vk.pickThumbnail(post.attachments),
-            body  : String(post.text),
-            date  : utils.getLocalTime(Number(post.date) * 1000),
-            link  : `https://vk.com/club${ Math.abs(post.from_id || 0) }?w=wall${ post.from_id }_${ post.id }`,
-            social: {
-              likes    : Number(post.likes.count || Number()),
-              comments : Number(post.comments.count || Number()),
-              reposts  : Number(post.reposts.count || Number()),
-            }
-          };
-        });
-
-      }
     },
   });
 

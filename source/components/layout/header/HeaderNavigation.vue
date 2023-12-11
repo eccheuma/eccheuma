@@ -308,34 +308,34 @@ $TransitionDuration: 250ms;
 
 <script lang="ts">
 
-	import Vue from 'vue';
+	import Vue from "vue";
 
 	// VUEX
-	import { mapState } from 'vuex';
+	import { mapState } from "vuex";
 
 	// VUEX MAP
-	import { VuexMap } from '~/contracts/VuexMap';
+	import { VuexMap } from "~/contracts/VuexMap";
 
 	// LANG
-	import { getLocale } from '~/lang';
+	import { getLocale } from "~/lang";
 
 	// UTILS
-	import { utils } from '~/utils';
+	import { utils } from "~/utils";
 
 	// MIXINS
-	import EmitSound from '~/assets/mixins/EmitSound';
+	import EmitSound from "~/assets/mixins/EmitSound";
 
 	// COMPONENTS
-	import Popover 		from '~/components/common/Popover.vue';
-	import Icon				from '~/components/common/Icon.vue';
+	import Popover 		from "~/components/common/Popover.vue";
+	import Icon				from "~/components/common/Icon.vue";
 
-	import { PageDescription as HomePage } from '~/pages/home.vue';
-	import { PageDescription as GalleryPage } from '~/pages/gallery.vue';
-	import { PageDescription as PortfolioPage } from '~/pages/portfolio.vue';
-	import { PageDescription as ServicePage } from '~/pages/service.vue';
+	import { PageDescription as HomePage } from "~/pages/home.vue";
+	import { PageDescription as GalleryPage } from "~/pages/gallery.vue";
+	import { PageDescription as PortfolioPage } from "~/pages/portfolio.vue";
+	import { PageDescription as ServicePage } from "~/pages/service.vue";
 
 	// TYPES
-	import { navigation } from '~/contracts/Navigation';
+	import { navigation } from "~/contracts/Navigation";
 
 	type HeaderMenuItem = {
 		disabled		: boolean,
@@ -349,37 +349,37 @@ $TransitionDuration: 250ms;
 	const HeaderRoutes: ReadonlyArray<HeaderMenuItem> = [
 		{
 			disabled: false,
-			route: '/home', 
+			route: "/home", 
 			name: navigation.routeSections.home, 
-			icon: 'Home',
+			icon: "Home",
 			description: HomePage.description
 		},
 		{
 			disabled: false,
-			route: '/gallery', 
+			route: "/gallery", 
 			name: navigation.routeSections.gallery, 
-			icon: 'Gallery',
+			icon: "Gallery",
 			description: GalleryPage.description
 		},
 		{
 			disabled: false,
-			route: '/recommendation', 
+			route: "/recommendation", 
 			name: navigation.routeSections.recommendation, 
-			icon: 'Fire',
+			icon: "Fire",
 			description: PortfolioPage.description
 		},
 		{
 			disabled: false,
-			route: '/portfolio', 
+			route: "/portfolio", 
 			name: navigation.routeSections.portfolio, 
-			icon: 'Portfolio',
-			description: 'Принятые работы. С указанием сроков, цены, комментариев, и отзывов на выполненую работу.'
+			icon: "Portfolio",
+			description: "Принятые работы. С указанием сроков, цены, комментариев, и отзывов на выполненую работу."
 		},
 		{
 			disabled: false,
-			route: '/service', 
+			route: "/service", 
 			name: navigation.routeSections.service, 
-			icon: 'Service',
+			icon: "Service",
 			description: ServicePage.description
 		},
 	];
@@ -390,8 +390,8 @@ $TransitionDuration: 250ms;
 			Popover,
 			Icon,
 			// ASYNC COMPONENTS
-			SearchBar: 	() => import('~/components/common/SearchBar.vue'),
-			CursorFX: 	() => import('~/components/common/CursorFX.vue'),
+			SearchBar: 	() => import("~/components/common/SearchBar.vue"),
+			CursorFX: 	() => import("~/components/common/CursorFX.vue"),
 
 		},
 		mixins: [ EmitSound ],
@@ -432,18 +432,18 @@ $TransitionDuration: 250ms;
 
 			if ( process.browser ) {
 				this.setSounds([
-					{ file: 'On', name: 'Element::Action', 	settings: { rate: 0.50 } },
-					{ file: 'On', name: 'Element::Hover', 	settings: { rate: 0.25 } }
+					{ file: "On", name: "Element::Action", 	settings: { rate: 0.50 } },
+					{ file: "On", name: "Element::Hover", 	settings: { rate: 0.25 } }
 				]);
 			}
 
 			this.$router.beforeEach((to, from, next) => {
 
-				if ( 'type' in to.params ) return next();
+				if ( "type" in to.params ) return next();
 
 				window.scrollTo({
 					top: window.innerHeight / 2,
-					behavior: 'smooth',
+					behavior: "smooth",
 				});
 
 				return next();

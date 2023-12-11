@@ -1,4 +1,4 @@
-import crusoris from '@eccheuma/crusoris';
+import crusoris from "@eccheuma/crusoris/lib/crusoris.es";
 
 export default () => {
 	if ( process.browser && window.ontouchstart === undefined ) {

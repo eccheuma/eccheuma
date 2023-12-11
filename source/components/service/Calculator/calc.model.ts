@@ -1,107 +1,111 @@
 // API
-import { database } from '~/api/database';
+import { database } from "~/api/database";
 
 // Types
-import type { Hash, Second } from '~/contracts/Nominals';
-import type { Categories, Purchase, Additions } from '~/contracts/Services';
-import type { ICost, IPurchaseForm, IQuantity, FetchResult } from './calc.types';
+import type { Hash, Second } from "~/contracts/Nominals";
+import type { Categories, Purchase, Additions } from "~/contracts/Services";
+import type { ICost, IPurchaseForm, IQuantity, FetchResult } from "./calc.types";
 
 // Utils
-import { currencies } from '~/utils/currency';
-import { cache } from '~/utils/cache';
+import { currencies } from "~/utils/currency";
+import { cache } from "~/utils/cache";
 
 // Errors
-import { ERRORS } from './calc.errors';
-import { utils } from '~/utils';
+import { ERRORS } from "./calc.errors";
+import { utils } from "~/utils";
 
 // Cache
 namespace CacheContainer {
 
   export interface IService {
-    category	: Categories,
-    services	: Array<Purchase.struct>,
+    category: Categories,
+    services: Array<Purchase.struct>,
   }
 
   export interface IAddition {
-    serviceID	: Purchase.struct['ID'],
-    additions	: Array<Additions.struct>,
+    serviceID: Purchase.struct[ "ID" ],
+    additions: Array<Additions.struct>,
   }
 
 }
 
 namespace defaults {
 
-    export const form: IPurchaseForm = {
-      category	: 'Application',
-      service		: Object(),
-      additions	: Array(),
-    };
-    
-    export const quantity: IQuantity = {
-      service		: 1,
-      additions	: Object(),
-    };
-    
-    export const cost: ICost = {
-      raw		: Number(),
-      view	: Number(),
-    };
+  export const form: IPurchaseForm = {
+    category: "Application",
+    service: Object(),
+    additions: Array(),
+  };
+
+  export const quantity: IQuantity = {
+    service: 1,
+    additions: Object(),
+  };
+
+  export const cost: ICost = {
+    raw: Number(),
+    view: Number(),
+  };
 
 }
 
 interface IForm {
-  form      : IPurchaseForm,
-  quantity  : IQuantity,
-  cost      : ICost
+  form: IPurchaseForm,
+  quantity: IQuantity,
+  cost: ICost;
 }
 
 export class CalculatorModel {
 
   // Currency
-	private static RUB = currencies.Fabric(currencies.Country.ru, 60);
-	private static USD = currencies.Fabric(currencies.Country.en, 1);
+  private static RUB = currencies.Fabric(currencies.Country.ru, 60);
+  private static USD = currencies.Fabric(currencies.Country.en, 1);
 
-	// TODO #20 : Подключить API ЦБРФ для сбора индексов для конечных поборов. @Scarlatum
-  public static GLOBAL_TAX_INDEX = 1.20; 
-  public static SERVICE_TYPES: Array<Categories> = ['Application', 'Graphic', 'FrontEnd'];
+  // TODO #20 : Подключить API ЦБРФ для сбора индексов для конечных поборов. @Scarlatum
+  public static GLOBAL_TAX_INDEX = 1.20;
+  public static SERVICE_TYPES: Array<Categories> = [ "Application", "Graphic", "FrontEnd" ];
   public static BASIC_COF = 25; // h\c
 
   public static toHours(secs: Second) {
-		return parseFloat(Number((secs / 60) / 60).toPrecision(3));
-	}
+    return parseFloat(Number((secs / 60) / 60).toPrecision(3));
+  }
 
-	public static hourPayment(val: number) {
+  public static hourPayment(val: number) {
 
-		const Rouble = new CalculatorModel.RUB(val);
+    const Rouble = new CalculatorModel.RUB(val);
 
-		return Math.floor(((Rouble.convert(CalculatorModel.USD) / CalculatorModel.BASIC_COF) * 60) * 60) as Second;
+    return Math.floor(((Rouble.convert(CalculatorModel.USD) / CalculatorModel.BASIC_COF) * 60) * 60) as Second;
 
-	}
+  }
 
   private static async fetchSerives(category: Categories) {
-    
-    const response: Array<IPurchaseForm['service']> = await database.get(`Service/${ category }`);
+
+    console.debug(category);
+
+    const response: Array<IPurchaseForm[ "service" ]> = await database.get(`service/${category.toLowerCase()}`);
 
     console.debug(response);
 
-    cache.set<CacheContainer.IService>(`services::${ category }`, {
+    cache.set<CacheContainer.IService>(`services::${category}`, {
       category,
       services: response,
     });
 
-    return response.length
+    return response?.length
       ? response
       : Error(ERRORS.SERVICES_EMPTY);
 
   }
 
   private static async fetchAdditions(type: string, ID: Hash) {
-    
-    const response: Array<Additions.struct> = await database.get(`Service/Addictions/${ type }`);
+
+    console.debug(type);
+
+    const response: Array<Additions.struct> = await database.get(`service/addictions/${type.toLowerCase()}`);
 
     console.debug(response, type, ID);
 
-    cache.set<CacheContainer.IAddition>(`additions::${ type }`, {
+    cache.set<CacheContainer.IAddition>(`additions::${type}`, {
       serviceID: ID,
       additions: response
     });
@@ -111,13 +115,13 @@ export class CalculatorModel {
       : Error(ERRORS.ADDITIONS_EMPTY);
 
   }
-  
+
 
   public static async setServices(category: Categories) {
 
-    const cachedData = cache.get<CacheContainer.IService>(`services::${ category }`);
- 
-    if ( cachedData instanceof Error ) {
+    const cachedData = cache.get<CacheContainer.IService>(`services::${category}`);
+
+    if (cachedData instanceof Error) {
 
       const responseResult = await CalculatorModel.fetchSerives(category);
 
@@ -131,7 +135,7 @@ export class CalculatorModel {
 
       // console.debug('setServices::cachedData:', cachedData);
 
-      return cachedData.data.services;	
+      return cachedData.data.services;
 
     }
 
@@ -139,9 +143,9 @@ export class CalculatorModel {
 
   public static async setAdditions({ type, ID }: Purchase.struct) {
 
-    const cachedData = cache.get<CacheContainer.IAddition>(`additions::${ type }`);
+    const cachedData = cache.get<CacheContainer.IAddition>(`additions::${type}`);
 
-    if ( cachedData instanceof Error ) {
+    if (cachedData instanceof Error) {
 
       const responseResult = await CalculatorModel.fetchAdditions(type, ID);
 
@@ -158,10 +162,10 @@ export class CalculatorModel {
       return ID === cachedData.data.serviceID
         ? cachedData.data.additions
         : await CalculatorModel.fetchAdditions(type, ID).then(data => {
-            return data instanceof Error
-              ? []
-              : data;
-          });
+          return data instanceof Error
+            ? []
+            : data;
+        });
 
     }
 

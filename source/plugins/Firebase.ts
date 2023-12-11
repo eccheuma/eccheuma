@@ -1,8 +1,8 @@
-import { initializeApp, FirebaseApp, getApps, deleteApp, FirebaseOptions } from 'firebase/app';
-import { getDatabase, Database } from 'firebase/database';
+import { initializeApp, FirebaseApp, getApps, deleteApp, FirebaseOptions } from "firebase/app";
+import { getDatabase, Database } from "firebase/database";
 
-import { getAuth, Auth, } from 'firebase/auth';
-import { Context } from '@nuxt/types';
+import { getAuth, Auth, } from "firebase/auth";
+import { Context } from "@nuxt/types";
 
 declare global {
 	var firebaseClient: FirebaseApp;
@@ -30,12 +30,12 @@ export default async (context?: Context) => {
 		projectId: DOMEN,
 		databaseURL: `https://${DOMEN}.firebaseio.com`,
 		storageBucket: `${DOMEN}.appspot.com`,
-		messagingSenderId: '975378208350',
-		measurementId: 'G-W49JBK6546',
+		messagingSenderId: "975378208350",
+		measurementId: "G-W49JBK6546",
 		
 	};
 
-	globalThis.firebaseClient = initializeApp(CONFIG, 'DEFAULT');
+	globalThis.firebaseClient = initializeApp(CONFIG, "DEFAULT");
 	globalThis.firebaseDB = getDatabase(globalThis.firebaseClient);
 	globalThis.firebaseAuth = getAuth(globalThis.firebaseClient);
 

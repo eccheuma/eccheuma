@@ -34,33 +34,33 @@
 
 <script lang="ts">
 
-	import Vue from 'vue';
+	import Vue from "vue";
 
 	// VUEX
-	import { mapActions, mapMutations, mapState } from 'vuex';
+	import { mapActions, mapMutations, mapState } from "vuex";
 
 	// API
-	import { database } from '~/api/database';
+	import { database } from "~/api/database";
 
 	// VUEX MODULE TYPE MAP
-	import type { VuexMap } from '~/contracts/VuexMap';
+	import type { VuexMap } from "~/contracts/VuexMap";
 
 	// MIXINS
-	import PageTransitionProperty 	from '~/assets/mixins/PageTransitionProperty';
+	import PageTransitionProperty 	from "~/assets/mixins/PageTransitionProperty";
 
 	// TYPES
-	import { PayloadQuery, Reference } from '~/store/PageContent';
-	import { navigation } from '~/contracts/Navigation';
+	import { PayloadQuery, Reference } from "~/store/PageContent";
+	import { navigation } from "~/contracts/Navigation";
 
 	// COMPONENTS
-	import PromoBanner 					from '~/components/promo/PromoBanner.vue';
-	import Post 								from '~/components/post/view.vue';
+	import PromoBanner 					from "~/components/promo/PromoBanner.vue";
+	import Post 								from "~/components/post/view.vue";
 
 	// LOAD POLITIC
-	import { Ranges } from '~/config/LoadPolitic';
+	import { Ranges } from "~/config/LoadPolitic";
 	
 	// UTILS
-	import { Meta } from '~/utils/meta';
+	import { Meta } from "~/utils/meta";
 
 	// MODULE
 	export default Vue.extend({
@@ -73,17 +73,17 @@
 
 			const Page 			= Number( params.page.slice(-1) ); // page_1 => 1
 			const LOADRANGE = Number( query.range || Ranges.posts );
-			const QUANTITY 	= await database.getLength('posts');
+			const QUANTITY 	= await database.getLength("posts");
 
 			const OutRange = QUANTITY + LOADRANGE < Page * LOADRANGE; 
 
-			if ( OutRange ) { redirect('/error'); }
+			if ( OutRange ) { redirect("/error"); }
 
     },
 		//
 		transition: {
-			name: 'opacity-enterDelayed-transition',
-			mode: 'out-in',
+			name: "opacity-enterDelayed-transition",
+			mode: "out-in",
 		},
 		//
 		asyncData({ params, query }) {
@@ -110,7 +110,7 @@
 			await this.getDatabaseData();
 
 		},
-		head(): any {
+		head() {
 
 			return {
 				title: Meta.conctructTitle(this.Lang, { 
@@ -131,7 +131,7 @@
 			this.ChangePage(this.Page);
 
 			// Fix fetching on diferrent routes for some reasons...
-			if ( process.browser && this.$router.currentRoute.name === 'home' ) {
+			if ( process.browser && this.$router.currentRoute.name === "home" ) {
 				this.getDatabaseData();
 			}
 
@@ -139,16 +139,16 @@
 		methods: {
 
 			...mapActions({
-				GetContent: 'PageContent/GetContent',
+				GetContent: "PageContent/GetContent",
 			}),
 
 			...mapMutations({
-				ChangePage: 'PageSelector/ChangePage'
+				ChangePage: "PageSelector/ChangePage"
 			}),
 
 			async getDatabaseData() {
 
-				const QUANTITY = await database.getLength('posts');
+				const QUANTITY = await database.getLength("posts");
 
 				const REM: number = QUANTITY - ( this.LOAD_RANGE * this.Page );
 

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-empty-interface */
-import type { RootState } from '~/store';
+import type { RootState } from "~/store";
 
 // FOLDERS
 	export interface User {}

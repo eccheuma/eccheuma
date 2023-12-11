@@ -90,22 +90,22 @@
 
 <script lang="ts">
 
-import Vue from 'vue';
+import Vue from "vue";
 
 // API
-import { database } from '~/api/database';
+import { database } from "~/api/database";
 
 // MIXINS
-import EmitSound from '~/assets/mixins/EmitSound';
+import EmitSound from "~/assets/mixins/EmitSound";
 
 // Namespaces
-import { Portfolio } from '~/contracts/Portfolio';
-import { Workcase  } from '~/contracts/WorkCase';
+import { Portfolio } from "~/contracts/Portfolio";
+import { Workcase  } from "~/contracts/WorkCase";
 
 export default Vue.extend({
   components: {
-    EccheumaImage   : () => import('~/components/image/Image.vue'),
-    EccheumaSwiper  : () => import('~/components/common/Carousel.vue')
+    EccheumaImage   : () => import("~/components/image/Image.vue"),
+    EccheumaSwiper  : () => import("~/components/common/Carousel.vue")
   },
   mixins: [ EmitSound ],
   data() {

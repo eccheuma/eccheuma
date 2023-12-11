@@ -153,29 +153,29 @@
 
   // TODO | first prior component
 
-  import Vue from 'vue';
+  import Vue from "vue";
 
   // VUEX
-	import { mapState, mapMutations } from 'vuex';
-	import type { VuexMap } from '~/contracts/VuexMap';
+	import { mapState, mapMutations } from "vuex";
+	import type { VuexMap } from "~/contracts/VuexMap";
 
   // MIXINS
-	import EmitSound from '~/assets/mixins/EmitSound';
+	import EmitSound from "~/assets/mixins/EmitSound";
 
   // TYPES & INTERFACES & ENUMS
-	import { form, auth } from '~/api/auth';
-	import { validate } from '~/utils/validate';
+	import { form, auth } from "~/api/auth";
+	import { validate } from "~/utils/validate";
 
   // LANG
-  import { getLocale } from '~/lang';
+  import { getLocale } from "~/lang";
 
   // COMPONENTS
-  import EccheumaButton from '~/components/buttons/CommonButton.vue';
-  import CaptionCard 	  from '~/components/common/Caption.vue';
+  import EccheumaButton from "~/components/buttons/CommonButton.vue";
+  import CaptionCard 	  from "~/components/common/Caption.vue";
 
   // PREDEFINED
   const PREDEFINED_FORM: form.registration = {
-    email			: String() as form.registration['email'],
+    email			: String() as form.registration["email"],
     password	: String(),
     name			: String(),
   };
@@ -239,8 +239,8 @@
       if ( process.browser ) {
 
 				this.setSounds([
-					{ file: 'Off', name: 'Input::Increment', settings: { rate: 0.65, volume: .25 } },
-					{ file: 'Off', name: 'Input::Decrement', settings: { rate: 0.50, volume: .25 } },
+					{ file: "Off", name: "Input::Increment", settings: { rate: 0.65, volume: .25 } },
+					{ file: "Off", name: "Input::Decrement", settings: { rate: 0.50, volume: .25 } },
 				]);
 
 			}
@@ -249,19 +249,19 @@
     methods: {
 
       ...mapMutations({
-        setAuthError: 'Auth/Session/setAuthError'
+        setAuthError: "Auth/Session/setAuthError"
       }),
 
       sendForm() {
 
         this.prev.form = Object.create({ ...this.form });
 
-        this.$emit('form-send', this.form);
+        this.$emit("form-send", this.form);
 
       },
 
       inputSound(input: Event) {
-        this.playSound(this.Sounds.get((input as InputEvent).data ? 'Input::Increment' : 'Input::Decrement'));
+        this.playSound(this.Sounds.get((input as InputEvent).data ? "Input::Increment" : "Input::Decrement"));
 			},
 
       getLocale(error: auth.error) {

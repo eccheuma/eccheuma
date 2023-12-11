@@ -130,13 +130,13 @@
 
 <script lang="ts">
 
-  import Vue, { PropOptions } from 'vue';
+  import Vue, { PropOptions } from "vue";
 
 // COMPONENTS
-  import Icon from '~/components/common/Icon.vue';
+  import Icon from "~/components/common/Icon.vue";
 
 // TYPES
-  type CAPTION_STATUS = 'error' | 'warning' | 'notice' | 'missunderstood' | 'default'
+  type CAPTION_STATUS = "error" | "warning" | "notice" | "missunderstood" | "default"
 
 // MODULE
   export default Vue.extend({
@@ -146,7 +146,7 @@
     props: {
       status: {
         type: String,
-        default: 'default'
+        default: "default"
       } as PropOptions<CAPTION_STATUS>,
     },
   });

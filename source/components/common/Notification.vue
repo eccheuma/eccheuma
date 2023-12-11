@@ -188,19 +188,19 @@
 
 <script lang="ts">
 
-	import Vue from 'vue';
+	import Vue from "vue";
 
-	import { mapMutations, mapState } from 'vuex';
+	import { mapMutations, mapState } from "vuex";
 
-	import type { VuexMap } from '~/contracts/VuexMap';
+	import type { VuexMap } from "~/contracts/VuexMap";
 
 	// COMPONENTS 
-	import Icon 									from '~/components/common/Icon.vue';
+	import Icon 									from "~/components/common/Icon.vue";
 
 	export default Vue.extend({
 		components: {
 			Icon,
-			CommonButton: () => import('~/components/buttons/CommonButton.vue')
+			CommonButton: () => import("~/components/buttons/CommonButton.vue")
 		},
 		computed: {
 			...mapState({
@@ -209,7 +209,7 @@
 		},
 		methods: {
 			...mapMutations({
-				changeStatus: 'Notification/changeStatus' 
+				changeStatus: "Notification/changeStatus" 
 			})
 		}
 	});

@@ -35,13 +35,14 @@
 
 <script lang="ts">
 
-	import Vue from 'vue';
+	import Vue from "vue";
 
 	// VUEX
-	import { mapState, mapMutations } from 'vuex';
+	import { mapState, mapMutations } from "vuex";
 
 	// COMPONENTS
-	import EccheumaButton		from '~/components/buttons/CommonButton.vue';
+	import EccheumaButton		from "~/components/buttons/CommonButton.vue";
+	import { VuexMap } 			from "~/contracts/VuexMap";
 
 	// MODULE
 	export default Vue.extend({
@@ -55,9 +56,9 @@
 		},
 		computed: {
 			...mapState({
-				isDesktop: 		( state: any ): boolean => state.isDesktop,
-				LoginStatus: 	( state: any ): boolean => state.Auth.Session.LoginStatus,
-				NewMessages: 	( state: any ): number 	=> state.User.Messages.NewMessages,
+				isDesktop: 		state => (state as VuexMap).isDesktop,
+				LoginStatus: 	state => (state as VuexMap).Auth.Session.LoginStatus,
+				NewMessages: 	state => (state as VuexMap).User.Messages.Data,
 			})
 		},
 		mounted() {
@@ -69,12 +70,12 @@
 		},
 		methods: {
 			...mapMutations({
-				toggleProfileArea: 'User/State/toggleProfileArea',
-				toggleRegisterModal: 'Auth/Register/toggleRegisterModal',
+				toggleProfileArea: "User/State/toggleProfileArea",
+				toggleRegisterModal: "Auth/Register/toggleRegisterModal",
 			}),
 
 			GoToHoll() {
-				this.$router.push({ path: '/' });
+				this.$router.push({ path: "/" });
 			},
 			AnimateLogo() {
 
@@ -82,12 +83,12 @@
 					targets: this.$refs.HDLP,
 					strokeDashoffset: [this.$AnimeJS.setDashoffset, 0],
 					fill: [
-						{ value: '#333', duration: 2500, delay: 1500, endDelay: 5000, }
+						{ value: "#333", duration: 2500, delay: 1500, endDelay: 5000, }
 					],
 					delay: 1000,
 					duration: 3000,
-					easing: 'easeInOutSine',
-					direction: 'alternate',
+					easing: "easeInOutSine",
+					direction: "alternate",
 					loop: true
 				});
 

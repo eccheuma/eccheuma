@@ -1,6 +1,6 @@
-import type { MetaPropertyProperty, MetaPropertyName } from 'vue-meta';
-import { utils } from '~/utils';
-import { languages } from '~/lang';
+import type { MetaPropertyProperty, MetaPropertyName } from "vue-meta";
+import { utils } from "~/utils";
+import { languages } from "~/lang";
 
 
 
@@ -8,7 +8,7 @@ export type OpengraphMetaObject = MetaPropertyProperty | MetaPropertyName
 
 export namespace opengraph {
 
-  const PREFIX = 'og';
+  const PREFIX = "og";
 
   export type struct = {
     title       : string
@@ -33,7 +33,7 @@ export namespace opengraph {
     static readonly predefined: 
       predefinedMeta = {
         locale  : languages.Russian,
-        website : globalThis.location?.origin || './'
+        website : globalThis.location?.origin || "./"
       };
 
     constructor(meta: struct, opt?: Partial<predefinedMeta>) {

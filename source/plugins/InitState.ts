@@ -1,14 +1,14 @@
-import Vue from 'vue';
+import Vue from "vue";
 
 // TYPES
-import type { Context } from '@nuxt/types';
+import type { Context } from "@nuxt/types";
 
 // UTILS
-import { gpu } from '~/utils/gpu';
+import { gpu } from "~/utils/gpu";
 
 export default ({ env, isDev }: Context) => {
 
-	Vue.config.ignoredElements = ['eccheuma-layout'];
+	Vue.config.ignoredElements = ["eccheuma-layout"];
 
 	Vue.prototype.application = {
 		hash: env.buildHash,
@@ -24,13 +24,13 @@ export default ({ env, isDev }: Context) => {
   
 		console.log(`%cEccheuma | Build: ${ env.buildHash } | Слышу ZOV ебать AZOV`,
 
-		'background-color: #141418; padding: 4px 20px; border-radius: 4px; border: 1px solid #323236');
+		"background-color: #141418; padding: 4px 20px; border-radius: 4px; border: 1px solid #323236");
     
 	}
 
 };
 
-declare module 'vue/types/vue' {
+declare module "vue/types/vue" {
 	interface Vue {
 		application: {
 			hash: string,

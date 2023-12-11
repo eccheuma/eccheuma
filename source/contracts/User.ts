@@ -1,8 +1,8 @@
 // ENUMS
-import { Purchase } from '~/contracts/Services';
+import { Purchase } from "~/contracts/Services";
 
 // TYPES
-import { Message } from '~/contracts/Message';
+import { Message } from "~/contracts/Message";
 
 export namespace User {
 

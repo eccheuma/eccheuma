@@ -317,24 +317,24 @@
  
 <script lang="ts">
 
-	import Vue from 'vue';
+	import Vue from "vue";
 
 // VUEX
-	import { mapState, mapMutations, mapActions } from 'vuex';
+	import { mapState, mapMutations, mapActions } from "vuex";
 
 // UTILS
-	import { utils } from '~/utils';
+	import { utils } from "~/utils";
 
 // COMPONENTS
-	import Popover 	from '~/components/common/Popover.vue';
-	import Icon			from '~/components/common/Icon.vue';
+	import Popover 	from "~/components/common/Popover.vue";
+	import Icon			from "~/components/common/Icon.vue";
 
 // TYPES
-	import type { VuexMap } from '~/contracts/VuexMap';
-	import type { APP_THEME } 	from '~/contracts/App';
+	import type { VuexMap } from "~/contracts/VuexMap";
+	import type { APP_THEME } 	from "~/contracts/App";
 
 // MIXINS
-	import EmitSound from '~/assets/mixins/EmitSound';
+	import EmitSound from "~/assets/mixins/EmitSound";
 
 // MODULE
 	export default Vue.extend({
@@ -363,15 +363,15 @@
 			if ( process.browser ) {
 
 				this.setSounds([
-					{ file: 'On', 	name: 'Switch::On', 			settings: { rate: 1.00 } },
-					{ file: 'Off', 	name: 'Switch::Off', 			settings: { rate: 1.00 } },
-					{ file: 'On', 	name: 'Element::Action', 	settings: { rate: 0.50 } },
-					{ file: 'On', 	name: 'Element::Hover', 	settings: { rate: 0.25 } }
+					{ file: "On", 	name: "Switch::On", 			settings: { rate: 1.00 } },
+					{ file: "Off", 	name: "Switch::Off", 			settings: { rate: 1.00 } },
+					{ file: "On", 	name: "Element::Action", 	settings: { rate: 0.50 } },
+					{ file: "On", 	name: "Element::Hover", 	settings: { rate: 0.25 } }
 				]);
 
-				window.matchMedia('(prefers-color-scheme: light)').matches 
-					? this.setUI('light' as APP_THEME)
-					: this.setUI('dark' as APP_THEME);
+				window.matchMedia("(prefers-color-scheme: light)").matches 
+					? this.setUI("light" as APP_THEME)
+					: this.setUI("dark" as APP_THEME);
 
 			}
 
@@ -379,21 +379,21 @@
 		methods: {
 
 			...mapActions({
-				globalMute: 'Sound/globalMute',
+				globalMute: "Sound/globalMute",
 			}),
 
 			...mapMutations({
-				setUI: 'App/setUI',
+				setUI: "App/setUI",
 			}),
 
 			scrollPage(to: 0 | 9999) {
 
-				this.playSound(this.Sounds.get('Element::Action'));
+				this.playSound(this.Sounds.get("Element::Action"));
 
 				window.scrollTo({
 					top: to,
 					left: 0,
-					behavior: 'smooth'
+					behavior: "smooth"
 				});
 
 			},
@@ -403,11 +403,11 @@
 				this.setUI(theme); 
 
 				switch (theme) {
-					case 'light': 
-						this.playSound(this.Sounds.get('Switch::On')); 
+					case "light": 
+						this.playSound(this.Sounds.get("Switch::On")); 
 						break;
-					case 'dark': 
-						this.playSound(this.Sounds.get('Switch::Off')); 
+					case "dark": 
+						this.playSound(this.Sounds.get("Switch::Off")); 
 						break;
 				}
 

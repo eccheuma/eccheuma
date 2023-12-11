@@ -1,13 +1,13 @@
 // Utils
-import { getLocale, languages } from '~/lang';
-import { Result, utils } from '~/utils';
+import { getLocale, languages } from "~/lang";
+import { Result, utils } from "~/utils";
 
 // API
-import { database } from '~/api/database';
-import { storage } from '~/api/storage';
+import { database } from "~/api/database";
+import { storage } from "~/api/storage";
 
 // Animations
-import { IconStatus } from '~/animations/profile.animations';
+import { IconStatus } from "~/animations/profile.animations";
 
 export interface ViewContext {
   Warning	: string,
@@ -16,9 +16,9 @@ export interface ViewContext {
 }
 
 const ERROR_MESSAGES = {
-  UNREACHABLE : 'a',
-  EMPTY       : 'a',
-  UPDATE      : 'a',
+  UNREACHABLE : "a",
+  EMPTY       : "a",
+  UPDATE      : "a",
 } as const;
 
 const SIZE_LIMIT = 15e5;
@@ -37,7 +37,7 @@ export class Model {
   public async getDefaultIcons(): Promise<Array<string>> {
 
     const resultPaths = Array<string>();
-    const responseResult = await storage.list('UserIconse');
+    const responseResult = await storage.list("UserIconse");
 
     if ( responseResult instanceof Error ) {
 
@@ -49,7 +49,7 @@ export class Model {
 
     if ( responseResult.files.length ) {
 
-      this.IOError('Простите, но судя по всему изображения по умолчанию нет, или они на пересмотре');
+      this.IOError("Простите, но судя по всему изображения по умолчанию нет, или они на пересмотре");
 
       return resultPaths;
       
@@ -60,12 +60,12 @@ export class Model {
     }));
 
     result.forEach(x => {
-      if ( typeof x === 'string' ) resultPaths.push(x);
+      if ( typeof x === "string" ) resultPaths.push(x);
     });
 
     queueMicrotask(() => {
       if ( result.some(x => x instanceof Error) ) {
-        this.IOError('Some default images can\'t be dowloaded');
+        this.IOError("Some default images can't be dowloaded");
       }
     });
 
@@ -97,7 +97,7 @@ export class Model {
     this.view.Loading = IconStatus.start;
     this.view.NewIcon = String();
 
-    const extensionResult = utils.extension.define(name, ['png', 'jpg', 'webp']);
+    const extensionResult = utils.extension.define(name, ["png", "jpg", "webp"]);
 
     if ( extensionResult instanceof Error ) return extensionResult;
 

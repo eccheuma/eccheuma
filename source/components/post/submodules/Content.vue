@@ -181,22 +181,22 @@
 
 <script lang="ts">
 
-	import Vue, { PropOptions } from 'vue';
+	import Vue, { PropOptions } from "vue";
 
 	// PRISM
-	import Prism from 'prismjs';
+	import Prism from "prismjs";
 
 	// TYPES
-	import type { Post } from '~/contracts/Post';
+	import type { Post } from "~/contracts/Post";
 
 	// COMPONENTS
-	import Icon from '~/components/common/Icon.vue';
+	import Icon from "~/components/common/Icon.vue";
 
 	// MODULE
   export default Vue.extend({
 		components: {
 			Icon,
-			EccheumaImage: () => import('~/components/image/Image.vue'),
+			EccheumaImage: () => import("~/components/image/Image.vue"),
 		},
 		props: {
 			source: {
@@ -226,7 +226,7 @@
 				const WRAP_NODE = this.$refs.content as Element;
 
 				WRAP_NODE.childNodes.forEach((node, i) => {
-					node.addEventListener('dblclick', () => this.PickBlock(i));
+					node.addEventListener("dblclick", () => this.PickBlock(i));
 				});
 
 			}
@@ -234,11 +234,11 @@
 		},
 		methods: {
 			PickBlock(index = 0) {
-				this.$emit('curent-block', index );
+				this.$emit("curent-block", index );
 			},
 
 			prismHighlight(code: string, lang: string) {
-				return Prism.highlight(code, Prism.languages.javascript, 'javascript');
+				return Prism.highlight(code, Prism.languages.javascript, "javascript");
 			},
 
 		}

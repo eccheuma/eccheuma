@@ -75,19 +75,19 @@
 
 <script lang="ts">
 
-	import Vue from 'vue';
+	import Vue from "vue";
 
 	// VUEX
-	import { mapState } from 'vuex';
+	import { mapState } from "vuex";
 
 	// API
-	import { database } from '~/api/database';
+	import { database } from "~/api/database";
 
 	// VUEX MODULE TYPE MAP
-	import type { VuexMap } from '~/contracts/VuexMap';
+	import type { VuexMap } from "~/contracts/VuexMap";
 
 	// COMPONENTS
-	import EccheumaButton from '~/components/buttons/CommonButton.vue';
+	import EccheumaButton from "~/components/buttons/CommonButton.vue";
 
 	// MODULE
 	export default Vue.extend({
@@ -97,7 +97,7 @@
 		data() {
 
 			return {
-				NewName: '',
+				NewName: "",
 			};
 		
 },

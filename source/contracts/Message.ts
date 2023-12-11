@@ -1,11 +1,11 @@
-import { User } from '~/contracts/User';
+import { User } from "~/contracts/User";
 
 export namespace Message {
 
   export type struct = {
     uid: string
-    userID: User.struct['uid'] 
-    from: User.struct['name']
+    userID: User.struct["uid"] 
+    from: User.struct["name"]
     date: number
     message: string
     readed: boolean

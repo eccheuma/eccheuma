@@ -6,15 +6,15 @@ import {
   update as firebaseUpdate,
   orderByKey,
   orderByChild,
-} from 'firebase/database';
+} from "firebase/database";
 
-import { onValue, onChildChanged } from 'firebase/database';
-import { query, startAt, endAt, limitToFirst, orderByValue } from 'firebase/database';
+import { onValue, onChildChanged } from "firebase/database";
+import { query, startAt, endAt, limitToFirst, orderByValue } from "firebase/database";
 
-import type { DatabaseReference, Query, QueryConstraint } from 'firebase/database';
+import type { DatabaseReference, Query, QueryConstraint } from "firebase/database";
 
 // Utils
-import { Result } from '~/utils';
+import { Result } from "~/utils";
 
 export interface QueryParams<O extends database.order = database.order.NONE> extends database.QueryOrder<O> {
   mode: database.mode
@@ -51,8 +51,8 @@ function defineQuery<O extends database.order>(ref: DatabaseReference, params?: 
 
 }
 
-function applyRoot(this: any, path: string, root = 'v1') {
-  return path.substring(0,2) === '~/' 
+function applyRoot(path: string, root = "v1") {
+  return path.substring(0,2) === "~/" 
     ? path.substring(2) 
     : `${ root }/${ path }`;
 }
@@ -73,7 +73,7 @@ export namespace database {
   }
 
   export const enum error {
-    denied = 'PERMISSION_DENIED',
+    denied = "PERMISSION_DENIED",
   }
 
   export const enum mode {
@@ -108,7 +108,7 @@ export namespace database {
   export function listen<
     C extends object,
     O extends order = order.NONE,
-  >(path: string, callback: (value: C) => any, params?: Partial<QueryParams<O>>) {
+  >(path: string, callback: (value: C) => void, params?: Partial<QueryParams<O>>) {
 
     const REF = ref(globalThis.firebaseDB, applyRoot(path));
 

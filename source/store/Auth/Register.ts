@@ -1,21 +1,21 @@
-import type { MutationTree, ActionTree } from 'vuex';
+import type { MutationTree, ActionTree } from "vuex";
 
 // API
-	import { database } from '~/api/database';
-	import { storage } from '~/api/storage';
-	import { auth, form } from '~/api/auth';
+	import { database } from "~/api/database";
+	import { storage } from "~/api/storage";
+	import { auth, form } from "~/api/auth";
 
 // UTILS
-	import { utils } from '~/utils';
-	import { currencies, wallet } from '~/utils/currency';
+	import { utils } from "~/utils";
+	import { currencies, wallet } from "~/utils/currency";
 
 // TYPES
-	import type { VuexMap } from '~/contracts/VuexMap';
-	import type { Message } from '~/contracts/Message';
+	import type { VuexMap } from "~/contracts/VuexMap";
+	import type { Message } from "~/contracts/Message";
 
 // NAMESPACES
-	import { User } 		from '~/contracts/User';
-	import { Purchase } from '~/contracts/Services';
+	import { User } 		from "~/contracts/User";
+	import { Purchase } from "~/contracts/Services";
 
 // STATE
 	export const state = () => ({
@@ -26,7 +26,7 @@ import type { MutationTree, ActionTree } from 'vuex';
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/contracts/VuexMap' {
+	declare module "~/contracts/VuexMap" {
 		interface Auth {
 			Register: CurentState
 		}
@@ -48,7 +48,7 @@ import type { MutationTree, ActionTree } from 'vuex';
 
 			if ( responseResult instanceof Error ) {
 
-				vuex.commit('Auth/Session/setAuthError', responseResult, { root: true });
+				vuex.commit("Auth/Session/setAuthError", responseResult, { root: true });
 
 				return false;
 
@@ -56,8 +56,8 @@ import type { MutationTree, ActionTree } from 'vuex';
 
 			const { uid, email } = responseResult;
 
-			vuex.commit('Auth/Session/setUserState', { uid, email }, { root: true });
-			vuex.commit('Auth/Session/setAuthError', null, { root: true });
+			vuex.commit("Auth/Session/setUserState", { uid, email }, { root: true });
+			vuex.commit("Auth/Session/setAuthError", null, { root: true });
 
 			await database.set<User.struct>(`users/${ uid }/state`, {
 				uid					:	uid,
@@ -65,7 +65,7 @@ import type { MutationTree, ActionTree } from 'vuex';
 				name				:	form.name,
 				status			:	User.status.User,
 				purchase		: Purchase.status.None,
-				image				:	String(storage.reference('UserIcons/default.webp'))
+				image				:	String(storage.reference("UserIcons/default.webp"))
 			});
 
 			await database.set(`User/${ uid }/info`, {
@@ -81,9 +81,9 @@ import type { MutationTree, ActionTree } from 'vuex';
 			const Message: Message.struct = {
 				uid			: utils.randHashGenerator(),
 				date		: Date.now(),
-				from		: 'Eccheuma',
-				userID	: 'SUPPORT',
-				message	: 'Благодарю вас за регистрацию!',
+				from		: "Eccheuma",
+				userID	: "SUPPORT",
+				message	: "Благодарю вас за регистрацию!",
 				readed	: false,
 			};
 

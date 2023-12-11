@@ -207,21 +207,21 @@
 
 <script lang="ts">
 
-	import Vue from 'vue';
+	import Vue from "vue";
 
 // VUEX
-	import { mapState, mapMutations, mapActions } from 'vuex';
-	import type { VuexMap } from '~/contracts/VuexMap';
+	import { mapState, mapMutations, mapActions } from "vuex";
+	import type { VuexMap } from "~/contracts/VuexMap";
 
 // TYPES & INTERFACES & ENUMS
-	import { auth, form } from '~/api/auth';
+	import { auth, form } from "~/api/auth";
 
 // COMPONENTS
-	import Loader 			from '~/components/common/Loader.vue';
-	import CommonButton from '~/components/buttons/CommonButton.vue';
+	import Loader 			from "~/components/common/Loader.vue";
+	import CommonButton from "~/components/buttons/CommonButton.vue";
 
 	// SUBMODULES
-	import RegistrationForm from './submodules/Form.vue';
+	import RegistrationForm from "./submodules/Form.vue";
 
 // MODULE
 	export default Vue.extend({
@@ -240,8 +240,8 @@
 
 				LoaderStage: -1,
 				UserRegistration: [
-					{ LoadPoint: 0, 	Message: 'Отправка данных' },
-					{ LoadPoint: 100, Message: 'Переходим к следующему шагу' },
+					{ LoadPoint: 0, 	Message: "Отправка данных" },
+					{ LoadPoint: 100, Message: "Переходим к следующему шагу" },
 				]
 
 			};
@@ -267,12 +267,12 @@
 		methods: {
 
 			...mapMutations({
-				toggleRegisterModal: 'Auth/Register/toggleRegisterModal',
-				ChangeLoadMessage: 'Loader/Loader_ChangeLoadMessage',
+				toggleRegisterModal: "Auth/Register/toggleRegisterModal",
+				ChangeLoadMessage: "Loader/Loader_ChangeLoadMessage",
 			}),
 
 			...mapActions({
-				Register: 'Auth/Register/Register',
+				Register: "Auth/Register/Register",
 			}),
 
 			defineError(e: auth.error): string {
@@ -281,7 +281,7 @@
 			
 			async sendForm(form: form.registration) {
 
-				this.ChangeLoadMessage('Отправка формы');
+				this.ChangeLoadMessage("Отправка формы");
 
 				this.LoaderStage += 1;
 

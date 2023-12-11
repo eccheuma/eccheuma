@@ -1,8 +1,8 @@
 // VUEX
-	import type { MutationTree } from 'vuex';
+	import type { MutationTree } from "vuex";
 
 // TYPES
-	import { User } from '~/contracts/User';
+	import { User } from "~/contracts/User";
 
 // STATE
 	export const state = () => ({
@@ -17,7 +17,7 @@
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/contracts/VuexMap' {
+	declare module "~/contracts/VuexMap" {
 		interface User {
 			State: CurentState
 		}

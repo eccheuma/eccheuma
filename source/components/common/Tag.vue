@@ -65,15 +65,15 @@
 
 <script lang="ts">
 
-  import Vue from 'vue';
+  import Vue from "vue";
 
   // COMPONENTS
-  import HardwareAccelerationDecorator from '~/components/functional/HardwareAcceleration.vue';
+  import HardwareAccelerationDecorator from "~/components/functional/HardwareAcceleration.vue";
 
   const enum Mode {
-    DARK  = 'dark',
-    LIGHT = 'light',
-    GREY  = 'grey',
+    DARK  = "dark",
+    LIGHT = "light",
+    GREY  = "grey",
   }
 
   // MODULE

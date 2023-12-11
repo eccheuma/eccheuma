@@ -158,8 +158,8 @@ const config: NuxtConfig = {
 
     analyze     : inDevelopment === false,
     parallel    : inDevelopment,
-    cache       : true,
-    hardSource 	: true,
+    // cache       : true,
+    // hardSource 	: true,
     postcss     : false,
     publicPath  : 'resources',
 
@@ -198,7 +198,7 @@ const config: NuxtConfig = {
     transpile: [/pixi.js/],
     babel: {
       presets: [
-        '@babel/preset-env'
+	"@babel/preset-env",
       ],
       plugins: [
         '@babel/plugin-transform-nullish-coalescing-operator',

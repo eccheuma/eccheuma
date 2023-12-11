@@ -1,25 +1,25 @@
-	import { ActionTree, MutationTree } from 'vuex';
+	import { ActionTree, MutationTree } from "vuex";
 
 // API
-	import { database } from '~/api/database';
+	import { database } from "~/api/database";
 
 // UTILS
-	import { utils } from '~/utils';
+	import { utils } from "~/utils";
 
 // INTERFACES AND TYPES 
 
-	import { VuexMap } from '~/contracts/VuexMap';
+	import { VuexMap } from "~/contracts/VuexMap";
 
-	import { Purchase } 	from '~/contracts/Services';
-	import { Message } from '~/contracts/Message';
+	import { Purchase } 	from "~/contracts/Services";
+	import { Message } from "~/contracts/Message";
 
-	import type { Notification } from '~/contracts/Notification';
+	import type { Notification } from "~/contracts/Notification";
 	
 // STATE
 	export const state = () => ({
 
-		Orders				: new Array<Purchase.order<'Graphic'>>(0),
-		ActiveOrders	: new Array<Purchase.order<'Graphic'>>(0),
+		Orders				: new Array<Purchase.order>(0),
+		ActiveOrders	: new Array<Purchase.order>(0),
 
 		RequestQuantity: 0,
 		
@@ -29,7 +29,7 @@
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/contracts/VuexMap' {
+	declare module "~/contracts/VuexMap" {
 		interface User {
 			WorkRequest: CurentState
 		}
@@ -40,7 +40,7 @@
 		setQuantity(state, prop) {
 			state.RequestQuantity = prop;
 		},
-		setOrders(state, prop: Array<Purchase.order<any>>) {
+		setOrders(state, prop: Array<Purchase.order>) {
 
 			if ( prop.length ) {
 				state.Orders = prop;
@@ -56,14 +56,14 @@
 	export const actions: ActionTree<CurentState, VuexMap> = {
 
 		// TODO: #16 Перенести сообщения в отдельный модуль, чтобы не болтались по среди метода. @Scarlatum
-		async sendWorkRequest(vuex, order: Purchase.order<any>) {
+		async sendWorkRequest(vuex, order: Purchase.order) {
 
 			const { uid: ID } = vuex.rootState.User.State.State;
 
 			const Message: Message.struct = {
 				uid: utils.randHashGenerator(),
-				userID: 'SUPPORT',
-				from: 'Eccheuma Informer',
+				userID: "SUPPORT",
+				from: "Eccheuma Informer",
 				message: 
 				`Благодарю за оформление заявки на заказ: "${ order.name }".
 				
@@ -76,21 +76,21 @@
 			};
 
 			const newNotification: Notification.struct = {
-				message			: 'Ваша заявка пошла на рассмотрение',
-				description	: 'Информацию о стаусе заказа, вы можете посмотреть в личном кабинете, что находиться вверху приложения.',
+				message			: "Ваша заявка пошла на рассмотрение",
+				description	: "Информацию о стаусе заказа, вы можете посмотреть в личном кабинете, что находиться вверху приложения.",
 			};
 
 			try {
 
-				await vuex.dispatch('setRequestQuantity');
+				await vuex.dispatch("setRequestQuantity");
 
 				const requestHash = utils.randHashGenerator();
 
 				await database.set(`users/${ ID }/work_requests/WorkID-${ requestHash }`, order);
 				await database.set(`users/${ ID }/messages/Hash_${ requestHash }`, Message);
 
-				vuex.commit('Notification/Notification_Status', true, { root: true });
-				vuex.commit('Notification/createNotification', newNotification, { root: true });
+				vuex.commit("Notification/Notification_Status", true, { root: true });
+				vuex.commit("Notification/createNotification", newNotification, { root: true });
 
 			} catch (e) {
 				console.log(e); 
@@ -102,7 +102,7 @@
 
 			const { uid: ID } = vuex.rootState.User.State.State;
 
-			vuex.commit('setOrders', await database.get<Array<Purchase.order<any>>>(`users/${ ID }/work_requests`));
+			vuex.commit("setOrders", await database.get<Array<Purchase.order>>(`users/${ ID }/work_requests`));
 
 
 		},
@@ -111,14 +111,14 @@
 
 			const { uid: ID } = vuex.rootState.User.State.State;
 
-			vuex.commit('setQuantity', await database.getLength(`users/${ ID }/work_requests`)); 
+			vuex.commit("setQuantity", await database.getLength(`users/${ ID }/work_requests`)); 
 		},
 
 		setActiveRequest(vuex) {
 
 			if ( !vuex.state.Orders.length ) return;
 
-			vuex.commit('setActiveOrder', vuex.state.Orders.filter((order) => {
+			vuex.commit("setActiveOrder", vuex.state.Orders.filter((order) => {
 				return order.status === Purchase.status.Process;
 			}));
 

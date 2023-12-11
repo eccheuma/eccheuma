@@ -20,7 +20,7 @@
 
 <script lang="ts">
 
-import Vue, { PropOptions } from 'vue';
+import Vue, { PropOptions } from "vue";
 
 export default Vue.extend({
 	props: {
@@ -69,15 +69,15 @@ export default Vue.extend({
 			const { borderWidth } = window.getComputedStyle(this.$slots.default![0].elm as HTMLElement);
 
 			requestAnimationFrame(() => {
-				el.style.setProperty('transition-duration', `${ this.options.duration }ms`);
-				el.style.setProperty('height', `${ val ? (el.firstChild as HTMLElement).offsetHeight + parseInt(borderWidth) : 0 }px`);
+				el.style.setProperty("transition-duration", `${ this.options.duration }ms`);
+				el.style.setProperty("height", `${ val ? (el.firstChild as HTMLElement).offsetHeight + parseInt(borderWidth) : 0 }px`);
 			});
 
 			setTimeout(() => {
 
-				el.style.removeProperty('transition-duration'); 
+				el.style.removeProperty("transition-duration"); 
 
-				if (this.options.emit) this.$emit('collapsed', this.active);
+				if (this.options.emit) this.$emit("collapsed", this.active);
 
 			}, this.options.duration);
 

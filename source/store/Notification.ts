@@ -1,7 +1,7 @@
-import { ActionTree, MutationTree } from 'vuex';
+import { ActionTree, MutationTree } from "vuex";
 
 // TYPES AND INTERFACES
-	import type { Notification } from '~/contracts/Notification';
+	import type { Notification } from "~/contracts/Notification";
 
 // STATE
 	export const state = () => ({
@@ -16,7 +16,7 @@ import { ActionTree, MutationTree } from 'vuex';
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/contracts/VuexMap' {
+	declare module "~/contracts/VuexMap" {
 		interface VuexMap {
 			Notification: CurentState
 		}
@@ -36,8 +36,8 @@ import { ActionTree, MutationTree } from 'vuex';
 	export const actions: ActionTree<CurentState, CurentState>  = {
 		createNotification(vuex, payload: Notification.struct) {
 
-			vuex.commit('setContent', payload);
-			vuex.commit('changeStatus', true);
+			vuex.commit("setContent", payload);
+			vuex.commit("changeStatus", true);
 
 		}
 	};

@@ -317,46 +317,46 @@
 
 <script lang="ts">
 
-	import Vue from 'vue';
+	import Vue from "vue";
 
 	// API
-		import { mapState } from 'vuex';
-		import { database } from '~/api/database';
+		import { mapState } from "vuex";
+		import { database } from "~/api/database";
 
 	// VUEX
 	
 	// UTILS
-		import { utils, LocaleDate } from '~/utils';
+		import { utils, LocaleDate } from "~/utils";
 
 	// COMPONENTS
-		import Parallax from '~/components/common/Parallax.vue';
-		import Carousel from '~/components/common/Carousel.vue';
-		import Icon 		from '~/components/common/Icon.vue';
-		import Tag 			from '~/components/common/Tag.vue';
+		import Parallax from "~/components/common/Parallax.vue";
+		import Carousel from "~/components/common/Carousel.vue";
+		import Icon 		from "~/components/common/Icon.vue";
+		import Tag 			from "~/components/common/Tag.vue";
 	
 	// MIXINS
-		import EmitSound from '~/assets/mixins/EmitSound';
+		import EmitSound from "~/assets/mixins/EmitSound";
 
 	// LOAD POLITIC
-		import { Ranges } from '~/config/LoadPolitic';
+		import { Ranges } from "~/config/LoadPolitic";
 
 	// Helpers
-		import { DEFAULT_IMAGE_STRUCT, getImageURL } from '~/components/image/image.helpers';
+		import { DEFAULT_IMAGE_STRUCT, getImageURL } from "~/components/image/image.helpers";
 
 	// TYPES
-		import type { Image } from '~/contracts/Image';
-		import type { Post } 	from '~/contracts/Post';
+		import type { Image } from "~/contracts/Image";
+		import type { Post } 	from "~/contracts/Post";
 
-		import type { VuexMap } from '~/contracts/VuexMap';
+		import type { VuexMap } from "~/contracts/VuexMap";
 
 		type HeaderSlide = {
-			content: Pick<Post.struct, 'title' | 'description' | 'ID' | 'tags'>
+			content: Pick<Post.struct, "title" | "description" | "ID" | "tags">
 			date: LocaleDate
 			formatsStruct: Image.formatsStruct
 		}
 
 	// VARS
-		const PLACEHOLDER_L = `${ require('~/assets/images/ImagePlaceholder.png?resize&size=600')}`;
+		const PLACEHOLDER_L = `${ require("~/assets/images/ImagePlaceholder.png?resize&size=600")}`;
 	
 	// MODULE
 	export default Vue.extend({
@@ -365,7 +365,7 @@
 			Carousel,
 			Icon,
 			Tag,
-			Profile: () => import('~/components/profile/Profile.vue'),
+			Profile: () => import("~/components/profile/Profile.vue"),
 		},
 		mixins: [ EmitSound ],
 		data() {
@@ -406,7 +406,7 @@
 
 			async GetPosts() {
 
-				const Posts: utils.types.asIterableObject<Post.struct> = await database.get('posts', { limit: Ranges.posts });
+				const Posts: utils.types.asIterableObject<Post.struct> = await database.get("posts", { limit: Ranges.posts });
 
 				const formatedSlides: Array<Promise<HeaderSlide>> = Object
 					.values(Posts)
@@ -443,15 +443,15 @@
 				function scrollToTarget() {
 					window.scrollTo({
 						top: targetPosition,
-						behavior: 'smooth'
+						behavior: "smooth"
 					});
 				}
 
 				switch (this.$route.name) {
 
-					case 'home': scrollToTarget(); break;
+					case "home": scrollToTarget(); break;
 				
-					default: this.$router.push({ path: 'home' }).then(scrollToTarget); break;
+					default: this.$router.push({ path: "home" }).then(scrollToTarget); break;
 
 				}
 

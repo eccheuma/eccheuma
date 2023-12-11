@@ -5,11 +5,16 @@ export namespace debug {
   }
 
   export function derive(enable: boolean, debug: boolean = false): MethodDecorator {
-    return function (target, key, desc: TypedPropertyDescriptor<any>) {
+
+    return function <T>(
+      target  : object, 
+      key     : string | symbol,
+      desc    : TypedPropertyDescriptor<T>
+    ) {
 
       if (!enable) return;
 
-      const fn = (target as Record<string, Function>)[String(key)];
+      const fn = target[String(key)];
 
       desc.value = function (this: typeof target, ...args: Array<unknown>) {
 
@@ -24,7 +29,7 @@ export namespace debug {
 
         return result;
 
-      } as typeof desc['value'];
+      } as typeof desc["value"];
 
     };
   }

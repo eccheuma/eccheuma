@@ -1,4 +1,4 @@
-import { MutationTree } from 'vuex';
+import { MutationTree } from "vuex";
 
 // STATE
 	export const state = () => ({
@@ -12,7 +12,7 @@ import { MutationTree } from 'vuex';
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/contracts/VuexMap' {
+	declare module "~/contracts/VuexMap" {
 		interface VuexMap {
 			PageSelector: CurentState
 		}

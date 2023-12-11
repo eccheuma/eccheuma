@@ -1,5 +1,5 @@
-import { Hash } from '~/contracts/Nominals';
-import { Result, utils } from '.';
+import { Hash } from "~/contracts/Nominals";
+import { Result, utils } from ".";
 
 interface ICacheContainer<D> {
   hash: Hash,
@@ -28,7 +28,7 @@ export namespace cache {
 
     const container = window.localStorage.getItem(KEY);
 
-    if ( container?.charAt(0) !== '{' ) return Error('Cache miss');
+    if ( container?.charAt(0) !== "{" ) return Error("Cache miss");
 
     return JSON.parse(container);
 

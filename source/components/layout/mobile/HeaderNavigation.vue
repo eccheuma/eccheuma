@@ -49,10 +49,10 @@
 
 <script lang="ts">
 
-  import Vue from 'vue';
+  import Vue from "vue";
 
 // COMPONETS
-	import Icon									from '~/components/common/Icon.vue';
+	import Icon									from "~/components/common/Icon.vue";
 
 // MODULE
   export default Vue.extend({

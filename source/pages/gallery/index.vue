@@ -4,10 +4,10 @@
 
 <script lang="ts">
 
-	import Vue from 'vue';
+	import Vue from "vue";
 
 	// PAGE
-	import Page from './_page.vue';
+	import Page from "./_page.vue";
 
 	// MODULE
 	export default Vue.extend({

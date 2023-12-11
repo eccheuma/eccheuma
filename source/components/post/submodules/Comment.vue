@@ -254,29 +254,29 @@
 
 <script lang="ts">
 
-	import Vue, { PropOptions } from 'vue';
+	import Vue, { PropOptions } from "vue";
 
 	// VUEX
-	import { mapState } from 'vuex';
+	import { mapState } from "vuex";
 
 	// API
-	import { database } from '~/api/database';
+	import { database } from "~/api/database";
 
 	// UTILS
-	import { utils } from '~/utils';
+	import { utils } from "~/utils";
 
 	// MIXINS
-	import EmitSound from '~/assets/mixins/EmitSound';
+	import EmitSound from "~/assets/mixins/EmitSound";
 
 	// NAMESPACES
-	import { Post } from '~/contracts/Post';
-	import { User }	from '~/contracts/User';	
+	import { Post } from "~/contracts/Post";
+	import { User }	from "~/contracts/User";	
 
 	// TYPES
-	import type { VuexMap } from '~/contracts/VuexMap';
+	import type { VuexMap } from "~/contracts/VuexMap";
 
 	// COMPONENTS
-	import CommonButton from '~/components/buttons/CommonButton.vue';
+	import CommonButton from "~/components/buttons/CommonButton.vue";
 
 	// MODULE
 	export default Vue.extend({
@@ -288,11 +288,11 @@
 			postID: {
 				type: Number,
 				required: true,
-			} as PropOptions<Post.struct['ID']>,
+			} as PropOptions<Post.struct["ID"]>,
 			userID: {
 				type: String,
 				required: true,
-			} as PropOptions<User.struct['uid']>,
+			} as PropOptions<User.struct["uid"]>,
 			commentID: {
 				type: String,
 				required: true,
@@ -312,7 +312,7 @@
 				author: new Object() as User.struct,
 				comment: new Object() as Post.comment,
 
-				answerTo: Array<User.struct['name']>(),
+				answerTo: Array<User.struct["name"]>(),
 
 				roles: User.status,
 
@@ -349,7 +349,7 @@
 			if ( process.browser ) {
 
 				this.setSounds([
-					{ file: 'Tap', name: 'Element::Action', settings: { rate: 0.50 } }
+					{ file: "Tap", name: "Element::Action", settings: { rate: 0.50 } }
 				]);
 			
 }
@@ -370,19 +370,19 @@
 
 				await database.remove(`posts/post::${ this.postID }/comments/Hash-${ this.commentID }`);
 
-				this.playSound(this.Sounds.get('Element::Action'));
+				this.playSound(this.Sounds.get("Element::Action"));
 
 			},
 
 			pickUser() {
 
-				this.$emit('picked-user', this.author);
+				this.$emit("picked-user", this.author);
 
 			},
 
-			async taggedUser(): Promise<Array<User.struct['name']>> {
+			async taggedUser(): Promise<Array<User.struct["name"]>> {
 
-				const users = await database.get<utils.types.asIterableObject<User.state>>('users');
+				const users = await database.get<utils.types.asIterableObject<User.state>>("users");
 
 				if ( !this.comment.mention ) return [];
 

@@ -1,14 +1,14 @@
-import type { ActionTree, MutationTree } from 'vuex';
-import { database } from '~/api/database';
-import { VuexMap } from '~/contracts/VuexMap';
-import { currencies, wallet } from '~/utils/currency';
+import type { ActionTree, MutationTree } from "vuex";
+import { database } from "~/api/database";
+import { VuexMap } from "~/contracts/VuexMap";
+import { currencies, wallet } from "~/utils/currency";
 
 interface WalletState {
   Current: wallet.contract,
   Country: currencies.Country, 
 }
 
-declare module '~/contracts/VuexMap' {
+declare module "~/contracts/VuexMap" {
   interface User {
     Wallet: WalletState
   }
@@ -44,7 +44,7 @@ export const actions: ActionTree<WalletState, VuexMap> = {
 
     const getResult: Partial<wallet.contract> = await database.get(`wallets/${ uid }`);
 
-    vuex.commit('setWallet', { ...vuex.state.Current, ...getResult });
+    vuex.commit("setWallet", { ...vuex.state.Current, ...getResult });
 
   }
 

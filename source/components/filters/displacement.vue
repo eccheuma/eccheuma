@@ -65,17 +65,17 @@
 
 <script lang="ts">
 
-  import Vue from 'vue';
+  import Vue from "vue";
 
   // TYPES
-  import type { AnimeAnimParams } from 'animejs';
+  import type { AnimeAnimParams } from "animejs";
 
   // MODULE
   export default Vue.extend({
     props: {
       name: {
         type: String,
-        default: '000000'
+        default: "000000"
       },
       status: {
         type: Boolean,
@@ -102,9 +102,9 @@
             targets: this.$data,
             updatedScale: [0, to],
             duration: 500,
-            direction: this.status ? 'normal' : 'reverse',
+            direction: this.status ? "normal" : "reverse",
             round: 1,
-            easing: 'easeInOutCubic',
+            easing: "easeInOutCubic",
             complete: () => resolve(),
 
             ...params

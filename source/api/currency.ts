@@ -1,7 +1,7 @@
-import { fetchExternal } from '~/api/cloudFunctions';
+import { fetchExternal } from "~/api/cloudFunctions";
 
-import { currencies } from '~/utils/currency';
-import { Result } from '~/utils';
+import { currencies } from "~/utils/currency";
+import { Result } from "~/utils";
 // import fetchOpaque from 'fetch-jsonp';
 
 declare global {
@@ -13,14 +13,14 @@ export let currencyData: currency.CurrencyResponse;
 export namespace currency {
 
 	export const enum errors {
-		REJECT = 'Transaction reject',
-		REST_UNDEFINED = 'Rest API  URL is undefined',
-		UNREACHABLE = 'Rest enter point is unreacheable'
+		REJECT = "Transaction reject",
+		REST_UNDEFINED = "Rest API  URL is undefined",
+		UNREACHABLE = "Rest enter point is unreacheable"
 	}
 
 	const enum CurrencyPairs {
-		RUB = 'USDRUB',
-		CNY = 'CNYRUB'
+		RUB = "USDRUB",
+		CNY = "CNYRUB"
 	}
 
 	const REST_URL = String(process.env.CURRENCY_API_URL);
@@ -37,20 +37,20 @@ export namespace currency {
 			CNYRUB: String(0),
 			USDRUB: String(0),
 		},
-		message: 'CurrencyResponseMock',
+		message: "CurrencyResponseMock",
 		status: 0,
 	};
 
 	async function getData(): Promise<CurrencyResponse | Error> {
 
-		if (globalThis.location?.origin.match('localhost')?.length) return CurrencyResponseMock;
+		if (globalThis.location?.origin.match("localhost")?.length) return CurrencyResponseMock;
 
 		const anyResponse = await Promise.any([
-			fetch(API_POINT, { mode: 'cors' }),
+			fetch(API_POINT, { mode: "cors" }),
 			fetchExternal(API_POINT),
 		]);
 
-		return anyResponse && anyResponse.type !== 'error'
+		return anyResponse && anyResponse.type !== "error"
 			? await anyResponse.json() as CurrencyResponse
 			: CurrencyResponseMock;
 

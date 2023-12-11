@@ -1,6 +1,6 @@
 
-import { Image } from './Image';
-import { Portfolio } from './Portfolio';
+import { Image } from "./Image";
+import { Portfolio } from "./Portfolio";
 
 export namespace Workcase {
 

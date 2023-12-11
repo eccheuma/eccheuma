@@ -14,9 +14,9 @@
 		</section>
 
 		<section class="home-wrapper home-feed">
-			<client-only>
-				<vk-posts-container />
-			</client-only>
+			<!-- <client-only> -->
+				<vk-posts-container :posts="vk_feed"/>
+			<!-- </client-only> -->
 		</section>
 
 	</div>
@@ -63,35 +63,36 @@
 
 <script lang="ts">
 
-	import Vue from 'vue';
+	import Vue from "vue";
 
 // VUEX
-	import { mapMutations, mapState } from 'vuex';
+	import { mapMutations, mapState } from "vuex";
 
 // API
-	import { database } from '~/api/database';
+	import { database } from "~/api/database";
+	import { feed } from "~/api/feed";
 
 // MIXINS
-	import TransitionProperty from '~/assets/mixins/PageTransitionProperty';
+	import TransitionProperty from "~/assets/mixins/PageTransitionProperty";
 
 // COMPONENTS
-	import Pagination from '~/components/common/Pagination.vue';
-	import Auth from '~/components/auth/Auth.vue';
+	import Pagination from "~/components/common/Pagination.vue";
+	import Auth from "~/components/auth/Auth.vue";
 
 // TYPES
-	import type { VuexMap } from '~/contracts/VuexMap';
+	import type { VuexMap } from "~/contracts/VuexMap";
 
 // LOAD POLITIC
-	import { Ranges } from '~/config/LoadPolitic';
+	import { Ranges } from "~/config/LoadPolitic";
 
 // PAGE DESCRIPTION
-	import { opengraph } from '~/utils/opengraph';
+	import { opengraph } from "~/utils/opengraph";
 
 	export const PageDescription: opengraph.struct = {
-		title				: 'Eccheuma | Главная',
-		description	: 'Главная страница. Тут собраны статьи на завязанные на профильную тему.',
-		url					: '',
-		image				: require('~/assets/images/NotificationBadge.png?resize&size=600').src,
+		title				: "Eccheuma | Главная",
+		description	: "Главная страница. Тут собраны статьи на завязанные на профильную тему.",
+		url					: "",
+		image				: require("~/assets/images/NotificationBadge.png?resize&size=600").src,
 	};
 
 // MODULE
@@ -99,20 +100,26 @@
 		components: {
 			Pagination,
 			Auth,
-			VkPostsContainer: () => import('~/components/feed/Container.vue'),
+			VkPostsContainer: () => import("~/components/feed/Container.vue"),
 		},
 		mixins: [ TransitionProperty ],
-		layout: 'Application', 
+		layout: "Application", 
 		scrollToTop: false, 
+		async asyncData() {
+
+			const vk_feed = await feed.get();
+
+			return { vk_feed };
+
+		},
 		data() {
 			return {
 
-				Title: 'Главная',
+				Title: "Главная",
 				PageQuantity: 0,
 
 			};
 		},
-
 		head() {
 			return {
 				title: PageDescription.title,
@@ -121,17 +128,15 @@
 				],
 			};
 		},
-
 		async mounted() {
 
-			const PostsQuantity: number = await database.getLength('posts');
+			const PostsQuantity: number = await database.getLength("posts");
 
 			this.PageQuantity = Math.ceil( PostsQuantity / Ranges.posts );
 
 			this.ChangePageQuantity(this.PageQuantity);
 
 		},
-
 		computed: {
 			...mapState({
 				LoginStatus: state => (state as VuexMap).Auth.Session.LoginStatus
@@ -139,7 +144,7 @@
 		},
 		methods: {
 			...mapMutations({
-				ChangePageQuantity: 'PageSelector/ChangePageQuantity'
+				ChangePageQuantity: "PageSelector/ChangePageQuantity"
 			})
 		},
 	});

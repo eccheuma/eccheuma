@@ -1,4 +1,4 @@
-import { animations, AnimationProperties } from './index';
+import { animations, AnimationProperties } from "./index";
 
 export const enum IconStatus {
   start,
@@ -19,13 +19,13 @@ export function iconAnimation(status: IconStatus) {
 
   switch (status) {
     case IconStatus.start:
-      return animationBase({ direction: 'reverse' });
+      return animationBase({ direction: "reverse" });
     case IconStatus.pending:
-      return animationBase({ direction: 'alternate', iterations: Infinity });
+      return animationBase({ direction: "alternate", iterations: Infinity });
     case IconStatus.error:
-      return animationBase({ direction: 'normal', duration: 100, iterations: 3 });
+      return animationBase({ direction: "normal", duration: 100, iterations: 3 });
     case IconStatus.done:
-      return animationBase({ direction: 'normal', iterations: 1 });
+      return animationBase({ direction: "normal", iterations: 1 });
   }
 
 }

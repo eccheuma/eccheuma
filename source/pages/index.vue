@@ -329,28 +329,28 @@
 
 <script lang="ts">
 
-	import Vue from 'vue';
+	import Vue from "vue";
 
 // VUEX
-	import { mapState, mapMutations, mapActions } from 'vuex';
+	import { mapState, mapMutations, mapActions } from "vuex";
 
 // UTILS
-	import { gpu } from '~/utils/gpu';
+	import { gpu } from "~/utils/gpu";
 
 // TYPES
-	import type { AnimeInstance, AnimeAnimParams } 	from 'animejs';
-	import type { VuexMap } from '~/contracts/VuexMap';
+	import type { AnimeInstance, AnimeAnimParams } 	from "animejs";
+	import type { VuexMap } from "~/contracts/VuexMap";
 
 // MIXINS
-	import EmitSound from '~/assets/mixins/EmitSound';
+	import EmitSound from "~/assets/mixins/EmitSound";
 
 // COMPONENTS
-	import HeaderNavigation from '~/components/layout/header/HeaderNavigation.vue';
-	import CanvasComponent	from '~/components/Canvas.vue';
-	import Icon 						from '~/components/common/Icon.vue';
+	import HeaderNavigation from "~/components/layout/header/HeaderNavigation.vue";
+	import CanvasComponent	from "~/components/Canvas.vue";
+	import Icon 						from "~/components/common/Icon.vue";
 
 // Анекдоты категории Б
-	import Anec from '~/assets/json/anetodes.json';
+	import Anec from "~/assets/json/anetodes.json";
 
 // MODULE
 	export default Vue.extend({
@@ -370,12 +370,12 @@
 				CurentQuoteIndex: 0,
 
 				Quotes: [
-					'Escape from Mordorland - Блог-портфолио ориентируемый на визуальный дизайн сайтов, логотипов, баннеров, и UI интерфейса. Предоставление услуг по работе с веб-дизайном и digital дизайном, фирменным стилем, и прочим графическим услугам',
+					"Escape from Mordorland - Блог-портфолио ориентируемый на визуальный дизайн сайтов, логотипов, баннеров, и UI интерфейса. Предоставление услуг по работе с веб-дизайном и digital дизайном, фирменным стилем, и прочим графическим услугам",
 					...Anec,
 				],
 
 				Links: [
-					{ link: 'https://github.com/Scarlatum', icon: 'URL', title: 'GitHub' },
+					{ link: "https://github.com/Scarlatum", icon: "URL", title: "GitHub" },
 				],
 			
 				HollVolume: 0,
@@ -400,8 +400,8 @@
 						{ opacity: 1 },
 					], {
 						duration: 3000,
-						easing: 'ease-in-out',
-						fill: 'forwards',
+						easing: "ease-in-out",
+						fill: "forwards",
 					});
 
 				}
@@ -412,8 +412,8 @@
 			if ( process.server ) return;
 
 			this.setSounds([{
-				file: 'Holl',
-				name: 'Ambient',
+				file: "Holl",
+				name: "Ambient",
 				settings: { 
 					rate: .5, 
 					volume: .25, 
@@ -432,7 +432,7 @@
 
 			if ( process.browser ) {
 
-				const Ambient = this.Sounds.get('Ambient');
+				const Ambient = this.Sounds.get("Ambient");
 
 				if ( Ambient ) {
 
@@ -451,7 +451,7 @@
 		},
 		beforeDestroy() {
 
-			const HOWL = this.Sounds.get('Ambient');
+			const HOWL = this.Sounds.get("Ambient");
 
 			this.AnimeInstance.forEach((anim) => {
 				anim.pause();
@@ -463,12 +463,12 @@
 		methods: {
 
 			...mapMutations({
-				setDeviceType: 'setDeviceType'
+				setDeviceType: "setDeviceType"
 			}),
 
 			...mapActions({
-				changeGlobalVolume: 'Sound/changeGlobalVolume',
-				globalMute: 				'Sound/globalMute',
+				changeGlobalVolume: "Sound/changeGlobalVolume",
+				globalMute: 				"Sound/globalMute",
 			}),
 
 			// ! Refactor this with Animation API
@@ -478,20 +478,20 @@
 
 				const LOOP = true;
 
-				const COLOR = `rgb(${ getComputedStyle(document.body).getPropertyValue('--mono-800').trim() })`;
+				const COLOR = `rgb(${ getComputedStyle(document.body).getPropertyValue("--mono-800").trim() })`;
 
 				const ANIMATIONS: AnimeAnimParams[] = [
 					{	
 						targets: this.$refs.LOGO_SVG,
 						filter: [
-							{ value: 'drop-shadow(0px 0px 6px #FFFFFF)', duration: 2000 },
-							{ value: 'drop-shadow(0px 0px 1px #FFFFFF)', duration: 5000 },
+							{ value: "drop-shadow(0px 0px 6px #FFFFFF)", duration: 2000 },
+							{ value: "drop-shadow(0px 0px 1px #FFFFFF)", duration: 5000 },
 						],
 						endDelay: 2000,
 						round: 100,
 						loop: LOOP, 
-						easing: 'easeInOutSine',
-						direction: 'alternate',
+						easing: "easeInOutSine",
+						direction: "alternate",
 					},
 					{	
 						targets: this.$refs.LOGO_PATH,
@@ -503,23 +503,23 @@
 						duration: 3000,
 						round: 100, 
 						loop: LOOP,
-						easing: 'easeInOutSine',
-						direction: 'alternate',
+						easing: "easeInOutSine",
+						direction: "alternate",
 					},
 					{
-						targets: '.holl-logo span',
+						targets: ".holl-logo span",
 						opacity: [0, 1],
 						filter: [
-							{ value: 'drop-shadow(0px 0px 4px #FFF)' },
-							{ value: 'drop-shadow(0px 0px 0px #FFF)' },
+							{ value: "drop-shadow(0px 0px 4px #FFF)" },
+							{ value: "drop-shadow(0px 0px 0px #FFF)" },
 						],
 						delay: this.$AnimeJS.stagger(1000, { start: 0 }), 
 						endDelay: 8000, 
 						duration: 1000,
 						round: 100,
 						loop: LOOP, 
-						easing: 'linear',
-						direction: 'alternate',
+						easing: "linear",
+						direction: "alternate",
 					}
 				];
 
@@ -549,7 +549,7 @@
 				], {
 					duration: 750,
 					endDelay: 5000,
-					fill: 'both',
+					fill: "both",
 				});
 
 				textAnimation.onfinish = () => {

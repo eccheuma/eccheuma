@@ -197,21 +197,21 @@
 
 <script lang="ts">
 
-	import Vue, { PropOptions } from 'vue';
+	import Vue, { PropOptions } from "vue";
 
 	// NAMESPACES
-	import { Image } from '~/contracts/Image';
+	import { Image } from "~/contracts/Image";
 
 	// TYPES
 	// type PREVIEW_MODE = 'cover' | 'contain' | 'zoom'
 
 	// Helpers
-	import { DEFAULT_IMAGE_STRUCT, getImageURL } from '~/components/image/image.helpers';
+	import { DEFAULT_IMAGE_STRUCT, getImageURL } from "~/components/image/image.helpers";
 
 	// VARIABLES
-	const PLACEHOLDER: Pick<Image.formatsStruct, 'avif' | 'webp'> = {
-		avif: require('~/assets/images/ImagePlaceholder.png?resize&size=1000&format=avif').src,
-		webp: require('~/assets/images/ImagePlaceholder.png?resize&size=1000&format=webp').src,
+	const PLACEHOLDER: Pick<Image.formatsStruct, "avif" | "webp"> = {
+		avif: require("~/assets/images/ImagePlaceholder.png?resize&size=1000&format=avif").src,
+		webp: require("~/assets/images/ImagePlaceholder.png?resize&size=1000&format=webp").src,
 	};
 
 	const zoomStep = 20;
@@ -219,8 +219,8 @@
 	// MODULE
 	export default Vue.extend({
 		components: {
-			CommonButton	: () => import('~/components/buttons/CommonButton.vue'),
-			Notion				: () => import('~/components/common/Notion.vue')
+			CommonButton	: () => import("~/components/buttons/CommonButton.vue"),
+			Notion				: () => import("~/components/common/Notion.vue")
 		},
 		props: {
 			modalState: { 
@@ -234,12 +234,12 @@
 			} as PropOptions<string>,
 			title: {
 				type: String,
-				default: '',
+				default: "",
 				required: false,
 			} as PropOptions<string>,
 			description: {
 				type: String,
-				default: '',
+				default: "",
 				required: false,
 			} as PropOptions<string>,
 		},
@@ -302,7 +302,7 @@
 			},
 
 			toggleModal() {
-				this.$emit('toggle-modal', !this.modalState);
+				this.$emit("toggle-modal", !this.modalState);
 			},
 
 			grab(value: boolean) {
