@@ -21,6 +21,7 @@
 					:key="prop.route" 
 					
 					class="main_navigation-item"
+					:id="`nav_item-${ prop.name }`"
 					:class="[
 						{ disabled: prop.disabled },
 						{ active: CurentRoute === prop.route }
@@ -35,10 +36,8 @@
 
 					<!-- prefetch -->
 					<nuxt-link 
-						:id="`nav_item-${ prop.name }`"
 						:to="prop.route"
 						:prefetch="routePrefetch"
-						@click="topScroll"
 						>
 
 						<icon :name="prop.icon" />
@@ -48,12 +47,14 @@
 
 					</nuxt-link>
 					
-					<popover v-if="!prop.disabled || !$isMobile" :target="`nav_item-${ prop.name }`">
-						<!-- <i class="fas fa-info-circle" /> -->
-						{{ prop.description }}
-					</popover>
+					
 
 				</div>
+
+				<popover v-if="!prop.disabled || !$isMobile" :target="`nav_item-${ prop.name }`" :key="index + 10">
+					<!-- <i class="fas fa-info-circle" /> -->
+					{{ prop.description }}
+				</popover>
 
 				<span :key="index" class="main_navigation-separator" />
 
@@ -119,6 +120,10 @@ $TransitionDuration: 250ms;
 
 		padding-inline: 6vw;
 
+		@media screen and ( max-width: $mobile-breakpoint ) {
+			padding-inline: 2vw;
+		}
+
 		display: grid; 
 		min-height: $GLOBAL-HeaderHeight;
 		
@@ -141,6 +146,9 @@ $TransitionDuration: 250ms;
 
 			a {
 				transform: translateY(-2vh);
+				@media screen and ( max-width: $mobile-breakpoint ) {
+					transform: translateY(0);
+				}
 			}
 
 			i {
@@ -177,10 +185,6 @@ $TransitionDuration: 250ms;
 		text-align: center;
 
 		width: 100%;
-
-		@media screen and ( max-width: $mobile-breakpoint ) {
-			margin: .5vh 0;
-		}
 
 		&:before {
 
@@ -249,8 +253,8 @@ $TransitionDuration: 250ms;
 			z-index: 1000;
 
 			@media screen and ( max-width: $mobile-breakpoint ) {
-				display: inline-flex;
-				font-size: var(--font-size-20);
+				// display: inline-flex;
+				font-size: var(--font-size-21);
 			}
 
 			i {
@@ -287,6 +291,7 @@ $TransitionDuration: 250ms;
 		align-self: center;
 
 		width: 2%; 
+		min-width: 4px;
 		height: 10px;
 
 		background-color: rgb(var(--color-mono-400));
@@ -303,34 +308,34 @@ $TransitionDuration: 250ms;
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from "vue";
 
 	// VUEX
-	import { mapState } from 'vuex';
+	import { mapState } from "vuex";
 
 	// VUEX MAP
-	import { VuexMap } from '~/typescript/VuexMap'
+	import { VuexMap } from "~/contracts/VuexMap";
 
 	// LANG
-	import { getLocale } from '~/lang';
+	import { getLocale } from "~/lang";
 
 	// UTILS
-	import { utils } from '~/utils';
+	import { utils } from "~/utils";
 
 	// MIXINS
-	import EmitSound from '~/assets/mixins/EmitSound'
+	import EmitSound from "~/assets/mixins/EmitSound";
 
 	// COMPONENTS
-	import Popover 		from '~/components/common/Popover.vue'
-	import Icon				from '~/components/common/Icon.vue'
+	import Popover 		from "~/components/common/Popover.vue";
+	import Icon				from "~/components/common/Icon.vue";
 
-	import { PageDescription as HomePage } from '~/pages/home.vue';
-	import { PageDescription as GalleryPage } from '~/pages/gallery.vue';
-	import { PageDescription as PortfolioPage } from '~/pages/portfolio.vue';
-	import { PageDescription as ServicePage } from '~/pages/service.vue';
+	import { PageDescription as HomePage } from "~/pages/home.vue";
+	import { PageDescription as GalleryPage } from "~/pages/gallery.vue";
+	import { PageDescription as PortfolioPage } from "~/pages/portfolio.vue";
+	import { PageDescription as ServicePage } from "~/pages/service.vue";
 
 	// TYPES
-	import { navigation } from '~/typescript/Navigation'
+	import { navigation } from "~/contracts/Navigation";
 
 	type HeaderMenuItem = {
 		disabled		: boolean,
@@ -344,40 +349,40 @@ $TransitionDuration: 250ms;
 	const HeaderRoutes: ReadonlyArray<HeaderMenuItem> = [
 		{
 			disabled: false,
-			route: '/home', 
+			route: "/home", 
 			name: navigation.routeSections.home, 
-			icon: 'Home',
+			icon: "Home",
 			description: HomePage.description
 		},
 		{
 			disabled: false,
-			route: '/gallery', 
+			route: "/gallery", 
 			name: navigation.routeSections.gallery, 
-			icon: 'Gallery',
+			icon: "Gallery",
 			description: GalleryPage.description
 		},
 		{
 			disabled: false,
-			route: '/recommendation', 
+			route: "/recommendation", 
 			name: navigation.routeSections.recommendation, 
-			icon: 'Fire',
+			icon: "Fire",
 			description: PortfolioPage.description
 		},
 		{
 			disabled: false,
-			route: '/portfolio', 
+			route: "/portfolio", 
 			name: navigation.routeSections.portfolio, 
-			icon: 'Portfolio',
-			description: 'Принятые работы. С указанием сроков, цены, комментариев, и отзывов на выполненую работу.'
+			icon: "Portfolio",
+			description: "Принятые работы. С указанием сроков, цены, комментариев, и отзывов на выполненую работу."
 		},
 		{
 			disabled: false,
-			route: '/service', 
+			route: "/service", 
 			name: navigation.routeSections.service, 
-			icon: 'Service',
+			icon: "Service",
 			description: ServicePage.description
 		},
-	]
+	];
 
 	// MODULE
 	export default Vue.extend({
@@ -385,8 +390,8 @@ $TransitionDuration: 250ms;
 			Popover,
 			Icon,
 			// ASYNC COMPONENTS
-			SearchBar: 	() => import('~/components/common/SearchBar.vue'),
-			CursorFX: 	() => import('~/components/common/CursorFX.vue'),
+			SearchBar: 	() => import("~/components/common/SearchBar.vue"),
+			CursorFX: 	() => import("~/components/common/CursorFX.vue"),
 
 		},
 		mixins: [ EmitSound ],
@@ -411,7 +416,7 @@ $TransitionDuration: 250ms;
 
 				HeaderMenu: HeaderRoutes,	
 
-			}
+			};
 		},
 		computed: {
 
@@ -420,33 +425,37 @@ $TransitionDuration: 250ms;
 			}),
 
 			CurentRoute(): string { // Текущий рут
-				return this.$route.matched?.[0].path
+				return this.$route.matched?.[0].path;
 			},
 		},
 		mounted() {
 
 			if ( process.browser ) {
 				this.setSounds([
-					{ file: 'On', name: 'Element::Action', 	settings: { rate: 0.50 } },
-					{ file: 'On', name: 'Element::Hover', 	settings: { rate: 0.25 } }
-				])
+					{ file: "On", name: "Element::Action", 	settings: { rate: 0.50 } },
+					{ file: "On", name: "Element::Hover", 	settings: { rate: 0.25 } }
+				]);
 			}
+
+			this.$router.beforeEach((to, from, next) => {
+
+				if ( "type" in to.params ) return next();
+
+				window.scrollTo({
+					top: window.innerHeight / 2,
+					behavior: "smooth",
+				});
+
+				return next();
+
+			});
 
 		},
 		methods: {
-
-			topScroll() {
-				window.scrollTo({
-					top: this.$el.scrollTop,
-					behavior: 'smooth',
-				})
-			},
-
 			getLocale(route: navigation.routeSections): string {
-				return getLocale(this.Lang).Routes[ utils.enums.toString(navigation.routeSections, route) ]
+				return getLocale(this.Lang).Routes[ route ];
 			}
-			
 		}
-	})
+	});
 
 </script>

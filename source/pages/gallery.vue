@@ -1,7 +1,7 @@
 <template>
 	<main class="gallery-container">
 
-		<promo-banner promo-type="Gallery" />
+		<promo-banner promo-type="Works" />
 
 		<section class="gallery-pinned">
 
@@ -55,9 +55,12 @@
 
 			<pagination :payload="PaginationParams" />
 
-			<span class="gallery-notion">
-				Aptly at my purple gently dreaming on out what ghost burden. He craven here mystery doubtless evilprophet pallas guessing and linking, evermore then tell angels have this a agreeing all, above tis rare be this and it me, my unbrokenquit it and no flirt curtain.
-			</span>
+			<notion lang="ru">
+				Все представленные изображения в данной секции являются интеллектуальной собственностью. В следствии чего, любое их коммерческое использование юр.лицами без согласования с их владельцем - Несёт за собой юридические последствия.
+				<a href="http://kodeks.systecs.ru/gk_rf/gk_glava69/gk_st1252.html" target="_blank">ст. 1252 ГК РФ.</a>
+				<br>
+				TLDR: Не воруй. А если и воруешь, хотя бы признавайся.
+			</notion>
 
 		</section>
 
@@ -72,7 +75,7 @@
 
 		display: grid;
 		gap: 15px;
-		grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
 		
 	}
 
@@ -102,11 +105,10 @@
 		&-body {
 
 			display: grid;
-			grid-template: {
-				columns: 1fr 1fr
-			};
+			grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
 
 			column-gap: 1vw;
+			row-gap: 2vh;
 
 			width: 100%;
 			max-width: 1210px;
@@ -125,17 +127,8 @@
 
 		display: grid;
 		row-gap: 2vh;
-
 		padding: 0 2vw 2vh;
 
-	}
-
-	&-notion {
-		width: 114ch;
-    margin: 0 auto;
-    text-align: center;
-    font-size: var(--font-size-12);
-    color: rgb(var(--color-mono-500));
 	}
 
 }
@@ -144,79 +137,82 @@
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from "vue";
 
 // VUEX
-	import { mapMutations } from 'vuex'
+	import { mapMutations } from "vuex";
 
 // API
-	import { database } from '~/api/database'
+	import { database } from "~/api/database";
 	
-// MIXINS
-	import TransitionSound from '~/assets/mixins/TransitionSound'
-
 // LOAD POLITIC
-	import { Ranges } from '~/config/LoadPolitic'
+	import { Ranges } from "~/config/LoadPolitic";
 
 // COMPONENTS
-	import PromoBanner 		from '~/components/promo/PromoBanner.vue'
-	import SectionHeader 	from '~/components/common/SectionHeader.vue'
+	import PromoBanner 		from "~/components/promo/PromoBanner.vue";
+	import SectionHeader 	from "~/components/common/SectionHeader.vue";
 
 // PAGE DESCRIPTION
-	import { Opengraph } from '~/utils/opengraph'
+	import { opengraph } from "~/utils/opengraph";
 
-	export const PageDescription: Opengraph.struct = {
-		title				: 'Eccheuma | Галерея',
-		description	: 'Галлерея изображений. Начиная от логотипов и полноценных макетов, заканчивая всякими набросками и непринятыми вариантами работ.',
-		url					: '',
-		image				: require('~/assets/images/NotificationBadge.png?resize&size=600').src,
-	}
+	export const PageDescription: opengraph.struct = {
+		title				: "Eccheuma | Галерея",
+		description	: "Галлерея изображений. Начиная от логотипов и полноценных макетов, заканчивая всякими набросками и непринятыми вариантами работ.",
+		url					: "",
+		image				: require("~/assets/images/NotificationBadge.png?resize&size=600").src,
+	};
 
 // MODULE
 	export default Vue.extend({ 
 		components: {
 			PromoBanner,
 			SectionHeader,
-			Pagination		: () => import('~/components/common/Pagination.vue'),
-			EccheumaImage	: () => import('~/components/image/Image.vue'),
+			Pagination		: () => import("~/components/common/Pagination.vue"),
+			EccheumaImage	: () => import("~/components/image/Image.vue"),
+			Notion        : () => import("~/components/common/Notion.vue"),
 		},
-		mixins: [ TransitionSound ],
-		layout: 'Application', 
+		layout: "Application", 
 		scrollToTop: false, 
-		transition: 'opacity-transition',
+		transition: "opacity-transition",
 		loading: false, 
 		data() {
 			return {
 
 				PaginationParams: {
-					section: 'gallery', 
+					section: "gallery", 
 					params: `range=${ Ranges.gallery }`
 				},
 
-			}
-		},
-		async fetch() {
+				PageQuantity: 0,
 
-			const GalleryQuantity = await database.getLength('Gallery');
-
-			this.ChangePageQuantity(Math.ceil( GalleryQuantity / Ranges.gallery ))
-
+			};
 		},
 		head () {
 			return {
 				title: PageDescription.title,
 				meta: [
-					...new Opengraph.Meta(PageDescription).buildMeta()
+					...new opengraph.Meta(PageDescription).buildMeta()
 				],
-			}
+			};
 		},
+
+		async mounted() {
+
+			const GalleryQuantity = await database.getLength("gallery");
+
+			this.PageQuantity = Math.ceil( GalleryQuantity / Ranges.gallery );
+
+			this.ChangePageQuantity(this.PageQuantity);
+
+		},
+
 		methods: {
 
 			...mapMutations({
-				ChangePageQuantity: 'PageSelector/ChangePageQuantity'
+				ChangePageQuantity: "PageSelector/ChangePageQuantity"
 			}),
 
 		},
-	})
+	});
 
 </script>

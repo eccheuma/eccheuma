@@ -8,7 +8,7 @@
 			:property="{ type: 'promo' }"
 		/>
 
-		<section v-once>
+		<section>
 			<h4>Для чего это?</h4>
 			<p>
 				Основная причина для чего нужна разный подход к вёрстке и функционалу - Это разные методы взаимодействия с приложением \ сайтом с разных типов устройств. 
@@ -42,7 +42,9 @@
 	background-color: rgb(var(--color-mono-300));
 
 	@media screen and ( max-width: $mobile-breakpoint ) {
+		padding: 2vh 2vw;
 		grid-template-columns: 1fr;
+		grid-template-rows: auto auto;
 		text-align: center;
 	}
 
@@ -54,10 +56,10 @@
 	}
 
 	p {
-		font-size: var(--font-size-20);
+		font-size: var(--font-size-18);
     font-family: var(--read-font);
-    font-weight: 500;
-    color: rgb(var(--color-mono-900));
+    font-weight: 300;
+    color: rgb(var(--color-mono-600));
 	}
 
 }
@@ -68,7 +70,7 @@
 
 	export default {
 		components: {
-			EccheumaImage: () => import( '~/components/image/Image.vue' ),
+			EccheumaImage: () => import( "~/components/image/Image.vue" ),
 		},
-	}
+	};
 </script>

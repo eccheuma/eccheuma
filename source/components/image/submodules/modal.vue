@@ -19,10 +19,10 @@
 					ref="image"
 					v-dragscroll="true"
 					class="modal-body" 
-					:style="`overflow: ${ Zoom ? 'scroll' : 'hidden' }`"
+					:style="`overflow: ${ zoomState ? 'scroll' : 'hidden' }`"
 					:class="[
-						{ 'grab': Zoom },
-						{ 'grabbing': Grabbing && Zoom },
+						{ 'grab': zoomState },
+						{ 'grabbing': Grabbing && zoomState },
 					]"
 					@mousedown="grab(true)" 
 					@mouseup="grab(false)"
@@ -31,14 +31,14 @@
 				
 					<picture>
 						<source :srcset="URL.avif" type="image/avif">
-						<img :src="URL.webp" :style="Zoom ? zoomStyle : null" @dblclick="Zoom = !Zoom">
+						<img :src="URL.webp" :style="zoomState ? zoomStyle : null" @dblclick="zoomState = !zoomState">
 					</picture>
 
 				</div>
 
 				<div class="modal-footer">
-					<common-button @click.native="Zoom = !Zoom">
-						{{ Zoom ? 'Уменьшить' : 'Увеличить' }}
+					<common-button @click.native="zoomState = !zoomState">
+						{{ zoomState ? 'Уменьшить' : 'Увеличить' }}
 					</common-button>
 					<common-button @click.native="toggleModal">
 						Закрыть
@@ -46,6 +46,11 @@
 				</div>
 
 			</div>
+
+			<notion>
+				Подсказка: Используйте двойной левый клик для приблежения.
+			</notion>
+
 		</div>
 
 	</portal>
@@ -68,24 +73,29 @@
 		background:
 			radial-gradient(farthest-side, rgb(var(--color-mono-200), .5) 0%, rgb(var(--color-mono-200), .9) 85%), 
 			url(~assets/images/Stripes.png?size=15);
-		display: flex;
+
+		display: grid;
+		grid-template-rows: 95vh 1fr;
+
 	}
 	&-container {
 
+		$headerH: 5vh;
+
 		display: grid;
-		
+		margin: $headerH auto 0;
+
     grid-template: {
 			columns: 1fr;
 			rows: minmax(10vh, min-content) 8fr auto;
 		}
 
     overflow: hidden;
-    height: 95vh;
+    height: calc(100% - #{ $headerH });
 		aspect-ratio: 16/9;
     background-color: rgb(var(--color-mono-300));
     border: 1px solid rgb(var(--color-mono-400));
     border-radius: var(--border-radius);
-    margin: auto;
 
 	}
 	&-header {
@@ -187,26 +197,30 @@
 
 <script lang="ts">
 
-	import Vue, { PropOptions } from 'vue'
+	import Vue, { PropOptions } from "vue";
 
-	// VUEX
-	import { mapActions } from 'vuex'
-	
 	// NAMESPACES
-	import { Image } from '~/typescript/Image'
+	import { Image } from "~/contracts/Image";
+
+	// TYPES
+	// type PREVIEW_MODE = 'cover' | 'contain' | 'zoom'
+
+	// Helpers
+	import { DEFAULT_IMAGE_STRUCT, getImageURL } from "~/components/image/image.helpers";
 
 	// VARIABLES
-	const PLACEHOLDER: Pick<Image.formatsStruct, 'avif' | 'webp'> = {
-		avif: require('~/assets/images/ImagePlaceholder.png?resize&size=1000&format=avif').src,
-		webp: require('~/assets/images/ImagePlaceholder.png?resize&size=1000&format=webp').src,
-	}
+	const PLACEHOLDER: Pick<Image.formatsStruct, "avif" | "webp"> = {
+		avif: require("~/assets/images/ImagePlaceholder.png?resize&size=1000&format=avif").src,
+		webp: require("~/assets/images/ImagePlaceholder.png?resize&size=1000&format=webp").src,
+	};
 
 	const zoomStep = 20;
 
 	// MODULE
 	export default Vue.extend({
 		components: {
-			CommonButton: () => import('~/components/buttons/CommonButton.vue')
+			CommonButton	: () => import("~/components/buttons/CommonButton.vue"),
+			Notion				: () => import("~/components/common/Notion.vue")
 		},
 		props: {
 			modalState: { 
@@ -220,12 +234,12 @@
 			} as PropOptions<string>,
 			title: {
 				type: String,
-				default: '',
+				default: "",
 				required: false,
 			} as PropOptions<string>,
 			description: {
 				type: String,
-				default: '',
+				default: "",
 				required: false,
 			} as PropOptions<string>,
 		},
@@ -235,64 +249,66 @@
 				URL: PLACEHOLDER,
 				Grabbing: false,
 
-				Zoom: false,
-				ZoomRate: 150,
+				zoomState: false,
+				zoomRate: 150,
 
-			}
+			};
 		},
 		computed: {
 			zoomStyle(): { height: string, width: string } {
 
-				const perc = `${ this.ZoomRate }%`;
+				const perc = `${ this.zoomRate }%`;
 
 				return {
-					height: perc,
-					width: perc,
-				}
+					height	: perc,
+					width		: perc,
+				};
 
 			}
 		},
 		async mounted() {
-			if ( this.application.context.browser ) {
-				this.URL = await this.getImageURL({ 
-					path: this.path,
-					size: 1440,
-				}) as Image.formatsStruct
-			}
+
+			if ( this.application.context.browser ) this.URL = await this.constructImage();
+
 		},
 		methods: {
 
-			...mapActions({
-				getImageURL: 'Images/getImageURL',
-			}),
+			async constructImage() {
+
+				const urlResult = await getImageURL({
+					path: this.path,
+					size: 1440,
+				});
+
+				return urlResult instanceof Error 
+					? DEFAULT_IMAGE_STRUCT 
+					: urlResult;
+
+			},
 
 			changeZoom({ deltaY }: WheelEvent) {
 
 				const sign = Math.sign(deltaY);
-				const zoom = this.ZoomRate + (zoomStep * sign);
+				const zoom = this.zoomRate + (zoomStep * sign);
 
-				this.ZoomRate = sign > 0
+				this.zoomRate = sign > 0
 					? zoom > 300
 						? Math.min(300, zoom)
 						: zoom
 					: zoom < 50
 						? Math.max(50, zoom)
-						: zoom
+						: zoom;
 
 			},
 
 			toggleModal() {
-				this.$emit('toggle-modal', !this.modalState)
+				this.$emit("toggle-modal", !this.modalState);
 			},
 
 			grab(value: boolean) {
-
-				if ( this.Zoom ) {
-					this.Grabbing = value
-				}
-
+				if ( this.zoomState ) this.Grabbing = value;
 			}
 
 		},
-	})
+	});
 </script>

@@ -1,106 +1,164 @@
-import { ActionTree, MutationTree } from 'vuex'
+import { ActionTree, MutationTree } from "vuex";
 
 // API
-	import { database } from '~/api/database'
+import { database } from "~/api/database";
 
 // UTILS
-	import { cache } from '~/utils/cache';
+import { cache } from "~/utils/cache";
 
 // INTERFACES & TYPES
+import type { Post } from "~/contracts/Post";
+import type { Image } from "~/contracts/Image";
 
-	import type { Post } 	from '~/typescript/Post'
-	import type { Image } from '~/typescript/Image'
+export const enum Reference {
+	Posts,
+	Gallery
+}
 
-	type REFS = 'Posts' | 'Gallery';
+const PATHS = {
+	[Reference.Posts]: "posts",
+	[Reference.Gallery]: "gallery"
+} as const;
 
-	export type LOAD_PROPERTY = { 
-		LoadRange: number
-		LoadPoint: number
+export type LoadQuery = {
+	LoadRange: number
+	LoadPoint: number
+}
+
+interface IMutInformer<D, F, T> {
+	data: D,
+	from: F,
+	to: T,
+}
+
+type RecordValues<R> = R extends Record<string, infer V> ? V : never;
+
+export type PayloadQuery = { ref: Reference, loadQuery: LoadQuery }
+
+// HELPERS
+namespace helpers {
+
+	export function getOrderQuery(ref: Reference) {
+
+		const query: database.QueryOrder<database.order> = Object();
+
+		switch (ref) {
+			case Reference.Posts: {
+				query.order = database.order.child;
+				query.orderBy = "ID";
+			} break;
+			case Reference.Gallery: {
+				query.order = database.order.key;
+			} break;
+		}
+
+		return query;
+
 	}
 
-	type CONTENT = {
-		Posts: Array<Post.struct>
-		Gallery: Image.struct[]
+	export async function getContentSlice(payload: PayloadQuery): Promise<RecordValues<CurentState["Content"]>> {
+
+		const LP = payload.loadQuery.LoadPoint;
+
+		return await database.get(PATHS[payload.ref], {
+			limit: payload.loadQuery.LoadRange,
+			start: payload.ref === Reference.Posts
+				? Number(LP)
+				: String(LP),
+			...helpers.getOrderQuery(payload.ref),
+		});
+
 	}
 
-	export type PAYLOAD = { REF: REFS, LOAD_PROPERTY: LOAD_PROPERTY }
+}
 
 // STORE
-	export const state = () => ({
-		Content: {
-			Gallery: [],
-			Posts: []
-		} as CONTENT
-	})
+export const state = () => ({
+	Content: {
+		Gallery: Array<Image.struct>(),
+		Posts: Array<Post.struct>(),
+	}
+});
 
 // CURENT STATE
-	export type CurentState = ReturnType<typeof state>
+export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/typescript/VuexMap' {
-		interface VuexMap {
-			PageContent: CurentState
-		}
-	}
+declare module "~/contracts/VuexMap" {
+	interface VuexMap { PageContent: CurentState }
+}
 
 // MUTATIONS
-	export const mutations: MutationTree<CurentState> = {
+export const mutations: MutationTree<CurentState> = {
 
-		setContent(state, { data, to }: { data: any[], from: string, to: REFS }) {
-			state.Content[to] = Object.values(data); 
-		},
+	setContent(state, { data, to }: IMutInformer<RecordValues<CurentState["Content"]>, string, Reference>) {
+		switch ( to ) {
+			case Reference.Posts:
+				state.Content.Posts = Object.values(data || Object());
+				break;
+			case Reference.Gallery:
+				state.Content.Gallery = Object.values(data || Object());
+				break;
+		}
+	},
 
-	}
+};
 
 // ACTIONS
-	export const actions: ActionTree<CurentState, CurentState> = {
-		
-		async checkCachedData({ commit }, payload: PAYLOAD) {
+export const actions: ActionTree<CurentState, CurentState> = {
 
-			const HASH_KEY 					= `${ payload.REF.toUpperCase() }_DATA_HASH`
-			const LOAD_PROPERTY_KEY = `${ payload.LOAD_PROPERTY.LoadPoint }_${ payload.LOAD_PROPERTY.LoadRange }`
+	async checkCachedData({ commit }, payload: PayloadQuery) {
 
-			const Hashes = {
-				server: await database.get(`App/Cache/${ payload.REF }`),
-				cashed: cache.get(HASH_KEY)
-			}
+		const HASH_KEY = `${PATHS[payload.ref].toUpperCase()}_DATA_HASH`;
+		const LOAD_PROPERTY_KEY = `${payload.loadQuery.LoadPoint}_${payload.loadQuery.LoadRange}`;
 
-			const CACHE_KEY = `${ Hashes.server }_${ payload.REF.toUpperCase() }_${ LOAD_PROPERTY_KEY }`
+		const hashes = {
+			server: await database.get(`app/content::hashes/${payload.ref}`),
+			cache: cache.get(HASH_KEY)
+		};
 
-			// --------------------------------
+		const CACHE_KEY = `${hashes.server}_${PATHS[payload.ref].toUpperCase()}_${LOAD_PROPERTY_KEY}`;
+		const CACHED_DATA = cache.get<RecordValues<CurentState["Content"]>>(CACHE_KEY);
 
-			const CACHED_DATA = cache.get(CACHE_KEY);
+		if (!(CACHED_DATA instanceof Error) && hashes.cache && hashes.cache === hashes.server) {
 
-			if ( CACHED_DATA && Hashes.cashed && Hashes.cashed === Hashes.server ) {
+			commit("setContent", { data: CACHED_DATA.data, from: "cache", to: payload.ref });
 
-				commit('setContent', { data: JSON.parse(CACHED_DATA), from: 'cache', to: payload.REF  })
+		} else {
 
-			} else {
+			const data = await helpers.getContentSlice(payload);
 
-				const DATA = await database.get(payload.REF, { limit: payload.LOAD_PROPERTY.LoadRange })
+			commit("setContent", {
+				data,
+				from: "server",
+				to: payload.ref
+			});
 
-				commit('setContent', { data: DATA, from: 'firebase', to: payload.REF });
+			cache.set(CACHE_KEY, data);
+			cache.set(HASH_KEY, hashes.server);
 
-				cache.set(CACHE_KEY, DATA);
-				cache.set(HASH_KEY, Hashes.server);
+		}
 
-			}
+	},
 
-		},
+	async GetContent(vuex, payload: PayloadQuery) {
 
-		async GetContent({ commit, dispatch }, payload: PAYLOAD) {
+		if (process.browser) {
 
-			if ( process.browser ) {
+			await vuex.dispatch("checkCachedData", payload);
 
-				await dispatch('checkCachedData', payload);	
-				
-			} else {
+		} else {
 
-				const DATA = await database.get(payload.REF, { limit: payload.LOAD_PROPERTY.LoadRange })
+			vuex.commit("setContent", {
+				data: await helpers.getContentSlice(payload),
+				from: "server",
+				to: payload.ref
+			});
 
-				commit('setContent', { data: Object.values(DATA), from: 'server', to: payload.REF });			
+		}
 
-			} 
+	},
 
-		},
-	}
+};
+
+

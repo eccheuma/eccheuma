@@ -1,8 +1,7 @@
-import crusoris from '@eccheuma/crusoris';
-import { Context } from '@nuxt/types';
+import crusoris from "@eccheuma/crusoris/lib/crusoris.es";
 
-export default (nuxt: Context) => {
-	if ( process.browser ) {
-		crusoris({ dist: true, styles: true })
+export default () => {
+	if ( process.browser && window.ontouchstart === undefined ) {
+		crusoris({ dist: true, styles: true });
 	}
-}
+};

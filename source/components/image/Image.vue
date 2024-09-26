@@ -27,8 +27,8 @@
 
 			<section ref="holder" class="eccheuma-image-picture">
 				<picture>
-					<source v-if="AVIF_SUPPORT" :srcset="Source.avif" type="image/avif">
-					<img ref="image" :src="Source.webp" :alt="content.description">
+					<source :srcset="imageStruct.avif" type="image/avif">
+					<img ref="image" :src="imageStruct.webp" :alt="content.description">
 				</picture>
 			</section>
 
@@ -45,7 +45,7 @@
 
 		</div>
 
-		<tag v-if="sections && sections.date" :transparent="false" :light="true">
+		<tag v-if="sections && sections.date" :transparent="false" theme="grey">
 			{{ LocalDate.Day }} в {{ LocalDate.Time }}
 		</tag>
 
@@ -65,13 +65,15 @@
 			gap: 2vh;
 
 			.type\:\:gallery {
-				height: 50vh !important;
+				// height: 50vh !important;
+				aspect-ratio: 3/2;
 				--fit-type: cover;
 			}
 
 			.type\:\:promo {
-				width: clamp(340px, 100%, 40vw) !important;
-				margin: auto !important;
+				// width: clamp(340px, 100%, 40vw) !important;
+				width: 100%;
+				margin: auto;
 				aspect-ratio: 16/9;
 			}
 
@@ -81,7 +83,8 @@
 			}
 
 			.type\:\:default {
-				height: 100%;
+				width: 100%;
+				aspect-ratio: 16/9;
 			}
 
 		}
@@ -269,81 +272,75 @@
  
 <script lang="ts">
 
-	import Vue, { PropOptions } from 'vue';
-
-	// VUEX
-	import { mapActions, mapState } from 'vuex'
+	import Vue, { PropOptions } from "vue";
 
 	// UTILS
-	import { utils } from '~/utils'
+	import { utils } from "~/utils";
 
 	// TYPES
-	import { Image } from '~/typescript/Image'
-
-	// VUEX MAP
-	import type { VuexMap } from '~/typescript/VuexMap'
+	import { Image } from "~/contracts/Image";
 
 	// COMPONENTS
-	import Icon 			from '~/components/common/Icon.vue';
-	import Tag				from '~/components/common/Tag.vue'
+	import Icon from "~/components/common/Icon.vue";
+	import Tag from "~/components/common/Tag.vue";
 	
+	// Helpers
+	import { getOptimalImage } from "./image.helpers";
+
+	// Animations
+	import { animations } from "~/animations";
+
+	const { keyframes, options } = animations.common.opacityResolve(animations.common.AnimationMode.Short, true);
+
 	// MIXINS
-	import EmitSound from '~/assets/mixins/EmitSound'
+	import EmitSound from "~/assets/mixins/EmitSound";
 
 	// VARS
-	const PLACEHOLDER: Pick<Image.formatsStruct, 'avif' | 'webp'> = {
-		avif: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src,
-		webp: require('~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp').src
-	}
+	const PLACEHOLDER: Image.formatsStruct = {
+		avif: require("~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp").src,
+		webp: require("~/assets/images/ImagePlaceholder.png?resize&size=600&format=webp").src
+	};
 
-	const defaultSections: Image.struct['sections'] = {
+	const defaultSections: Image.struct["sections"] = {
 		date: false,
 		description: false,
 		zoom: true,
-	}
+	};
 
-	const defaultProperty: Image.struct['property'] = {
-		type: 'gallery',
-	}
+	const defaultProperty: Image.struct["property"] = {
+		type: "gallery",
+	};
 
 	// MODULE
 	export default Vue.extend({
 		components: {
 			Icon,
 			Tag,
-			Modal: () => import('./submodules/modal.vue')
+			Modal: () => import("./submodules/modal.vue")
 		},
 		mixins: [ EmitSound ],
 		props: {
-			content: 	{ type: Object, required: true  } as PropOptions<Image.struct['content']>,
-			property: { type: Object, required: false, default() { return defaultProperty } } as PropOptions<Image.struct['property']>,
-			sections: { type: Object, required: false, default() { return defaultSections } } as PropOptions<Image.struct['sections']>,
+			content: 	{ type: Object, required: true  } as PropOptions<Image.struct["content"]>,
+			property: { type: Object, required: false, default() { return defaultProperty; } } as PropOptions<Image.struct["property"]>,
+			sections: { type: Object, required: false, default() { return defaultSections; } } as PropOptions<Image.struct["sections"]>,
 		},
 		data() {
 			return {
 
 				LocalDate: utils.getLocalTime(this.content.date),
 
-				Source: PLACEHOLDER as Image.formatsStruct,
+				imageStruct: PLACEHOLDER as Image.formatsStruct,
 
 				Modal: false,
 				ImageFocus: false,
 
-			}
-		},
-
-		computed: {
-
-			...mapState({
-				AVIF_SUPPORT: state => (state as VuexMap).Images.AVIF_SUPPORT
-			}),
-
+			};
 		},
 
 		watch: {
-			'content.path': {
-				handler() {
-					this.$nextTick(this.getImage)
+			"content.path": {
+				async handler() {
+					this.imageStruct = await this.getOptimalImage();
 				}
 			},
 		},
@@ -352,69 +349,60 @@
 
 			if ( process.browser ) {
 
-				const interesection = new IntersectionObserver((entry) => {
-					if ( entry[0].isIntersecting )  {
+				const observerInstance = new IntersectionObserver(([ firstEntry ]) => {
 
-						setTimeout(this.getImage, 250);
-						
-						interesection.unobserve(this.$el as HTMLElement);
-						
-					}
-				})
+					if ( !firstEntry.isIntersecting ) return;
 
-				interesection.observe(this.$el as HTMLElement);
+					this.$nextTick(() => {
+						this.getOptimalImage().then(data => {
+							this.imageStruct = data;
+						});
+					});
+
+					observerInstance.unobserve(this.$el);
+
+				});
+
+				observerInstance.observe(this.$el);
 
 			}
+
 		},
 
 		methods: {
-			
-			...mapActions({
-				getImageURL: 	'Images/getImageURL',
-			}),
 
-			async getImage(): Promise<void> {
+			async getOptimalImage(): Promise<Image.formatsStruct> {
 
-				const IMAGE_CONTAINER = this.$refs.holder as Element
-				const { width } = IMAGE_CONTAINER?.getBoundingClientRect();
+				const imageContainer = this.$refs.holder as HTMLElement;
 
-				const URL: Image.formatsStruct = await this.getImageURL({ 
-					path: this.content.path,
-					size: width * window.devicePixelRatio
-				})
+				const image = await getOptimalImage(imageContainer, this.content.path);
 
-				if ( this.application.context.browser && this.application.gpu.available() ) {
-					this.prepareAnimations(IMAGE_CONTAINER, URL)
-				} else {
-					this.Source = URL;
-				}
+				return this.application.context.browser && this.application.gpu.available()
+					? await this.runAnimation(imageContainer, image)
+					: image;
 
 			},
 
-			prepareAnimations(el: Element, url: Image.formatsStruct) {
+			runAnimation(container: Element, struct: Image.formatsStruct): Promise<Image.formatsStruct> {
 
-				const animation = el.animate([
-					{ opacity: 1 },
-					{ opacity: 0 }
-				], {
-					duration: 250,
-					fill: 'both',
-				})
+				return new Promise((resolve) => {
 
-				animation.onfinish = () => {
+					const animation = container.animate(keyframes, options);
 
-					animation.onfinish = null;
+					animation.onfinish = () => { animation.onfinish = null;
 
-					this.Source = url;
+						resolve(struct);
 
-					(this.$refs.image as HTMLImageElement).onload = () => animation.reverse();
+						(this.$refs.image as HTMLImageElement).onload = () => animation.reverse();
 
-				}
+					};
+
+				});
 
 			},
 
 		},
 
-	})
+	});
 
 </script>

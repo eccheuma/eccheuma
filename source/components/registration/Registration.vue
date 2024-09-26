@@ -62,7 +62,7 @@
 		z-index: 3000;
 
 		width: $GLOBAL-BodySize; 
-		height: 100vh;
+		height: 100%;
 
 		display: flex;
 		place-content: center;
@@ -115,6 +115,11 @@
 
 		background-color: rgba(var(--color-mono-200));
 		border-radius: var(--border-radius);
+
+		@media screen and ( max-width: $mobile-breakpoint ) {
+			width: 90vw;
+			height: min-content;
+		};
 
 	}
 	&-header {
@@ -202,22 +207,21 @@
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from "vue";
 
 // VUEX
-	import { mapState, mapMutations, mapActions } from 'vuex'
-	import type { VuexMap } from '~/typescript/VuexMap'
+	import { mapState, mapMutations, mapActions } from "vuex";
+	import type { VuexMap } from "~/contracts/VuexMap";
 
 // TYPES & INTERFACES & ENUMS
-	import { auth, form } from '~/api/auth';
+	import { auth, form } from "~/api/auth";
 
 // COMPONENTS
-	import Loader 			from '~/components/common/Loader.vue'
-	import CommonButton from '~/components/buttons/CommonButton.vue';
+	import Loader 			from "~/components/common/Loader.vue";
+	import CommonButton from "~/components/buttons/CommonButton.vue";
 
 	// SUBMODULES
-	// eslint-disable-next-line import/order
-	import RegistrationForm from './submodules/Form.vue'
+	import RegistrationForm from "./submodules/Form.vue";
 
 // MODULE
 	export default Vue.extend({
@@ -236,11 +240,11 @@
 
 				LoaderStage: -1,
 				UserRegistration: [
-					{ LoadPoint: 0, 	Message: 'Отправка данных' },
-					{ LoadPoint: 100, Message: 'Переходим к следующему шагу' },
+					{ LoadPoint: 0, 	Message: "Отправка данных" },
+					{ LoadPoint: 100, Message: "Переходим к следующему шагу" },
 				]
 
-			}
+			};
 		},
 		computed: {
 
@@ -255,7 +259,7 @@
 		watch: {
 			LoginStatus: {
 				handler() {
-					this.toggleRegisterModal(false)
+					this.toggleRegisterModal(false);
 				},
 				deep: true
 			}
@@ -263,33 +267,29 @@
 		methods: {
 
 			...mapMutations({
-				toggleRegisterModal: 'Auth/Register/toggleRegisterModal',
-				ChangeLoadMessage: 'Loader/Loader_ChangeLoadMessage',
+				toggleRegisterModal: "Auth/Register/toggleRegisterModal",
+				ChangeLoadMessage: "Loader/Loader_ChangeLoadMessage",
 			}),
 
 			...mapActions({
-				Register: 'Auth/Register/Register',
+				Register: "Auth/Register/Register",
 			}),
 
 			defineError(e: auth.error): string {
-				return auth.defineError(e, this.Lang)
+				return auth.defineError(e, this.Lang);
 			},
 			
 			async sendForm(form: form.registration) {
 
-				this.ChangeLoadMessage('Отправка формы');
+				this.ChangeLoadMessage("Отправка формы");
 
 				this.LoaderStage += 1;
 
-				const response: boolean = await this.Register(form);
-
-				if ( typeof response === 'string' ) {
-
-				}
+				await this.Register(form);
 
 			},
 
 		}
-	})
+	});
 
 </script>

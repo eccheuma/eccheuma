@@ -34,23 +34,23 @@
 
 <script lang="ts">
 
-  import Vue, { PropOptions } from 'vue'
+  import Vue, { PropOptions } from "vue";
 
   export default Vue.extend({
     props: {
       name: {
         type: String,
-        default: 'JS'
+        default: "JS"
       } as PropOptions<string>
     },
     render(h) {
-      return h('i', { 
-        class: 'icon',
+      return h("i", { 
+        class: "icon",
         domProps: {
           innerHTML: require(`~/assets/icons/Icon=${ this.name }.svg?include`)
         },
-      })
+      });
     },
-  })
+  });
 
 </script>

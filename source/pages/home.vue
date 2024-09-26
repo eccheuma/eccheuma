@@ -1,65 +1,61 @@
 <template>
 	<div id="HomePage" class="home-container">
 
-		<main>
-
-			<client-only>
-				<auth v-if="$isMobile" />
-			</client-only>
-
+		<section class="home-wrapper home-main" >
 			<pagination :payload="{ order: 1, scrollTarget: 445, section: 'home', delay: 0 }" />
+			<nuxt-child :key="$route.path" />
+			<pagination :payload="{ order: -1, scrollTarget: 445, section: 'home', delay: 0 }" />
+		</section>
 
-			<nuxt-child :key="$route.path" class="home-content" />
-
-			<pagination style="align-self: end" :payload="{ order: -1, scrollTarget: 445, section: 'home', delay: 0 }" />
-
-		</main>
-
-		<aside>
-
+		<section class="home-wrapper home-auth">
 			<client-only>
-
-				<auth v-if="!$isMobile" v-once />
-
-				<vk-posts-container />
-
+				<auth />
 			</client-only>
-			
-		</aside>
+		</section>
+
+		<section class="home-wrapper home-feed">
+			<!-- <client-only> -->
+				<vk-posts-container :posts="vk_feed"/>
+			<!-- </client-only> -->
+		</section>
 
 	</div>
 </template>
 
 <style lang="scss" scoped>
 
-aside {
-
-	padding: 2vh 10px;
-	display: grid;
-	row-gap: 2vh;
-	align-content: start;
-
-}
-
-main {
-	display: grid;
-	row-gap: 2vh;
-	align-content: start;
-	padding: 2vh 10px;
-}
-
 .home {
+	&-wrapper {
+		padding: 2vh 10px;
+		background: rgb(var(--color-mono-200));
+	}
 	&-container {
 		display: grid;
-		column-gap: 15px;
-		grid-template-columns: 3fr minmax(300px, 1fr);
+		grid-template-columns: 9fr 3fr;
+		grid-template-rows: auto 1fr;
+		grid-template-areas: 
+			"main auth" 
+			"main feed";
+		column-gap: 1vw;
+
 		@media screen and ( max-width: $mobile-breakpoint ) {
 			grid-template-columns: 1fr;
+			grid-template-areas: "auth" "main" "feed";
 		}
+
 	}
-	&-content {
-		display: grid;
+	&-main {
+		grid-area: main;
+		display: flex;
+		flex-direction: column;
 		row-gap: 2vh;
+	}
+	&-auth {
+		grid-area: auth;
+	}
+	&-feed {
+		grid-area: feed;
+		padding: 0;
 	}
 }
 
@@ -67,69 +63,79 @@ main {
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from "vue";
 
 // VUEX
-	import { mapMutations, mapState } from 'vuex'
+	import { mapMutations, mapState } from "vuex";
 
 // API
-	import { database } from '~/api/database'
+	import { database } from "~/api/database";
+	import { feed } from "~/api/feed";
 
 // MIXINS
-	import TransitionSound 		from '~/assets/mixins/TransitionSound'
-	import TransitionProperty from '~/assets/mixins/PageTransitionProperty'
+	import TransitionProperty from "~/assets/mixins/PageTransitionProperty";
 
 // COMPONENTS
-	import Pagination 			from '~/components/common/Pagination.vue'
-	import Auth 						from '~/components/auth/Auth.vue'
+	import Pagination from "~/components/common/Pagination.vue";
+	import Auth from "~/components/auth/Auth.vue";
 
 // TYPES
-	import type { VuexMap } from '~/typescript/VuexMap'
+	import type { VuexMap } from "~/contracts/VuexMap";
 
 // LOAD POLITIC
-	import { Ranges } from '~/config/LoadPolitic'
+	import { Ranges } from "~/config/LoadPolitic";
 
 // PAGE DESCRIPTION
-	import { Opengraph } from '~/utils/opengraph'
+	import { opengraph } from "~/utils/opengraph";
 
-	export const PageDescription: Opengraph.struct = {
-		title				: 'Eccheuma | Главная',
-		description	: 'Главная страница. Тут собраны статьи на завязанные на профильную тему.',
-		url					: '',
-		image				: require('~/assets/images/NotificationBadge.png?resize&size=600').src,
-	}
+	export const PageDescription: opengraph.struct = {
+		title				: "Eccheuma | Главная",
+		description	: "Главная страница. Тут собраны статьи на завязанные на профильную тему.",
+		url					: "",
+		image				: require("~/assets/images/NotificationBadge.png?resize&size=600").src,
+	};
 
 // MODULE
 	export default Vue.extend({ 
 		components: {
 			Pagination,
 			Auth,
-			VkPostsContainer: () => import('~/components/feed/VkPostsContainer.vue'),
+			VkPostsContainer: () => import("~/components/feed/Container.vue"),
 		},
-		mixins: [ TransitionSound, TransitionProperty ],
-		layout: 'Application', 
+		mixins: [ TransitionProperty ],
+		layout: "Application", 
 		scrollToTop: false, 
+		async asyncData() {
+
+			const vk_feed = await feed.get();
+
+			return { vk_feed };
+
+		},
 		data() {
 			return {
 
-				Title: 'Главная',
+				Title: "Главная",
+				PageQuantity: 0,
 
-			}
+			};
 		},
-		async fetch() {
-
-			const PostsQuantity: number = await database.getLength('Posts');
-
-			this.ChangePageQuantity(Math.ceil( PostsQuantity / Ranges.posts ));
-
-		},
-		head () {
+		head() {
 			return {
 				title: PageDescription.title,
 				meta: [
-					...new Opengraph.Meta(PageDescription).buildMeta()
+					...new opengraph.Meta(PageDescription).buildMeta()
 				],
-			}
+			};
+		},
+		async mounted() {
+
+			const PostsQuantity: number = await database.getLength("posts");
+
+			this.PageQuantity = Math.ceil( PostsQuantity / Ranges.posts );
+
+			this.ChangePageQuantity(this.PageQuantity);
+
 		},
 		computed: {
 			...mapState({
@@ -138,9 +144,9 @@ main {
 		},
 		methods: {
 			...mapMutations({
-				ChangePageQuantity: 'PageSelector/ChangePageQuantity'
+				ChangePageQuantity: "PageSelector/ChangePageQuantity"
 			})
 		},
-	})
+	});
 
 </script>

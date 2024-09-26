@@ -1,4 +1,4 @@
-import { MutationTree } from 'vuex'
+import { MutationTree } from "vuex";
 
 // STATE
 	export const state = () => ({
@@ -6,13 +6,13 @@ import { MutationTree } from 'vuex'
 		Page: 1,
 		PageQuantity: 1,
 
-	})
+	});
 
 // CURENT STATE
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/typescript/VuexMap' {
+	declare module "~/contracts/VuexMap" {
 		interface VuexMap {
 			PageSelector: CurentState
 		}
@@ -21,9 +21,9 @@ import { MutationTree } from 'vuex'
 // MUTATIONS
 	export const mutations: MutationTree<CurentState> = {
 		ChangePage(state, page: number ) {
-			state.Page = page
+			state.Page = page;
 		},
 		ChangePageQuantity(state, quantity: number) {
-			state.PageQuantity = quantity
+			state.PageQuantity = quantity;
 		}
-	}
+	};

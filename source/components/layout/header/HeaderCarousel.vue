@@ -317,43 +317,46 @@
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from "vue";
 
 	// API
-		import { mapActions, mapState } from 'vuex'
-		import { database } from '~/api/database'
+		import { mapState } from "vuex";
+		import { database } from "~/api/database";
 
 	// VUEX
 	
 	// UTILS
-		import { utils, LocaleDate } from '~/utils';
+		import { utils, LocaleDate } from "~/utils";
 
 	// COMPONENTS
-		import Parallax from '~/components/common/Parallax.vue';
-		import Carousel from '~/components/common/Carousel.vue';
-		import Icon 		from '~/components/common/Icon.vue';
-		import Tag 			from '~/components/common/Tag.vue';
+		import Parallax from "~/components/common/Parallax.vue";
+		import Carousel from "~/components/common/Carousel.vue";
+		import Icon 		from "~/components/common/Icon.vue";
+		import Tag 			from "~/components/common/Tag.vue";
 	
 	// MIXINS
-		import EmitSound from '~/assets/mixins/EmitSound'
+		import EmitSound from "~/assets/mixins/EmitSound";
 
 	// LOAD POLITIC
-		import { Ranges } from '~/config/LoadPolitic'
+		import { Ranges } from "~/config/LoadPolitic";
+
+	// Helpers
+		import { DEFAULT_IMAGE_STRUCT, getImageURL } from "~/components/image/image.helpers";
 
 	// TYPES
-		import type { Image } from '~/typescript/Image';
-		import type { Post } 	from '~/typescript/Post';
+		import type { Image } from "~/contracts/Image";
+		import type { Post } 	from "~/contracts/Post";
 
-		import type { VuexMap } from '~/typescript/VuexMap';
+		import type { VuexMap } from "~/contracts/VuexMap";
 
 		type HeaderSlide = {
-			content: Pick<Post.struct, 'title' | 'description' | 'ID' | 'tags'>
+			content: Pick<Post.struct, "title" | "description" | "ID" | "tags">
 			date: LocaleDate
 			formatsStruct: Image.formatsStruct
 		}
 
 	// VARS
-		const PLACEHOLDER_L = `${ require('~/assets/images/ImagePlaceholder.png?resize&size=600')}`
+		const PLACEHOLDER_L = `${ require("~/assets/images/ImagePlaceholder.png?resize&size=600")}`;
 	
 	// MODULE
 	export default Vue.extend({
@@ -362,7 +365,7 @@
 			Carousel,
 			Icon,
 			Tag,
-			Profile: () => import('~/components/profile/Profile.vue'),
+			Profile: () => import("~/components/profile/Profile.vue"),
 		},
 		mixins: [ EmitSound ],
 		data() {
@@ -383,25 +386,19 @@
 
 				Slides: Array<HeaderSlide>(0),
 
-			}
+			};
 		},
 		async fetch() {
 
-			await this.GetPosts();
+			this.Slides = await this.GetPosts();
 
 		},
 		computed: {
-
 			...mapState({
 				LoginStatus:	state => (state as VuexMap).Auth.Session.LoginStatus,
 			})
-
 		},
 		methods: {
-
-			...mapActions({
-				getImageURL: 'Images/getImageURL',
-			}),
 
 			setScrollPosition(scroll: number) {
 				this.CommonCarouselScrollPosition = scroll;
@@ -409,24 +406,27 @@
 
 			async GetPosts() {
 
-				const POSTS: utils.types.asIterableObject<Post.struct> = await database.get('Posts', { limit: Ranges.posts })
+				const Posts: utils.types.asIterableObject<Post.struct> = await database.get("posts", { limit: Ranges.posts });
 
-				const formatedSlides = Object
-					.values(POSTS)
-					.map(async ({ title, description, ID, tags, image, date }) => {
+				const formatedSlides: Array<Promise<HeaderSlide>> = Object
+					.values(Posts)
+					.map(({ title, description, ID, tags, image, date }) => new Promise((res) => {
 
-						return {
+						getImageURL({ 
+							path: image,
+							size: 1440,
+						}).then(imageResult => res({
 							content: { title, description, ID, tags },
-							date: utils.getLocalTime(date),
-							formatsStruct: await this.getImageURL({ 
-								path: image,
-								size: 1440,
-							})
-						} as HeaderSlide
+							// TODO: Выводить на отображение несколько дат, в зависимости от того, был ли изменён пост или нет.
+							date: utils.getLocalTime(date.modified),
+							formatsStruct: imageResult instanceof Error
+								? DEFAULT_IMAGE_STRUCT
+								: imageResult,
+						}));
 
-					})
+					}));
 
-				this.Slides = await Promise.all(formatedSlides)
+				return await Promise.all(formatedSlides);
 				
 			},
 
@@ -443,20 +443,20 @@
 				function scrollToTarget() {
 					window.scrollTo({
 						top: targetPosition,
-						behavior: 'smooth'
-					})
+						behavior: "smooth"
+					});
 				}
 
 				switch (this.$route.name) {
 
-					case 'home': scrollToTarget(); break;
+					case "home": scrollToTarget(); break;
 				
-					default: this.$router.push({ path: 'home' }).then(scrollToTarget); break;
+					default: this.$router.push({ path: "home" }).then(scrollToTarget); break;
 
 				}
 
 			},
 		},
-	})
+	});
 
 </script>

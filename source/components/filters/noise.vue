@@ -49,19 +49,19 @@
 
 <script lang="ts">
 
-  import Vue from 'vue'
+  import Vue from "vue";
 
   export default Vue.extend({
     props: {
       hash: {
         type: String,
-        default: '000000'
+        default: "000000"
       },
     },
     data() {
       return {
         seed: 1,
-      }
+      };
     },
     mounted() {
       // this.updateSeed(); 
@@ -70,9 +70,9 @@
       updateSeed() {
         requestAnimationFrame(() => {
           this.seed = Math.trunc(Math.random() * 100); this.updateSeed();
-        })
+        });
       }
     }
-  })
+  });
 
 </script>

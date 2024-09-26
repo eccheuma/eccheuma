@@ -48,7 +48,7 @@
 				</template>
 			</caption-card>
 
-			<div class="auth_login-body-social">
+			<!-- <div class="auth_login-body-social">
 
 				<span>
 					Войти с помощью соц. сетей
@@ -68,7 +68,7 @@
 					</button>
 				</div>
 
-			</div>
+			</div> -->
 
 		</section>
 
@@ -282,29 +282,29 @@
 
 <script lang="ts">
 
-import Vue from 'vue'
+import Vue from "vue";
 
 // VUEX
-	import { mapState, mapMutations, mapActions } from 'vuex'
+	import { mapState, mapMutations, mapActions } from "vuex";
 
 // UTILS
-	import { validate } from '~/utils/validate'
+	import { validate } from "~/utils/validate";
 
 // MIXINS
-	import EmitSound from '~/assets/mixins/EmitSound'
+	import EmitSound from "~/assets/mixins/EmitSound";
 
 // TYPES 
 
 	// AUTH
-	import { form, auth } from '~/api/auth'
+	import { form, auth } from "~/api/auth";
 
 	// VUEX MODULE TYPE MAP
-	import type { VuexMap } from '~/typescript/VuexMap'
+	import type { VuexMap } from "~/contracts/VuexMap";
 
 	// COMPONENTS
-	import EccheumaButton from '~/components/buttons/CommonButton.vue';
-	import Icon 					from '~/components/common/Icon.vue';
-	import CaptionCard 		from '~/components/common/Caption.vue'
+	import EccheumaButton from "~/components/buttons/CommonButton.vue";
+	import Icon 					from "~/components/common/Icon.vue";
+	import CaptionCard 		from "~/components/common/Caption.vue";
 
 // MODULE
 	export default Vue.extend({
@@ -324,7 +324,7 @@ import Vue from 'vue'
 					password: String(),
 				} as form.registration
 
-			}
+			};
 		},
 		computed: {
 
@@ -337,19 +337,19 @@ import Vue from 'vue'
 			formValidation(): { email: boolean, password: boolean } {
 				return {
 					email			: validate.email(this.userForm.email),
-					password	: validate.pass(this.userForm.password, 6, '[a-zA-Z0-9]'),
-				}
+					password	: validate.pass(this.userForm.password, 6, "[a-zA-Z0-9]"),
+				};
 			}
 
 		},
 		mounted() {
-
+				
 			if ( process.browser ) {
 
 				this.setSounds([
-					{ file: 'Off', name: 'Input::Increment', settings: { rate: 0.65, volume: .25 } },
-					{ file: 'Off', name: 'Input::Decrement', settings: { rate: 0.50, volume: .25 } },
-				])
+					{ file: "Off", name: "Input::Increment", settings: { rate: 0.65, volume: .25 } },
+					{ file: "Off", name: "Input::Decrement", settings: { rate: 0.50, volume: .25 } },
+				]);
 
 			}
 
@@ -357,16 +357,16 @@ import Vue from 'vue'
 		methods: {
 
 			...mapActions({
-				signIn: 'Auth/Login/SignIn'
+				signIn: "Auth/Login/SignIn"
 			}),
 
 			...mapMutations({
-				toggleRegisterModal: 'Auth/Register/toggleRegisterModal',
+				toggleRegisterModal: "Auth/Register/toggleRegisterModal",
 			}),
 
-			inputSound(input: InputEvent) {
+			inputSound(event: Event) {
 				if ( this.inFocus ) {
-					this.playSound(this.Sounds.get(input.data ? 'Input::Increment' : 'Input::Decrement'))
+					this.playSound(this.Sounds.get((event as InputEvent).data ? "Input::Increment" : "Input::Decrement"));
 				}
 			},
 
@@ -375,16 +375,16 @@ import Vue from 'vue'
 				const { email, password } = this.formValidation;
 
 				if ( email && password ) {
-					this.signIn(this.userForm)
-				};
+					this.signIn(this.userForm);
+				}
 
 			},
 
 			getLocaleError(error: auth.error) {
-				return auth.defineError(error, this.Lang)
+				return auth.defineError(error, this.Lang);
 			}
 
 		}
-	})
+	});
 
 </script>

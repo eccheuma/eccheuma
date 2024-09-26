@@ -1,35 +1,35 @@
-	import { ActionTree, MutationTree } from 'vuex'
+	import { ActionTree, MutationTree } from "vuex";
 
 // API
-	import { database } from '~/api/database'
+	import { database } from "~/api/database";
 
 // UTILS
-	import { utils } from '~/utils';
+	import { utils } from "~/utils";
 
 // INTERFACES AND TYPES 
 
-	import { VuexMap } from '~/typescript/VuexMap'
+	import { VuexMap } from "~/contracts/VuexMap";
 
-	import { Purchase } 	from '~/typescript/Services'
-	import { Message } from '~/typescript/Message'
+	import { Purchase } 	from "~/contracts/Services";
+	import { Message } from "~/contracts/Message";
 
-	import type { Notification } from '~/typescript/Notification'
+	import type { Notification } from "~/contracts/Notification";
 	
 // STATE
 	export const state = () => ({
 
-		Orders				: new Array<Purchase.order<any>>(0),
-		ActiveOrders	: new Array<Purchase.order<any>>(0),
+		Orders				: new Array<Purchase.order>(0),
+		ActiveOrders	: new Array<Purchase.order>(0),
 
 		RequestQuantity: 0,
 		
-	})
+	});
 
 // CURENT STATE
 	export type CurentState = ReturnType<typeof state>
 
 // DECALARE MODULE
-	declare module '~/typescript/VuexMap' {
+	declare module "~/contracts/VuexMap" {
 		interface User {
 			WorkRequest: CurentState
 		}
@@ -40,25 +40,30 @@
 		setQuantity(state, prop) {
 			state.RequestQuantity = prop;
 		},
-		setOrders(state, prop) {
-			state.Orders = prop
+		setOrders(state, prop: Array<Purchase.order>) {
+
+			if ( prop.length ) {
+				state.Orders = prop;
+			}
+
 		},
 		setActiveOrder(state, prop) {
-			state.ActiveOrders = prop
+			state.ActiveOrders = prop;
 		}
-	}
+	};
 
 	// ACTIONS
 	export const actions: ActionTree<CurentState, VuexMap> = {
 
-		async sendWorkRequest(vuex, order: Purchase.order<any>) {
+		// TODO: #16 Перенести сообщения в отдельный модуль, чтобы не болтались по среди метода. @Scarlatum
+		async sendWorkRequest(vuex, order: Purchase.order) {
 
-			const { UserID } = vuex.rootState.User.State.State
+			const { uid: ID } = vuex.rootState.User.State.State;
 
 			const Message: Message.struct = {
-				ID: utils.hashGenerator(),
-				userID: 'SUPPORT',
-				from: 'Eccheuma Informer',
+				uid: utils.randHashGenerator(),
+				userID: "SUPPORT",
+				from: "Eccheuma Informer",
 				message: 
 				`Благодарю за оформление заявки на заказ: "${ order.name }".
 				
@@ -68,53 +73,55 @@
 				Текущие заказы можно посмотреть в разделе "запросы".`,
 				readed: false,
 				date: Date.now(),
-			}
+			};
 
 			const newNotification: Notification.struct = {
-				message: 'Ваша заявка пошла на рассмотрение',
-				description: 'Информацию о стаусе заказа, вы можете посмотреть в личном кабинете, что находиться вверху приложения.',
-			}
+				message			: "Ваша заявка пошла на рассмотрение",
+				description	: "Информацию о стаусе заказа, вы можете посмотреть в личном кабинете, что находиться вверху приложения.",
+			};
 
 			try {
 
-				await vuex.dispatch('setRequestQuantity');
+				await vuex.dispatch("setRequestQuantity");
 
-				const requestHash = utils.hashGenerator();
+				const requestHash = utils.randHashGenerator();
 
-				await database.set(`Users/${ UserID }/work_requests/WorkID-${ requestHash }`, order);
-				await database.set(`Users/${ UserID }/messages/Hash_${ requestHash }`, Message);
+				await database.set(`users/${ ID }/work_requests/WorkID-${ requestHash }`, order);
+				await database.set(`users/${ ID }/messages/Hash_${ requestHash }`, Message);
 
-				vuex.commit('Notification/Notification_Status', true, { root: true })
-				vuex.commit('Notification/createNotification', newNotification, { root: true })
+				vuex.commit("Notification/Notification_Status", true, { root: true });
+				vuex.commit("Notification/createNotification", newNotification, { root: true });
 
 			} catch (e) {
-				console.log(e) 
+				console.log(e); 
 			}
 
 		},
 		
 		async setRequestContent(vuex) {
 
-			const { UserID } = vuex.rootState.User.State.State
+			const { uid: ID } = vuex.rootState.User.State.State;
 
-			vuex.commit('setOrders', await database.get(`Users/${ UserID }/work_requests`)) 
+			vuex.commit("setOrders", await database.get<Array<Purchase.order>>(`users/${ ID }/work_requests`));
+
+
 		},
 
 		async setRequestQuantity(vuex) {
 
-			const { UserID } = vuex.rootState.User.State.State
+			const { uid: ID } = vuex.rootState.User.State.State;
 
-			vuex.commit('setQuantity', await database.getLength(`Users/${ UserID }/work_requests`)) 
+			vuex.commit("setQuantity", await database.getLength(`users/${ ID }/work_requests`)); 
 		},
 
 		setActiveRequest(vuex) {
 
 			if ( !vuex.state.Orders.length ) return;
 
-			vuex.commit('setActiveOrder', vuex.state.Orders.filter((order) => {
-				return order.status === Purchase.status.Process
-			}))
+			vuex.commit("setActiveOrder", vuex.state.Orders.filter((order) => {
+				return order.status === Purchase.status.Process;
+			}));
 
 		},
 
-	}
+	};

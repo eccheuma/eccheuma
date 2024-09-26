@@ -1,13 +1,15 @@
 # 
+.cache
+.github
 .firebase
 .output
 .nuxt
 .env
+.vim
 
 #
 app
 container
-functions
 
 # Node Modules
 node_modules
@@ -16,3 +18,4 @@ node_modules
 *.rules.*
 
 .vercel
+*.log

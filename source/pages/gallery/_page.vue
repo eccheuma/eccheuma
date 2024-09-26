@@ -1,5 +1,5 @@
 <template>
-	<section ref="page" class="gallery-page">
+	<section ref="page" class="gallery-page" :key="Page" :style="dynamicStyles">
 
 		<template v-if="$isMobile">
 			<eccheuma-image
@@ -7,7 +7,7 @@
 				v-for="(image, index) in Images"
 
 				:id="`GalleryImage_${ index }`"
-				:key="image.content.date"
+				:key="image.content.path"
 
 				:ref="'images'" 
 				:style="`order: ${( BasePoint - image.ID ) + Images.length }`"
@@ -24,7 +24,7 @@
 
 		<template v-for="(image, index) in Images" v-else>
 			<intesection-component 
-				:key="image.content.date" 
+				:key="image.content.path"
 				:style="`order: ${( BasePoint - image.ID ) + Images.length }`"
 				:rootMargin="5"
 				:wrap="true" 
@@ -48,37 +48,52 @@
 	</section>
 </template>
 
+<style lang="scss">
+
+.gallery-page {
+	transition-duration: 250ms;
+}
+
+</style>
+
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue, { VNodeData } from "vue";
 
 	// VUEX
-	import { mapActions, mapMutations, mapState } from 'vuex'
+	import { mapActions, mapMutations, mapState } from "vuex";
 	
 	// VUEX MAP
-	import type { VuexMap } from '~/typescript/VuexMap';
+	import type { VuexMap } from "~/contracts/VuexMap";
 
 	// API
-	import { database } from '~/api/database';
+	import { database } from "~/api/database";
 
 	// UTILS
-	import { Meta } from '~/utils/meta';
+	import { Meta } from "~/utils/meta";
 
 	// MIXINS
-	import PageTransitionProperty 	from '~/assets/mixins/PageTransitionProperty'
+	import PageTransitionProperty 	from "~/assets/mixins/PageTransitionProperty";
 
 	// TYPES
-	import type { PAYLOAD } 					from '~/store/PageContent'
-	import type { ANIMATION_PAYLOAD } from '~/assets/mixins/IntersectionObserver'
+	import { MetaInfo } from "vue-meta/types/vue-meta";
 
-	import { navigation } from '~/typescript/Navigation';
+	// ? Надо разобраться, почему не хватаются типы.
+	import type VueRouter from "vue-router";
+
+	import { PayloadQuery, Reference } from "~/store/PageContent";
+	import type { ANIMATION_PAYLOAD } from "~/assets/mixins/IntersectionObserver";
+
+	import { navigation } from "~/contracts/Navigation";
 
 	// LOAD POLITIC
-	import { Ranges } from '~/config/LoadPolitic'
+	import { Ranges } from "~/config/LoadPolitic";
 
 	// COMPONENTS
-	import EccheumaImage 						from '~/components/image/Image.vue'
-	import IntesectionComponent from '~/components/functional/intersectionComponent.vue'
+	import EccheumaImage 						from "~/components/image/Image.vue";
+	import IntesectionComponent from "~/components/functional/intersectionComponent.vue";
+
+	const PAGE_TRANSITION_TIME = 250;
 
 	// INTERSECTION_ANIMATION
 	const Animation: ANIMATION_PAYLOAD = {
@@ -92,7 +107,7 @@
 			translateY: [0, 100],
 			duration: () => 500 + 500 * Math.random(),
 		}
-	}
+	};
 
 	// MODULE
 	export default Vue.extend({
@@ -109,19 +124,19 @@
 			// ? Parse page_1: str => 1: int
 			const Page: number = parseInt(params.page.slice(-1));
 
-			const Range: number = typeof query.range === 'string'
+			const Range: number = typeof query.range === "string"
 				? parseInt(query.range)
-				: Ranges.gallery
+				: Ranges.gallery;
 
-			const Quantity: number = await database.getLength('Gallery');
+			const Quantity: number = await database.getLength("gallery");
 
-			if ( ! Number.isInteger(Page) ) redirect('/error');
+			if ( ! Number.isInteger(Page) ) redirect("/error");
  
 			const inRange: boolean = (Quantity + Range) >= (Page * Range);
 
 			inRange 
 				? null 
-				: redirect('/error');
+				: redirect("/error");
 
     },
 		asyncData({ params, query }) {
@@ -129,7 +144,7 @@
 			const Page 			= Number( params.page.slice(-1) ); // page_1 => 1
 			const LoadRange = Number( query.range );
 			
-			return { Page, LoadRange }
+			return { Page, LoadRange };
 
 		},
 		data() {
@@ -141,24 +156,20 @@
 				LoadRange: Ranges.gallery,
 				BasePoint: 0,
 
-			}
+			};
 		},
 		async fetch() {
 
-			// if ( process.server && !this.application.context.browser ) {
 			await this.getDatabaseData();
-			// }
 			
 		},
-		head(): {[index: string]: string } {
-
+		head(): MetaInfo {
 			return {
 				title: Meta.conctructTitle(this.Lang, { 
 					page: this.Page, 
 					section: navigation.routeSections.gallery
-				}),
-			}
-			
+				})
+			};
 		},
 		computed: {
 
@@ -167,49 +178,59 @@
 				Lang 		: state => (state as VuexMap).App.Lang
 			}),
 
-		},
-		watch: {
-			GalleryData: {
-				handler() {
-					this.$nextTick().then(() => {
-						this.Ready = true
-					})
-				}
-			},
+			dynamicStyles(): VNodeData["style"] {
+				return {
+					["--t"]: `${ PAGE_TRANSITION_TIME }ms`,
+					opacity: Number(this.Ready)
+				};
+			}
+
 		},
 		created() {
-			
+
 			this.ChangePage(this.Page);
 
-			if ( process.browser && this.$router.currentRoute.name === 'gallery' ) {
+			if ( process.browser && this.$router.currentRoute.name === "gallery" ) {
 				this.getDatabaseData();
 			}
+
+			(this.$router as VueRouter).beforeEach((to, from, next) => {
+
+				if (to.name !== "gallery-page") return next();
+
+				this.Ready = false;
+
+				setTimeout(next, PAGE_TRANSITION_TIME);
+
+			});
 
 		},
 		methods: {
 			
 			...mapActions({
-				GetContent: 'PageContent/GetContent',
+				GetContent: "PageContent/GetContent",
 			}),
 			...mapMutations({
-				ChangePage: 'PageSelector/ChangePage'
+				ChangePage: "PageSelector/ChangePage"
 			}),
 
 			async getDatabaseData() {
 
-				const QUANTITY = await database.getLength('Gallery')
+				const QUANTITY = await database.getLength("gallery");
 
-				const REM: number = QUANTITY - ( this.LoadRange * this.Page )
+				const REM: number = QUANTITY - ( this.LoadRange * this.Page );
 
-				const PAYLOAD: PAYLOAD = {
-					REF: 'Gallery',
-					LOAD_PROPERTY: {
+				const Query: PayloadQuery = {
+					ref: Reference.Gallery,
+					loadQuery: {
 						LoadRange: REM < 0 ? this.LoadRange + REM : this.LoadRange,
 						LoadPoint: REM < 0 ? 0 : REM
 					}
-				}
+				};
 
-				await this.GetContent(PAYLOAD)
+				await this.GetContent(Query);
+
+				this.Ready = true;
 
 			},
 
@@ -217,15 +238,15 @@
 
 				this.$AnimeJS({
 					targets: slotNode,
-					easing: 'linear',
+					easing: "linear",
 
-					...Animation[intersection ? 'in' : 'out']
+					...Animation[intersection ? "in" : "out"]
 
-				})
+				});
 
 			}
 
 		},
-	})
+	});
 	
 </script>

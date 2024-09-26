@@ -1,29 +1,31 @@
 
-import Vue from 'vue';
+import Vue from "vue";
 
 // Mixin for sound emit in Howler.js via store
-import 			{ mapActions, mapState } 	from 'vuex'
-import type { Howl, HowlOptions } from 'howler'
+import 			{ mapActions, mapState } 	from "vuex";
+import type { Howl, HowlOptions } from "howler";
 
-import type { VuexMap } from '~/typescript/VuexMap'
+import type { VuexMap } from "~/contracts/VuexMap";
 
 // TYPES
-export type FILE_NAME = 'Holl' 
-	| 'In'
-	| 'Off' 
-	| 'On' 
-	| 'Out'
-	| 'Tap'
-	| 'Translate'
+export type FILE_NAME = "Holl" 
+	| "In"
+	| "Off" 
+	| "On" 
+	| "Out"
+	| "Tap"
+	| "Translate"
 
-export type SOUND_NAME = 'Ambient'
-	| 'Element::Action' 
-	| 'Element::Disabled'
-	| 'Element::Hover'
-	| 'Switch::On'
-	| 'Switch::Off'
-	| 'Input::Increment'
-	| 'Input::Decrement'
+export type SOUND_NAME = "Ambient"
+	| "Element::Action" 
+	| "Element::Disabled"
+	| "Element::Hover"
+	| "Switch::On"
+	| "Switch::Off"
+	| "Input::Increment"
+	| "Input::Decrement"
+	| "Translate::In"
+	| "Translate::Out"
 
 export type SoundInstance = {
 	file: FILE_NAME,
@@ -32,7 +34,7 @@ export type SoundInstance = {
 }
 
 // DECLARE INSTANCE
-declare module 'vue/types/vue' {
+declare module "vue/types/vue" {
 	interface Vue {
 		setSounds: (sounds_arr: SoundInstance[]) => void,
 		playSound: (howl: Howl | undefined) => Promise<void>
@@ -52,7 +54,7 @@ export default Vue.extend({
 	methods: {
 
 		...mapActions({
-			registerSound: 	'Sound/registerSound'
+			registerSound: 	"Sound/registerSound"
 		}),
 
 		playSound(howl: Howl) {
@@ -72,17 +74,17 @@ export default Vue.extend({
 				file: sound.file,
 				name: sound.name, 
 				settings: { ...DEFAULT_SETTINGS, ...sound.settings } 
-			}
+			};
 
 		},
 
 		setSounds(sounds_arr: SoundInstance[]) {
 
 			sounds_arr.forEach((sound) => {
-				this.registerSound(this.predefineProperty(sound))
-			})
+				this.registerSound(this.predefineProperty(sound));
+			});
 
 		}
 
 	}
-})
+});

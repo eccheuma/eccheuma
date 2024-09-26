@@ -6,7 +6,7 @@
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from "vue";
 
 	const CURSOR_OFFSET = 4;
 
@@ -20,7 +20,7 @@
 				CursorNode: null as unknown as HTMLElement | null,
 				ParentNode: null as unknown as HTMLElement | null,
 
-			}
+			};
 		},
 		computed: {
 			CursorNodeRect(): { H: number, W: number } {
@@ -29,10 +29,10 @@
 					return {
 						H: this.CursorNode.getBoundingClientRect().height / 2,
 						W: this.CursorNode.getBoundingClientRect().width 	/ 2,
-					}
+					};
 				} 
 
-				return { H: 0, W: 0 }
+				return { H: 0, W: 0 };
 
 			}
 		},
@@ -40,24 +40,24 @@
 			ParentNode: {
 				handler() {
 
-					this.ParentNode?.addEventListener('mouseenter', 	this.defineListenersAction)
-					this.ParentNode?.addEventListener('mouseleave', 	this.defineListenersAction)
-					this.ParentNode?.addEventListener('click', 				this.defineListenersAction)
+					this.ParentNode?.addEventListener("mouseenter", 	this.defineListenersAction);
+					this.ParentNode?.addEventListener("mouseleave", 	this.defineListenersAction);
+					this.ParentNode?.addEventListener("click", 				this.defineListenersAction);
 
 				}
 			}
 		},
 		mounted() {
 
-			this.ParentNode = this.$el.parentElement!
-			this.CursorNode = this.$refs.CurRef as HTMLElement 
+			this.ParentNode = this.$el.parentElement!;
+			this.CursorNode = this.$refs.CurRef as HTMLElement; 
 				
 		},
 		destroyed() {
 
-			this.ParentNode?.removeEventListener('mouseenter', 	this.defineListenersAction)
-			this.ParentNode?.removeEventListener('mouseleave', 	this.defineListenersAction)
-			this.ParentNode?.removeEventListener('click', 			this.defineListenersAction)
+			this.ParentNode?.removeEventListener("mouseenter", 	this.defineListenersAction);
+			this.ParentNode?.removeEventListener("mouseleave", 	this.defineListenersAction);
+			this.ParentNode?.removeEventListener("click", 			this.defineListenersAction);
 
 		},	
 		methods: {
@@ -68,70 +68,70 @@
 						this.CursorNode.style.top 	= `${ event.y - this.ParentNode.getBoundingClientRect().y - CURSOR_OFFSET }px`;
 						this.CursorNode.style.left 	= `${ event.x - this.ParentNode.getBoundingClientRect().x - CURSOR_OFFSET }px`;
 					}
-				})
+				});
 
 			},
 			animateCursor( config = {} ) {
 
-				this.$AnimeJS.remove( this.CursorNode )
+				this.$AnimeJS.remove( this.CursorNode );
 
 				const Default = {
 					targets: this.CursorNode,
 					opacity: [0, 0.1],
 					scale: [0, 10],
-					easing: 'easeInOutQuad',
+					easing: "easeInOutQuad",
 					duration: 1000,
-				}
+				};
 
-				this.$AnimeJS({ ...Default, ...config })
+				this.$AnimeJS({ ...Default, ...config });
 
 			},
 			defineListenersAction(event: MouseEvent) {
 
-				this.CursorShowed = true
+				this.CursorShowed = true;
 
-				const EventProperty = { capture: true }
+				const EventProperty = { capture: true };
 
 				switch (event.type) {
 
-					case 'mouseenter':
+					case "mouseenter":
 
 						this.animateCursor({
 							begin: () => {
-								window.addEventListener('mousemove', this.setCursorPosition, EventProperty);
+								window.addEventListener("mousemove", this.setCursorPosition, EventProperty);
 							}
 						}); break;
 
-					case 'mouseleave':
+					case "mouseleave":
 
 						this.animateCursor({
-							direction: 'reverse',
+							direction: "reverse",
 							complete: () => { 
 								
 								this.CursorShowed = false;
 
-								window.removeEventListener('mousemove', this.setCursorPosition, EventProperty ); 
+								window.removeEventListener("mousemove", this.setCursorPosition, EventProperty ); 
 
 							},
 						}); break;
 
-					case 'click':
+					case "click":
 
-						this.setCursorPosition(event)
+						this.setCursorPosition(event);
 
 						this.animateCursor({
-							opacity: [this.CursorNode?.style.opacity ?? 1, 1],
+							opacity: [this.CursorNode?.style.opacity || 1, 1],
 							scale: [10, .5],
-							filter: ['blur(3px)', 'blur(0px)'],
+							filter: ["blur(3px)", "blur(0px)"],
 							duration: 500,
-							direction: 'alternate',
+							direction: "alternate",
 						}); break;
 
 				}
 
 			},
 		},
-	})
+	});
 
 </script>
 

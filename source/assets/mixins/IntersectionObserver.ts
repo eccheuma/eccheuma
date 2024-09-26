@@ -1,10 +1,10 @@
-	import Vue from 'vue'
+	import Vue from "vue";
 
 // TYPES
 
-	import type { AnimeAnimParams } from 'animejs';
+	import type { AnimeAnimParams } from "animejs";
 
-	type ANIMATION_MODE = 'in' | 'out';
+	type ANIMATION_MODE = "in" | "out";
 
 	export type ANIMATION_PAYLOAD = {
 		in: AnimeAnimParams
@@ -25,7 +25,7 @@
 
 // DECLARE FUNC
 
-	declare module 'vue/types/vue' {
+	declare module "vue/types/vue" {
 		interface Vue {
 			initIntersectionObserver: (payload: PAYLOAD) => void
 		}
@@ -38,7 +38,7 @@ export default Vue.extend({
 		return {
 			ObserversMap: 	new Map() as Map<Element, IntersectionObserver>,
 			AnimationState: new Map() as Map<Element, boolean>,
-		}
+		};
 	},
 	methods: {
 
@@ -48,14 +48,14 @@ export default Vue.extend({
 				this.animateElement(
 
 				isIntersecting 
-					? 'in' 
-					: 'out', 
+					? "in" 
+					: "out", 
 				payload._options?.animation_target || payload.el, 
-				payload.animation)
-			}
+				payload.animation);
+			};
 	
 			const OPTIONS = {
-				threshold: payload._threshold ?? this.$isMobile ? 0 : .25
+				threshold: payload._threshold || this.$isMobile ? 0 : .25
 			};
 	
 			const OBSERVER = new IntersectionObserver((entry) => {
@@ -63,48 +63,48 @@ export default Vue.extend({
 				const observer = entry.pop();
 
 				if ( observer ) {
-					payload._cb ? payload._cb(entry) : DEF_CB(observer.isIntersecting)
+					payload._cb ? payload._cb(entry) : DEF_CB(observer.isIntersecting);
 				}
 
 
 			}, OPTIONS);
 
 			this.ObserversMap.set(payload.el, OBSERVER);
-			this.AnimationState.set(payload.el, false)
+			this.AnimationState.set(payload.el, false);
 
-			OBSERVER.observe(payload.el)
+			OBSERVER.observe(payload.el);
 
 		},
 
 		animateElement(mode: ANIMATION_MODE, el: Element, animation: ANIMATION_PAYLOAD) {
 
-			const AS = this.AnimationState
+			const AS = this.AnimationState;
 
 			const DUR = 500;
 
 			const ANIMATION = this.$AnimeJS({
 				targets: el,
 				duration: DUR,
-				easing: 'linear',
+				easing: "linear",
 
 				...animation[mode],
 
 				begin: () => {
-					AS.set(el, true)
+					AS.set(el, true);
 				},
 				complete: () => {
 					setTimeout(() => {
-						AS.set(el, false)
+						AS.set(el, false);
 					}, 250);
 				}
 
-			})
+			});
 
 			if ( AS.get(el) === false ) {
-				ANIMATION.play() 
+				ANIMATION.play(); 
 			}
 
 		}
 
 	}
-})
+});

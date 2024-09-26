@@ -7,10 +7,12 @@ configEnviroment();
 
 export default defineConfig({
   test: {
-    exclude: ['node_modules', 'source', 'utils', 'app', '.vscode', '.nuxt', '.firebase', '.github'],
+    dir: 'spec',
     reporters: 'verbose',
     testTimeout: 12000,
-    watch: false,
+    setupFiles: [
+      './vitest.setup.ts'
+    ],
   },
   resolve: {
     alias: {
@@ -18,8 +20,4 @@ export default defineConfig({
       'path::root': path.resolve(__dirname, '.')
     }
   },
-  clearScreen: true,
-  esbuild: {
-    target: 'ES6'
-  }
-})
+});

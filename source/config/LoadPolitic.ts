@@ -1,7 +1,7 @@
 export namespace Ranges {
 
-	export const posts: number = 4;
+	export const posts = 4;
 
-	export const gallery: number = 12;
+	export const gallery = 12;
 
 }

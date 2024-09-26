@@ -85,7 +85,7 @@
 
 		section {
 			display: grid;
-    	place-content: center;
+			place-content: center;
 		}
 
 		&:after {
@@ -158,15 +158,17 @@
 
 <script lang="ts">
 
-	import Vue, { PropOptions } from 'vue'
+	import Vue, { PropOptions } from "vue";
 
 	// TYPES
-	import type { AnimeParams } from 'animejs'
+	import type { AnimeParams } from "animejs";
 
 	export type LoadStage = { LoadPoint: number, Message: string }
 
 	// VARIABLES
-	const ICON_COLOR_VARIABLE = 'rgb(var(--color-mono-900))'
+	const ICON_COLOR_VARIABLE = "rgb(var(--color-mono-900))";
+	const STAGE_TIME_DURATION = 300;
+	const ANIMATION_DURATION_MS = 100;
 
 	// MODULE
 	export default Vue.extend({
@@ -175,9 +177,9 @@
 				type: Array,
 				default() {
 					return [
-						{ LoadPoint: 0, 	Message: 'Подготовка' },
-						{ LoadPoint: 100, Message: 'Готово' },
-					]
+						{ LoadPoint: 0, 	Message: "Подготовка" },
+						{ LoadPoint: 100, Message: "Готово" },
+					];
 				}
 			} as PropOptions<Array<LoadStage>>,
 			controllable: {
@@ -213,7 +215,7 @@
 
 				ashed: false,
 
-			} 
+			}; 
 		},
 		computed: {
 
@@ -224,7 +226,7 @@
 			},
 
 			segmentLength(): number {
-				return this.dash / this.stages.length
+				return this.dash / this.stages.length;
 			},
 
 			segmentCoord(): [number, number] {
@@ -232,7 +234,7 @@
 				return [
 					this.segmentLength * ( this.stages.length - ( this.curentStage / 2 )),
 					this.segmentLength * ( this.stages.length - ( this.nextStage / 2 ))
-				]
+				];
 
 			}
 
@@ -252,18 +254,18 @@
 						queueMicrotask(() => this.changeStage(stage));
 
 					} else {
-						const idleWathcer = this.$watch('idle', (value) => {
+						const idleWathcer = this.$watch("idle", (value) => {
 							if (value) {
 								queueMicrotask(() => this.changeStage(stage)); idleWathcer();
 							}
-						})
+						});
 					}
 
 				}
 			},
 			active: {
 				handler() {
-					setTimeout(() => { this.active = false }, this.timeLimit );
+					setTimeout(() => { this.active = false; }, this.timeLimit );
 				}
 			}
 		},
@@ -280,23 +282,23 @@
 		},
 		methods: {
 
-			async changeStage(stage: number = 0) {
+			async changeStage(stage = 0) {
 
 				this.idle = false;
 
 				if ( stage === 0 && this.ashed ) {
-					this.fillLogo({ direction: 'reverse', duration: 0, endDelay: 0 });
+					this.fillLogo({ direction: "reverse", duration: 0, endDelay: 0 });
 				}
 
-				const stageDurationFN = () => Math.trunc(750 - (250 * Math.random()));
+				const stageDurationFN = () => Math.trunc(STAGE_TIME_DURATION * 2 - (STAGE_TIME_DURATION * Math.random()));
 				
 				// ---
 
 				// console.log('await block start')
 
-				await this.animateText({ direction: 'normal',  duration: 250 });
-				await this.pathlineDash({ direction: 'normal', duration: stageDurationFN() });
-				await this.animateText({ direction: 'reverse', duration: 250 });
+				await this.animateText({ direction: "normal",  duration: ANIMATION_DURATION_MS });
+				await this.pathlineDash({ direction: "normal", duration: stageDurationFN() });
+				await this.animateText({ direction: "reverse", duration: ANIMATION_DURATION_MS });
 
 				// console.log('await block end')
 
@@ -339,16 +341,16 @@
 						{ opacity: 0 },
 						{ opacity: 1 },
 					], {
-						easing: 'ease-in-out',
-						fill: 'both',
+						easing: "ease-in-out",
+						fill: "both",
 
 						...params
 						
-					})
+					});
 
 					animation.onfinish = () => resolve(true);
 
-				})
+				});
 
 			},
 
@@ -358,18 +360,18 @@
 
 					this.$AnimeJS({
 						targets: this.$refs.path,	
-						easing: 'easeInOutQuad',
+						easing: "easeInOutQuad",
 						round: 1,
 						strokeDashoffset: this.segmentCoord,
-						stroke: { value: ICON_COLOR_VARIABLE, duration: 250 },
+						stroke: { value: ICON_COLOR_VARIABLE, duration: ANIMATION_DURATION_MS },
 						
 						...params,
 
 						complete: () => resolve(true),
 						
-					})
+					});
 
-				})
+				});
 
 			},
 
@@ -382,27 +384,27 @@
 					if ( !el ) reject(false);
 
 					const animation = el.animate([
-						{ fill: 'rgba(var(--color-mono-900), 0)' },
-						{ fill: 'rgba(var(--color-mono-900), 1)' },
+						{ fill: "rgba(var(--color-mono-900), 0)" },
+						{ fill: "rgba(var(--color-mono-900), 1)" },
 					], {
 						duration	: 500,
 						endDelay	: 1000,
-						easing		: 'ease-in-out',
-						fill			: 'both',
+						easing		: "ease-in-out",
+						fill			: "both",
 
 						...params,
 
-					})
+					});
 
 					animation.onfinish = () => {
 						resolve(true);
 					};
 
-				}) 
+				}); 
 
 			}
 
 		}
-	})
+	});
 
 </script>

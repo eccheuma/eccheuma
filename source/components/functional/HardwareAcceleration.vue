@@ -1,12 +1,12 @@
 <script lang="ts">
 
-  import Vue from 'vue'
+  import Vue from "vue";
 
   export default Vue.extend({
     data() {
       return {
         GPU: true,
-      }
+      };
     },  
     created() {
       
@@ -20,14 +20,14 @@
     mounted() {
 
       if ( !this.GPU ) {
-        (this.$el as Element).classList.add('utils::dead-GPU')
+        (this.$el as Element).classList.add("utils::dead-GPU");
       }
 
     },
     render(): any {
       return this.$slots.default;
     }
-  })
+  });
 
 </script>
 

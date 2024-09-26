@@ -1,26 +1,42 @@
-import { Context } from '@nuxt/types'
+import { initializeApp, FirebaseApp, getApps, deleteApp, FirebaseOptions } from "firebase/app";
+import { getDatabase, Database } from "firebase/database";
 
-import firebase from 'firebase/app'
+import { getAuth, Auth, } from "firebase/auth";
+import { Context } from "@nuxt/types";
 
 declare global {
-	var firebaseClient: firebase.app.App
+	var firebaseClient: FirebaseApp;
+	var firebaseDB: Database;
+	var firebaseAuth: Auth;
 }
 
-export default (context?: Context) => {
+export const deleteActiveInstances = () => getApps().forEach(deleteApp);
 
-	const CLIENT_CONFIG = {
-		appId							: context?.env.FIREBASE_API_APP || process.env.FIREBASE_API_APP,
-		apiKey						: context?.env.FIREBASE_API_KEY || process.env.FIREBASE_API_KEY,
-		authDomain				: 'escapefrommordorland.firebaseapp.com',
-		projectId					: 'escapefrommordorland',
-		databaseURL				: 'https://escapefrommordorland.firebaseio.com',
-		storageBucket			: 'escapefrommordorland.appspot.com',
-		messagingSenderId	: '975378208350',
-		measurementId			: 'G-W49JBK6546',
+export default async (context?: Context) => {
+
+	// Wipeout all instances that was stared early. 
+	if (context?.isDev) deleteActiveInstances();
+
+	// const { utils: { randHashGenerator } } = await import('~/utils');
+
+	const DOMEN = process.env.FIREBASE_DOMEN || String();
+
+	const CONFIG: FirebaseOptions = {
+
+		appId: process.env.FIREBASE_API_APP,
+		apiKey: process.env.FIREBASE_API_KEY,
+
+		authDomain: `${DOMEN}.firebaseapp.com`,
+		projectId: DOMEN,
+		databaseURL: `https://${DOMEN}.firebaseio.com`,
+		storageBucket: `${DOMEN}.appspot.com`,
+		messagingSenderId: "975378208350",
+		measurementId: "G-W49JBK6546",
+		
 	};
-	
-	if ( !firebase.apps.length ) {
-		globalThis.firebaseClient = firebase.initializeApp(CLIENT_CONFIG);
-	}
 
-}
+	globalThis.firebaseClient = initializeApp(CONFIG, "DEFAULT");
+	globalThis.firebaseDB = getDatabase(globalThis.firebaseClient);
+	globalThis.firebaseAuth = getAuth(globalThis.firebaseClient);
+
+};

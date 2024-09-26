@@ -33,6 +33,7 @@
 		width: $w;
 
 		&-track {
+
 			background-color: var(--color-accent-edges-100);
 			border-inline: 0.45vw solid rgb(var(--color-mono-200));
 		}
@@ -92,4 +93,8 @@ main {
 
 aside {
 	background-color: rgb(var(--color-mono-200));
+}
+
+code {
+	color: rgb(var(--color-mono-800));
 }

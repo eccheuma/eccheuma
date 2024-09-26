@@ -78,7 +78,14 @@
 
       }
 
+      &-date {
+        height: min-content;
+        line-height: normal;
+        align-self: center;
+      }
+
       &-read {
+        
         display: flex;
         justify-content: right;
         align-items: center;
@@ -115,20 +122,20 @@
 
 <script lang="ts">
 
-  import Vue, { PropOptions } from 'vue'
+  import Vue, { PropOptions } from "vue";
 
   // API
-  import { database } from '~/api/database';
+  import { database } from "~/api/database";
 
   // UTILS
-  import { utils } from '~/utils';
+  import { utils } from "~/utils";
 
   // COMPONENTS
-  import Icon from '~/components/common/Icon.vue'
+  import Icon from "~/components/common/Icon.vue";
 
   // TYPE | INTERFACES | NAMESPACES
-  import { Message }  from '~/typescript/Message';
-  import { User }     from '~/typescript/User'
+  import { Message }  from "~/contracts/Message";
+  import { User }     from "~/contracts/User";
 
   // MODULE
   export default Vue.extend({
@@ -145,28 +152,28 @@
       return {
 
         author: {
-          name: String('Placeholdy'),
+          name: String("Placeholdy"),
           status: User.status.User,
         },
 
         date: utils.getLocalTime(0)
 
-      }
+      };
     },
     created() {
       this.date = utils.getLocalTime(this.payload.date);
     },
     mounted() {
 
-      switch (this.payload.userID) {
+      switch (this.payload.from) {
 
-        case 'SUPPORT': this.author = {
-          name: 'Eccheuma Support',
+        case "SUPPORT": this.author = {
+          name: "Eccheuma Support",
           status: User.status.Support,
         }; break;
 
-        case 'ADMIN': this.author = {
-          name: 'Eccheuma Administration',
+        case "ADMIN": this.author = {
+          name: "Eccheuma Administration",
           status: User.status.Admin,
         }; break;
       
@@ -178,15 +185,15 @@
     methods: {
       async getUser() {
 
-        const { UserName, UserStatus } = await database.get<User.state>(`Users/${ this.payload.userID }/state`);
+        const { name, status } = await database.get<User.struct>(`users/${ this.payload.uid }/state`);
 
         this.author = {
-          name: UserName,
-          status: UserStatus
-        }
+          name: name,
+          status: status
+        };
 
       }
     }
-  })
+  });
 
 </script>

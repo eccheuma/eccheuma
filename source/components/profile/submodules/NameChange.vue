@@ -1,37 +1,59 @@
 <template>
 	<section class="user_profile-component">
-		<div class="user_profile-component-name_change">
+  
+		<div class="user_profile-nameinput">
 
-			<!-- :class="{ NonActive: $v.NewName.$invalid }" -->
-			<!-- <span>Любое имя длинее одного символа</span> -->
+			<span>Любое имя длинее одного символа</span>
 			<input 
 				v-model="NewName" 
 				type="text" 
-				:placeholder="`Текущее имя: ${ State.UserName }`"
+				:placeholder="`Текущее имя: ${ State.name }`"
 				@keypress.shift.enter="setUsername"
 			>
-
 		</div>
+
+		<hr>
+
+		<eccheuma-button @click.native="setUsername">
+			Отправить
+		</eccheuma-button>
+
 	</section>
 </template>
 
 <style lang="scss">
 
-.user_profile-component {
-	&-name_change {
+.user_profile {
 
+	&-component {
+		text-align: center;
+		height: 100%;
+	
 		display: grid;
 		grid-template: {
 			columns: 1fr;
-			rows: 1fr
+			rows: 1fr min-content auto
 		}
+	
+		place-content: center;
+		row-gap: 2vh;		
+	
+		button {
+			width: min-content;
+			height: min-content;
+			justify-self: center;
+			align-self: end;
+		}
+	}
 
-		height: 60vh;
+	&-nameinput {
+
+		margin: auto;
 
 		span {
-			height: 3vh;
+			line-height: 4vh;
 		}
-
+	
 		input {
 			margin: auto;
 			text-align: center;
@@ -44,49 +66,60 @@
 			border-radius: var(--border-radius);
 			width: 75%;
 		}
-	}	
+	}
+
+
 }
 
 </style>
 
 <script lang="ts">
 
-	import Vue from 'vue';
-
-	// VALIDATORS
-	import { required, minLength } from 'vuelidate/lib/validators'
+	import Vue from "vue";
 
 	// VUEX
-	import { mapState } from 'vuex'
+	import { mapState } from "vuex";
 
 	// API
-	import { database } from '~/api/database';
+	import { database } from "~/api/database";
 
 	// VUEX MODULE TYPE MAP
-	import type { VuexMap } 				from '~/typescript/VuexMap'
+	import type { VuexMap } from "~/contracts/VuexMap";
+
+	// COMPONENTS
+	import EccheumaButton from "~/components/buttons/CommonButton.vue";
 
 	// MODULE
 	export default Vue.extend({
-		data() {
-			return {
-				NewName: '',
-			}
+		components: {
+			EccheumaButton
 		},
+		data() {
+
+			return {
+				NewName: "",
+			};
+		
+},
 		computed: {
 			...mapState({
 				State: state => (state as VuexMap).User.State.State,
 			}),
-		},
-		validations: {
-			NewName: { minLength: minLength(1), required },
+
+			nameValidation(): boolean {
+
+				return this.NewName.length > 1;
+			
+}
+
 		},
 		methods: {
 			setUsername() {
 				
-				database.update(`Users/${ this.State.UserID }/state`, { UserName: this.NewName })
+				database.update(`users/${ this.State.uid }/state`, { name: this.NewName });
 
 			},
 		}
-	})
+	});
 
 </script>

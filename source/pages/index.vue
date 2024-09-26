@@ -14,12 +14,12 @@
 		</client-only>
 
 		<section class="holl-mute">
-			<span
+			<button
 				:class="{ active: mute }"
 				@click="globalMute(!mute)"
 			>
 				<icon name="Mute" />
-			</span>
+			</button>
 		</section>
 
 		<section class="holl-info">
@@ -36,7 +36,7 @@
 				<path
 					ref="LOGO_PATH"
 					d="m156 7h-155c1-2 1-3 3-4 1-1 3-2 6-2h138c2 0 4 1 5 2 2 1 3 2 3 4zm-135 2h20c0 1 0 3-1 4s-3 2-7 2h-20c0-2 1-3 2-4 2-1 4-2 6-2zm135 8c0 2-1 3-3 4-1 1-3 2-5 2h-138c-3 0-5-1-6-2-2-1-2-2-3-4h155z"
-					stroke="rgb(var(--color-mono-900))"
+					stroke="rgb(var(--color-mono-800))"
 				/>
 			</svg>
 
@@ -53,16 +53,12 @@
 		</section>
 
 		<section class="holl-links">
-
-			<a
-				v-for="(item, index) in Links"
-				:key="index"
-				:href="item.link"
-			>
-			
-				<icon :name="item.icon" /> {{ item.title }}
-
-			</a>
+			<template v-for="(item, index) in Links">
+				<a :href="item.link" :key="index">
+					<icon :name="item.icon" />
+          {{ item.title }}
+				</a>
+			</template>
 		</section>
 
 	</main>
@@ -83,7 +79,12 @@
 			grid-template: {
 				columns: 1fr 12fr 1fr;
 				rows: 10vh 40vh 1fr 1fr 10vh;
-				areas: ". build 	mute" ". logo 	." ". nav 		." ". quote 	." ". links 	.";
+				areas: 
+					". build 	mute" 
+					". logo 	." 
+					". nav 		." 
+					". quote 	." 
+					". links 	.";
 			}
 
 			@media screen and ( max-width: $mobile-breakpoint ) {
@@ -163,7 +164,7 @@
 			align-self: center;
 			justify-self: center;
 
-			span {
+			button {
 				
 				$size: 50px;
 
@@ -181,6 +182,10 @@
 				i {
 					@include icon-size(24px);
 					margin: auto;
+				}
+
+				&:focus {
+					border: 3px solid rgb(var(--color-mono-600));
 				}
 
 			}
@@ -247,48 +252,8 @@
 				height: 1.5rem;
 				width: 100%;
 				margin: 3vh 0;
+				filter: drop-shadow(0px 0px 0px transparent);
 			}
-
-			// span {
-			// 	opacity: 0;
-
-			// 	display: block;
-			// 	text-align: center;
-			// 	pointer-events: none;
-
-			// 	margin: {
-			// 		top: 5px;
-			// 	}
-
-			// 	@media screen and (max-width: $mobile-breakpoint) {
-			// 		opacity: 1;
-			// 	}
-
-			// 	&:nth-of-type(1) {
-
-			// 		color: rgb(var(--color-mono-900));
-					
-			// 		font: {
-			// 			size: var(--font-size-42);
-			// 			family: var(--decor-font);
-			// 		}
-
-			// 		letter-spacing: 0.5ch;
-			// 		margin-right: -0.25ch;
-			// 		line-height: normal;
-
-			// 	}
-
-			// 	&:nth-of-type(2) {
-			// 		color: rgb(var(--color-mono-800));
-			// 		// line-height: 2vh;
-			// 		letter-spacing: 0.5ch;
-			// 		font: {
-			// 			size: 0.45rem;
-			// 			weight: 600;
-			// 		}
-			// 	}
-			// }
 			
 		}
 		&-navigation {
@@ -335,8 +300,8 @@
 				text-decoration: underline;
 				display: flex;
 
-		    justify-content: center;
-		    align-items: flex-end;
+				justify-content: center;
+				align-items: flex-end;
 
 				transition-duration: 250ms;
 
@@ -364,25 +329,28 @@
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from "vue";
 
 // VUEX
-	import { mapState, mapMutations, mapActions } from 'vuex'
+	import { mapState, mapMutations, mapActions } from "vuex";
 
 // UTILS
-	import { gpu } from '~/utils/gpu';
+	import { gpu } from "~/utils/gpu";
 
 // TYPES
-	import type { AnimeInstance, AnimeAnimParams } 	from 'animejs'
-	import type { VuexMap } 										from '~/typescript/VuexMap'
+	import type { AnimeInstance, AnimeAnimParams } 	from "animejs";
+	import type { VuexMap } from "~/contracts/VuexMap";
 
 // MIXINS
-	import EmitSound from '~/assets/mixins/EmitSound'
+	import EmitSound from "~/assets/mixins/EmitSound";
 
 // COMPONENTS
-	import HeaderNavigation from '~/components/layout/header/HeaderNavigation.vue'
-	import CanvasComponent	from '~/components/Canvas.vue';
-	import Icon 						from '~/components/common/Icon.vue'
+	import HeaderNavigation from "~/components/layout/header/HeaderNavigation.vue";
+	import CanvasComponent	from "~/components/Canvas.vue";
+	import Icon 						from "~/components/common/Icon.vue";
+
+// Анекдоты категории Б
+	import Anec from "~/assets/json/anetodes.json";
 
 // MODULE
 	export default Vue.extend({
@@ -402,28 +370,24 @@
 				CurentQuoteIndex: 0,
 
 				Quotes: [
-					'Escape from Mordorland - Блог-портфолио ориентируемый на визуальный дизайн сайтов, логотипов, баннеров, и UI интерфейса. Предоставление услуг по работе с веб-дизайном и digital дизайном, фирменным стилем, и прочим графическим услугам',
-					'SPA - Что-то странное, но работает лучше.',
-					'Tilda это конечно быстро, но есть одна загвоздка...'
+					"Escape from Mordorland - Блог-портфолио ориентируемый на визуальный дизайн сайтов, логотипов, баннеров, и UI интерфейса. Предоставление услуг по работе с веб-дизайном и digital дизайном, фирменным стилем, и прочим графическим услугам",
+					...Anec,
 				],
 
 				Links: [
-					{ link: 'https://vk.com/club158755478', icon: 'VK', title: 'ВКонтакте'},
-					{ link: 'https://github.com/Scarlatum', icon: 'URL', title: 'GitHub' },
-					// { link: 'https://facebook.com', 				icon: 'Facebook', 	title: 'FaceBook' 	},
-					// { link: 'https://telegramm.com', 				icon: 'Telegramm', 	title: 'Telegramm' 	},
+					{ link: "https://github.com/Scarlatum", icon: "URL", title: "GitHub" },
 				],
 			
 				HollVolume: 0,
 
 				AnimeInstance: [] as AnimeInstance[],
 				
-			}
+			};
 		},
 		computed: {
 
 			...mapState({
-				mute: ( state: any ) => (state as VuexMap).Sound.global.mute,
+				mute: state => (state as VuexMap).Sound.global.mute,
 			}),
 
 		},
@@ -436,9 +400,9 @@
 						{ opacity: 1 },
 					], {
 						duration: 3000,
-						easing: 'ease-in-out',
-						fill: 'forwards',
-					})
+						easing: "ease-in-out",
+						fill: "forwards",
+					});
 
 				}
 			},
@@ -448,31 +412,37 @@
 			if ( process.server ) return;
 
 			this.setSounds([{
-				file: 'Holl',
-				name: 'Ambient',
+				file: "Holl",
+				name: "Ambient",
 				settings: { 
-					rate: 1, 
+					rate: .5, 
 					volume: .25, 
 					loop: true,
 				},
-			}])
+			}]);
 
 			window.onload = () => {
 				if ( ! gpu.available() ) {
 					this.CanvasReady = undefined;
 				}
-			}
+			};
 
 		},
 		mounted() {
 
 			if ( process.browser ) {
 
-				const Ambient = this.Sounds.get('Ambient')!;
+				const Ambient = this.Sounds.get("Ambient");
 
-				Ambient.volume(0);
-				this.playSound(this.Sounds.get('Ambient'))
-				Ambient.fade(0, 1, 3000)
+				if ( Ambient ) {
+
+					Ambient.volume(0);
+
+					this.playSound(Ambient);
+
+					Ambient.fade(0, 1, 3000);
+
+				}
 
 				this.changeQuote();
 
@@ -481,11 +451,11 @@
 		},
 		beforeDestroy() {
 
-			const HOWL = this.Sounds.get('Ambient');
+			const HOWL = this.Sounds.get("Ambient");
 
 			this.AnimeInstance.forEach((anim) => {
 				anim.pause();
-			})
+			});
 
 			if ( HOWL ) HOWL.fade(HOWL.volume(), 0, 5e3);
 
@@ -493,12 +463,12 @@
 		methods: {
 
 			...mapMutations({
-				setDeviceType: 'setDeviceType'
+				setDeviceType: "setDeviceType"
 			}),
 
 			...mapActions({
-				changeGlobalVolume: 'Sound/changeGlobalVolume',
-				globalMute: 				'Sound/globalMute',
+				changeGlobalVolume: "Sound/changeGlobalVolume",
+				globalMute: 				"Sound/globalMute",
 			}),
 
 			// ! Refactor this with Animation API
@@ -506,22 +476,22 @@
 
 				this.CanvasReady = true;
 
-				const LOOP: boolean = true;
+				const LOOP = true;
 
-				const COLOR = `rgb(${ getComputedStyle(document.body).getPropertyValue('--mono-800').trim() })`;
+				const COLOR = `rgb(${ getComputedStyle(document.body).getPropertyValue("--mono-800").trim() })`;
 
 				const ANIMATIONS: AnimeAnimParams[] = [
 					{	
 						targets: this.$refs.LOGO_SVG,
 						filter: [
-							{ value: 'drop-shadow(0px 0px 3px #FFFFFF)', duration: 2000 },
-							{ value: 'drop-shadow(0px 0px 0px #FFFFFF)', duration: 5000 },
+							{ value: "drop-shadow(0px 0px 6px #FFFFFF)", duration: 2000 },
+							{ value: "drop-shadow(0px 0px 1px #FFFFFF)", duration: 5000 },
 						],
 						endDelay: 2000,
 						round: 100,
 						loop: LOOP, 
-						easing: 'easeInOutSine',
-						direction: 'alternate',
+						easing: "easeInOutSine",
+						direction: "alternate",
 					},
 					{	
 						targets: this.$refs.LOGO_PATH,
@@ -533,35 +503,45 @@
 						duration: 3000,
 						round: 100, 
 						loop: LOOP,
-						easing: 'easeInOutSine',
-						direction: 'alternate',
+						easing: "easeInOutSine",
+						direction: "alternate",
 					},
 					{
-						targets: '.holl-logo span',
+						targets: ".holl-logo span",
 						opacity: [0, 1],
 						filter: [
-							{ value: 'drop-shadow(0px 0px 4px #FFF)' },
-							{ value: 'drop-shadow(0px 0px 0px #FFF)' },
+							{ value: "drop-shadow(0px 0px 4px #FFF)" },
+							{ value: "drop-shadow(0px 0px 0px #FFF)" },
 						],
 						delay: this.$AnimeJS.stagger(1000, { start: 0 }), 
 						endDelay: 8000, 
 						duration: 1000,
 						round: 100,
 						loop: LOOP, 
-						easing: 'linear',
-						direction: 'alternate',
+						easing: "linear",
+						direction: "alternate",
 					}
-				]
+				];
 
 				ANIMATIONS.forEach((item) => {
-					this.AnimeInstance.push(this.$AnimeJS(item))
-				})
+					this.AnimeInstance.push(this.$AnimeJS(item));
+				});
+
+			},
+
+			pickIndex(): number {
+					
+				const newIndex = Math.trunc(Math.random() * this.Quotes.length);
+
+				return newIndex === this.CurentQuoteIndex
+					? this.pickIndex()
+					: newIndex;
 
 			},
 
 			changeQuote() {
 
-				this.CurentQuoteIndex = Math.trunc(Math.random() * this.Quotes.length)
+				this.CurentQuoteIndex = this.pickIndex();
 
 				const textAnimation = (this.$refs.quote as HTMLElement).animate([
 					{ opacity: 0 },
@@ -569,17 +549,17 @@
 				], {
 					duration: 750,
 					endDelay: 5000,
-					fill: 'both',
-				})
+					fill: "both",
+				});
 
 				textAnimation.onfinish = () => {
 					textAnimation.onfinish = () => this.changeQuote();
 					textAnimation.reverse();
-				}
+				};
 				
 			}
 
 		},
-	})
+	});
 
 </script>

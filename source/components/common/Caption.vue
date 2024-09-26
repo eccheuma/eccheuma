@@ -5,17 +5,18 @@
     </span>
     <hr v-once>
     <div class="caption-content">
-      <strong>
+      <span class="caption-content-type">
         <slot name="type" />
-      </strong>
-      <span>
+      </span>
+      <hr v-once>
+      <span class="caption-content-desc">
         <slot name="desc" />
       </span>
     </div>
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 
 .caption {
   &-icon {
@@ -39,7 +40,7 @@
 
     display: grid;
     grid-template: {
-      columns: 4vw 1px 1fr;
+      columns: auto 1px 1fr;
     };
 
     padding-right: 15%;
@@ -51,6 +52,11 @@
     background-color: var(--caption-card-bg);
     color: var(--caption-card-color);
     padding: 1vw;
+
+    @media screen and ( max-width: $mobile-breakpoint ) {
+			padding: 2vw 3vw;
+      column-gap: min(8px, 4vw);
+		};
 
     hr {
       width: 1px;
@@ -87,17 +93,30 @@
   }
   &-content {
 
-    strong {
+    &-type {
+      width: 45ch;
       color: var(--caption-card-color) !important;
+      line-height: var(--size-14);
       font: {
         size: var(--font-size-16);
         weight: 800;
       }
     }
 
-    span {
+    hr {
+      width: 100%;
+      background: var(--caption-card-color);
+      margin: 1vh 0;
+      opacity: .25;
+      @media screen and ( max-width: $mobile-breakpoint ) {
+        margin: min(4px, 1vh) 0;
+      }; 
+    }
+
+    &-desc {
       display: flex;
       color: var(--caption-card-color) !important;
+      width: calc(min(100%, 75ch));
       font: {
         size: var(--font-size-14);
         weight: 700;
@@ -111,13 +130,13 @@
 
 <script lang="ts">
 
-  import Vue, { PropOptions } from 'vue'
+  import Vue, { PropOptions } from "vue";
 
 // COMPONENTS
-  import Icon from '~/components/common/Icon.vue'
+  import Icon from "~/components/common/Icon.vue";
 
 // TYPES
-  type CAPTION_STATUS = 'error' | 'warning' | 'notice' | 'missunderstood' | 'default'
+  type CAPTION_STATUS = "error" | "warning" | "notice" | "missunderstood" | "default"
 
 // MODULE
   export default Vue.extend({
@@ -127,9 +146,9 @@
     props: {
       status: {
         type: String,
-        default: 'default'
+        default: "default"
       } as PropOptions<CAPTION_STATUS>,
     },
-  })
+  });
 
 </script>

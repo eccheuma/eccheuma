@@ -40,20 +40,12 @@
 					@click="ActiveSection = i"
 				>
 					<span>{{ item.name }}</span>
-					<span>от {{ item.time }}</span>
+					<span>от {{ formatDelivery(item.delivery)	}}</span>					
 				</div>
 			</template>
 		</section>
-		<caption-card>
-			<template #type>
-				Lorem ipsum.
-			</template>
-			<template #desc>
-				Dreary disaster ghastly whispered nepenthe lore, echo word my on there soul. And the sainted air from, and into once.
-			</template>
-		</caption-card>
 		<section class="service-card-footer">
-			<common-button @click.native="() => Modal = true">
+			<common-button @click.native="() => Modal = true" :class="{ disabled: !LoginStatus }">
 				Заказать
 			</common-button>
 		</section>
@@ -97,7 +89,6 @@
 						'desc'
 						'cost'
 						'time'
-						'note'
 						'foot'
 	}
 	row-gap: 1vh;
@@ -177,9 +168,6 @@
 	&-timeframe {
 		grid-area: time;
 	}
-	&-notice {
-		grid-area: note;
-	}
 	&-footer {
 
 		@include gradient_border;
@@ -204,7 +192,7 @@
 		areas: 	'head head'
 						'desc cost'
 						'desc time'
-						'note foot'
+						'desc foot'
 	}
 
 	gap: 1vw;
@@ -215,34 +203,38 @@
 
 <script lang="ts">
 
-	import Vue, { PropOptions } from 'vue'
+	import Vue, { PropOptions } from "vue";
 
 	// VUEX
-	import { mapState, mapMutations } from 'vuex'
+	import { mapState, mapMutations } from "vuex";
+
+
+	// LANG 
+	import { languages, russian } from "~/lang/index";
 
 	// API
-	import { database } from '~/api/database';
+	import { database } from "~/api/database";
 
 	// COMPONENTS
-	import ServiceModal from '~/components/service/ServiceModal.vue'
-	import CaptionCard 	from '~/components/common/Caption.vue'
+	import ServiceModal from "~/components/service/ServiceModal.vue";
 
 	// TYPES 
-	import type { Purchase } from '~/typescript/Services'
-	import type { VuexMap } from '~/typescript/VuexMap'
+	import type { Purchase } from "~/contracts/Services";
+	import type { VuexMap } from "~/contracts/VuexMap";
+import { time } from "~/utils/time";
 
 	// MODULE
 	export default Vue.extend({
 		components: {
-			CaptionCard,
+			// CaptionCard,
 			ServiceModal,
-			CommonButton: () => import('~/components/buttons/CommonButton.vue')
+			CommonButton: () => import("~/components/buttons/CommonButton.vue")
 		},
 		props: {
 			payload: {
 				type: Object,
 				required: true
-			} as PropOptions<Purchase.struct<any>>,
+			} as PropOptions<Purchase.struct>,
 			wide: {
 				type: Boolean,
 				default: false,
@@ -253,11 +245,11 @@
 
 				ActiveSection: 0,
 
-				Services: new Array<Purchase.struct<any>>(0),
+				Services: new Array<Purchase.struct>(0),
 
 				Modal: false,
 
-			}
+			};
 		},
 
 		async fetch() {
@@ -265,30 +257,42 @@
 		},
 
 		computed: {
+
 			...mapState({
-				LoginStatus: state => (state as VuexMap).Auth.Session.LoginStatus
-			})
+				LoginStatus: state => (state as VuexMap).Auth.Session.LoginStatus,
+				locale: state => (state as VuexMap).App.Lang,
+			}),
+
 		},
 		
 		methods: {
 
+			formatDelivery(milli: number): string {
+				switch (this.locale) {
+					case languages.Russian: 
+						return russian.format.delivery(milli)
+					case languages.English: 
+						return `${ Math.round(milli / time.MILLIS_PER_HOUR) } hours`
+				}
+			},
+
 			...mapMutations({
-				toggleRegisterModal: 'Auth/Register/toggleRegisterModal',
+				toggleRegisterModal: "Auth/Register/toggleRegisterModal",
 			}),
 
 			ToggleModal(value: boolean) {
-				this.Modal = value
+				this.Modal = value;
 			},
 
-			async getDatabaseData(): Promise<Array<Purchase.struct<any>>> {
+			async getDatabaseData(): Promise<Array<Purchase.struct>> {
 
 				return await database
-					.get(`Service/${ this.payload.category }`)
+					.get(`service/${ String(this.payload.category).toLowerCase() }`)
 					.then(data => Object.values(data));
 
-			}
+			},
 
 		},
-	})
+	});
 
 </script>

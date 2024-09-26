@@ -1,13 +1,20 @@
-import Vue from 'vue'
+import Vue from "vue";
 
-  // import { isMobile } from 'mobile-device-detect'
+// TYPES
+import { Context } from "@nuxt/types";
 
-  Vue.prototype.$isMobile = process.browser 
-    ? window.innerHeight > window.innerWidth
-    : false
-
-declare module 'vue/types/vue' {
+declare module "vue/types/vue" {
   interface Vue {
     $isMobile: boolean
   }
 }
+
+export default (ctx: Context) => {
+
+	Vue.prototype.$isMobile = process.browser 
+    ? window.innerHeight > window.innerWidth
+    : false;
+
+};
+
+

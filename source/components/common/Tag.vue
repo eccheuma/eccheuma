@@ -3,8 +3,8 @@
     <span 
     :class="[
       { 'transparent::false': !transparent },
-      { 'scheme::light': light },
-      { 'utils::glassy': transparent }, 
+      { 'utils::glassy': transparent },
+      `scheme::${ theme }`
     ]"
     >
       <slot />
@@ -22,6 +22,21 @@
   .scheme\:\:light {
     color: rgb(var(--mono-200));
     background-color: rgb(var(--mono-800));
+  }
+
+  .scheme\:\:grey {
+    color: rgb(var(--mono-800));
+    background-color: rgb(var(--mono-300));
+  }
+
+  .scheme\:\:dark {
+    color: rgb(var(--mono-800));
+    background-color: rgb(var(--mono-200));
+  }
+
+  .scheme\:\:transparent {
+    color: rgb(var(--mono-800));
+    background-color: rgba(var(--mono-200), .75);
   }
 
   span {
@@ -50,10 +65,16 @@
 
 <script lang="ts">
 
-  import Vue from 'vue';
+  import Vue from "vue";
 
   // COMPONENTS
-  import HardwareAccelerationDecorator from '~/components/functional/HardwareAcceleration.vue'
+  import HardwareAccelerationDecorator from "~/components/functional/HardwareAcceleration.vue";
+
+  const enum Mode {
+    DARK  = "dark",
+    LIGHT = "light",
+    GREY  = "grey",
+  }
 
   // MODULE
   export default Vue.extend({
@@ -65,11 +86,11 @@
         type: Boolean,
         default: true,
       },
-      light: {
-        type: Boolean,
-        default: false
+      theme: {
+        type: String,
+        default: Mode.DARK,
       }
     }
-  })
+  });
 
 </script>

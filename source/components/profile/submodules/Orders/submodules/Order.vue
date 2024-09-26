@@ -218,24 +218,24 @@
 
 <script lang="ts">
 
-  import Vue, { PropOptions } from 'vue';
+  import Vue, { PropOptions } from "vue";
 
   // VUEX
-	import { mapState, mapMutations, mapActions } from 'vuex'
-	import type { VuexMap } from '~/typescript/VuexMap'
+	import { mapState } from "vuex";
+	import type { VuexMap } from "~/contracts/VuexMap";
 
   // UTILS
-  import { utils } from '~/utils';
-  import { work } from '~/utils/status';
+  import { utils } from "~/utils";
+  import { work } from "~/utils/status";
 
   // FUNCTIONAL
-    import IntesectionComponent from '~/components/functional/intersectionComponent.vue';
+    import IntesectionComponent from "~/components/functional/intersectionComponent.vue";
 
   // COMPONENTS
-    import CommonButton	from '~/components/buttons/CommonButton.vue';
+    import CommonButton	from "~/components/buttons/CommonButton.vue";
 
   // Namespace
-  import { Purchase } from '~/typescript/Services'
+  import { Purchase } from "~/contracts/Services";
 
   type WAITING_TIME_FORMAT = {
     days: number
@@ -258,7 +258,7 @@
       payload: {
         type: Object,
         required: true,
-      } as PropOptions<Purchase.order<any>>
+      } as PropOptions<Purchase.order>
     },
     data() {
       return {
@@ -276,11 +276,11 @@
         infoList: [] as Array<ORDER_INFO_FIELD>,
 
         randomCirclePosition: {
-          '--t': `${ Math.trunc(Math.random() * 100) }%`,
-          '--l': `${ Math.trunc(Math.random() * 100) }%`,
+          "--t": `${ Math.trunc(Math.random() * 100) }%`,
+          "--l": `${ Math.trunc(Math.random() * 100) }%`,
         }
 
-      }
+      };
     },
     computed: {
 
@@ -293,7 +293,7 @@
       },
 
       acceptDate(): number {
-        return this.payload.recived + QUEUE_TIME
+        return this.payload.recived + QUEUE_TIME;
       }
 
     },
@@ -301,17 +301,17 @@
 
       if ( process.browser ) {
 
-        const timerWatcher = this.$watch('waintingTime', () => {
+        const timerWatcher = this.$watch("waintingTime", () => {
   
           this.$AnimeJS({
             targets: this.$refs.deliveryTimer,
             opacity: [0, 1],
             duration: 750,
-            easing: 'easeInOutQuad',
+            easing: "easeInOutQuad",
             complete: timerWatcher
-          })
+          });
   
-        })
+        });
 
       }
 
@@ -334,7 +334,7 @@
     beforeDestroy() {
 
       if ( this.ticker ) {
-        clearInterval(this.ticker)
+        clearInterval(this.ticker);
       }
 
     },
@@ -350,7 +350,7 @@
 
       getAwaitTime(awaitDate: number): WAITING_TIME_FORMAT {
 
-        const DAYS    = ( awaitDate - Date.now() ) / 86_400_000
+        const DAYS    = ( awaitDate - Date.now() ) / 86_400_000;
         const HOURS   = ( DAYS  % 1 ) * 24;
         const MINUTES = ( HOURS % 1 ) * 60;
 
@@ -358,12 +358,12 @@
           days: Math.trunc(DAYS),
           hours: Math.trunc(HOURS),
           minutes: Math.trunc(MINUTES),
-        }
+        };
 
       },
 
       setVisiableStatus(status: boolean): void {
-        this.visiableStatus = status
+        this.visiableStatus = status;
       },
 
       // TODO | Refactor keys with enums
@@ -372,12 +372,12 @@
         const { Day, Time } = utils.getLocalTime(this.payload.recived);
 
         return [
-          { name: 'Состояние',          value: work.defineStatus(this.payload.status, this.Lang) },
-          { name: 'Цена',               value: `${ this.payload.cost } ₽` },
-          { name: 'Дата заказа',        value: `${ Day } в ${ Time }` },
-          { name: 'Тип Заказа',         value: this.getOrderType(this.payload.type) },
-          { name: 'Индификатор заказа', value: this.payload.ID, type: 'id' },
-        ]
+          { name: "Состояние",          value: work.defineStatus(this.payload.status, this.Lang) },
+          { name: "Цена",               value: `${ this.payload.cost } ₽` },
+          { name: "Дата заказа",        value: `${ Day } в ${ Time }` },
+          { name: "Тип Заказа",         value: this.getOrderType(this.payload.type) },
+          { name: "Индификатор заказа", value: this.payload.ID, type: "id" },
+        ];
 
       },
 
@@ -391,18 +391,18 @@
           case 1: return variants[0];
 
           default: {
-            return variants[Remainder < 5 ? 1 : 2]  
+            return variants[Remainder < 5 ? 1 : 2];  
           }
 
         }
 
       },
 
-      getOrderType(type: number): string {
+      getOrderType(type: string): string {
         return this.payload.category[type];
       }
 
     }
-  })
+  });
 
 </script>

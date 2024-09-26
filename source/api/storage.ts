@@ -1,8 +1,9 @@
 // TYPES
-import type { FileOptions, FileObject } from '@supabase/storage-js';
+import type { FileOptions, FileObject } from "@supabase/storage-js";
+import { Result } from "~/utils";
 
 export namespace references {
-  export const images = 'images'
+  export const images = "images";
 }
 
 // MODULE NAMESPACE
@@ -14,63 +15,67 @@ export namespace storage {
   }
 
   type ListResponse = {
-    files   : Array<ResponseFile>,
-    folders : Array<ResponseFile>,
+    files: Array<ResponseFile>,
+    folders: Array<ResponseFile>,
   }
 
-  export const enum error {
-    path = 'Get of undefined or wrong path' 
-  } 
-
-  export function reference(path: string): string | null {
-
-    const { publicURL, error } = global.supabase.storage.from('main').getPublicUrl(path);
-  
-    if ( error ) throw error;
-  
-    return publicURL
-  
+  export const enum StorageErrors {
+    path = "Wrong path",
+    corrupt = "Path resolve was corrupt",
   }
-  
-  export async function list(path: string = '/'): Promise<ListResponse | storage.error> {
+
+  export async function reference(path: string): Promise<Result<string>> {
+
+    const { publicURL, error } = global.supabase.storage.from("main").getPublicUrl(path);
+
+    if (error)
+      return Error(StorageErrors.path);
+    if (!publicURL)
+      return Error(StorageErrors.corrupt);
+
+    return Promise.resolve(publicURL);
+
+  }
+
+  export async function list(path = "/"): Promise<Result<ListResponse>> {
 
     function constructFile(object: FileObject): ResponseFile {
       return {
         name: object.name,
-        path: `${ path }/${ object.name }`
-      }
+        path: `${path}/${object.name}`
+      };
     }
 
     const FOLDERS = Array<ResponseFile>();
-    const FILES   = Array<ResponseFile>();   
+    const FILES = Array<ResponseFile>();
 
-    const { error, data } = await global.supabase.storage.from('main').list(path)
+    const { error, data } = await global.supabase.storage.from("main").list(path);
 
-    if ( error || !data ) return storage.error.path;
+    if (error || !data) return Error(storage.StorageErrors.path);
 
-    for ( const value of data ) {
+    for (const value of data) {
 
       const responseStruct = constructFile(value);
 
       value.metadata
         ? FILES.push(responseStruct)
-        : FOLDERS.push(responseStruct)
+        : FOLDERS.push(responseStruct);
 
     }
 
     return {
-      files   : FILES,
-      folders : FOLDERS
-    }
+      files: FILES,
+      folders: FOLDERS
+    };
 
   }
-  
+
   export function upload(path: string, data: any, meta?: FileOptions) {
-    return global.supabase.storage.from('main').upload(path, data, { upsert: true, ...meta })
+    return global.supabase.storage.from("main").upload(path, data, { upsert: true, ...meta });
   }
 
   export function remove(path: string) {
-    return global.supabase.storage.from('main').remove([ path ])
+    return global.supabase.storage.from("main").remove([path]);
   }
 
 }

@@ -2,18 +2,18 @@
 /* eslint-disable prefer-regex-literals */
 
 const enum expressions {
-  CharAndNumber = '[a-z][0-9]|[0-9][a-z]', // ! Need to find better RegExp...
-  Email         = '.+@.+\\.[a-zа-я]{2,}',
+  CharAndNumber = "[a-z][0-9]|[0-9][a-z]", // ! Need to find better RegExp...
+  Email         = ".+@.+\\.[a-zа-я]{2,}",
 }
 
 namespace Sentence {
 
   export const params = {
     minLength: 0
-  }
+  };
 
   export function applyPattern(value: string): string {
-    return `\\S*${ value.toLowerCase() }.?[а-яa-z]`
+    return `\\S*${ value.toLowerCase() }.?[а-яa-z]`;
   }
 
 }
@@ -39,19 +39,19 @@ export namespace validate {
 
     if ( list.length ) {
 
-      return !sentence.split(' ').some(word => {
+      return !sentence.split(" ").some(word => {
         return list.some(banned => {
 
           return new RegExp(Sentence.applyPattern(banned)).test(word);
 
-        })
-      })
+        });
+      });
 
     }
   
     if ( params.minLength > sentence.length ) return false;
   
-    return Boolean(sentence.length)
+    return Boolean(sentence.length);
   
   }
 

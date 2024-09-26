@@ -3,9 +3,9 @@ export namespace gpu {
   let renderContext : WebGL2RenderingContext | null;
   let gpuStatus     : boolean | undefined = undefined;
 
-  function setContext() {
-    renderContext = document?.createElement('canvas').getContext('webgl2');
-  }
+  const setContext = () =>{
+    renderContext = document?.createElement("canvas").getContext("webgl2");
+  };
 
   export function available(): boolean {
 
@@ -15,7 +15,7 @@ export namespace gpu {
 
     if ( gpuStatus === undefined ) gpuStatus = Boolean(renderContext);
 
-    return gpuStatus
+    return gpuStatus;
 
   }
 

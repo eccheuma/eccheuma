@@ -20,12 +20,12 @@
 					<hr v-once>
 
 					<section class="user_profile-info-body">
-						<i ref="UserIcon" :style="`background-image: url(${ State.UserImageID }); transform: scale(0)`" />
+						<i ref="UserIcon" :style="`background-image: url(${ State.image }); transform: scale(0)`" />
 						<div class="user_profile-info-body-name">
-							<tag :light="true">
-								{{ State.UserName }}
+							<tag theme="light">
+								{{ State.name }}
 							</tag>
-							<span>{{ defineStatus(State.UserStatus) }}</span>
+							<span>{{ defineStatus(State.status) }}</span>
 						</div>
 					</section>
 
@@ -37,29 +37,15 @@
 						<hr v-once>
 						<div class="user_profile-info-footer-list">
 
-							<span>
+							<span v-if="Wallet">
 								<div>Баланс: </div>
-								<strong>{{ State.UserBalance }} ₽</strong>
+								<strong>{{ fmt_balance }}</strong>
 							</span>
+
 							<span>
 								<div>Сообщений: </div>
 								<strong>{{ Messages.length }} ( Новых: {{ NewMessages }} )</strong>
 							</span>
-
-							<!-- <template v-if="ActiveRequest.length">
-								<span>
-									<div>Тип заказа:  </div>
-									<strong>{{ ActiveRequest[0].Service.Name || 'Не указан' }}</strong>
-								</span>
-								<span>
-									<div>Статус заказа: </div>
-									<strong>{{ DefineWorkStatus(ActiveRequest[0].Status) }}</strong>
-								</span>
-								<span>
-									<div>Цена заказа: </div>
-									<strong>{{ ActiveRequest[0].Service.Cost || 0 }} ₽</strong>
-								</span>
-							</template> -->
 
 							<span>
 								<div>Заказов в прогрессе: </div>
@@ -121,7 +107,7 @@
 					<hr v-once>
 
 					<section v-once class="user_profile-navigation-footer">
-						<common-button @click.native="Logout">
+						<common-button @click.native="logout">
 							Выход из аккаунта
 						</common-button>
 					</section>
@@ -473,73 +459,74 @@
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from "vue";
 
 	// VUEX
-	import { mapState, mapActions } from 'vuex'
+	import { mapState, mapActions } from "vuex";
 
 	// TYPES
-	import type { AnimeAnimParams } from 'animejs';
-	import type { VuexMap } 				from '~/typescript/VuexMap';
+	import type { AnimeAnimParams } from "animejs";
+	import type { VuexMap } 				from "~/contracts/VuexMap";
 
 	// UTILS
-	import { user } from '~/utils/status'
+	import { user } from "~/utils/status";
+	import { currencies } from "~/utils/currency";
 
 	// ENUMS
-	import { User } from '~/typescript/User'
+	import { User } from "~/contracts/User";
 
 	// COMPONENTS
-	import CommonButton	from '~/components/buttons/CommonButton.vue'
-	import Collapse 		from '~/components/common/Collapse.vue'
-	import Tag 					from '~/components/common/Tag.vue'
+	import CommonButton	from "~/components/buttons/CommonButton.vue";
+	import Collapse 		from "~/components/common/Collapse.vue";
+	import Tag 					from "~/components/common/Tag.vue";
 
 	// FUNCTION COMPONENTS
-	import TransitionWrapper from '~/components/functional/TransitionWrapper.vue';
+	import TransitionWrapper from "~/components/functional/TransitionWrapper.vue";
 
 	// INTERFACE'N'TYPES
-	type MODULES = 'Messages' | 'NameChange' | 'IconChange' | 'Orders';
+	type MODULES = "Messages" | "NameChange" | "IconChange" | "Orders";
 
 	type COMPONENT_HEADER = {
 		Title: string,
-		Sub: String
+		Sub: string
 	}
 
 	const enum Title {
-		messages 	= 'Сообщения',
-		name			= 'Смена имени пользователя',
-		icon 			= 'Смена иконки профиля',
-		orders		= 'Статус заказа'
+		messages 	= "Сообщения",
+		name			= "Смена имени пользователя",
+		icon 			= "Смена иконки профиля",
+		orders		= "Статус заказа"
 	}
 
 	const enum Notation {
-		send 		= 'Подсказка: Нажмите "Ctrl + Enter" для отправки сообщения.',
-		confirm = 'Подсказка: Нажмите "Ctrl + Enter" для подтверждения.',
-		avail 	= 'Данная сводка полезна для проверки. В случае чего',
+		send 		= "Подсказка: Нажмите \"Ctrl + Enter\" для отправки сообщения.",
+		confirm = "Подсказка: Нажмите \"Ctrl + Enter\" для подтверждения.",
+		avail 	= "Данная сводка полезна для проверки. В случае чего",
 	}
 
 	// ANIMATION STATES 
 
-	type ICON_ANIMATION_STATES = 'init' | 'update' | 'close'
+	type ICON_ANIMATION_STATES = "init" | "update" | "close"
 
 	const ANIMATION_VARIATIONS: {[K in ICON_ANIMATION_STATES]: AnimeAnimParams } = {
-		'init': {
+		"init": {
 			scale: [0, 1],
 			delay: 500,
 			duration: 250,
-			easing: 'easeInOutCubic',
+			easing: "easeInOutCubic",
 		},
-		'update': {
+		"update": {
 			scale: [1, 0],
-			direction: 'alternate',
+			direction: "alternate",
 			duration: 500,
-			easing: 'easeInOutCubic',
+			easing: "easeInOutCubic",
 		},
-		'close': {
+		"close": {
 			scale: [1, 0],
 			duration: 250,
-			easing: 'easeInOutCubic',
+			easing: "easeInOutCubic",
 		}
-	}
+	};
 
 	// MODULE
 	export default Vue.extend({
@@ -549,42 +536,50 @@
 			Tag,
 			CommonButton,
 			TransitionWrapper,
-			Messages: 		() => import('~/components/profile/submodules/Messages/module.vue'),
-			Orders: 			() => import('~/components/profile/submodules/Orders/module.vue'),
-			NameChange: 	() => import('~/components/profile/submodules/NameChange.vue'),
-			IconChange: 	() => import('~/components/profile/submodules/IconChange.vue'),
+			Messages: 		() => import("~/components/profile/submodules/Messages/module.vue"),
+			Orders: 			() => import("~/components/profile/submodules/Orders/module.vue"),
+			NameChange: 	() => import("~/components/profile/submodules/NameChange.vue"),
+			IconChange: 	() => import("~/components/profile/submodules/Icon/module.vue"),
 		},
 
 		data() {
 			return {
 
-				CurentPreferencesComponent: 'Messages' as MODULES, 
+				CurentPreferencesComponent: "Messages" as MODULES,
 
 				PreferencesArea: [
-
-					{ Component: 'Messages', 			Name: 'Сообщения' 		},
-					{ Component: 'IconChange', 		Name: 'Смена иконки'	},
-					{ Component: 'Orders', 				Name: 'Запросы'				},
-					{ Component: 'NameChange', 		Name: 'Изменить Имя'	},
-
+					{ Component: "Messages", 			Name: "Сообщения" 		},
+					{ Component: "IconChange", 		Name: "Смена иконки"	},
+					{ Component: "Orders", 				Name: "Запросы"				},
+					{ Component: "NameChange", 		Name: "Изменить Имя"	},
 				] as Array<{ Component: MODULES, Name: string }>,
 
 				status: false,
 				
-			}
+			};
 		},
 
 		computed: {
 
 			...mapState({
+				
 				Lang						: state => (state as VuexMap).App.Lang,
 				LoginStatus			:	state => (state as VuexMap).Auth.Session.LoginStatus,
-				State						:	state	=> (state as VuexMap).User.State.State,
-				ProfileArea			:	state	=> (state as VuexMap).User.State.UserProfileArea,
+        State						: state => (state as VuexMap).User.State.State,
+        ProfileArea			:	state => (state as VuexMap).User.State.UserProfileArea,
+
+				Country					: state => (state as VuexMap).User.Wallet.Country,
+				Wallet					: state => (state as VuexMap).User.Wallet.Current,
+
 				Messages				: state => (state as VuexMap).User.Messages.Data,
 				NewMessages			: state => (state as VuexMap).User.Messages.NewMessagesCount,
 				WorkRequest			: state => (state as VuexMap).User.WorkRequest,
+
 			}),
+
+			fmt_balance(): string {
+				return currencies.fmt_balance(this.Wallet, this.Country);
+			},
 
 			// COMPONENT_HEADER
 
@@ -592,30 +587,30 @@
 
 				switch (this.CurentPreferencesComponent) {
 
-					case 'Messages': return {
+					case "Messages": return {
 						Title: Title.messages,
 						Sub: Notation.send,
-					}
+					};
 
-					case 'NameChange': return {
+					case "NameChange": return {
 						Title: Title.name,
 						Sub: Notation.confirm,
-					}
+					};
 
-					case 'IconChange': return {
+					case "IconChange": return {
 						Title: Title.icon,
 						Sub: Notation.confirm,
-					}
+					};
 
-					case 'Orders': return {
+					case "Orders": return {
 						Title: Title.orders,
 						Sub: Notation.avail,
-					}
+					};
 
 					default: return {
-						Title: 'Название для компонента',
-						Sub: 'Явно что-то пошло не так...'
-					}
+						Title: "Название для компонента",
+						Sub: "Явно что-то пошло не так..."
+					};
 
 				}
 
@@ -625,21 +620,21 @@
 
 		watch: {
 
-			'State.UserImageID': {
+			"State.image": {
 				handler() {
-					this.AnimateUserIcon('update'); 
+					this.AnimateUserIcon("update"); 
 				},
 			},
 
 			GetRequestsQuantity: {
 				handler() {
-					this.$store.dispatch('User/WorkRequest/setActiveRequest')
+					this.$store.dispatch("User/WorkRequest/setActiveRequest");
 				}
 			},
 
 			status: {
 				handler() {
-					this.AnimateUserIcon('init')
+					this.AnimateUserIcon("init");
 				}
 			},
 
@@ -665,13 +660,13 @@
 
 			...mapActions({
 				// AUTH
-				Logout: 							'Auth/Logout',
+				logout: 							"Auth/Logout/Logout",
 				// MessageS
-				getMessages: 					'User/Messages/getMessages',
-				checkUnreaded: 				'User/Messages/checkUnreaded',
+				getMessages: 					"User/Messages/getMessages",
+				checkUnreaded: 				"User/Messages/checkUnreaded",
 				// WORK REQUESTS
-				setRequestQuantity: 	'User/WorkRequest/setRequestQuantity',
-				setRequestContent: 		'User/WorkRequest/setRequestContent',
+				setRequestQuantity: 	"User/WorkRequest/setRequestQuantity",
+				setRequestContent: 		"User/WorkRequest/setRequestContent",
 			}),
 
 			AreaToggle(component: MODULES) {
@@ -690,12 +685,14 @@
 
 			},
 
+			
+
 			defineStatus(status: User.status) {
-				return user.defineStatus(status, this.Lang)
+				return user.defineStatus(status, this.Lang);
 			},
 
 		},
 
-	})
+	});
 
 </script>

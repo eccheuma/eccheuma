@@ -80,8 +80,17 @@
 		}
 
 		display: grid;
+
 		grid-template: {
 			columns: 1fr 8fr 3fr;
+		}
+
+		@media screen and ( max-width: $mobile-breakpoint ) {
+			row-gap: 2vh;
+			grid-template: {
+				columns: 1fr;
+				rows: 10vh min-content auto;
+			}
 		}
 
 		color: rgb(var(--color-mono-900));
@@ -105,6 +114,14 @@
 			transform: rotate(30deg) scale(8);
 
 			fill: rgb(var(--color-mono-300));
+
+			@media screen and ( max-width: $mobile-breakpoint ) {
+				transform: rotate(30deg) scale(12);
+				top: 150%;
+				left: 50%;
+			}
+
+			z-index: -1;
 
 		}
 
@@ -150,6 +167,12 @@
 			};
 		}
 
+		@media screen and ( max-width: $mobile-breakpoint ) {
+			span {
+				text-align: center;
+			}
+		}
+
 	}
 
 	&-button {
@@ -165,19 +188,19 @@
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from "vue";
 
-	import { mapMutations, mapState } from 'vuex'
+	import { mapMutations, mapState } from "vuex";
 
-	import type { VuexMap } from '~/typescript/VuexMap'
+	import type { VuexMap } from "~/contracts/VuexMap";
 
 	// COMPONENTS 
-	import Icon 									from '~/components/common/Icon.vue';
+	import Icon 									from "~/components/common/Icon.vue";
 
 	export default Vue.extend({
 		components: {
 			Icon,
-			CommonButton: () => import('~/components/buttons/CommonButton.vue')
+			CommonButton: () => import("~/components/buttons/CommonButton.vue")
 		},
 		computed: {
 			...mapState({
@@ -186,9 +209,9 @@
 		},
 		methods: {
 			...mapMutations({
-				changeStatus: 'Notification/changeStatus' 
+				changeStatus: "Notification/changeStatus" 
 			})
 		}
-	})
+	});
 
 </script>

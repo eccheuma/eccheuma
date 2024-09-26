@@ -1,13 +1,13 @@
 <template>
 	<div class="auth_profile-container">
 
-		<section class="auth_profile-header" :style="`background-image: url(${ State.UserImageID })`">
-			<i :style="`background-image: url(${ State.UserImageID })`" />
+		<section class="auth_profile-header" :style="`background-image: url(${ State.image })`">
+			<i :style="`background-image: url(${ State.image })`" />
 			<div class="auth_profile-header-info">
-				<tag :light="true">
-					{{ State.UserName }}
+				<tag theme="light">
+					{{ State.name }}
 				</tag>
-				<span>{{ defineStatus(State.UserStatus) }}</span>
+				<span>{{ defineStatus(State.status) }}</span>
 			</div>
 		</section>
 
@@ -234,24 +234,27 @@
 
 <script lang="ts">
 
-	import Vue from 'vue'
+	import Vue from "vue";
 
 // VUEX
-	import { mapState, mapActions } from 'vuex'
+	import { mapState, mapActions } from "vuex";
 
 // UTILS
-	import { user, work } from '~/utils/status'
+	import { user, work } from "~/utils/status";
+	import { currencies } from "~/utils/currency";
 
 // COMPONENTS
-	import EccheumaButton from '~/components/buttons/CommonButton.vue';
-	import Tag 						from '~/components/common/Tag.vue';
-	import Icon						from '~/components/common/Icon.vue'
+	import EccheumaButton from "~/components/buttons/CommonButton.vue";
+	import Tag 						from "~/components/common/Tag.vue";
+	import Icon						from "~/components/common/Icon.vue";
 
 // TYPES
-	import type { VuexMap } from '~/typescript/VuexMap'
+	import type { VuexMap } from "~/contracts/VuexMap";
 
 // NAMESPACE
-	import { User } from '~/typescript/User'
+	import { User } from "~/contracts/User";
+
+	type FIELDS = "wallet" | "status" | "messages";
 
 	type PROFILE_AREA = {
 		title: string
@@ -259,6 +262,8 @@
 		icon: string
 		info?: string
 	}
+
+	type ProfileStat = Record<FIELDS, PROFILE_AREA>
 
 // MODULE
 	export default Vue.extend({
@@ -270,46 +275,50 @@
 		computed: {
 			...mapState({
 
-				State		: state => (state as VuexMap).User.State.State,
+				State				: state => (state as VuexMap).User.State.State,
+
+				Country			: state => (state as VuexMap).User.Wallet.Country,
+				Wallet 			: state => (state as VuexMap).User.Wallet.Current,
+
 				NewMessages	: state => (state as VuexMap).User.Messages.NewMessagesCount,
 				Messages		: state => (state as VuexMap).User.Messages.Data,
 				Lang				: state => (state as VuexMap).App.Lang
 
 			}),
 
-			profileAreas(): { [ K in keyof User.state ]?: PROFILE_AREA } | { Messages: PROFILE_AREA } {
+			profileAreas(): ProfileStat {
 
-				// ! Refactor target.
-
-				const LastMessage = this.Messages.length ? [ ...this.Messages ].pop()?.message : ''
+				const messageInfo = this.Messages[ this.Messages.length - 1 ]
+					? `Последнее сообщение: "${ this.Messages[ this.Messages.length - 1 ].message?.slice(0, 65) }"`
+					: "Новых сообщений нет.";
 
 				return {
-					UserBalance: {
-						title: 'Баланс',
-						value: `${ this.State.UserBalance } ₽`,
-						info: 'Ваш текущий баланс.',
-						icon: 'Service',
+					wallet: {
+						title: "Баланс",
+						value: currencies.fmt_balance(this.Wallet, this.Country),
+						info: "Ваш текущий баланс.",
+						icon: "Service",
 					},
-					UserWorkStatus: {
-						title: 'Статус заказа',
-						value: work.defineStatus(this.State.UserWorkStatus, this.Lang),
-						info: 'Текущий статус последнего заказа заказа',
-						icon: 'Fire',
+					status: {
+						title: "Статус последнего заказа",
+						value: work.defineStatus(this.State.purchase, this.Lang),
+						info: "Текущий статус последнего заказа заказа",
+						icon: "Fire",
 					},
-					Messages: {
-						title: 'Сообщения',
-						value: this.NewMessages,
-						info: `Последнее сообщенее: "${ LastMessage?.slice(0, 65) }"`,
-						icon: 'Message',
+					messages: {
+						title	: "Сообщения",
+						value	: this.NewMessages,
+						info	: messageInfo, 
+						icon	: "Message",
 					}
-				}
+				};
 			}
 
 		},
 		methods: {
 
 			...mapActions({
-				logout: 'Auth/Logout/Logout'
+				logout: "Auth/Logout/Logout"
 			}),
 
 			defineStatus(status: User.status) {
@@ -317,6 +326,6 @@
 			}
 
 		}
-	})
+	});
 
 </script>
